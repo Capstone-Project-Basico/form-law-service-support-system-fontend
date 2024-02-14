@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  background-color: white;
+  height: 110px;
+}
+
+.container button {
+  font-family: "Roboto Condensed", "Trebuchet MS", Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  height: 110px;
+}
