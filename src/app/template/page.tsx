@@ -20,7 +20,7 @@ const Page = () => {
   }, []);
 
   return (
-    <div>
+    <div className="columns-3 pb-10 gap-10 ">
       {(templates || []).map((item: Template, index: number) => (
         <CardTemplate key={index} itemDetail={item} />
       ))}
