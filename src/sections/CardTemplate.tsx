@@ -1,5 +1,6 @@
 import { Template } from "@/constants/types/homeType";
 import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
+import Link from "next/link";
 
 type Props = {
   itemDetail?: Template;
@@ -9,6 +10,16 @@ const CardTemplate = ({ itemDetail }: Props) => {
   return (
     <Card className="py-4 pb-9">
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+        <Link
+          href={{
+            pathname: "/form",
+            query: { name: itemDetail?.name },
+          }}
+        >
+          <Button className="" color="primary" radius="full" size="sm">
+            Chỉnh sửa
+          </Button>
+        </Link>
         <a href={itemDetail?.url}>
           <Button className="" color="primary" radius="full" size="sm">
             Download
