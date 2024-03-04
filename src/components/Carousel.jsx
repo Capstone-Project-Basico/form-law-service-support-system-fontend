@@ -1,18 +1,41 @@
-import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
+"use client";
 
-const Carousel = ({ children: slides }) => {
+import React from "react";
+import Image from "next/image";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+// import SwiperCore, { Navigation } from "swiper/core";
+import { Navigation } from "swiper/modules";
+import { images } from "@/lib/images";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "./Carousel.css";
+
+const Carousel = () => {
   return (
-    <div className="overflow-hidden relative">
-      <div className="min-w-9 min-h-96">{slides}</div>
-      <div className="absolute inset-0 flex items-center justify-between p-4">
-        <button className="p-1 shadown bg-slate-400 text-white hover:bg-slate-600">
-          <ChevronLeftIcon className="w-10 h-10 text-white" />
-        </button>
-        <button className="p-1 shadown bg-slate-400 text-white hover:bg-slate-600">
-          <ChevronRightIcon className="w-10 h-10 text-white" />
-        </button>
-      </div>
-    </div>
+    <Swiper
+      modules={[Navigation]}
+      spaceBetween={50}
+      slidesPerView={1}
+      navigation
+      loop={true}
+      className="h-auto w-full"
+    >
+      {images.map((img, index) => (
+        <SwiperSlide key={index}>
+          <div style={{ position: "relative", width: "100vw", height: "50vh" }}>
+            <Image
+              src={img.src}
+              alt={img.alt}
+              layout="fill"
+              objectFit="cover"
+            />
+            {/* <p>{img.desc}</p> */}
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 };
 

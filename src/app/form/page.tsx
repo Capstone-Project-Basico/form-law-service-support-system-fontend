@@ -47,33 +47,49 @@ const Page = () => {
     e.preventDefault();
 
     try {
-      console.log(JSON.stringify(inputValues));
-
-      const response = await fetch(
-        `https://demo-production-b43a.up.railway.app/GenerateFile/${name}`,
-        {
-          method: "POST", // Specify the method
-          headers: {
-            "Content-Type": "application/json", // Specify content type
-          },
-          body: JSON.stringify(inputValues), // Convert inputValues to JSON string
-        }
-      );
-
+      // const response = await fetch(
+      //   `https://demo-production-b43a.up.railway.app/GenerateFile/${name}`,
+      //   {
+      //     method: "POST", // Specify the method
+      //     headers: {
+      //       "Content-Type": "application/json", // Specify content type
+      //     },
+      //     body: JSON.stringify(inputValues), // Convert inputValues to JSON string
+      //   }
+      // );
       //download by http
-      if (response) {
-        const blob = await response.blob();
-        const downloadUrl = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = downloadUrl;
-        a.download = `${name}`;
-        document.body.appendChild(a);
-        a.click();
-        URL.revokeObjectURL(downloadUrl); // Clean up
-        a.remove(); // Clean up
-      } else {
-        console.error("Server responded with ", response);
-      }
+      // if (response) {
+      //   const blob = await response.blob();
+      //   const downloadUrl = URL.createObjectURL(blob);
+      //   const a = document.createElement("a");
+      //   a.href = downloadUrl;
+      //   a.download = `${name}`;
+      //   document.body.appendChild(a);
+      //   a.click();
+      //   URL.revokeObjectURL(downloadUrl); // Clean up
+      //   a.remove(); // Clean up
+      // } else {
+      //   console.error("Server responded with ", response);
+      // }
+
+      //try axios
+      axios
+        .post(
+          `https://demo-production-b43a.up.railway.app/GenerateFile/${name}`,
+          inputValues,
+          { responseType: "blob" }
+        )
+        .then((response) => {
+          const blob = response.data;
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${name}`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+        });
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -98,7 +114,7 @@ const Page = () => {
             <Input
               className="w-44"
               type="text"
-              placeholder="nhap di ..."
+              placeholder="type here"
               value={inputValues[`"${item}"`] || ""}
               onChange={(e) => handleInputChange(e, item)}
             />

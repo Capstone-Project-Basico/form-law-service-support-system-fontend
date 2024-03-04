@@ -1,3 +1,5 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+
 export type Template = {
   name?: string;
   url?: string;
@@ -5,4 +7,12 @@ export type Template = {
 
 export type InputValues = {
   [key: string]: string;
+};
+
+export type Item = {
+  icon?: IconProp; // Now strictly an IconProp
+  imagePath?: string; // Separately handle image paths
+  alt: string;
+  title: string;
+  subtitle: string;
 };

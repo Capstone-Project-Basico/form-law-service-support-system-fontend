@@ -1,0 +1,19 @@
+.swiper-button-next,
+.swiper-button-prev {
+  display: flex;
+  background-color: #333333;
+  color: white;
+  height: 40px;
+  width: 40px;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: #000;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 20px; /* Adjust the size of the arrow */
+  color: #fff;
+}

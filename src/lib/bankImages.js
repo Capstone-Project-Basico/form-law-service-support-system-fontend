@@ -1,0 +1,17 @@
+export const bankImages = [
+  { src: "/bank/ocb.jpg", alt: "First" },
+  { src: "/bank/acb.jpg", alt: "Second" },
+  { src: "/bank/logo_shb.jpg", alt: "Third" },
+  { src: "/bank/vcbr.jpg", alt: "vcbr" },
+  { src: "/bank/mb.jpg", alt: "mb" },
+  { src: "/bank/bidv.jpg", alt: "bidv" },
+  { src: "/bank/vpbank.jpg", alt: "vpbank" },
+  { src: "/bank/pg.jpg", alt: "pg" },
+  { src: "/bank/hongleong.jpg", alt: "hongleong" },
+  { src: "/bank/vib.jpg", alt: "vib" },
+  { src: "/bank/hd.jpg", alt: "hd" },
+  { src: "/bank/bangkok.jpg", alt: "bangkok" },
+  { src: "/bank/red.jpg", alt: "red" },
+  { src: "/bank/vfm.jpg", alt: "vfm" },
+  { src: "/bank/hsc.jpg", alt: "hsc" },
+];
