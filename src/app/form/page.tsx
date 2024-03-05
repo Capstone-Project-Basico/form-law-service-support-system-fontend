@@ -36,7 +36,7 @@ const Page = () => {
     item: string
   ) => {
     const { value } = e.target;
-    const key = `"${item}"`;
+    const key = item;
     setInputValues((prevValues) => ({
       ...prevValues,
       [key]: value,
@@ -115,7 +115,7 @@ const Page = () => {
               className="w-44"
               type="text"
               placeholder="type here"
-              value={inputValues[`"${item}"`] || ""}
+              value={inputValues[item] || ""}
               onChange={(e) => handleInputChange(e, item)}
             />
           </div>
