@@ -1,10 +1,10 @@
 import Image from "next/image";
-import Carousel from "../components/Carousel";
-import Divine from "@/components/Divine";
-import Contact from "@/components/Contact";
-import Customer from "@/components/Customer";
-import Service from "@/components/Service";
-import Request from "@/components/Request";
+import Carousel from "../components/home/Carousel";
+import Divine from "@/components/home/Divine";
+import Contact from "@/components/home/Contact";
+import Customer from "@/components/home/Customer";
+import Service from "@/components/home/Service";
+import Request from "@/components/home/Request";
 
 export default function Home() {
   return (

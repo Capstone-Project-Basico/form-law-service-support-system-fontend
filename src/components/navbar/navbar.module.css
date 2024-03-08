@@ -10,3 +10,15 @@
   font-weight: bold;
   height: 110px;
 }
+
+.hoverButton {
+  position: relative;
+  overflow: hidden;
+  background-color: white !important;
+  border-radius: none;
+}
+
+.hoverButton:hover {
+  color: red !important;
+  border-top: 5px solid #ff0004;
+}

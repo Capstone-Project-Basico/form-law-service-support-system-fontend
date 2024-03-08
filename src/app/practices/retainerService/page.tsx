@@ -1,8 +1,10 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileAlt } from "@fortawesome/free-solid-svg-icons";
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
+import HeaderComponent from "@/components/header";
 
 const Page = () => {
   const items = [
@@ -26,22 +28,16 @@ const Page = () => {
   return (
     <div>
       {/* header for service */}
-      <div className="flex px-15 bg-black text-white">
-        <div className="text-2xl font-bold">LĨNH VỰC CHUYÊN MÔN</div>
-        <div>
-          <Breadcrumbs>
-            <BreadcrumbItem>Basico Law Firm</BreadcrumbItem>
-            <BreadcrumbItem>Dịch Vụ Luật Sư Nội Bộ</BreadcrumbItem>
-          </Breadcrumbs>
-        </div>
-      </div>
-
+      <HeaderComponent
+        title="LĨNH VỰC CHUYÊN MÔN"
+        link=" Dịch Vụ Luật Sư Nội Bộ"
+      />
       <div className="flex flex-col justify-center items-center bg-white text-black px-[366px] pt-20">
         <h1 className="text-3xl font-bold mb-9">Dịch vụ Luật sư nội bộ</h1>
         <Image
           className="mb-8"
           alt=""
-          src="/dichvu/luat-su-noi-bo.jpg"
+          src="/practices/luat-su-noi-bo.jpg"
           height={434}
           width={727}
         />

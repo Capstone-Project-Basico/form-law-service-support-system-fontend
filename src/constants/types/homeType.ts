@@ -16,3 +16,9 @@ export type Item = {
   title: string;
   subtitle: string;
 };
+
+export type Header = {
+  title: string;
+  subTitle?: string;
+  link: string;
+};
