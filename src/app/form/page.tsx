@@ -12,21 +12,21 @@ const Page = () => {
   const [form, setForm] = useState([]);
   const [inputValues, setInputValues] = useState<InputValues>({});
 
-  const getForm = async () => {
-    if (name) {
-      try {
-        const res = await fetch(
-          `https://demo-production-b43a.up.railway.app/file/formfields/${name}`
-        );
-        const data = await res.json();
-        setForm(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
   useEffect(() => {
+    const getForm = async () => {
+      if (name) {
+        try {
+          const res = await fetch(
+            `https://demo-production-b43a.up.railway.app/file/formfields/${name}`
+          );
+          const data = await res.json();
+          setForm(data);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
     getForm();
   }, [name]);
 
@@ -47,32 +47,6 @@ const Page = () => {
     e.preventDefault();
 
     try {
-      // const response = await fetch(
-      //   `https://demo-production-b43a.up.railway.app/GenerateFile/${name}`,
-      //   {
-      //     method: "POST", // Specify the method
-      //     headers: {
-      //       "Content-Type": "application/json", // Specify content type
-      //     },
-      //     body: JSON.stringify(inputValues), // Convert inputValues to JSON string
-      //   }
-      // );
-      //download by http
-      // if (response) {
-      //   const blob = await response.blob();
-      //   const downloadUrl = URL.createObjectURL(blob);
-      //   const a = document.createElement("a");
-      //   a.href = downloadUrl;
-      //   a.download = `${name}`;
-      //   document.body.appendChild(a);
-      //   a.click();
-      //   URL.revokeObjectURL(downloadUrl); // Clean up
-      //   a.remove(); // Clean up
-      // } else {
-      //   console.error("Server responded with ", response);
-      // }
-
-      //try axios
       axios
         .post(
           `https://demo-production-b43a.up.railway.app/GenerateFile/${name}`,
@@ -102,7 +76,7 @@ const Page = () => {
           <h1 className="font-bold">Biểu mẫu {name}</h1>
         </div>
       )}
-      <ul className="w-full">
+      <ul className="w-full text-black">
         {form.map((item, index) => (
           <div
             key={index}
