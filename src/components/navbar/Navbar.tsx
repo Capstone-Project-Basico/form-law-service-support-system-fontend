@@ -16,10 +16,13 @@ import {
 import { Navbar as MyNavbar } from "@nextui-org/react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { practices } from "@/lib/navbarItems";
+import { researchAndPublications, about } from "@/lib/navbarItems";
 
 const Navbar = () => {
   const [serviceDropdownVisible, setServiceDropdownVisible] = useState(false);
   const [researchDropdownVisible, setResearchDropdownVisible] = useState(false);
+  const [aboutDropdownVisible, setAboutDropdownVisible] = useState(false);
 
   const pathname = usePathname();
   return (
@@ -61,19 +64,13 @@ const Navbar = () => {
                 </Link>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
-                <DropdownItem key="retainerService">
-                  <Link
-                    href="/practices/retainerService"
-                    className="text-white"
-                  >
-                    DỊCH VỤ LUẬT SƯ NỘI BỘ
-                  </Link>
-                </DropdownItem>
-                <DropdownItem key="new">BẢO HIỂM</DropdownItem>
-                <DropdownItem key="copy">DOANH NGHIỆP</DropdownItem>
-                <DropdownItem key="edit">
-                  TƯ VẤN CHIẾN LƯỢC & TÁI CẤU TRÚC DN
-                </DropdownItem>
+                {practices.map((practice) => (
+                  <DropdownItem key="retainerService">
+                    <Link href={practice.link} className="text-white">
+                      {practice.title}
+                    </Link>
+                  </DropdownItem>
+                ))}
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
@@ -96,30 +93,42 @@ const Navbar = () => {
                 </Link>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
-                <DropdownItem key="retainerService">
-                  <Link
-                    href="/researchAndPublications/professionalLegalBooks"
-                    className="text-white"
-                  >
-                    VIẾT SÁCH PHÁP LÍ NGHIỆP VỤ
-                  </Link>
-                </DropdownItem>
-                <DropdownItem key="retainerService">
-                  <Link
-                    href="/researchAndPublications/researchArticles"
-                    className="text-white"
-                  >
-                    BÀI NGHIÊN CỨU TRÊN BÁO CHÍ
-                  </Link>
-                </DropdownItem>
-                <DropdownItem key="retainerService">
-                  <Link
-                    href="/researchAndPublications/basicoWeeklyNews"
-                    className="text-white"
-                  >
-                    BASICO TUẦN LUẬT
-                  </Link>
-                </DropdownItem>
+                {researchAndPublications.map((research) => (
+                  <DropdownItem key="retainerService">
+                    <Link href={research.link} className="text-white">
+                      {research.title}
+                    </Link>
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </NavbarItem>
+
+          {/* About dropdown */}
+          <NavbarItem
+            onMouseEnter={() => setAboutDropdownVisible(true)}
+            onMouseLeave={() => setAboutDropdownVisible(false)}
+          >
+            <Dropdown
+              isOpen={aboutDropdownVisible}
+              className="bg-black"
+              radius="none"
+            >
+              <DropdownTrigger>
+                <Link href="/about">
+                  <Button className={styles.hoverButton} radius="none">
+                    GIỚI THIỆU
+                  </Button>
+                </Link>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions" className="bg-black">
+                {about.map((ab) => (
+                  <DropdownItem key="retainerService">
+                    <Link href={ab.link} className="text-white">
+                      {ab.title}
+                    </Link>
+                  </DropdownItem>
+                ))}
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
