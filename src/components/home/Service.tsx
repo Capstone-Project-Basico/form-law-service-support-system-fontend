@@ -73,27 +73,33 @@ const Service = () => {
   ];
 
   return (
-    <div className="flex md:grid md:grid-cols-4 sm:flex-col justify-center items-center ml-80 mr-80 mt-28 mb-28">
+    <div className="grid lg:grid-cols-4 px-32 py-28 bg-black">
       {items.map((item, index) => (
         <div
           key={index}
-          className="flex flex-col items-center justify-center text-center pr-4 pl-4 h-52 w-72"
+          className="flex flex-col items-center justify-center text-center px-4 h-72"
         >
-          {item.icon ? (
-            <FontAwesomeIcon
-              icon={item.icon}
-              className="size-10 text-[#ff0004] "
-            />
-          ) : (
-            <Image
-              src={item.icon || "/default-image.png"}
-              alt={item.alt}
-              width={64}
-              height={64}
-            />
-          )}
-          <h1 className="size-5 font-bold pb-2 w-full">{item.title}</h1>
-          <h2 className="size-4 w-full">{item.subtitle}</h2>
+          <div className="flex justify-center w-[260px] h-[67px]">
+            {item.icon ? (
+              <FontAwesomeIcon
+                icon={item.icon}
+                className="size-10 text-[#ff0004] "
+              />
+            ) : (
+              <Image
+                src={item.icon || "/default-image.png"}
+                alt={item.alt}
+                width={64}
+                height={64}
+              />
+            )}
+          </div>
+          <div className="pt-4">
+            <h2 className="text-[18px] font-bold mb-2 h-[22px]">
+              {item.title}
+            </h2>
+            <p className="text-[16px] h-full">{item.subtitle}</p>
+          </div>
         </div>
       ))}
     </div>

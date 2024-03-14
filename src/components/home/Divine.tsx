@@ -3,7 +3,7 @@ import React from "react";
 const Divine = () => {
   return (
     <div className="">
-      <div className="flex md:flex-row sm:flex-col justify-center items-center relative ">
+      <div className="flex lg:flex-row md:flex-col justify-center items-center relative ">
         {/* div 1 */}
         <div className="bg-[#ff0004] text-white text-right pr-5 pl-44 pt-16 pb-16">
           <div className="mb-4 text-2xl font-bold ">DỊCH VỤ PHÁP LÝ</div>

@@ -133,6 +133,14 @@ const Navbar = () => {
             </Dropdown>
           </NavbarItem>
 
+          <NavbarItem>
+            <a href="/basicoLawyers">
+              <Button className="red-hover-button bg-white" radius="none">
+                LUẬT SƯ CỦA BASICO
+              </Button>
+            </a>
+          </NavbarItem>
+
           {/* upload file */}
           <NavbarItem>
             <a href="/manager">
@@ -149,6 +157,13 @@ const Navbar = () => {
                 TEMPLATE list*
               </Button>
             </a>
+          </NavbarItem>
+        </NavbarContent>
+
+        {/* login */}
+        <NavbarContent justify="end">
+          <NavbarItem className="hidden lg:flex">
+            <Link href="/login">Login</Link>
           </NavbarItem>
         </NavbarContent>
       </MyNavbar>

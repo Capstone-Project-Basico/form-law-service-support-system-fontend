@@ -15,6 +15,10 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      fontFamily: {
+        sans: ["Roboto Condensed", "Arial", "Helvetica", "sans-serif"],
+        // other fonts...
+      },
     },
   },
   darkMode: "class",
