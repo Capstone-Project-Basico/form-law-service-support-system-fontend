@@ -1,51 +1,111 @@
 "use client";
 
-import { Input } from "@nextui-org/react";
-import { useState } from "react";
+import { Button, Input } from "@nextui-org/react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import Link from "next/link";
+
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
-
   const toggleVisibility = () => setIsVisible(!isVisible);
-  return (
-    <div className="text-black ml-10">
-      <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
-        <div className="text-2xl">Làm việc với các luật sư xuất sắc</div>
-        <div className="text-3xl">CÔNG TY LUẬT BASICO CHÀO MỪNG BẠN</div>
-      </div>
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-      <div>
-        <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-          <Input type="email" label="Email" placeholder="Enter your email" />
-        </div>
-        <Input
-          label="Password"
-          variant="bordered"
-          placeholder="Enter your password"
-          endContent={
-            <button
-              className="focus:outline-none"
-              type="button"
-              onClick={toggleVisibility}
-            >
-              {isVisible ? (
-                <FontAwesomeIcon
-                  icon={faEye}
-                  className="text-2xl text-default-400 pointer-events-none"
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faEyeSlash}
-                  className="text-2xl text-default-400 pointer-events-none"
-                />
-              )}
-            </button>
+  let dataLogin = {
+    email: email,
+    password: password,
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    axios
+      .post(
+        "https://hytiron.click/basico-server/api/v1/auth/generateToken",
+        dataLogin
+      )
+      .then((response) => {
+        setTimeout(() => {
+          localStorage.setItem("user", JSON.stringify(response));
+          switch (response.data.role) {
+            case "ROLE_ADMIN":
+              <Link href="/manager" />;
+              break;
+            case "ROLE_CUSTOMER":
+              <Link href="/" />;
+              break;
+            default:
+              <Link href="/" />;
           }
-          type={isVisible ? "text" : "password"}
-          className="max-w-xs"
-        />
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  return (
+    <div className="flex flex-row">
+      <div className="text-black ml-10 w-[681px]">
+        <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
+          <div className="text-2xl">Làm việc với các luật sư xuất sắc</div>
+          <div className="text-3xl">CÔNG TY LUẬT BASICO CHÀO MỪNG BẠN</div>
+        </div>
+
+        <div>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-wrap md:flex-nowrap gap-4 w-full mb-10">
+              <Input
+                type="email"
+                label="Email"
+                placeholder="Enter your email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="flex w-full">
+              <Input
+                label="Password"
+                placeholder="Enter your password"
+                onChange={(e) => setPassword(e.target.value)}
+                endContent={
+                  <button
+                    className="focus:outline-none"
+                    type="button"
+                    onClick={toggleVisibility}
+                  >
+                    {isVisible ? (
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="text-2xl text-default-400 pointer-events-none"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faEyeSlash}
+                        className="text-2xl text-default-400 pointer-events-none"
+                      />
+                    )}
+                  </button>
+                }
+                type={isVisible ? "text" : "password"}
+                className="max-w-xs"
+              />
+            </div>
+            <div className="flex justify-end font-bold">Quên mật khẩu</div>
+            <Button
+              type="submit"
+              className="bg-[#F00044] text-white w-full my-4"
+            >
+              Đăng nhập
+            </Button>
+            <div className="flex justify-center">
+              Bạn chưa có tài khoản? <strong>Đăng ký ngay</strong>
+            </div>
+          </form>
+        </div>
       </div>
+      {/* second div */}
+      <div className="w-[505px]"></div>
     </div>
   );
 };
