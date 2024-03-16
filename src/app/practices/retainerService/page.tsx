@@ -31,7 +31,7 @@ const Page = () => {
         title="LĨNH VỰC CHUYÊN MÔN"
         link=" Dịch Vụ Luật Sư Nội Bộ"
       />
-      <div className="flex flex-col justify-center items-center bg-white text-black px-[366px] pt-20">
+      <div className="flex flex-col justify-center items-center bg-white text-black px-[366px]">
         <h1 className="text-3xl font-bold mb-9">Dịch vụ Luật sư nội bộ</h1>
         <Image
           className="mb-8"
