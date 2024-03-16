@@ -2,8 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileAlt } from "@fortawesome/free-solid-svg-icons";
 import HeaderComponent from "@/components/header";
 import BasicoMayHelp from "@/components/practices/basicoMayHelp";
 
