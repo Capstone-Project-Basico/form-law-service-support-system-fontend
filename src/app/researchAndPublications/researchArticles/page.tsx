@@ -1,4 +1,5 @@
 import HeaderComponent from "@/components/header";
+import Side from "@/components/side";
 import { faCalendarDays, faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -41,6 +42,7 @@ const page = () => {
           {/* second book */}
           <div className="px-[15px] w-48 h-[492px]"></div>
         </div>
+        <Side />
       </div>
     </>
   );

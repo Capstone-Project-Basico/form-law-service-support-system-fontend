@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const HeaderComponent = (prop: Header) => {
   return (
-    <div className="relative h-[300px] ">
+    <div className="relative h-[300px] mb-20">
       <Image
         className="w-full h-[300px] -z-10"
         alt="bg image"
@@ -21,7 +21,7 @@ const HeaderComponent = (prop: Header) => {
           <div className="text-3xl font-bold text-white">{prop.title}</div>
           <div className="text-xl text-white">{prop.subTitle}</div>
         </div>
-        <div className="mt-16 bg-[#0000008a] py-4 pl-10 pr-8 w-[400px]">
+        <div className="mt-16 bg-[#0000008a] py-4 pl-10 pr-8 w-[600px]">
           <Breadcrumbs color="danger">
             <BreadcrumbItem>
               <a href="/">

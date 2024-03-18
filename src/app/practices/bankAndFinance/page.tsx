@@ -52,36 +52,69 @@ const page = () => {
           {/* left */}
           <div className="w-[547px]">
             <div className="pb-[10px]">
-              Năm 2010, BASICO trở thành hãng luật nằm trong danh sách ưu tiên
-              lựa chọn của Hong leong Bank Việt Nam.
+              Năm 2010,
+              <strong>
+                &nbsp;BA<span className="text-[#ff0000]">S</span>I
+                <span className="text-[#ff0000]">CO </span>
+              </strong>{" "}
+              trở thành hãng luật nằm trong danh sách ưu tiên lựa chọn của Hong
+              leong Bank Việt Nam.
             </div>
             <div className="pb-[10px]">
-              Năm 2011, BASICO trở thành hãng luật duy nhất tại Việt Nam được
-              Ngân hàng Phương Đông (OCB) lựa chọn làm hãng luật cung cấp dịch
-              vụ Luật sư nội bộ cho Hội đồng Quản trị và Ban Điều hành trong
-              điều hành toàn bộ hệ thống ngân hàng. Qua hơn 6 năm hợp tác, Ban
-              lãnh đạo OCB luôn ghi nhận BASICO đã và đang đóng góp ấn tượng vào
-              việc kiểm soát rủi ro pháp lý tạo nên những thành quả phát triển
-              của OCB suốt thời gian qua.
+              Năm 2011,{" "}
+              <strong>
+                &nbsp;BA<span className="text-[#ff0000]">S</span>I
+                <span className="text-[#ff0000]">CO </span>
+              </strong>{" "}
+              trở thành hãng luật duy nhất tại Việt Nam được Ngân hàng Phương
+              Đông (OCB) lựa chọn làm hãng luật cung cấp dịch vụ Luật sư nội bộ
+              cho Hội đồng Quản trị và Ban Điều hành trong điều hành toàn bộ hệ
+              thống ngân hàng. Qua hơn 6 năm hợp tác, Ban lãnh đạo OCB luôn ghi
+              nhận{" "}
+              <strong>
+                &nbsp;BA<span className="text-[#ff0000]">S</span>I
+                <span className="text-[#ff0000]">CO </span>
+              </strong>{" "}
+              đã và đang đóng góp ấn tượng vào việc kiểm soát rủi ro pháp lý tạo
+              nên những thành quả phát triển của OCB suốt thời gian qua.
             </div>
             <div className="pb-[10px]">
-              Năm 2015, BASICO ký Thỏa thuận hợp tác toàn diện với Ngân hàng Đầu
-              tư Phát triển Việt Nam (BIDV).
+              Năm 2015,{" "}
+              <strong>
+                &nbsp;BA<span className="text-[#ff0000]">S</span>I
+                <span className="text-[#ff0000]">CO </span>
+              </strong>{" "}
+              ký Thỏa thuận hợp tác toàn diện với Ngân hàng Đầu tư Phát triển
+              Việt Nam (BIDV).
             </div>
             <div className="pb-[10px]">
-              Từ năm 2016 tới nay, BASICO chính thức trở thành hãng luật duy
-              nhất được Ngân hàng Á Châu (ACB) lựa chọn để cung cấp dịch vụ Luật
-              sư nội bộ cho Hội đồng Quản trị và Ban lãnh đạo ngân hàng.
+              Từ năm 2016 tới nay,{" "}
+              <strong>
+                &nbsp;BA<span className="text-[#ff0000]">S</span>I
+                <span className="text-[#ff0000]">CO </span>
+              </strong>{" "}
+              chính thức trở thành hãng luật duy nhất được Ngân hàng Á Châu
+              (ACB) lựa chọn để cung cấp dịch vụ Luật sư nội bộ cho Hội đồng
+              Quản trị và Ban lãnh đạo ngân hàng.
             </div>
             <div className="pb-[10px]">
               Năm 2018, Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank) gia nhập
               vào nhóm Khách hàng là Hội sở ngân hàng sử dụng dịch vụ Luật sư
-              nội bộ của BASICO.
+              nội bộ của
+              <strong>
+                &nbsp;BA<span className="text-[#ff0000]">S</span>I
+                <span className="text-[#ff0000]">CO </span>
+              </strong>
+              .
             </div>
             <div className="pb-[10px]">
-              Gắn bó với ngành Ngân hàng trong mọi lĩnh vực nghiệp vụ, BASICO đã
-              triển khai hàng loạt dự án pháp lý, góp phần hỗ trợ sự phát triển
-              nghiệp vụ của các ngân hàng với một số dự án tiêu biểu:
+              Gắn bó với ngành Ngân hàng trong mọi lĩnh vực nghiệp vụ,
+              <strong>
+                &nbsp;BA<span className="text-[#ff0000]">S</span>I
+                <span className="text-[#ff0000]">CO </span>
+              </strong>
+              đã triển khai hàng loạt dự án pháp lý, góp phần hỗ trợ sự phát
+              triển nghiệp vụ của các ngân hàng với một số dự án tiêu biểu:
             </div>
             <ul style={{ listStyleType: "unset" }} className="pl-7">
               <li>
@@ -161,11 +194,23 @@ const page = () => {
             </ul>
           </div>
         </div>
+        <div className="pt-6">
+          Bên cạnh lĩnh vực nghiệp vụ, với chuyên môn sâu sắc của đội ngũ Luật
+          sư,{" "}
+          <strong>
+            BA<span className="text-[#ff0000]">S</span>I
+            <span className="text-[#ff0000]">CO&nbsp;</span>
+          </strong>
+          cũng giúp cho ngân hàng và doanh nghiệp hoàn thành vô số giao dịch
+          ngân hàng, trong đó phần lớn là các giao dịch tín dụng giá trị lớn,
+          giao dịch cho vay hợp vốn, giao dịch trái phiếu, tín dụng quốc tế và
+          hàng loạt giao dịch ngân hàng đa dạng khác.
+        </div>
         <div className="mt-[50px] mb-4 text-3xl font-bold">
           Dịch vụ pháp lý liên quan
         </div>
         <div className="grid grid-cols-2 justify-start items-center">
-          <ul style={{ listStyleType: "" }}>
+          <ul style={{ listStyleType: "" }} className="w-[560px] px-[15px]">
             {items.map((item, index) => (
               <li
                 key={index}
@@ -194,6 +239,13 @@ const page = () => {
               </li>
             ))}
           </ul>
+        </div>
+        <div className="flex justify-center p-[10px] text-[25px] mt-5 bg-[#f2c9b5] w-full">
+          <strong>
+            BA<span className="text-[#ff0000]">S</span>I
+            <span className="text-[#ff0000]">CO&nbsp;</span>
+          </strong>
+          là hãng luật của ngành Ngân hàng Việt Nam
         </div>
         <BasicoMayHelp />
       </div>
