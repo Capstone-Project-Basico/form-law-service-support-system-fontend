@@ -87,17 +87,17 @@ export const researchAndPublications = [
     link: "/researchAndPublications/basicoWeeklyNews",
     subTitle: "",
   },
-  {
-    title: "BASICO TUẦN LUẬT",
-    link: "/researchAndPublications/basicoWeeklyNews",
-    subTitle: "",
-  },
 ];
 
 export const about = [
   {
     title: "VỀ CHÚNG TÔI",
     link: "/about",
+    subTitle: "First",
+  },
+  {
+    title: "KHÁCH HÀNG CỦA CHÚNG TÔI",
+    link: "/about/ourClients",
     subTitle: "First",
   },
 ];

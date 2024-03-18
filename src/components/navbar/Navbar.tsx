@@ -141,23 +141,31 @@ const Navbar = () => {
             </a>
           </NavbarItem>
 
-          {/* upload file */}
           <NavbarItem>
+            <a href="/contactUs">
+              <Button className="red-hover-button bg-white" radius="none">
+                LIÊN HỆ
+              </Button>
+            </a>
+          </NavbarItem>
+
+          {/* upload file */}
+          {/* <NavbarItem>
             <a href="/manager">
               <Button className="red-hover-button bg-white" radius="none">
                 THEM TEMPLATE
               </Button>
             </a>
-          </NavbarItem>
+          </NavbarItem> */}
 
           {/* template list */}
-          <NavbarItem>
+          {/* <NavbarItem>
             <a href="/template">
               <Button className="red-hover-button bg-white" radius="none">
                 TEMPLATE list*
               </Button>
             </a>
-          </NavbarItem>
+          </NavbarItem> */}
         </NavbarContent>
 
         {/* login */}
