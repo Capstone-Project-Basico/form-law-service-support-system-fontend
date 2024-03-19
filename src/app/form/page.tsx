@@ -17,7 +17,7 @@ const Page = () => {
       if (name) {
         try {
           const res = await fetch(
-            `https://demo-production-b43a.up.railway.app/file/formfields/${name}`
+            `${process.env.NEXT_PUBLIC_BASE_API}file/formfields/${name}`
           );
           const data = await res.json();
           setForm(data);
