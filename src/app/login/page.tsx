@@ -29,7 +29,7 @@ const Page = () => {
           axios.defaults.headers.common["Authorization"] = `${response}`;
           switch (response.data.role) {
             case "ROLE_ADMIN":
-              <Link href="/manager" />;
+              <Link href="/dashboard" />;
               break;
             case "ROLE_CUSTOMER":
               <Link href="/" />;

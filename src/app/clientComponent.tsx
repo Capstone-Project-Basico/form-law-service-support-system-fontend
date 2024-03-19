@@ -11,12 +11,14 @@ export default function ExampleClientComponent({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const noNav = ["/login", "/registration"];
+  const noNav = ["/login", "/registration", "/dashboard"];
+
+  const shouldHideNavbar = noNav.some((path) => pathname.startsWith(path));
 
   return (
     <>
       <Providers>
-        {!noNav.includes(pathname) && <Navbar />}
+        {!shouldHideNavbar && <Navbar />}
         {children}
         <Footer />
       </Providers>
