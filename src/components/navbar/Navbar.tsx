@@ -150,13 +150,13 @@ const Navbar = () => {
           </NavbarItem>
 
           {/* upload file */}
-          {/* <NavbarItem>
-            <a href="/manager">
+          <NavbarItem>
+            <a href="/dashboard">
               <Button className="red-hover-button bg-white" radius="none">
-                THEM TEMPLATE
+                Manage Tam thoi
               </Button>
             </a>
-          </NavbarItem> */}
+          </NavbarItem>
 
           {/* template list */}
           {/* <NavbarItem>
