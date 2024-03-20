@@ -11,7 +11,7 @@ export default function ExampleClientComponent({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const noNav = ["/login", "/registration", "/dashboard"];
+  const noNav = ["/login", "/register", "/dashboard"];
 
   const shouldHideNavbar = noNav.some((path) => pathname.startsWith(path));
 
