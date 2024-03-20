@@ -6,13 +6,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Link from "next/link";
+import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const router = useRouter();
   let dataLogin = {
     email: email,
     password: password,
@@ -27,9 +29,11 @@ const Page = () => {
         setTimeout(() => {
           localStorage.setItem("user", JSON.stringify(response));
           axios.defaults.headers.common["Authorization"] = `${response}`;
-          switch (response.data.role) {
+          console.log(response.data.data.roleName);
+
+          switch (response.data.data.roleName) {
             case "ROLE_ADMIN":
-              <Link href="/dashboard" />;
+              router.push("/dashboard");
               break;
             case "ROLE_CUSTOMER":
               <Link href="/" />;
@@ -45,7 +49,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-52">
+    <div className="flex flex-col justify-center items-center mt-52 mb-[177px]">
       <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
         <div className="text-2xl">Làm việc với các luật sư xuất sắc</div>
         <div className="text-3xl">CÔNG TY LUẬT BASICO CHÀO MỪNG BẠN</div>
@@ -59,6 +63,9 @@ const Page = () => {
               label="Email"
               placeholder="Nhập email"
               onChange={(e) => setEmail(e.target.value)}
+              startContent={
+                <FontAwesomeIcon icon={faEye} className="w-5 h-5" />
+              }
             />
           </div>
           <div className="flex w-[662px]">
@@ -66,6 +73,9 @@ const Page = () => {
               label="Password"
               placeholder="Mật khẩu"
               onChange={(e) => setPassword(e.target.value)}
+              startContent={
+                <FontAwesomeIcon icon={faEye} className="w-5 h-5" />
+              }
               endContent={
                 <button
                   className="focus:outline-none"
@@ -88,12 +98,39 @@ const Page = () => {
               type={isVisible ? "text" : "password"}
             />
           </div>
-          <div  className="flex justify-end font-bold"><a href="/forgetPassword" className="text- hover:text-[#ff0000]">Quên mật khẩu</a></div>
-          <Button type="submit" className="bg-[#F00044] text-white w-full my-4">
+          <div className="flex justify-end font-bold mt-4">
+            <a href="/forgetPassword" className="text- hover:text-[#ff0000]">
+              Quên mật khẩu
+            </a>
+          </div>
+          <Button type="submit" className="bg-[#F00004] text-white w-full my-4">
             Đăng nhập
           </Button>
+
+          <p className="flex justify-center items-center mb-4">
+            Hoặc đăng nhập bằng
+          </p>
+
+          <div className="flex gap-5 mb-4">
+            <Button className="bg-[#FF0004] text-white w-80">
+              <FontAwesomeIcon icon={faGoogle} />
+              Google
+            </Button>
+
+            <Button className="bg-[#FF0004] text-white w-80">
+              <FontAwesomeIcon icon={faFacebook} className="text-[#4267B2]" />
+              Facebook
+            </Button>
+          </div>
+
           <div className="flex justify-center">
-            Bạn chưa có tài khoản? <strong>&nbsp;<a href="/register" className="text- hover:text-[#ff0000]">Đăng ký ngay</a></strong>
+            Bạn chưa có tài khoản?{" "}
+            <strong>
+              &nbsp;
+              <a href="/register" className="text- hover:text-[#ff0000]">
+                Đăng ký ngay
+              </a>
+            </strong>
           </div>
         </form>
       </div>
