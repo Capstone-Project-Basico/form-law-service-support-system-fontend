@@ -36,10 +36,10 @@ const Page = () => {
               router.push("/dashboard");
               break;
             case "ROLE_CUSTOMER":
-              <Link href="/" />;
+              router.push("/"); 
               break;
             default:
-              <Link href="/" />;
+              router.push("/");
           }
         });
       })
