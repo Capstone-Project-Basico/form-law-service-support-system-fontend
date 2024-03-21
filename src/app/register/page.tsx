@@ -6,38 +6,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const [username, setUsername] = useState ("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const router = useRouter();
 
-  let dataLogin = {
+  let dataRegister = {
+    username: username,
     email: email,
     password: password,
+    repeatPassword: repeatPassword,
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_API}auth/generateToken`, dataLogin)
+      .post(`${process.env.NEXT_PUBLIC_BASE_API}auth/registerNewUser`, dataRegister)
       .then((response) => {
-        setTimeout(() => {
-          localStorage.setItem("user", JSON.stringify(response));
-          axios.defaults.headers.common["Authorization"] = `${response}`;
-          switch (response.data.role) {
-            case "ROLE_ADMIN":
-              <Link href="/dashboard" />;
-              break;
-            case "ROLE_CUSTOMER":
-              <Link href="/" />;
-              break;
-            default:
-              <Link href="/" />;
-          }
-        });
+        router.push("/login");
+        
       })
       .catch((error) => {
         console.log(error);
@@ -58,7 +52,7 @@ const Page = () => {
               type="username"
               label="Họ và Tên"
               placeholder="Nhập họ và tên"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="flex flex-wrap md:flex-nowrap gap-4 mb-10 w-[662px]">
@@ -103,7 +97,7 @@ const Page = () => {
             <Input
               label="Password"
               placeholder="Nhạp lại mật khẩu"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setRepeatPassword(e.target.value)}
               endContent={
                 <button
                   className="focus:outline-none"
