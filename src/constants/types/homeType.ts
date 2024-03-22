@@ -30,3 +30,10 @@ export type SideNavItem = {
   subMenu?: boolean;
   subMenuItems?: SideNavItem[];
 };
+
+export type Partner = {
+  name: string;
+  avatar: string; // Assuming you have an image URL or similar
+  link: string; // This could be a URL
+  delete: boolean;
+};
