@@ -13,7 +13,7 @@ const Contact = () => {
       <div className="p-4">
         <Image alt="" src="/lienhe.jpg" width={555} height={379} />
       </div>
-      <div className="text-black m-3 text-xl" style={{ width: "555px" }}>
+      <div className="text-black m-3 text-xl" style={{ width: "605px" }}>
         <div className="pt-0 border-l-8 border-[#FF0004] p-5 mb-12 h-16">
           <h4>Làm việc với luật sư xuất sắc</h4>
           <h2 className="text-2xl font-bold pb-16">
@@ -55,7 +55,7 @@ const Contact = () => {
           className="bg-white border border-[#ff0004] text-[#ff0004] hover:bg-[#ff0004] hover:text-white"
           radius="none"
         >
-          LIÊN HỆ
+          <a href="/contactUs">LIÊN HỆ</a>
         </Button>
       </div>
     </div>

@@ -24,7 +24,7 @@ const Carousel = () => {
     >
       {images.map((img, index) => (
         <SwiperSlide key={index}>
-          <div style={{ position: "relative", width: "100vw", height: "50vh" }}>
+          <div style={{ position: "relative", width: "100vw", height: "64vh" }}>
             <Image
               src={img.src}
               alt={img.alt}

@@ -15,10 +15,11 @@ import { Item } from "@/constants/types/homeType";
 
 const Service = () => {
   const items: Item[] = [
-    {
+    { 
       icon: faUserGraduate,
       alt: "",
       title: "Dịch vụ luật sư nội bộ",
+      
       subtitle:
         "Tư vấn thường xuyên, toàn diện và gắn bó mật thiết với nội bộ doanh nghiệp",
     },

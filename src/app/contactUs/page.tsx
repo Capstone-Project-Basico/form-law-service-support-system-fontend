@@ -14,7 +14,7 @@ const page = () => {
         link="Liên Hệ"
       />
       <div className="flex flex-col justify-center items-center bg-white text-black px-[366px]">
-        <h1 className="text-3xl font-bold mb-9">
+        <h1 className="text-2xl font-bold mb-11">
           CÔNG TY LUẬT TNHH NGÂN HÀNG - CHỨNG KHOÁN - ĐẦU TƯ
         </h1>
         <div className="flex flex-row gap-[30px]">

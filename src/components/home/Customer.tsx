@@ -23,7 +23,7 @@ const Customer = () => {
           phát triển…
         </p>
         <Button className="bg-white text-red-500 py-2 px-4 inline-flex items-center justify-start hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-          XEM THÊM
+          <a href="/about/ourClients">XEM THÊM</a>
           <FontAwesomeIcon icon={faChevronCircleRight} className="size-4" />
         </Button>
       </div>
