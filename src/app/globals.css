@@ -13,6 +13,7 @@
   min-width: 100vw;
   display: flex;
   flex-direction: column;
+  
   /* font-family: "Roboto Condensed";
   letter-spacing: 0.5px;
   font-size: 16px !important; */
@@ -48,6 +49,10 @@ body {
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
+}
+
+button{
+  margin:10px;
 }
 
 @layer utilities {
