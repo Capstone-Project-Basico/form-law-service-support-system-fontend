@@ -3,7 +3,8 @@
 import { Button, Input } from "@nextui-org/react";
 import { useState, ChangeEvent, FormEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faKey } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
 import Link from "next/link";
 import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
@@ -36,7 +37,7 @@ const Page = () => {
               router.push("/dashboard");
               break;
             case "ROLE_CUSTOMER":
-              router.push("/"); 
+              router.push("/");
               break;
             default:
               router.push("/");
@@ -64,7 +65,7 @@ const Page = () => {
               placeholder="Nhập email"
               onChange={(e) => setEmail(e.target.value)}
               startContent={
-                <FontAwesomeIcon icon={faEye} className="w-5 h-5" />
+                <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5" />
               }
             />
           </div>
@@ -74,7 +75,7 @@ const Page = () => {
               placeholder="Mật khẩu"
               onChange={(e) => setPassword(e.target.value)}
               startContent={
-                <FontAwesomeIcon icon={faEye} className="w-5 h-5" />
+                <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
               }
               endContent={
                 <button
