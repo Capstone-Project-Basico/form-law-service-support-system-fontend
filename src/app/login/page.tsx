@@ -50,7 +50,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center mt-52 mb-[177px]">
+    <div className="flex flex-col justify-center items-center mt-48 mb-[177px]">
       <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
         <div className="text-2xl">Làm việc với các luật sư xuất sắc</div>
         <div className="text-3xl">CÔNG TY LUẬT BASICO CHÀO MỪNG BẠN</div>
