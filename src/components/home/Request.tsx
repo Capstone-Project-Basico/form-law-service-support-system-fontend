@@ -21,7 +21,7 @@ const Request = () => {
           variant="bordered"
           radius="none"
         >
-          GỬI YÊU CẦU
+          <a href="/contactUs">GỬI YÊU CẦU</a>
           <FontAwesomeIcon icon={faAngleRight} className="size-4" />
         </Button>
       </div>

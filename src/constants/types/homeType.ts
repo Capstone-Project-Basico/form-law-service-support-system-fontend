@@ -38,3 +38,29 @@ export type Partner = {
   link: string; // This could be a URL
   delete: boolean;
 };
+
+export type Contact = {
+  fullName: string;
+  email: string;
+  phoneNum : string;
+  career : string;
+  city: string;
+  businessTime: string;
+  annualRevenue: string;
+  juridical: String;
+  status: boolean;
+  delete: boolean;
+};
+export type User = {
+  username: string;
+  email: string;
+  roleName : string;
+  status: boolean;
+};
+
+export type Lawyer = {
+  username: string;
+  email: string;
+  roleName : string;
+  status: boolean;
+};

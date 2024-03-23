@@ -43,5 +43,5 @@ export const GoogleMaps = () => {
     initializeMap();
   }, []);
 
-  return <div className="h-[600px] w-full" ref={mapRef} />;
+  return <div className="h-[500px] w-[800px] mb-40" ref={mapRef} />;
 };

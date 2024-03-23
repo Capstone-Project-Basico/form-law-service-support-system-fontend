@@ -79,6 +79,7 @@ const page = () => {
         <div className="flex justify-center mb-[50px]">
           <div className="w-[60px] h-[6px] bg-[#FF0004]"></div>
         </div>
+        
       </div>
     </>
   );
