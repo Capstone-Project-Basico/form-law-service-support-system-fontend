@@ -6,24 +6,6 @@ import HeaderComponent from "@/components/header";
 import BasicoMayHelp from "@/components/practices/basicoMayHelp";
 
 const Page = () => {
-  const items = [
-    { text: "Ngân hàng và tài chính" },
-    { text: "Thị trường vốn" },
-    { text: "Bảo hiểm" },
-    { text: "Tư vấn chiến lược và Tái cấu trúc DN" },
-    { text: "Đào tạo pháp lý cho doanh nghiệp" },
-    { text: "Tư vấn M&A" },
-  ];
-
-  const items2 = [
-    { text: "Tranh tụng và Giải quyết tranh chấp" },
-    { text: "Sở hữu trí tuệ" },
-    { text: "Tư vấn bất động sản" },
-    { text: "Lao động" },
-    { text: "Thuế" },
-    { text: "CNTT & Truyền thông" },
-  ];
-
   return (
     <div>
       {/* header for service */}

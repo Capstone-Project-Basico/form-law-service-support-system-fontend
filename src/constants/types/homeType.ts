@@ -42,8 +42,8 @@ export type Partner = {
 export type Contact = {
   fullName: string;
   email: string;
-  phoneNum : string;
-  career : string;
+  phoneNum: string;
+  career: string;
   city: string;
   businessTime: string;
   annualRevenue: string;
@@ -54,13 +54,17 @@ export type Contact = {
 export type User = {
   username: string;
   email: string;
-  roleName : string;
+  roleName: string;
   status: boolean;
 };
 
 export type Lawyer = {
   username: string;
   email: string;
-  roleName : string;
+  roleName: string;
   status: boolean;
+};
+
+export type CardTemplate = {
+  itemDetail?: Template;
 };
