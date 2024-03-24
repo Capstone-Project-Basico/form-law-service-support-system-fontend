@@ -40,6 +40,7 @@ export type Partner = {
 };
 
 export type Contact = {
+  contactId: number;
   fullName: string;
   email: string;
   phoneNum : string;
@@ -51,6 +52,27 @@ export type Contact = {
   status: boolean;
   delete: boolean;
 };
+
+export type Recruitment = {
+  id: number;
+  fullName: string;
+  dateOfBirth: Date;
+  homeTown: string;
+  gender:  string;
+  maritalStatus: string;
+  email: string;
+  phoneNum : string;
+  position: string;
+  exp:string;
+  field: string;
+  graduate:string;
+  target: string;
+  workPlace: string;
+  id_number: string;
+  processStatus: boolean;
+  delete: boolean;
+};
+
 export type User = {
   username: string;
   email: string;

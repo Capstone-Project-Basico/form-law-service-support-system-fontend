@@ -261,6 +261,8 @@ const Partner = () => {
             <p className="text-[#FF0004] font-bold text-3xl">Đối tác</p>
           </BreadcrumbItem>
         </Breadcrumbs>
+
+        
         <div className="flex justify-end">
           <Button
             className="flex justify-end w-[100px] bg-[#FF0004] text-white"
@@ -307,6 +309,8 @@ const Partner = () => {
             </ModalContent>
           </Modal>
         </div>
+
+        
       </div>
       <div>
         <div className="my-10 flex flex-row">
@@ -449,6 +453,8 @@ const Partner = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+
     </div>
   );
 };
