@@ -63,6 +63,7 @@ const Page = () => {
               type="email"
               label="Email"
               placeholder="Nhập email"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               startContent={
                 <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5" />
@@ -73,6 +74,7 @@ const Page = () => {
             <Input
               label="Password"
               placeholder="Mật khẩu"
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               startContent={
                 <FontAwesomeIcon icon={faKey} className="w-5 h-5" />

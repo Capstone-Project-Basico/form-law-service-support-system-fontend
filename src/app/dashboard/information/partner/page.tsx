@@ -329,26 +329,26 @@ const Partner = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <Button className="bg-[#FF0004] text-white ml-3" radius="none">
+          {/* <Button className="bg-[#FF0004] text-white ml-3" radius="none">
             Tìm kiếm
-          </Button>
+          </Button> */}
         </div>
       </div>
       <Table aria-label="Example static collection table">
-        <TableHeader>
-          <TableColumn className="bg-[#FF0004] text-white">
+        <TableHeader className="">
+          <TableColumn className=" bg-[#FF0004] text-white">
             Tên đối tác
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
             Hình ảnh
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          <TableColumn className=" bg-[#FF0004] text-white">
             Liên kết trang web
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          <TableColumn className=" bg-[#FF0004] text-white">
             Trạng thái
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
         </TableHeader>
@@ -378,7 +378,7 @@ const Partner = () => {
               <TableCell>
                 {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
               </TableCell>
-              <TableCell className="flex gap-2 items-center">
+              <TableCell className="flex gap-2 items-center  justify-center ">
                 <Button
                   className="bg-[#FF0004] text-white"
                   onPress={() => {

@@ -1,12 +1,8 @@
-import { Template } from "@/constants/types/homeType";
+import { CardTemplate } from "@/constants/types/homeType";
 import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
 import Link from "next/link";
 
-type Props = {
-  itemDetail?: Template;
-};
-
-const CardTemplate = ({ itemDetail }: Props) => {
+const CardTemplate = ({ itemDetail }: CardTemplate) => {
   return (
     <Card className="py-4 pb-9">
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">

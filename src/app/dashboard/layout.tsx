@@ -1,6 +1,6 @@
-import Navbar from "./dashboardNavbar/navbar";
-import Sidebar from "./dashboardSidebar/sidebar";
-// import styles from "./dashboard.module.css";
+import Navbar from "../../components/dashboardNavbar/navbar";
+import Sidebar from "../../components/dashboardSidebar/sidebar";
+
 type LayoutProps = {
   children: React.ReactNode; // Typing the children prop
 };

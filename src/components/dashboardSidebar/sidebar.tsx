@@ -13,61 +13,14 @@ import { useState } from "react";
 import { SideNavItem } from "@/constants/types/homeType";
 import { sideNavItems } from "@/lib/dashboardNavbar";
 import { usePathname } from "next/navigation";
-// interface DropdownLinkProps {
-//   label: string;
-//   href: string;
-// }
-
-// const DropdownLink: React.FC<DropdownLinkProps> = ({ label, href }) => {
-//   return (
-//     <Link href={href}>
-//       <p className="flex flex-row items-center gap-2 text-2xl text-white hover:text-red-500">
-//         {label}
-//       </p>
-//     </Link>
-//   );
-// };
 
 const Sidebar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   return (
-    <Navbar className="flex items-start bg-[#2B2B2B] text-white w-[395px] h-[795px] pt-10">
+    <Navbar className="flex items-start bg-[#2B2B2B] text-white w-[350px] h-[795px] pt-10">
       <NavbarContent className="flex flex-col gap-8 items-start ">
         <NavbarItem className="text-xl">
-          {/* <Link href="/dashboard" className="flex flex-row items-center gap-10">
-            {
-              <FontAwesomeIcon
-                icon={faHouse}
-                className="w-7 h-7 text-[#FF0004]"
-              />
-            }
-            Trang chủ
-          </Link>
-        </NavbarItem>
-        <NavbarItem className="text-xl relative">
-          <div
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex flex-row items-center gap-10"
-          >
-            {
-              <FontAwesomeIcon
-                icon={faCircleInfo}
-                className="w-7 h-7 text-[#FF0004]"
-              />
-            }
-            Quản lí thông tin
-            <FontAwesomeIcon
-              icon={dropdownOpen ? faChevronDown : faChevronLeft}
-              className="w-7 h-7 text-[#FF0004]"
-            />
-            {dropdownOpen && (
-              <div className="absolute top-full left-0 bg-[#2B2B2B] w-full">
-                <DropdownLink href="/dashboard" label="Liên hệ" />
-                <DropdownLink href="/dashboard" label="Liên hệ" />
-              </div>
-            )}
-          </div> */}
-          <div className="flex flex-col space-y-2 md:px-6">
+          <div className="flex flex-col space-y-2 ">
             {sideNavItems.map((item, idx) => {
               return <MenuItem key={idx} item={item} />;
             })}

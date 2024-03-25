@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import ExampleClientComponent from "./clientComponent";
+import { Skeleton } from "@nextui-org/react";
 
 const inter = Inter({ subsets: ["latin"] });
 

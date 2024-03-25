@@ -9,6 +9,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 const DashboardNavbar = () => {
+  const logout = () => {
+    window.localStorage.clear();
+  };
   return (
     <Navbar isBordered className="border-[#FF0004]">
       <NavbarBrand>
@@ -25,8 +28,17 @@ const DashboardNavbar = () => {
 
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Hello admin
+          <Button as={Link} color="primary" href="/profile" variant="flat">
+            Profile
+          </Button>
+          <Button
+            as={Link}
+            color="primary"
+            href="/"
+            variant="flat"
+            // onClick={() => logout}
+          >
+            Logout
           </Button>
         </NavbarItem>
       </NavbarContent>

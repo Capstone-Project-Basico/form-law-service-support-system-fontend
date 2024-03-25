@@ -43,8 +43,8 @@ export type Contact = {
   contactId: number;
   fullName: string;
   email: string;
-  phoneNum : string;
-  career : string;
+  phoneNum: string;
+  career: string;
   city: string;
   businessTime: string;
   annualRevenue: string;
@@ -76,13 +76,17 @@ export type Recruitment = {
 export type User = {
   username: string;
   email: string;
-  roleName : string;
+  roleName: string;
   status: boolean;
 };
 
 export type Lawyer = {
   username: string;
   email: string;
-  roleName : string;
+  roleName: string;
   status: boolean;
+};
+
+export type CardTemplate = {
+  itemDetail?: Template;
 };

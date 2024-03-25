@@ -28,7 +28,7 @@ const Navbar = () => {
   return (
     <div className={styles.container}>
       <MyNavbar className={styles.navbar}>
-        <NavbarBrand>
+        <NavbarBrand className="w-[200px] h-[70px]">
           <a href="/">
             <Image
               src="/logoBasico.jpg"
@@ -40,6 +40,19 @@ const Navbar = () => {
           </a>
         </NavbarBrand>
         <NavbarContent>
+          {/* logo */}
+          {/* <NavbarItem>
+            <a href="/">
+              <Image
+                src="/logoBasico.jpg"
+                alt=""
+                width={200}
+                height={70}
+                priority
+              />
+            </a>
+          </NavbarItem> */}
+
           {/* dich vu */}
           <NavbarItem
             onMouseEnter={() => setServiceDropdownVisible(true)}
@@ -157,21 +170,29 @@ const Navbar = () => {
               </Button>
             </a>
           </NavbarItem>
-
-          {/* template list */}
-          {/* <NavbarItem>
-            <a href="/template">
-              <Button className="red-hover-button bg-white" radius="none">
-                TEMPLATE list*
-              </Button>
-            </a>
-          </NavbarItem> */}
         </NavbarContent>
 
         {/* login */}
         <NavbarContent justify="end">
           <NavbarItem className="hidden lg:flex">
-            <Link href="/login">Login</Link>
+            <Button
+              as={Link}
+              href="/login"
+              variant="bordered"
+              className="bg-white text-[#FF0004] border-[#FF0004] hover:bg-[#FF0004] hover:text-white"
+            >
+              Đăng nhập
+            </Button>
+          </NavbarItem>
+          <NavbarItem className="hidden lg:flex">
+            <Button
+              as={Link}
+              href="/login"
+              variant="bordered"
+              className="bg-[#FF0004] text-white border-[#FF0004] hover:bg-white hover:text-[#FF0004] w-[76px]"
+            >
+              Đăng ký
+            </Button>
           </NavbarItem>
         </NavbarContent>
       </MyNavbar>
