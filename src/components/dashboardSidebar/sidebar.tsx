@@ -17,10 +17,10 @@ import { usePathname } from "next/navigation";
 const Sidebar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   return (
-    <Navbar className="flex items-start bg-[#2B2B2B] text-white w-[395px] h-[795px] pt-10">
+    <Navbar className="flex items-start bg-[#2B2B2B] text-white w-[350px] h-[795px] pt-10">
       <NavbarContent className="flex flex-col gap-8 items-start ">
         <NavbarItem className="text-xl">
-          <div className="flex flex-col space-y-2 md:px-6">
+          <div className="flex flex-col space-y-2 ">
             {sideNavItems.map((item, idx) => {
               return <MenuItem key={idx} item={item} />;
             })}

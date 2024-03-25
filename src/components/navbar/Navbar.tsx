@@ -28,7 +28,7 @@ const Navbar = () => {
   return (
     <div className={styles.container}>
       <MyNavbar className={styles.navbar}>
-        <NavbarBrand>
+        <NavbarBrand className="w-[200px] h-[70px]">
           <a href="/">
             <Image
               src="/logoBasico.jpg"
@@ -40,6 +40,19 @@ const Navbar = () => {
           </a>
         </NavbarBrand>
         <NavbarContent>
+          {/* logo */}
+          {/* <NavbarItem>
+            <a href="/">
+              <Image
+                src="/logoBasico.jpg"
+                alt=""
+                width={200}
+                height={70}
+                priority
+              />
+            </a>
+          </NavbarItem> */}
+
           {/* dich vu */}
           <NavbarItem
             onMouseEnter={() => setServiceDropdownVisible(true)}
