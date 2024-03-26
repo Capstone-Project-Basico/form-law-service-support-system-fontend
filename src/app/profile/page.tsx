@@ -1,9 +1,12 @@
 "use client";
 
-import { User } from "@/constants/types/homeType";
+import { ProfileSidebarItem, User } from "@/constants/types/homeType";
+import { Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import axios from "axios";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 //type
 interface UserLocal {
@@ -42,27 +45,14 @@ const Profile = () => {
     };
 
     getUserById();
-  }, []);
+  }, [user]);
 
   return (
-    <div className="bg-[#F2F2F2]">
-      <div className="flex justify-center gap-10 pt-20 pb-20">
-        {/* left */}
-        <div className="flex flex-col w-[387px] gap-10">
-          <div className="bg-white ">
-            <Image src="/User-avatar.png" alt="" width={100} height={100} />
-            <p>Chào mừng bạn</p>
-            <h2></h2>
-          </div>
-          <div>
-            <div className="bg-white ">Cài đặt thông tin cá nhân</div>
-          </div>
-        </div>
-        {/* right */}
-        <div className="w-[950px] bg-white">
-          <h2>Cài đặt thông tin cá nhân</h2>
-          <h2>{userProfile?.email ? userProfile?.email : "no user"}</h2>
-        </div>
+    <div>
+      {/* right */}
+      <div className="w-[950px] bg-white rounded-lg">
+        <h2>Cài đặt thông tin cá nhân</h2>
+        <h2>{userProfile?.email ? userProfile?.email : "no user"}</h2>
       </div>
     </div>
   );

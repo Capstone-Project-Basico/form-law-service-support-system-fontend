@@ -31,6 +31,12 @@ export type SideNavItem = {
   subMenuItems?: SideNavItem[];
 };
 
+export type ProfileSidebarItem = {
+  title: string;
+  path: string;
+  icon?: JSX.Element;
+};
+
 export type Partner = {
   partnerId: number;
   name: string;
@@ -58,14 +64,14 @@ export type Recruitment = {
   fullName: string;
   dateOfBirth: Date;
   homeTown: string;
-  gender:  string;
+  gender: string;
   maritalStatus: string;
   email: string;
-  phoneNum : string;
+  phoneNum: string;
   position: string;
-  exp:string;
+  exp: string;
   field: string;
-  graduate:string;
+  graduate: string;
   target: string;
   workPlace: string;
   id_number: string;

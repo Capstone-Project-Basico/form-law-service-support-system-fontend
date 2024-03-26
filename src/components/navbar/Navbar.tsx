@@ -27,32 +27,13 @@ const Navbar = () => {
   const pathname = usePathname();
   return (
     <div className={styles.container}>
-      <MyNavbar className={styles.navbar}>
-        <NavbarBrand className="w-[200px] h-[70px]">
+      <MyNavbar>
+        <NavbarBrand>
           <a href="/">
-            <Image
-              src="/logoBasico.jpg"
-              alt=""
-              width={200}
-              height={70}
-              priority
-            />
+            <Image src="/logoBasico.jpg" alt="logo" width={200} height={70} />
           </a>
         </NavbarBrand>
         <NavbarContent>
-          {/* logo */}
-          {/* <NavbarItem>
-            <a href="/">
-              <Image
-                src="/logoBasico.jpg"
-                alt=""
-                width={200}
-                height={70}
-                priority
-              />
-            </a>
-          </NavbarItem> */}
-
           {/* dich vu */}
           <NavbarItem
             onMouseEnter={() => setServiceDropdownVisible(true)}
