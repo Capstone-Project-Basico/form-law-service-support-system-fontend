@@ -17,7 +17,7 @@ export const sideNavItems: SideNavItem[] = [
   },
   {
     title: "Quản lí thông tin",
-    path: "/dashboard/information/contact",
+    path: "/dashboard/information",
     icon: (
       <FontAwesomeIcon icon={faCircleInfo} className="w-7 h-7 text-[#FF0004]" />
     ),
@@ -30,7 +30,7 @@ export const sideNavItems: SideNavItem[] = [
   },
   {
     title: "Quản lí dịch vụ",
-    path: "/dashboard/service/template",
+    path: "/dashboard/service",
     icon: (
       <FontAwesomeIcon
         icon={faBarsStaggered}
@@ -39,7 +39,7 @@ export const sideNavItems: SideNavItem[] = [
     ),
     subMenu: true,
     subMenuItems: [
-      { title: "Biểu mẫu", path: "/dashboard/service/template" },
+      { title: "Biểu mẫu", path: "/dashboard/service/manageTemplate" },
       { title: "Gói dịch vụ", path: "/dashboard/service/pack" },
     ],
   },
