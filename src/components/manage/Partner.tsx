@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -21,32 +21,22 @@ import {
   NavbarContent,
   NavbarItem,
   MenuItem,
+  Pagination,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { Partner } from "@/constants/types/homeType";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  listAll,
-  list,
-  StorageReference,
-  uploadBytesResumable,
-} from "firebase/storage";
-// import { storage } from "@/app/firebase";
-
-// import * as admin from "firebase-admin";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
 
 type PartnersProps = {
   partners: Partner[];
 };
 
 const Partners: React.FC<PartnersProps> = ({ partners }) => {
-  // const [partners, setPartners] = useState<Partner[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
 
@@ -58,7 +48,6 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
   //upload file
   // const [imageUrls, setImageUrls] = useState<string[]>([]);
   // const [imageUrl, setImageUrl] = useState<string>();
-
   const imagesListRef = ref(storage, "partners/");
 
   //search
@@ -70,22 +59,18 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
     partner.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // useEffect(() => {
-  //   fetchPartners();
-  // }, []);
+  //pagination
+  const [page, setPage] = React.useState(1);
+  const rowsPerPage = 4;
 
-  // //get all items
-  // const fetchPartners = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`
-  //     );
-  //     setPartners(response.data.data);
-  //     // setPartners((prevPartners) => [...prevPartners, response.data.data]);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const pages = Math.ceil(filteredPartners.length / rowsPerPage);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return filteredPartners.slice(start, end);
+  }, [page, filteredPartners]);
 
   //update
   const handleUpdateSubmit = async () => {
@@ -174,9 +159,13 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
         }
         const user = JSON.parse(userString);
 
-        axios.delete(
-          `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`
-        ),
+        axios
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`
+          )
+          .then(() => {
+            toast.success("Xóa thành công");
+          }),
           {
             headers: {
               Authorization: user.data.data.token,
@@ -191,8 +180,25 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
       }
     }
   };
+
+  // restore
+  const restoreDelete = async (partnerId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}partner/restoreDelete/${partnerId}`
+        )
+        .then((response) => {
+          toast.success("Khôi phục thành công");
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
+      <ToastContainer />
       <div>
         <div className="my-10 flex flex-row">
           <Input
@@ -212,7 +218,22 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
           />
         </div>
       </div>
-      <Table aria-label="Example static collection table">
+      <Table
+        aria-label="Example static collection table"
+        bottomContent={
+          <div className="flex w-full justify-center">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="secondary"
+              page={page}
+              total={pages}
+              onChange={(page) => setPage(page)}
+            />
+          </div>
+        }
+      >
         <TableHeader className="">
           <TableColumn className=" bg-[#FF0004] text-white">
             Tên đối tác
@@ -231,7 +252,7 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
           </TableColumn>
         </TableHeader>
         <TableBody>
-          {filteredPartners.map((partner, index) => (
+          {items.map((partner, index) => (
             <TableRow key={index}>
               <TableCell>{partner.name}</TableCell>
               <TableCell>
@@ -256,24 +277,35 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
               <TableCell>
                 {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
               </TableCell>
-              <TableCell className="flex gap-2 items-center  justify-center ">
-                <Button
-                  className="bg-[#FF0004] text-white"
-                  onPress={() => {
-                    setSelectedPartner(partner);
-                    onOpenUpdate();
-                  }}
-                >
-                  Update
-                </Button>
+              {partner.delete === false ? (
+                <TableCell className="flex gap-2 items-center  justify-center ">
+                  <Button
+                    className="bg-[#FF0004] text-white"
+                    onPress={() => {
+                      setSelectedPartner(partner);
+                      onOpenUpdate();
+                    }}
+                  >
+                    Update
+                  </Button>
 
-                <Button
-                  className="bg-[#FF0004] text-white"
-                  onClick={() => handleDelete(partner.partnerId)}
-                >
-                  Delete
-                </Button>
-              </TableCell>
+                  <Button
+                    className="bg-[#FF0004] text-white"
+                    onClick={() => handleDelete(partner.partnerId)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              ) : (
+                <TableCell className="flex items-center justify-center">
+                  <Button
+                    className="bg-[#FF0004] text-white"
+                    onClick={() => restoreDelete(partner.partnerId)}
+                  >
+                    Khôi phục
+                  </Button>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
