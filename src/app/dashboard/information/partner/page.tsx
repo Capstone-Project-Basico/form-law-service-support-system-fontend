@@ -158,7 +158,7 @@ const Partner = () => {
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
             <p className="text-black font-bold text-3xl ">
-              Quản lí thông tin đối tác
+              Quản lí thông tin
             </p>
           </BreadcrumbItem>
           <BreadcrumbItem>
