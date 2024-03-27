@@ -65,13 +65,14 @@ const Partner = () => {
         fetchPartners();
         break;
       case 2:
-        fetchPartners();
         console.log("dang cho duyet ne");
         break;
       case 3:
+        fetchDeletedPartner();
         break;
       default:
         fetchPartners();
+        break;
     }
   }, [tabs]);
 
@@ -80,6 +81,19 @@ const Partner = () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`
+      );
+      setPartners(response.data.data);
+      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //get all deleted items
+  const fetchDeletedPartner = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllDeletedPartners`
       );
       setPartners(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -200,19 +214,32 @@ const Partner = () => {
         </div>
       </div>
 
-      <div className="flex flex-row gap-10 font-bold border-b-1 mt-10">
+      <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
-          <Button className="bg-white" onClick={() => setTabs(1)}>
+          <Button
+            className={`bg-white ${
+              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            onClick={() => setTabs(1)}
+            radius="none"
+          >
             TẤT CẢ
           </Button>
         </div>
         <div>
-          <Button className="bg-white" onClick={() => setTabs(2)}>
+          <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
             CHỜ DUYỆT
           </Button>
         </div>
         <div>
-          <Button className="bg-white" onClick={() => setTabs(3)}>
+          <Button
+            className={`bg-white ${
+              tabs === 3 &&
+              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            radius="none"
+            onClick={() => setTabs(3)}
+          >
             ĐÃ XÓA
           </Button>
         </div>

@@ -1,7 +1,7 @@
 import React from "react";
 
 const ServicePack = () => {
-  return <div>ServicePack</div>;
+  return <div className="w-[950px] bg-white">ServicePack</div>;
 };
 
 export default ServicePack;
