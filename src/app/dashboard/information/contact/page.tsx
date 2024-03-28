@@ -90,7 +90,7 @@ const Contact = () => {
   const fetchDeletedContact = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllContact`
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllDeletedContact`
       );
       setContacts(response.data.data);
       
