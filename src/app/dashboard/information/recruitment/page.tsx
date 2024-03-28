@@ -123,7 +123,7 @@ return (
           </p>
         </BreadcrumbItem>
         <BreadcrumbItem>
-          <p className="text-[#FF0004] font-bold text-3xl">Liên hệ</p>
+          <p className="text-[#FF0004] font-bold text-3xl">Tuyển dụng</p>
         </BreadcrumbItem>
       </Breadcrumbs>       
     </div>
