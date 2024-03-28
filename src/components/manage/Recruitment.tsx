@@ -242,7 +242,11 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
           {items.map((recruitment, index) => (
             <TableRow key={index}>
               <TableCell>{recruitment.fullName}</TableCell>
-              <TableCell>{recruitment.fullName}</TableCell>
+              <TableCell>{
+            recruitment.dateOfBirth 
+            ? new Date(recruitment.dateOfBirth).toLocaleDateString() 
+            : 'N/A' // Handle cases where dateOfBirth might not be available or is not a Date object
+              }</TableCell>
               <TableCell>{recruitment.id_number}</TableCell>
               <TableCell>{recruitment.homeTown}</TableCell>
               <TableCell>{recruitment.gender}</TableCell>
@@ -299,7 +303,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Cập nhật đối tác
+            Cập nhật liên hệ
           </ModalHeader>
           <ModalBody>
             {selectedRecruitment && (

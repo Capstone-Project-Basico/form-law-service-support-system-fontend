@@ -22,81 +22,80 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { Contact } from "@/constants/types/homeType";
+import { User } from "@/constants/types/homeType";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { storage } from "@/app/firebase";
+import Image from "next/image";
+import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 
-type ContactsProps = {
-  contacts: Contact[];
+type UsersProps = {
+  users: User[];
 };
 
-const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
+const Users: React.FC<UsersProps> = ({ users }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
-
+  
 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
-  // Filter contacts based on search term
-  const filteredContacts = contacts.filter((contact) =>
-    contact.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter users based on search term
+  const filteredUsers = users.filter((user) =>
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   //pagination
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 8;
 
-  const pages = Math.ceil(filteredContacts.length / rowsPerPage);
+  const pages = Math.ceil(filteredUsers.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return filteredContacts.slice(start, end);
-  }, [page, filteredContacts]);
+    return filteredUsers.slice(start, end);
+  }, [page, filteredUsers]);
 
-  ///update
+  //update
   const handleUpdateSubmit = async () => {
-    if (!selectedContact) return; // Check if a contact is selected
+    if (!selectedUser) return; // Check if a partner is selected
 
-    // Example: PUT request to update contact details
+    // Example: PUT request to update partner details
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}contact/updateContact/${selectedContact.contactId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}user/${selectedUser.userId}`,
         {
-            fullName : selectedContact.fullName,
-            email : selectedContact.email,
-            phoneNum : selectedContact.phoneNum,
-            career: selectedContact.career,
-            city: selectedContact.city,
-            businessTime: selectedContact.businessTime,
-            annualRevenue: selectedContact.annualRevenue,
-            juridical: selectedContact.juridical,
-            status: selectedContact.status,
+          roleName: selectedUser.roleName,
         }
       )
       .then((response) => {
-        console.log("Contact updated successfully", response);
+        // fetchPartners();
+        console.log("User updated successfully", response);
       })
       .catch((error) => {
-        console.error("Failed to update contact", error);
+        console.error("Failed to update user", error);
       });
   };
  
+
   //delete
-  const handleDelete = async (contactId: number) => {
+  const handleDelete = async (userId: number) => {
     const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa liên hệ này không?"
+      "Bạn có chắc muốn xóa người dùng này không?"
     );
     if (isConfirmed) {
       try {
@@ -109,7 +108,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
 
         axios
           .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`
+            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`
           )
           .then(() => {
             toast.success("Xóa thành công");
@@ -120,6 +119,9 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
             },
           };
 
+        // setPartners((prevPartners) =>
+        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
+        // );
       } catch (error) {
         console.log(error);
       }
@@ -127,11 +129,11 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
   };
 
   // restore
-  const restoreDelete = async (contactId: number) => {
+  const restoreDelete = async (userId: number) => {
     try {
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}contact/restoreContact/${contactId}`
+          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
@@ -179,64 +181,43 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
           </div>
         }
       >
-        <TableHeader>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Họ và Tên
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+        <TableHeader className="">
+        <TableColumn className=" bg-[#FF0004] text-white">
             Email
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
+            Họ và tên
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
             SĐT
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Ngành
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Vai trò
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Thành phố
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Thời gian kinh doanh
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Damh thu hàng năm
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Pháp lý
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Tình trạng
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          <TableColumn className=" bg-[#FF0004] text-white">
             Trạng thái
           </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
+
         </TableHeader>
         <TableBody>
-          {items.map((contact, index) => (
+          {items.map((user, index) => (
             <TableRow key={index}>
-              <TableCell>{contact.fullName}</TableCell>
-              <TableCell>{contact.email}</TableCell>
-              <TableCell>{contact.phoneNum}</TableCell>      
-              <TableCell>{contact.career}</TableCell>
-              <TableCell>{contact.city}</TableCell>
-              <TableCell>{contact.businessTime}</TableCell>
-              <TableCell>{contact.annualRevenue}</TableCell>
-              <TableCell>{contact.juridical}</TableCell>
-              <TableCell>{contact.status}</TableCell>
-
-
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.userName}</TableCell>
+              <TableCell>{user.phoneNumber}</TableCell>
+              <TableCell>{user.roleName}</TableCell>
               <TableCell>
-                {contact.delete ? "Không sử dụng" : "Đang hoạt động"}
+                {user.delete ? "Không sử dụng" : "Đang hoạt động"}
               </TableCell>
-              {contact.delete === false ? (
+              {user.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-[#FF0004] text-white"
                     onPress={() => {
-                      setSelectedContact(contact);
+                      setSelectedUser(user);
                       onOpenUpdate();
                     }}
                   >
@@ -245,7 +226,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
 
                   <Button
                     className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(contact.contactId)}
+                    onClick={() => handleDelete(user.userId)}
                   >
                     Delete
                   </Button>
@@ -254,7 +235,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
                 <TableCell className="flex items-center justify-center">
                   <Button
                     className="bg-[#FF0004] text-white"
-                    onClick={() => restoreDelete(contact.contactId)}
+                    onClick={() => restoreDelete(user.userId)}
                   >
                     Khôi phục
                   </Button>
@@ -269,46 +250,23 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Cập nhật đối tác
+            Cập nhật người dùng
           </ModalHeader>
           <ModalBody>
-            {selectedContact && (
+            {selectedUser && (
               <form onSubmit={handleUpdateSubmit}>
                 <Input
                   type="text"
-                  label="Họ và tên"
-                  value={selectedContact.fullName}
+                  label="Vai trò"
+                  value={selectedUser.roleName}
                   onChange={(e) =>
-                    setSelectedContact({
-                      ...selectedContact,
-                      fullName: e.target.value,
+                    setSelectedUser({
+                      ...selectedUser,
+                      roleName: e.target.value,
                     })
                   }
                 />
                
-                <Input className="py-3"
-                  type="text"
-                  label="Email"
-                  value={selectedContact.email}
-                  onChange={(e) =>
-                    setSelectedContact({
-                      ...selectedContact,
-                      email: e.target.value,
-                    })
-                  }
-                />
-
-                <Input
-                  type="text"
-                  label="Số điện thoại"
-                  value={selectedContact.phoneNum}
-                  onChange={(e) =>
-                    setSelectedContact({
-                      ...selectedContact,
-                      phoneNum: e.target.value,
-                    })
-                  }
-                />
               </form>
             )}
           </ModalBody>
@@ -333,4 +291,4 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
   );
 };
 
-export default Contacts;
+export default Users;

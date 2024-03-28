@@ -80,10 +80,12 @@ export type Recruitment = {
 };
 
 export type User = {
-  username: string;
+  userId: number;
   email: string;
+  userName: string;
+  phoneNumber: string;
   roleName: string;
-  status: boolean;
+  delete: boolean;
 };
 
 export type Lawyer = {

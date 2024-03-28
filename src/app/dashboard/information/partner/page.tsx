@@ -190,7 +190,7 @@ const Partner = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
-                      <input type="file" onChange={(e) => uploadFile(e)} />
+                      <input className="py-3" type="file" onChange={(e) => uploadFile(e)} />
                       <Input
                         type="text"
                         label="Link"
