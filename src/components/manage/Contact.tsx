@@ -26,8 +26,6 @@ import {
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { Contact } from "@/constants/types/homeType";
-import Image from "next/image";
-import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 
 type ContactsProps = {
@@ -88,7 +86,6 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
         }
       )
       .then((response) => {
-        //fetchContacts();
         console.log("Contact updated successfully", response);
       })
       .catch((error) => {
@@ -134,7 +131,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
     try {
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}`
+          `${process.env.NEXT_PUBLIC_BASE_API}contact/restoreContact/${contactId}`
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
