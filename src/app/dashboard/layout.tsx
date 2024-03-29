@@ -1,7 +1,7 @@
-import Navbar from "../../components/dashboardNavbar/navbar";
-import Sidebar from "../../components/dashboardSidebar/sidebar";
+import Navbar from '../../components/dashboardNavbar/navbar';
+import Sidebar from '../../components/dashboardSidebar/sidebar';
 
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 
 type LayoutProps = {
   children: React.ReactNode; // Typing the children prop
