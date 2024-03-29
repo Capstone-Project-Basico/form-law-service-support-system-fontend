@@ -9,6 +9,7 @@ import axios from "axios";
 import Link from "next/link";
 import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
 
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -27,22 +28,28 @@ const Page = () => {
     axios
       .post(`${process.env.NEXT_PUBLIC_BASE_API}auth/generateToken`, dataLogin)
       .then((response) => {
-        setTimeout(() => {
-          localStorage.setItem("user", JSON.stringify(response));
-          axios.defaults.headers.common["Authorization"] = `${response}`;
-          console.log(response.data.data.roleName);
+        localStorage.setItem("user", JSON.stringify(response));
+        localStorage.setItem(
+          "auth-token",
+          JSON.stringify(response.data.data.token)
+        );
+        axios.defaults.headers.common["Authorization"] = `${response}`;
+        console.log(response.data.data.roleName);
 
-          switch (response.data.data.roleName) {
-            case "ROLE_ADMIN":
-              router.push("/dashboard");
-              break;
-            case "ROLE_CUSTOMER":
-              router.push("/");
-              break;
-            default:
-              router.push("/");
-          }
-        });
+        switch (response.data.data.roleName) {
+          case "ROLE_ADMIN":
+            router.push("/dashboard");
+            break;
+          case "ROLE_CUSTOMER":
+            router.push("/");
+            break;
+          default:
+            router.push("/");
+        }
+        setTimeout(() => {
+          localStorage.clear();
+          toast.success("Hết thời gian đăng nhập");
+        }, 600000);
       })
       .catch((error) => {
         console.log(error);
@@ -51,6 +58,8 @@ const Page = () => {
 
   return (
     <div className="flex flex-col justify-center items-center mt-48 mb-[177px]">
+      <ToastContainer />
+
       <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
         <div className="text-2xl">Làm việc với các luật sư xuất sắc</div>
         <div className="text-3xl">CÔNG TY LUẬT BASICO CHÀO MỪNG BẠN</div>

@@ -12,6 +12,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Avatar,
 } from "@nextui-org/react";
 import { Navbar as MyNavbar } from "@nextui-org/react";
 import { useState } from "react";
@@ -19,12 +20,28 @@ import { usePathname } from "next/navigation";
 import { practices } from "@/lib/navbarItems";
 import { researchAndPublications, about } from "@/lib/navbarItems";
 
+interface UserLocal {
+  data: {
+    data: {
+      userId: string;
+    };
+  };
+}
+
 const Navbar = () => {
   const [serviceDropdownVisible, setServiceDropdownVisible] = useState(false);
   const [researchDropdownVisible, setResearchDropdownVisible] = useState(false);
   const [aboutDropdownVisible, setAboutDropdownVisible] = useState(false);
 
   const pathname = usePathname();
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
   return (
     <div className={styles.container}>
       <MyNavbar>
@@ -142,19 +159,46 @@ const Navbar = () => {
               </Button>
             </a>
           </NavbarItem>
-
-          {/* upload file */}
-          <NavbarItem>
-            <a href="/dashboard">
-              <Button className="red-hover-button bg-white" radius="none">
-                Manage Tam thoi
-              </Button>
-            </a>
-          </NavbarItem>
         </NavbarContent>
 
         {/* login */}
         <NavbarContent justify="end">
+          {/* {user ? (
+            <div>
+              <Dropdown placement="bottom-end">
+                <DropdownTrigger>
+                  <Avatar
+                    isBordered
+                    as="button"
+                    className="transition-transform"
+                    color="secondary"
+                    name="Jason Hughes"
+                    size="sm"
+                    src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                  />
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Profile Actions" variant="flat">
+                  <DropdownItem key="profile" className="h-14 gap-2">
+                    <p className="font-semibold">Signed in as</p>
+                    <p className="font-semibold">zoey@example.com</p>
+                  </DropdownItem>
+                  <DropdownItem key="settings">My Settings</DropdownItem>
+                  <DropdownItem key="team_settings">Team Settings</DropdownItem>
+                  <DropdownItem key="analytics">Analytics</DropdownItem>
+                  <DropdownItem key="system">System</DropdownItem>
+                  <DropdownItem key="configurations">
+                    Configurations
+                  </DropdownItem>
+                  <DropdownItem key="help_and_feedback">
+                    Help & Feedback
+                  </DropdownItem>
+                  <DropdownItem key="logout" color="danger">
+                    Log Out
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          ) : ( */}
           <NavbarItem className="hidden lg:flex">
             <Button
               as={Link}
@@ -165,16 +209,7 @@ const Navbar = () => {
               Đăng nhập
             </Button>
           </NavbarItem>
-          <NavbarItem className="hidden lg:flex">
-            <Button
-              as={Link}
-              href="/login"
-              variant="bordered"
-              className="bg-[#FF0004] text-white border-[#FF0004] hover:bg-white hover:text-[#FF0004] w-[76px]"
-            >
-              Đăng ký
-            </Button>
-          </NavbarItem>
+          {/* )} */}
         </NavbarContent>
       </MyNavbar>
     </div>
