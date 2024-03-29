@@ -26,15 +26,20 @@ jobs:
           
           # Get a list of branches, excluding 'main' and any others you don't want to update
           for branch in $(git branch -r | grep -v 'origin/main' | grep -v '<other-exclusions>' | sed 's/origin\///'); do
-            echo "Updating branch $branch"
+            echo "Attempting to update branch $branch"
             
             # Check out the branch
             git checkout -B $branch origin/$branch
             
-            # Merge changes from 'main'
-            git merge origin/main --no-edit -m "Merged main into $branch on $(date +%F)"
+            # Try to merge changes from 'main', skipping in case of conflict
+            if ! git merge origin/main --no-edit -m "Merged main into $branch on $(date +%F)"; then
+              echo "Merge conflict detected in $branch. Skipping..."
+              git merge --abort
+              git checkout main
+              continue
+            fi
             
-            # Push the updated branch
+            # Push the updated branch, if merge was successful
             git push origin $branch
           done
 
