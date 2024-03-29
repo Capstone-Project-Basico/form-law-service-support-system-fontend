@@ -13,7 +13,7 @@
   min-width: 100vw;
   display: flex;
   flex-direction: column;
-  
+
   /* font-family: "Roboto Condensed";
   letter-spacing: 0.5px;
   font-size: 16px !important; */
@@ -41,9 +41,8 @@
 
 body {
   color: rgb(var(--text));
-  background: linear-gradient(to bottom, transparent, rgb(var(--bbg-white)))
-    rgb(var(--background-start-rgb));
-  font-family: "Roboto Condensed", "Trebuchet MS", Helvetica, sans-serif;
+  background: linear-gradient(to bottom, transparent, rgb(var(--bbg-white))) rgb(var(--background-start-rgb));
+  font-family: 'Roboto Condensed', 'Trebuchet MS', Helvetica, sans-serif;
   line-height: 25px;
   letter-spacing: 0.5px;
   font-weight: 400;
@@ -51,9 +50,9 @@ body {
   font-size: 16px;
 }
 
-button{
+/* button{
   margin:10px;
-}
+} */
 
 @layer utilities {
   .text-balance {

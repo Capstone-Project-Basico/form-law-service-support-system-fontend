@@ -1,16 +1,13 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/navbar/Navbar";
-import Footer from "@/components/footer/Footer";
-import ExampleClientComponent from "./clientComponent";
-import { Skeleton } from "@nextui-org/react";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import ExampleClientComponent from './clientComponent';
+import './globals.css';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Basico",
-  description: "Basico website",
+  title: 'Basico',
+  description: 'Basico website',
 };
 
 export default function RootLayout({
