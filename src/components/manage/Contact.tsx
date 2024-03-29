@@ -86,7 +86,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
         }
       )
       .then((response) => {
-        console.log("Contact updated successfully", response);
+        toast.success("Cập nhật thành công");
       })
       .catch((error) => {
         console.error("Failed to update contact", error);

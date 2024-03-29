@@ -25,20 +25,21 @@ import {
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { Partner } from "@/constants/types/homeType";
+import { Lawyer } from "@/constants/types/homeType";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
+import authHeader from "../authHeader/AuthHeader";
 
-type PartnersProps = {
-  partners: Partner[];
+type LawyersProps = {
+  lawyers: Lawyer[];
 };
 
-const Partners: React.FC<PartnersProps> = ({ partners }) => {
+const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
+  const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
 
   const {
     isOpen: isOpenUpdate,
@@ -48,42 +49,51 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
   //upload file
   // const [imageUrls, setImageUrls] = useState<string[]>([]);
   // const [imageUrl, setImageUrl] = useState<string>();
-  const imagesListRef = ref(storage, "partners/");
+  const imagesListRef = ref(storage, "lawyers/");
 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
-  // Filter partners based on search term
-  const filteredPartners = partners.filter((partner) =>
-    partner.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter Lawyers based on search term
+  const filteredLawyers = lawyers.filter((lawyer) =>
+    lawyer.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   //pagination
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 4;
+  const rowsPerPage = 5;
 
-  const pages = Math.ceil(filteredPartners.length / rowsPerPage);
+  const pages = Math.ceil(filteredLawyers.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return filteredPartners.slice(start, end);
-  }, [page, filteredPartners]);
+    return filteredLawyers.slice(start, end);
+  }, [page, filteredLawyers]);
 
   //update
   const handleUpdateSubmit = async () => {
-    if (!selectedPartner) return; // Check if a partner is selected
+    if (!selectedLawyer) return; // Check if a Lawyer is selected
 
-    // Example: PUT request to update partner details
+    // Example: PUT request to update Lawyer details
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${selectedLawyer.userId}`,
+        { 
+          userName: selectedLawyer.userName,
+          email: selectedLawyer.email,
+          roleName: selectedLawyer.position,
+          introduce: selectedLawyer.introduce,
+          phoneNumber: selectedLawyer.phoneNumber,
+          url: selectedLawyer.url,
+          position: selectedLawyer.position,
+          avatar: selectedLawyer.avatar,
+          
+        },
         {
-          name: selectedPartner.name,
-          avatar: selectedPartner.avatar,
-          link: selectedPartner.link,
+          headers: authHeader(),
         }
       )
       .then((response) => {
@@ -100,7 +110,7 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
       const file = e.target.files[0]; // Safely access the first file
 
       // Create a unique file name for the storage to avoid name conflicts
-      const uniqueFileName = `partners/${file.name}-${uuidv4()}`;
+      const uniqueFileName = `lawyers/${file.name}-${uuidv4()}`;
       const storageRef = ref(storage, uniqueFileName);
 
       const uploadTask = uploadBytesResumable(storageRef, file); // Start the file upload
@@ -123,14 +133,14 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             console.log("File available at", downloadURL);
 
-            if (!selectedPartner) {
-              console.error("No partner selected for update.");
+            if (!selectedLawyer) {
+              console.error("No lawyer selected for update.");
               return;
             }
 
             // Update the state with the new avatar URL
-            setSelectedPartner({
-              ...selectedPartner,
+            setSelectedLawyer({
+              ...selectedLawyer,
               avatar: downloadURL,
             });
 
@@ -145,35 +155,25 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
   };
 
   //delete
-  const handleDelete = async (partnerId: number) => {
+  const handleDelete = async (userId: number) => {
     const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa đối tác này không?"
+      "Bạn có chắc muốn xóa luật sư này không?"
     );
     if (isConfirmed) {
       try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
-          console.log("No user found");
-          return;
-        }
-        const user = JSON.parse(userString);
-
+       
         axios
           .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`
+            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
+            {
+              headers: authHeader(),
+            }
           )
           .then(() => {
+            
             toast.success("Xóa thành công");
-          }),
-          {
-            headers: {
-              Authorization: user.data.data.token,
-            },
-          };
+          })
 
-        // setPartners((prevPartners) =>
-        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-        // );
       } catch (error) {
         console.log(error);
       }
@@ -181,11 +181,12 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
   };
 
   // restore
-  const restoreDelete = async (partnerId: number) => {
+  const restoreDelete = async (userId: number) => {
     try {
       axios
+
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}partner/restoreDelete/${partnerId}`
+          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
@@ -235,53 +236,67 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
       >
         <TableHeader className="">
           <TableColumn className=" bg-[#FF0004] text-white">
-            Tên đối tác
+            Họ và tên
           </TableColumn>
           <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
             Hình ảnh
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
-            Liên kết trang web
+            Đường dẫn đến Facebook
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
-            Trạng thái
+            email
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            SĐT
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Chức vụ
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Giới thiệu
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Vai trò
           </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
         </TableHeader>
         <TableBody>
-          {items.map((partner, index) => (
+          {items.map((lawyer, index) => (
             <TableRow key={index}>
-              <TableCell>{partner.name}</TableCell>
+              <TableCell>{lawyer.userName}</TableCell>
               <TableCell>
                 {
                   <Image
                     src={
-                      partner.avatar
-                        ? partner.avatar.startsWith("http")
-                          ? partner.avatar
-                          : `/${partner.avatar}`
+                      lawyer.avatar
+                        ? lawyer.avatar.startsWith("http")
+                          ? lawyer.avatar
+                          : `/${lawyer.avatar}`
                         : "/errorImage.png"
                     }
                     alt=""
                     width={100}
-                    height={100}
+                    height={150}
                   />
                 }
               </TableCell>
               <TableCell>
-                <Link href={partner.link}>{partner.link}</Link>
+                <Link href={lawyer.url}>{lawyer.url}</Link>
               </TableCell>
-              <TableCell>
-                {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
-              </TableCell>
-              {partner.delete === false ? (
+              <TableCell>{lawyer.email}</TableCell>
+              <TableCell>{lawyer.phoneNumber}</TableCell>
+              <TableCell>{lawyer.position}</TableCell>
+              <TableCell>{lawyer.introduce}</TableCell>
+              <TableCell>{lawyer.roleName}</TableCell>
+              
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-[#FF0004] text-white"
                     onPress={() => {
-                      setSelectedPartner(partner);
+                      setSelectedLawyer(lawyer);
                       onOpenUpdate();
                     }}
                   >
@@ -290,21 +305,12 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
 
                   <Button
                     className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(partner.partnerId)}
+                    onClick={() => handleDelete(lawyer.userId)}
                   >
                     Delete
                   </Button>
                 </TableCell>
-              ) : (
-                <TableCell className="flex items-center justify-center">
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => restoreDelete(partner.partnerId)}
-                  >
-                    Khôi phục
-                  </Button>
-                </TableCell>
-              )}
+             
             </TableRow>
           ))}
         </TableBody>
@@ -314,31 +320,86 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Cập nhật đối tác
+            Cập nhật luật sư
           </ModalHeader>
           <ModalBody>
-            {selectedPartner && (
+            {selectedLawyer && (
               <form onSubmit={handleUpdateSubmit}>
                 <Input
                   type="text"
-                  label="Name"
-                  value={selectedPartner.name}
+                  label="Họ và tên"
+                  value={selectedLawyer.userName}
                   onChange={(e) =>
-                    setSelectedPartner({
-                      ...selectedPartner,
-                      name: e.target.value,
+                    setSelectedLawyer({
+                      ...selectedLawyer,
+                      userName: e.target.value,
                     })
                   }
                 />
                 <input className="py-3" type="file" onChange={(e) => uploadUpdateFile(e)} />
                 <Input 
                   type="text"
-                  label="Link"
-                  value={selectedPartner.link}
+                  label="Đường dẫn facebook "
+                  value={selectedLawyer.url}
                   onChange={(e) =>
-                    setSelectedPartner({
-                      ...selectedPartner,
-                      link: e.target.value,
+                    setSelectedLawyer({
+                      ...selectedLawyer,
+                      url: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  type="text"
+                  label="Email"
+                  value={selectedLawyer.email}
+                  onChange={(e) =>
+                    setSelectedLawyer({
+                      ...selectedLawyer,
+                      email: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  type="text"
+                  label="SĐT"
+                  value={selectedLawyer.phoneNumber}
+                  onChange={(e) =>
+                    setSelectedLawyer({
+                      ...selectedLawyer,
+                      phoneNumber: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  type="text"
+                  label="Chức vụ"
+                  value={selectedLawyer.position}
+                  onChange={(e) =>
+                    setSelectedLawyer({
+                      ...selectedLawyer,
+                      position: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  type="text"
+                  label="Giới thiệu"
+                  value={selectedLawyer.introduce}
+                  onChange={(e) =>
+                    setSelectedLawyer({
+                      ...selectedLawyer,
+                      introduce: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  type="text"
+                  label="vai trò"
+                  value={selectedLawyer.roleName}
+                  onChange={(e) =>
+                    setSelectedLawyer({
+                      ...selectedLawyer,
+                      roleName: e.target.value,
                     })
                   }
                 />
@@ -366,4 +427,4 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
   );
 };
 
-export default Partners;
+export default Lawyers;
