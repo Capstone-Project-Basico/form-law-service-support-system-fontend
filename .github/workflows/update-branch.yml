@@ -1,0 +1,45 @@
+name: update-all-branches
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+      - name: Update all branches
+        run: |
+          # Set up Git configuration
+          git config user.name "Automatic Branch Updater"
+          git config user.email "github-actions@github.com"
+          
+          # Fetch all branches
+          git fetch --all
+          
+          # Get a list of branches, excluding 'main' and any others you don't want to update
+          for branch in $(git branch -r | grep -v 'origin/main' | grep -v '<other-exclusions>' | sed 's/origin\///'); do
+            echo "Attempting to update branch $branch"
+            
+            # Check out the branch
+            git checkout -B $branch origin/$branch
+            
+            # Try to merge changes from 'main', skipping in case of conflict
+            if ! git merge origin/main --no-edit -m "Merged main into $branch on $(date +%F)"; then
+              echo "Merge conflict detected in $branch. Skipping..."
+              git merge --abort
+              git checkout main
+              continue
+            fi
+            
+            # Push the updated branch, if merge was successful
+            git push origin $branch
+          done
+

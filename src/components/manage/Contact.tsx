@@ -30,9 +30,10 @@ import { ToastContainer, toast } from "react-toastify";
 
 type ContactsProps = {
   contacts: Contact[];
+  handleDelete: (id: number) => void
 };
 
-const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
+const Contacts: React.FC<ContactsProps> = ({ contacts,handleDelete }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
@@ -93,38 +94,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
       });
   };
  
-  //delete
-  const handleDelete = async (contactId: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa liên hệ này không?"
-    );
-    if (isConfirmed) {
-      try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
-          console.log("No user found");
-          return;
-        }
-        const user = JSON.parse(userString);
 
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-          }),
-          {
-            headers: {
-              Authorization: user.data.data.token,
-            },
-          };
-
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
 
   // restore
   const restoreDelete = async (contactId: number) => {
@@ -140,6 +110,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts }) => {
       console.log(error);
     }
   };
+  
 
   return (
     <div>

@@ -13,8 +13,8 @@ const DashboardNavbar = () => {
     window.localStorage.clear();
   };
   return (
-    <Navbar isBordered className="border-[#FF0004]">
-      <NavbarBrand>
+    <Navbar maxWidth="full" isBordered className="border-[#FF0004] px-8">
+      <NavbarBrand className="">
         <a href="/">
           <Image
             src="/logoBasico.jpg"
@@ -25,7 +25,6 @@ const DashboardNavbar = () => {
           />
         </a>
       </NavbarBrand>
-
       <NavbarContent justify="end">
         <NavbarItem>
           <Button as={Link} color="primary" href="/profile" variant="flat">
