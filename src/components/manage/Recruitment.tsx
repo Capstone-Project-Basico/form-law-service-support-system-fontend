@@ -34,14 +34,14 @@ type RecruitmentsProps = {
 
 const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRecruitment, setSelectedRecruitment] = useState<Recruitment | null>(null);
+  const [selectedRecruitment, setSelectedRecruitment] =
+    useState<Recruitment | null>(null);
 
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
-
 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,17 +71,17 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
 
     // Example: PUT request to update Recruitment details
     axios
-    .put(
-      `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/updateRecruitmentForm/${selectedRecruitment.id}`,
-      {
-          fullName : selectedRecruitment.fullName,
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/updateRecruitmentForm/${selectedRecruitment.id}`,
+        {
+          fullName: selectedRecruitment.fullName,
           dateOfBirth: selectedRecruitment.dateOfBirth,
           idNumber: selectedRecruitment.id_number,
           homeTown: selectedRecruitment.homeTown,
           gender: selectedRecruitment.gender,
           maritalStatus: selectedRecruitment.maritalStatus,
-          email : selectedRecruitment.email,
-          phoneNum : selectedRecruitment.phoneNum,
+          email: selectedRecruitment.email,
+          phoneNum: selectedRecruitment.phoneNum,
           position: selectedRecruitment.position,
           exp: selectedRecruitment.exp,
           field: selectedRecruitment.field,
@@ -89,16 +89,16 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
           target: selectedRecruitment.target,
           workPlace: selectedRecruitment.workPlace,
           processStatus: selectedRecruitment.processStatus,
-        }  
-    )
-      .then((response) => {    
+        }
+      )
+      .then((response) => {
         console.log("Recruitment updated successfully", response);
       })
       .catch((error) => {
         console.error("Failed to update recruitment", error);
       });
   };
- 
+
   //delete
   const handleDelete = async (recruitmentId: number) => {
     const isConfirmed = window.confirm(
@@ -125,7 +125,6 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
               Authorization: user.data.data.token,
             },
           };
-
       } catch (error) {
         console.log(error);
       }
@@ -204,15 +203,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
           <TableColumn className="bg-[#FF0004] text-white">
             Tình trạng hôn nhân
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            SĐT
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Email
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Vị trí
-          </TableColumn>
+          <TableColumn className="bg-[#FF0004] text-white">SĐT</TableColumn>
+          <TableColumn className="bg-[#FF0004] text-white">Email</TableColumn>
+          <TableColumn className="bg-[#FF0004] text-white">Vị trí</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
             Kinh nghiệm
           </TableColumn>
@@ -242,17 +235,19 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
           {items.map((recruitment, index) => (
             <TableRow key={index}>
               <TableCell>{recruitment.fullName}</TableCell>
-              <TableCell>{
-            recruitment.dateOfBirth 
-            ? new Date(recruitment.dateOfBirth).toLocaleDateString() 
-            : 'N/A' // Handle cases where dateOfBirth might not be available or is not a Date object
-              }</TableCell>
+              <TableCell>
+                {
+                  recruitment.dateOfBirth
+                    ? new Date(recruitment.dateOfBirth).toLocaleDateString()
+                    : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
+                }
+              </TableCell>
               <TableCell>{recruitment.id_number}</TableCell>
               <TableCell>{recruitment.homeTown}</TableCell>
               <TableCell>{recruitment.gender}</TableCell>
               <TableCell>{recruitment.maritalStatus}</TableCell>
               <TableCell>{recruitment.phoneNum}</TableCell>
-              <TableCell>{recruitment.email}</TableCell>      
+              <TableCell>{recruitment.email}</TableCell>
               <TableCell>{recruitment.position}</TableCell>
               <TableCell>{recruitment.exp}</TableCell>
               <TableCell>{recruitment.field}</TableCell>
@@ -260,12 +255,11 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
               <TableCell>{recruitment.target}</TableCell>
               <TableCell>{recruitment.workPlace}</TableCell>
               <TableCell>{recruitment.processStatus}</TableCell>
-              
 
               <TableCell>
-                {recruitment.delete ? "Không sử dụng" : "Đang hoạt động"}
+                {recruitment.deleted ? "Không sử dụng" : "Đang hoạt động"}
               </TableCell>
-              {recruitment.delete === false ? (
+              {recruitment.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-[#FF0004] text-white"
@@ -319,13 +313,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                     })
                   }
                 />
-                  
+
                 {/* choice date of birth */}
-                  <Input
-                  type="text"
-                  label="Ngày sinh"
-                  
-                />
+                <Input type="text" label="Ngày sinh" />
 
                 <Input
                   type="text"
@@ -339,7 +329,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                   }
                 />
 
-                  <Input
+                <Input
                   type="text"
                   label="Quê quán"
                   value={selectedRecruitment.homeTown}
@@ -350,7 +340,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                     })
                   }
                 />
-                
+
                 {/* multiple choice */}
                 <Input
                   type="text"
@@ -365,7 +355,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                 />
 
                 {/* multiple choice */}
-                  <Input
+                <Input
                   type="text"
                   label="Tình trạng hôn nhân"
                   value={selectedRecruitment.maritalStatus}
@@ -376,7 +366,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                     })
                   }
                 />
-                
+
                 <Input
                   type="text"
                   label="Số điện thoại"
@@ -388,7 +378,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                     })
                   }
                 />
-                  
+
                 <Input
                   type="text"
                   label="Email"
@@ -400,7 +390,6 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                     })
                   }
                 />
-
               </form>
             )}
           </ModalBody>
