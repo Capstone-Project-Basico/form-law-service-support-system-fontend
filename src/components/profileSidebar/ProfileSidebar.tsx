@@ -41,7 +41,6 @@ export default ProfileSidebar;
 
 const MenuItem = ({ item }: { item: ProfileSidebarItem }) => {
   const pathname = usePathname();
-  console.log(item.path + "=?" + pathname);
 
   return (
     <div>

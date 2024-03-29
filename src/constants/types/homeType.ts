@@ -80,8 +80,15 @@ export type Recruitment = {
 };
 
 export type User = {
-  username: string;
+  userId: number;
+  userName: string;
+  password: string;
+  avatar: string;
+  url: string;
+  introduce: string;
+  position: string;
   email: string;
+  phoneNumber: number;
   roleName: string;
   status: boolean;
 };

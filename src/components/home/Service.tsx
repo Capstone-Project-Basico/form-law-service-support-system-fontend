@@ -15,11 +15,11 @@ import { Item } from "@/constants/types/homeType";
 
 const Service = () => {
   const items: Item[] = [
-    { 
+    {
       icon: faUserGraduate,
       alt: "",
       title: "Dịch vụ luật sư nội bộ",
-      
+
       subtitle:
         "Tư vấn thường xuyên, toàn diện và gắn bó mật thiết với nội bộ doanh nghiệp",
     },
@@ -74,7 +74,7 @@ const Service = () => {
   ];
 
   return (
-    <div className="grid lg:grid-cols-4 px-32 py-28 bg-black">
+    <div className="grid lg:grid-cols-4 px-32 py-28 bg-black text-white">
       {items.map((item, index) => (
         <div
           key={index}
