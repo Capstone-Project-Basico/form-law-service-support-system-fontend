@@ -26,6 +26,10 @@ import {
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { Recruitment } from "@/constants/types/homeType";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { storage } from "@/app/firebase";
+import Image from "next/image";
+import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 
 type RecruitmentsProps = {
@@ -92,7 +96,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
         }
       )
       .then((response) => {
-        console.log("Recruitment updated successfully", response);
+        toast.success("Cập nhật thành công");
       })
       .catch((error) => {
         console.error("Failed to update recruitment", error);
@@ -100,7 +104,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
   };
 
   //delete
-  const handleDelete = async (recruitmentId: number) => {
+  const handleDelete = async (id: number) => {
     const isConfirmed = window.confirm(
       "Bạn có chắc muốn xóa tuyển dụng này không?"
     );
@@ -115,7 +119,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
 
         axios
           .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${recruitmentId}`
+            `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`
           )
           .then(() => {
             toast.success("Xóa thành công");
@@ -132,11 +136,11 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
   };
 
   // restore
-  const restoreDelete = async (recruitmentId: number) => {
+  const restoreDelete = async (id: number) => {
     try {
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm/${recruitmentId}`
+          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm/${id}`
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
@@ -315,7 +319,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                 />
 
                 {/* choice date of birth */}
-                <Input type="text" label="Ngày sinh" />
+                <Input className="py-3" type="text" label="Ngày sinh" />
 
                 <Input
                   type="text"
@@ -329,7 +333,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                   }
                 />
 
-                <Input
+                <Input className="py-3"
                   type="text"
                   label="Quê quán"
                   value={selectedRecruitment.homeTown}
@@ -355,7 +359,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                 />
 
                 {/* multiple choice */}
-                <Input
+                <Input className="py-3"
                   type="text"
                   label="Tình trạng hôn nhân"
                   value={selectedRecruitment.maritalStatus}
@@ -367,7 +371,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                   }
                 />
 
-                <Input
+                <Input 
                   type="text"
                   label="Số điện thoại"
                   value={selectedRecruitment.phoneNum}
@@ -379,7 +383,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                   }
                 />
 
-                <Input
+                <Input className="py-3"
                   type="text"
                   label="Email"
                   value={selectedRecruitment.email}
