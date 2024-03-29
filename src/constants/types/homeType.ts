@@ -90,7 +90,7 @@ export type User = {
   email: string;
   phoneNumber: number;
   roleName: string;
-  status: boolean;
+  delete: boolean;
 };
 
 export type Lawyer = {

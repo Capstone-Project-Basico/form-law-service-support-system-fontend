@@ -158,7 +158,7 @@ const Partner = () => {
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
             <p className="text-black font-bold text-3xl ">
-              Quản lí thông tin đối tác
+              Quản lí thông tin
             </p>
           </BreadcrumbItem>
           <BreadcrumbItem>
@@ -190,7 +190,7 @@ const Partner = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
-                      <input type="file" onChange={(e) => uploadFile(e)} />
+                      <input className="py-3" type="file" onChange={(e) => uploadFile(e)} />
                       <Input
                         type="text"
                         label="Link"

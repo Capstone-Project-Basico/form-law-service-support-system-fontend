@@ -1,6 +1,5 @@
- "use client";
+"use client";
 
-import { User } from "@/constants/types/homeType";
 import {
   Table,
   TableHeader,
@@ -13,120 +12,145 @@ import {
   Button,
   Input,
   useDisclosure,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Navbar,
+  NavbarContent,
+  NavbarItem,
+  MenuItem,
 } from "@nextui-org/react";
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import { User } from "@/constants/types/homeType";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  listAll,
+  list,
+  StorageReference,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { storage } from "@/app/firebase";
+import Users from "@/components/manage/User";
 import { v4 as uuidv4 } from "uuid";
 
 const User = () => {
-  const [users, setUsers] = useState<User[]>([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [tabs, setTabs] = useState(1);
 
- //data
-  const [username, serUsername] = useState("");
-  const [email, serEmail] = useState("");
+  //data
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [roleName, setRoleName] = useState("");
-  const [status, setStatus] = useState("");
 
-  let newContact = {
-    username,
+  const [users, setUsers] = useState<User[]>([]);
+  let newUser = {
     email,
+    userName,
+    phoneNumber,
     roleName,
-    status,
   };
+
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`
-        );
-        console.log(response.data);
-        setUsers(response.data.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchUsers();
-  }, []);
+    switch (tabs) {
+      case 1:
+        fetchUsers();
+        break;
+      case 2:
+        fetchDeletedUser();
+        break;
+      default:
+        fetchUsers();
+        break;
+    }
+  }, [tabs]);
 
+  //get all items
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`
+      );
+      setUsers(response.data.data);
+      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  //get all deleted items
+  const fetchDeletedUser = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAlDeletedUsers`
+      );
+      setUsers(response.data.data);
+      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
             <p className="text-black font-bold text-3xl ">
-              Quản lý người dùng
+              Quản lí người dùng
             </p>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <p className="text-[#FF0004] font-bold text-3xl">Người dùng</p>
           </BreadcrumbItem>
         </Breadcrumbs>
-        
+
+       
       </div>
-      <div>
-        <div className="my-10 flex flex-row">
-          <Input
-            classNames={{
-              base: "max-w-full sm:max-w-[10rem] h-10",
-              mainWrapper: "h-full",
-              input: "text-small",
-              inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-            }}
-            placeholder="Từ khóa tìm kiếm"
-            size="sm"
-            type="search"
+
+      <div className="flex flex-row gap-10 font-bold border-b-1 ">
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            onClick={() => setTabs(1)}
             radius="none"
-          />
-          <Button className="bg-[#FF0004] text-white ml-3" radius="none">
-            Tìm kiếm
+          >
+            TẤT CẢ
+          </Button>
+        </div>
+        
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 2 &&
+              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            radius="none"
+            onClick={() => setTabs(2)}
+          >
+            ĐÃ XÓA
           </Button>
         </div>
       </div>
-      <Table aria-label="Example static collection table">
-        <TableHeader>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Họ và Tên
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Email
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Vai trò
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Tương tác
-          </TableColumn>
-          
-          
-        </TableHeader>
-        <TableBody>
-          {users.map((user, index) => (
-            <TableRow key={index}>
-              <TableCell>{user.username}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.roleName}</TableCell>      
-              <TableCell>{user.status}</TableCell>
-             
-              <TableCell className="flex gap-2 items-center">
-                <Button>Update</Button>
-                <Button>Delete</Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+
+      <div>
+        <Users users={users} />
+      </div>
     </div>
   );
 };
-
 
 export default User;
