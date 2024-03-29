@@ -76,7 +76,7 @@ export type Recruitment = {
   workPlace: string;
   id_number: string;
   processStatus: boolean;
-  delete: boolean;
+  deleted: boolean;
 };
 
 export type User = {
