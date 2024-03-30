@@ -219,10 +219,7 @@ const Users: React.FC<UsersProps> = ({ users }) => {
                   >
                     Delete
                   </Button>
-                </TableCell>
-          
-                
-                    
+                </TableCell>    
             </TableRow>
           ))}
         </TableBody>
