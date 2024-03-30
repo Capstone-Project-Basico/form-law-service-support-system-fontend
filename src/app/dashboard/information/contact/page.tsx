@@ -31,6 +31,7 @@ import Link from "next/link";
 import { Contact } from "@/constants/types/homeType";
 import Contacts from "@/components/manage/Contact";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
 
 const Contact = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -99,7 +100,40 @@ const Contact = () => {
     }
   };
 
+    //delete
+    const handleDelete = async (contactId: number) => {
+      const isConfirmed = window.confirm(
+        "Bạn có chắc muốn xóa liên hệ này không?"
+      );
+      if (isConfirmed) {
+        try {
+          const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
+          if (!userString) {
+            console.log("No user found");
+            return;
+          }
+          const user = JSON.parse(userString);
   
+          axios
+            .delete(
+              `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`
+            )
+            .then(() => {
+              toast.success("Xóa thành công");
+              fetchContacts()
+              
+            }),
+            {
+              headers: {
+                Authorization: user.data.data.token,
+              },
+            };
+  
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    };
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -143,7 +177,7 @@ const Contact = () => {
       </div>
 
       <div>
-        <Contacts contacts={contacts} />
+        <Contacts contacts={contacts} handleDelete={handleDelete}/>
       </div>
     </div>
   );

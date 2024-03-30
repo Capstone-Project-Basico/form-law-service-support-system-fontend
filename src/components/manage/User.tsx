@@ -32,6 +32,7 @@ import { storage } from "@/app/firebase";
 import Image from "next/image";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
+import authHeader from "../authHeader/AuthHeader";
 
 type UsersProps = {
   users: User[];
@@ -80,11 +81,13 @@ const Users: React.FC<UsersProps> = ({ users }) => {
         `${process.env.NEXT_PUBLIC_BASE_API}user/${selectedUser.userId}`,
         {
           roleName: selectedUser.roleName,
+        },
+        {
+          headers: authHeader(),
         }
       )
       .then((response) => {
-        // fetchPartners();
-        console.log("User updated successfully", response);
+        toast.success("Cập nhật thành công");
       })
       .catch((error) => {
         console.error("Failed to update user", error);
@@ -99,29 +102,19 @@ const Users: React.FC<UsersProps> = ({ users }) => {
     );
     if (isConfirmed) {
       try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
-          console.log("No user found");
-          return;
-        }
-        const user = JSON.parse(userString);
-
+       
         axios
           .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`
+            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
+            {
+              headers: authHeader(),
+            }
           )
           .then(() => {
+            
             toast.success("Xóa thành công");
-          }),
-          {
-            headers: {
-              Authorization: user.data.data.token,
-            },
-          };
+          })
 
-        // setPartners((prevPartners) =>
-        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-        // );
       } catch (error) {
         console.log(error);
       }
@@ -194,9 +187,7 @@ const Users: React.FC<UsersProps> = ({ users }) => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Vai trò
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn>
+         
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -209,10 +200,8 @@ const Users: React.FC<UsersProps> = ({ users }) => {
               <TableCell>{user.userName}</TableCell>
               <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>{user.roleName}</TableCell>
-              <TableCell>
-                {user.delete ? "Không sử dụng" : "Đang hoạt động"}
-              </TableCell>
-              {user.delete === false ? (
+             
+
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-[#FF0004] text-white"
@@ -231,16 +220,9 @@ const Users: React.FC<UsersProps> = ({ users }) => {
                     Delete
                   </Button>
                 </TableCell>
-              ) : (
-                <TableCell className="flex items-center justify-center">
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => restoreDelete(user.userId)}
-                  >
-                    Khôi phục
-                  </Button>
-                </TableCell>
-              )}
+          
+                
+                    
             </TableRow>
           ))}
         </TableBody>

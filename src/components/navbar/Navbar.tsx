@@ -19,6 +19,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { practices } from "@/lib/navbarItems";
 import { researchAndPublications, about } from "@/lib/navbarItems";
+import { log } from "console";
 
 interface UserLocal {
   data: {
@@ -42,12 +43,14 @@ const Navbar = () => {
   };
 
   const user: UserLocal | null = getUserFromStorage();
+
+  console.log(user)
   return (
     <div className={styles.container}>
       <MyNavbar>
         <NavbarBrand>
           <a href="/">
-            <Image src="/logoBasico.jpg" alt="logo" width={200} height={70} />
+            <Image className=" !max-w-60" src="/logoBasico.jpg" alt="logo" width={200} height={70} />
           </a>
         </NavbarBrand>
         <NavbarContent>
@@ -163,7 +166,7 @@ const Navbar = () => {
 
         {/* login */}
         <NavbarContent justify="end">
-          {/* {user ? (
+          {user ? (
             <div>
               <Dropdown placement="bottom-end">
                 <DropdownTrigger>
@@ -198,7 +201,7 @@ const Navbar = () => {
                 </DropdownMenu>
               </Dropdown>
             </div>
-          ) : ( */}
+          ) : (
           <NavbarItem className="hidden lg:flex">
             <Button
               as={Link}
@@ -209,7 +212,7 @@ const Navbar = () => {
               Đăng nhập
             </Button>
           </NavbarItem>
-          {/* )} */}
+         )} 
         </NavbarContent>
       </MyNavbar>
     </div>

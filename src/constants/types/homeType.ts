@@ -90,14 +90,29 @@ export type User = {
   email: string;
   phoneNumber: number;
   roleName: string;
-  delete: boolean;
 };
 
 export type Lawyer = {
-  username: string;
-  email: string;
+  userId: number;
+  userName: string;
   roleName: string;
+  email: string;
+  phoneNumber:string;
+  url: string;
+  introduce: string;
+  position: string;
+  avatar: string;
+};
+
+export type Task = {
+  id: number;
+  taskName: string;
+  description: string;
+  startDate: Date;
+  endDate: Date ;
+  email: string;
   status: boolean;
+  delete:boolean;
 };
 
 export type CardTemplate = {

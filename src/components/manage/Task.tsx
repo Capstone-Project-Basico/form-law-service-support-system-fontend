@@ -25,43 +25,39 @@ import {
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { Partner } from "@/constants/types/homeType";
+import { Task } from "@/constants/types/homeType";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 
-type PartnersProps = {
-  partners: Partner[];
+type TasksProps = {
+  tasks: Task[];
 };
 
-const Partners: React.FC<PartnersProps> = ({ partners }) => {
+const Tasks: React.FC<TasksProps> = ({ tasks }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
-  //upload file
-  // const [imageUrls, setImageUrls] = useState<string[]>([]);
-  // const [imageUrl, setImageUrl] = useState<string>();
-  const imagesListRef = ref(storage, "partners/");
-
+ 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
-  // Filter partners based on search term
-  const filteredPartners = partners.filter((partner) =>
-    partner.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter tasks based on search term
+  const filteredPartners = tasks.filter((task) =>
+    task.taskName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   //pagination
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 4;
+  const rowsPerPage = 8;
 
   const pages = Math.ceil(filteredPartners.length / rowsPerPage);
 
@@ -74,16 +70,17 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
 
   //update
   const handleUpdateSubmit = async () => {
-    if (!selectedPartner) return; // Check if a partner is selected
+    if (!selectedTask) return; // Check if a Task is selected
 
-    // Example: PUT request to update partner details
+    // Example: PUT request to update Task details
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}task/updateTask/${selectedTask.id}`,
         {
-          name: selectedPartner.name,
-          avatar: selectedPartner.avatar,
-          link: selectedPartner.link,
+          taskName: selectedTask.taskName,
+          description: selectedTask.description,
+          startDate: selectedTask.startDate,
+          endDate: selectedTask.endDate,
         }
       )
       .then((response) => {
@@ -93,61 +90,12 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
         console.error("Failed to update partner", error);
       });
   };
-  //upload update file
-  const uploadUpdateFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // First, check if the files array is not null and has at least one file
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0]; // Safely access the first file
-
-      // Create a unique file name for the storage to avoid name conflicts
-      const uniqueFileName = `partners/${file.name}-${uuidv4()}`;
-      const storageRef = ref(storage, uniqueFileName);
-
-      const uploadTask = uploadBytesResumable(storageRef, file); // Start the file upload
-
-      // Listen for state changes, errors, and completion of the upload.
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          // Optional: monitor upload progress
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Upload is ${progress}% done`);
-        },
-        (error) => {
-          // Handle unsuccessful uploads
-          console.error("Upload failed", error);
-        },
-        () => {
-          // Handle successful uploads on complete
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log("File available at", downloadURL);
-
-            if (!selectedPartner) {
-              console.error("No partner selected for update.");
-              return;
-            }
-
-            // Update the state with the new avatar URL
-            setSelectedPartner({
-              ...selectedPartner,
-              avatar: downloadURL,
-            });
-
-            // Optionally: Update the partner's information in the database or state here
-            // This might involve calling an API endpoint or updating local state
-          });
-        }
-      );
-    } else {
-      console.error("No file selected for upload.");
-    }
-  };
+ 
 
   //delete
-  const handleDelete = async (partnerId: number) => {
+  const handleDelete = async (id: number) => {
     const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa đối tác này không?"
+      "Bạn có chắc muốn xóa công việc này không?"
     );
     if (isConfirmed) {
       try {
@@ -160,7 +108,7 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
 
         axios
           .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`
+            `${process.env.NEXT_PUBLIC_BASE_API}`
           )
           .then(() => {
             toast.success("Xóa thành công");
@@ -181,11 +129,11 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
   };
 
   // restore
-  const restoreDelete = async (partnerId: number) => {
+  const restoreDelete = async (paridtnerId: number) => {
     try {
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}partner/restoreDelete/${partnerId}`
+          `${process.env.NEXT_PUBLIC_BASE_API}`
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
@@ -235,13 +183,19 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
       >
         <TableHeader className="">
           <TableColumn className=" bg-[#FF0004] text-white">
-            Tên đối tác
+            Tên công việc
           </TableColumn>
           <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
-            Hình ảnh
+            Mô tả
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
-            Liên kết trang web
+            Ngày bắt đầu
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Ngày kết thúc
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Người đảm nhiệm
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Trạng thái
@@ -251,37 +205,21 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
           </TableColumn>
         </TableHeader>
         <TableBody>
-          {items.map((partner, index) => (
+          {items.map((task, index) => (
             <TableRow key={index}>
-              <TableCell>{partner.name}</TableCell>
-              <TableCell>
-                {
-                  <Image
-                    src={
-                      partner.avatar
-                        ? partner.avatar.startsWith("http")
-                          ? partner.avatar
-                          : `/${partner.avatar}`
-                        : "/errorImage.png"
-                    }
-                    alt=""
-                    width={100}
-                    height={100}
-                  />
-                }
-              </TableCell>
-              <TableCell>
-                <Link href={partner.link}>{partner.link}</Link>
-              </TableCell>
-              <TableCell>
-                {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
-              </TableCell>
-              {partner.delete === false ? (
+              <TableCell>{task.taskName}</TableCell>
+              <TableCell>{task.description}</TableCell>
+              <TableCell>{task.description}</TableCell>
+              <TableCell>{task.description}</TableCell>
+              <TableCell>{task.email}</TableCell>
+              <TableCell>{task.status}</TableCell>
+              
+          
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-[#FF0004] text-white"
                     onPress={() => {
-                      setSelectedPartner(partner);
+                      setSelectedTask(task);
                       onOpenUpdate();
                     }}
                   >
@@ -290,22 +228,13 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
 
                   <Button
                     className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(partner.partnerId)}
+                    onClick={() => handleDelete(task.id)}
                   >
                     Delete
                   </Button>
                 </TableCell>
-              ) : (
-                <TableCell className="flex items-center justify-center">
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => restoreDelete(partner.partnerId)}
-                  >
-                    Khôi phục
-                  </Button>
-                </TableCell>
-              )}
-            </TableRow>
+             
+             </TableRow>
           ))}
         </TableBody>
       </Table>
@@ -317,31 +246,19 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
             Cập nhật đối tác
           </ModalHeader>
           <ModalBody>
-            {selectedPartner && (
+            {selectedTask && (
               <form onSubmit={handleUpdateSubmit}>
                 <Input
                   type="text"
                   label="Name"
-                  value={selectedPartner.name}
+                  value={selectedTask.taskName}
                   onChange={(e) =>
-                    setSelectedPartner({
-                      ...selectedPartner,
-                      name: e.target.value,
+                    setSelectedTask({
+                      ...selectedTask,
+                      taskName: e.target.value,
                     })
                   }
-                />
-                <input className="py-3" type="file" onChange={(e) => uploadUpdateFile(e)} />
-                <Input 
-                  type="text"
-                  label="Link"
-                  value={selectedPartner.link}
-                  onChange={(e) =>
-                    setSelectedPartner({
-                      ...selectedPartner,
-                      link: e.target.value,
-                    })
-                  }
-                />
+                  />
               </form>
             )}
           </ModalBody>
@@ -366,4 +283,4 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
   );
 };
 
-export default Partners;
+export default Tasks;

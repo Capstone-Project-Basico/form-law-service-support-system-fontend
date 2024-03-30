@@ -1,6 +1,5 @@
 "use client";
 
-import { Lawyer } from "@/constants/types/homeType";
 import {
   Table,
   TableHeader,
@@ -13,127 +12,187 @@ import {
   Button,
   Input,
   useDisclosure,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Navbar,
+  NavbarContent,
+  NavbarItem,
+  MenuItem,
 } from "@nextui-org/react";
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import { Lawyer } from "@/constants/types/homeType";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  listAll,
+  list,
+  StorageReference,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { storage } from "@/app/firebase";
+import Lawyers from "@/components/manage/Lawyer";
 import { v4 as uuidv4 } from "uuid";
 
 const Lawyer = () => {
-  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [tabs, setTabs] = useState(1);
 
  //data
-  const [username, serUsername] = useState("");
-  const [email, serEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [url, seturl] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [position, setPosition] = useState("");
+  const [introduce, setIntroduce] = useState("");
   const [roleName, setRoleName] = useState("");
-  const [status, setStatus] = useState("");
+  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
 
-  let newContact = {
-    username,
+  let newLawyer = {
+    userName,
+    avatar,
+    url,
     email,
+    phoneNumber,
+    position,
+    introduce,
     roleName,
-    status,
   };
-  useEffect(() => {
-    const fetchLawyers = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_API}user/getAllLawyers`
-        );
-        console.log(response.data);
-        setLawyers(response.data.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchLawyers();
-  }, []);
+  const imagesListRef = ref(storage, "lawyers/");
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
 
-return (
-  <div className="w-full mt-5 ml-5 mr-5">
-    <div className="grid grid-cols-2">
-      <Breadcrumbs color="danger" size="lg" className="text-3xl">
-        <BreadcrumbItem>
-          <p className="text-black font-bold text-3xl ">
-            Quản lý người dùng
-          </p>
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <p className="text-[#FF0004] font-bold text-3xl">Luật sư</p>
-        </BreadcrumbItem>
-      </Breadcrumbs>
+  useEffect(() => {
+    switch (tabs) {
+      case 1:
+        fetchLawyers();
+        break;
       
-    </div>
-    <div>
-      <div className="my-10 flex flex-row">
-        <Input
-          classNames={{
-            base: "max-w-full sm:max-w-[10rem] h-10",
-            mainWrapper: "h-full",
-            input: "text-small",
-            inputWrapper:
-              "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-          }}
-          placeholder="Từ khóa tìm kiếm"
-          size="sm"
-          type="search"
-          radius="none"
-        />
-        <Button className="bg-[#FF0004] text-white ml-3" radius="none">
-          Tìm kiếm
-        </Button>
+      case 2:
+        fetchDeletedLawyer();
+        break;
+      default:
+        fetchLawyers();
+        break;
+    }
+  }, [tabs]);
+
+  //get all items
+  const fetchLawyers = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllLawyers`
+      );
+      setLawyers(response.data.data);
+    
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+   //get all deleted items
+   const fetchDeletedLawyer = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllDeletedPartners`
+      );
+      setLawyers(response.data.data);
+     
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  //upload file
+  const uploadFile = (e: any) => {
+    setImageUpload(e.target.files[0]);
+    let image = e.target.files[0];
+
+    if (image == null) return;
+    const storageRef = ref(storage, "/images/" + image.name + uuidv4()); // Create a reference to '/images/imageName'
+
+    const uploadTask = uploadBytesResumable(storageRef, image); // Start the file upload
+
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Handle progress updates here, if you wish
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        // Handle unsuccessful uploads here
+        console.error(error);
+      },
+      () => {
+        // Handle successful uploads on complete
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          setAvatar(downloadURL);
+        });
+      }
+    );
+  };
+
+  
+  return (
+    <div className="w-full mt-5 ml-5 mr-5">
+      <div className="grid grid-cols-2">
+        <Breadcrumbs color="danger" size="lg" className="text-3xl">
+          <BreadcrumbItem>
+            <p className="text-black font-bold text-3xl ">
+              Quản lí người dùng
+            </p>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <p className="text-[#FF0004] font-bold text-3xl">Luật sư</p>
+          </BreadcrumbItem>
+        </Breadcrumbs>
+
+        
+      </div>
+
+      <div className="flex flex-row gap-10 font-bold border-b-1 ">
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            onClick={() => setTabs(1)}
+            radius="none"
+          >
+            TẤT CẢ
+          </Button>
+        </div>
+        
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 2 &&
+              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            radius="none"
+            onClick={() => setTabs(2)}
+          >
+            ĐÃ XÓA
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        <Lawyers lawyers={lawyers} />
       </div>
     </div>
-    <Table aria-label="Example static collection table">
-      <TableHeader>
-        <TableColumn className="bg-[#FF0004] text-white">
-          Họ và Tên
-        </TableColumn>
-        <TableColumn className="bg-[#FF0004] text-white">
-          Email
-        </TableColumn>
-        <TableColumn className="bg-[#FF0004] text-white">
-          SĐT
-        </TableColumn>
-        <TableColumn className="bg-[#FF0004] text-white">
-          Chức vụ
-        </TableColumn>
-        <TableColumn className="bg-[#FF0004] text-white">
-          Thông tin bản thân
-        </TableColumn>
-        <TableColumn className="bg-[#FF0004] text-white">
-          Trạng thái
-        </TableColumn>
-        <TableColumn className="bg-[#FF0004] text-white">
-          Tương tác
-        </TableColumn>
-        
-        
-      </TableHeader>
-      <TableBody>
-        {lawyers.map((lawyer, index) => (
-          <TableRow key={index}>
-            <TableCell>{lawyer.username}</TableCell>
-            <TableCell>{lawyer.email}</TableCell>
-            <TableCell>{lawyer.roleName}</TableCell>      
-            <TableCell>{lawyer.status}</TableCell>
-            <TableCell>{lawyer.status}</TableCell>
-            <TableCell>{lawyer.status}</TableCell>
-        
-           
-            <TableCell className="flex gap-2 items-center">
-              <Button>Update</Button>
-              <Button>Delete</Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  </div>
-);
+  );
 };
 
 export default Lawyer;
