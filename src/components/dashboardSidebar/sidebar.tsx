@@ -44,13 +44,13 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
     <div className="">
       {item.subMenu ? (
         <>
-          <button
+          <div
             onClick={toggleSubMenu}
-            className={`flex flex-row items-center p-2 rounded-lg w-full justify-between hover:text-[#FF0004] ${
+            className={` cursor-pointer flex flex-row items-center p-2 rounded-lg w-full justify-between hover:text-[#FF0004] ${
               pathname.includes(item.path) ? "text-[#FF0004]" : ""
             }`}
           >
-            <div className="flex flex-row space-x-4 items-center">
+            <div className=" flex-1  flex flex-row space-x-4 items-center">
               {item.icon}
               <span className="font-semibold text-xl flex">{item.title}</span>
             </div>
@@ -58,7 +58,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
             <div className={`${subMenuOpen ? "-rotate-90" : ""} flex`}>
               <FontAwesomeIcon icon={faChevronLeft} className="pl-4 w-7 h-7" />
             </div>
-          </button>
+          </div>
 
           {subMenuOpen && (
             <div className="my-2 ml-12 flex flex-col space-y-4 ">
