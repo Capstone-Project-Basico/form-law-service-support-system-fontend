@@ -118,7 +118,7 @@ const Profile = () => {
               <Input
                 type="text"
                 disabled
-                variant="bordered"
+                variant="faded"
                 defaultValue={userProfile?.email ?? "hello?"}
               />
             </div>
