@@ -31,12 +31,14 @@ import { storage } from "@/app/firebase";
 import Image from "next/image";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
+import authHeader from "../authHeader/AuthHeader";
 
 type RecruitmentsProps = {
   recruitments: Recruitment[];
+  handleDelete: (id: number)=> void;
 };
 
-const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
+const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecruitment, setSelectedRecruitment] =
     useState<Recruitment | null>(null);
@@ -80,7 +82,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
         {
           fullName: selectedRecruitment.fullName,
           dateOfBirth: selectedRecruitment.dateOfBirth,
-          idNumber: selectedRecruitment.id_number,
+          id_number: selectedRecruitment.id_number,
           homeTown: selectedRecruitment.homeTown,
           gender: selectedRecruitment.gender,
           maritalStatus: selectedRecruitment.maritalStatus,
@@ -93,6 +95,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
           target: selectedRecruitment.target,
           workPlace: selectedRecruitment.workPlace,
           processStatus: selectedRecruitment.processStatus,
+        },
+        {
+          headers: authHeader(),
         }
       )
       .then((response) => {
@@ -103,47 +108,16 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
       });
   };
 
-  //delete
-  const handleDelete = async (id: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa tuyển dụng này không?"
-    );
-    if (isConfirmed) {
-      try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
-          console.log("No user found");
-          return;
-        }
-        const user = JSON.parse(userString);
-
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-          }),
-          {
-            headers: {
-              Authorization: user.data.data.token,
-            },
-          };
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  // restore
+   // restore
   const restoreDelete = async (id: number) => {
     try {
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm/${id}`
+          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm${id}`
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
+          
         });
     } catch (error) {
       console.log(error);
@@ -209,7 +183,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">SĐT</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">Email</TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">Vị trí</TableColumn>
+          {/* <TableColumn className="bg-[#FF0004] text-white">Vị trí</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
             Kinh nghiệm
           </TableColumn>
@@ -224,7 +198,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
             Nơi làm việc
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className="bg-[#FF0004] text-white">
             Trạng thái
           </TableColumn>
@@ -246,18 +220,19 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                     : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
                 }
               </TableCell>
+              
               <TableCell>{recruitment.id_number}</TableCell>
               <TableCell>{recruitment.homeTown}</TableCell>
               <TableCell>{recruitment.gender}</TableCell>
               <TableCell>{recruitment.maritalStatus}</TableCell>
               <TableCell>{recruitment.phoneNum}</TableCell>
               <TableCell>{recruitment.email}</TableCell>
-              <TableCell>{recruitment.position}</TableCell>
+              {/* <TableCell>{recruitment.position}</TableCell>
               <TableCell>{recruitment.exp}</TableCell>
               <TableCell>{recruitment.field}</TableCell>
               <TableCell>{recruitment.graduate}</TableCell>
               <TableCell>{recruitment.target}</TableCell>
-              <TableCell>{recruitment.workPlace}</TableCell>
+              <TableCell>{recruitment.workPlace}</TableCell> */}
               <TableCell>{recruitment.processStatus}</TableCell>
 
               <TableCell>
@@ -321,7 +296,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                 {/* choice date of birth */}
                 <Input className="py-3" type="text" label="Ngày sinh" />
 
-                <Input
+                  <Input className="py-3"
                   type="text"
                   label="CMND, CCCD hoặc giấy tờ khác tương đương"
                   value={selectedRecruitment.id_number}
@@ -331,7 +306,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments }) => {
                       id_number: e.target.value,
                     })
                   }
-                />
+                   />
+
 
                 <Input className="py-3"
                   type="text"
