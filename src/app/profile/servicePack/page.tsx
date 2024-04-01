@@ -28,7 +28,7 @@ const ServicePack = () => {
           <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
             30,000Đ cho 1 tháng
           </h1>
-          <Button className="text-white bg-[#FF0004] mb-5">Đăng ký</Button>
+          <Button className="text-white bg-[#FF0004] my-5">Đăng ký</Button>
         </div>
       </div>
     </div>
