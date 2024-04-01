@@ -31,7 +31,7 @@ import Link from "next/link";
 import { FormTemplate } from "@/constants/types/FormTemplate";
 import authHeader from "@/components/authHeader/AuthHeader";
 import Image from "next/image";
-import Template from "@/components/manage/template";
+import Template from "@/components/manage/Template";
 
 const Page = () => {
   // <div className="flex ">
