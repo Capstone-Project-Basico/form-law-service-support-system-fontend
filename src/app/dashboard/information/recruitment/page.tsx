@@ -30,6 +30,10 @@ import Link from "next/link";
 import { Recruitment } from "@/constants/types/homeType";
 import Recruitments from "@/components/manage/Recruitment";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
+// Lỗi import authHeader
+//import authHeader from "../authHeader/AuthHeader";
+
 
 const Recruitment = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -37,7 +41,7 @@ const Recruitment = () => {
   //data
   const [fullName, serFullName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [idNumber, setIdNumber] = useState("");
+  const [id_number, setIdNumber] = useState("");
   const [homeTown, setHomeTown] = useState("");
   const [maritalStatus, setMaritalStatus] = useState("");
   const [gender, setGender] = useState("");
@@ -56,7 +60,7 @@ const Recruitment = () => {
   let newRecruitment = {
     fullName,
     dateOfBirth,
-    idNumber,
+    id_number,
     homeTown,
     maritalStatus,
     gender,
@@ -108,6 +112,43 @@ const Recruitment = () => {
       console.error(error);
     }
   };
+  
+  //delete
+  const handleDelete = async (id: number) => {
+    const isConfirmed = window.confirm(
+      "Bạn có chắc muốn xóa tuyển dụng này không?"
+    );
+    if (isConfirmed) {
+      try {
+        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
+        if (!userString) {
+          console.log("No user found");
+          return;
+        }
+        const user = JSON.parse(userString);
+
+        axios
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
+            // {
+            //   headers: authHeader(),
+            // }
+          )
+          .then(() => {
+            toast.success("Xóa thành công");
+
+          }),
+          {
+            headers: {
+              Authorization: user.data.data.token,
+            },
+          };
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -149,7 +190,7 @@ const Recruitment = () => {
       </div>
 
       <div>
-        <Recruitments recruitments={recruitment} />
+        <Recruitments recruitments={recruitment} handleDelete ={handleDelete}/>
       </div>
     </div>
   );

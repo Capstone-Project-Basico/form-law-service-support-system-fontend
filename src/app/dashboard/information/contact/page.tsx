@@ -70,7 +70,7 @@ const Contact = () => {
         break;
       default:
         fetchContacts();
-        break;
+        break;``
     }
   }, [tabs]);
 
@@ -100,6 +100,7 @@ const Contact = () => {
     }
   };
 
+  
     //delete
     const handleDelete = async (contactId: number) => {
       const isConfirmed = window.confirm(
@@ -121,7 +122,6 @@ const Contact = () => {
             .then(() => {
               toast.success("Xóa thành công");
               fetchContacts()
-              
             }),
             {
               headers: {
@@ -134,6 +134,24 @@ const Contact = () => {
         }
       }
     };
+
+     // restore
+  const restoreDelete = async (contactId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}contact/restoreContact/${contactId}`
+        )
+        .then((response) => {
+          toast.success("Khôi phục thành công");
+          fetchDeletedContact()
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -177,7 +195,7 @@ const Contact = () => {
       </div>
 
       <div>
-        <Contacts contacts={contacts} handleDelete={handleDelete}/>
+        <Contacts contacts={contacts} handleDelete= {handleDelete} restoreDelete={restoreDelete}/>
       </div>
     </div>
   );
