@@ -45,7 +45,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecruitment, setSelectedRecruitment] =
     useState<Recruitment | null>(null);
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
@@ -253,14 +253,24 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                       onOpenUpdate();
                     }}
                   >
-                    Update
+                    Cập nhật
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(recruitment.id)}
                   >
-                    Delete
+                    Xóa
+                  </Button>
+
+                  <Button
+                    className="bg-[#FF0004] text-white"
+                    onClick={() => {
+                      setSelectedRecruitment(recruitment);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
                   </Button>
                 </TableCell>
               ) : (
@@ -277,6 +287,61 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           ))}
         </TableBody>
       </Table>
+
+      {/* update modal */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+          <ModalBody>
+            {selectedRecruitment && (
+              <div className="flex flex-row gap-10">
+                {/* <p>{selectedRecruitment.fullName}</p> */}
+                <div className="">
+                  <p>Họ và tên</p>
+                  <p>Ngày sinh</p>
+                  <p>Quê quán</p>
+                  <p>Giới tính</p>
+                  <p>Tình trạng hôn nhân</p>
+                  <p>SĐT</p>
+                  <p>Email</p>
+                  <p>Vị trí</p>
+                  <p>Kinh nghiệm</p>
+                  <p>Lĩnh vực</p>
+                  <p>Tốt nghiệp</p>
+                  <p>Mục tiêu</p>
+                  <p>Chổ làm việc</p>
+                  <p>CCCD hoặc CMND</p>
+                </div>
+                <div>
+                  <p>{selectedRecruitment.fullName}</p>
+                  {selectedRecruitment.dateOfBirth
+                    ? new Date(
+                        selectedRecruitment.dateOfBirth
+                      ).toLocaleDateString()
+                    : "N/A"}
+                  <p>{selectedRecruitment.homeTown}</p>
+                  <p>{selectedRecruitment.gender}</p>
+                  <p>{selectedRecruitment.maritalStatus}</p>
+                  <p>{selectedRecruitment.phoneNum}</p>
+                  <p>{selectedRecruitment.email}</p>
+                  <p>{selectedRecruitment.position}</p>
+                  <p>{selectedRecruitment.exp}</p>
+                  <p>{selectedRecruitment.field}</p>
+                  <p>{selectedRecruitment.graduate}</p>
+                  <p>{selectedRecruitment.target}</p>
+                  <p>{selectedRecruitment.workPlace}</p>
+                  <p>{selectedRecruitment.id_number}</p>
+                </div>
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onClose}>
+              Đóng
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
