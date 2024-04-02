@@ -45,7 +45,7 @@ const Page = () => {
           case "ROLE_ADMIN":
             router.push("/dashboard");
             break;
-          case "Customer":
+          case "ROLE_CUSTOMER":
             router.push("/");
             break;
           default:
@@ -54,7 +54,7 @@ const Page = () => {
         setTimeout(() => {
           localStorage.clear();
           toast.success("Hết thời gian đăng nhập");
-        }, 600000);
+        }, 6000000);
       })
       .catch((error) => {
         console.log(error);
