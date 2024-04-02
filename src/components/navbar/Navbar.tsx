@@ -44,13 +44,19 @@ const Navbar = () => {
 
   const user: UserLocal | null = getUserFromStorage();
 
-  console.log(user)
+  console.log(user);
   return (
     <div className={styles.container}>
       <MyNavbar>
         <NavbarBrand>
           <a href="/">
-            <Image className=" !max-w-60" src="/logoBasico.jpg" alt="logo" width={200} height={70} />
+            <Image
+              className=" !max-w-60"
+              src="/logoBasico.jpg"
+              alt="logo"
+              width={200}
+              height={70}
+            />
           </a>
         </NavbarBrand>
         <NavbarContent>
@@ -165,7 +171,7 @@ const Navbar = () => {
         </NavbarContent>
 
         {/* login */}
-        <NavbarContent justify="end">
+        {/* <NavbarContent justify="end">
           {user ? (
             <div>
               <Dropdown placement="bottom-end">
@@ -213,7 +219,7 @@ const Navbar = () => {
             </Button>
           </NavbarItem>
          )} 
-        </NavbarContent>
+        </NavbarContent> */}
       </MyNavbar>
     </div>
   );
