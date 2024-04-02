@@ -31,9 +31,7 @@ import { Recruitment } from "@/constants/types/homeType";
 import Recruitments from "@/components/manage/Recruitment";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
-// Lỗi import authHeader
-//import authHeader from "../authHeader/AuthHeader";
-
+import authHeader from "@/components/authHeader/AuthHeader";
 
 const Recruitment = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -112,7 +110,7 @@ const Recruitment = () => {
       console.error(error);
     }
   };
-  
+
   //delete
   const handleDelete = async (id: number) => {
     const isConfirmed = window.confirm(
@@ -130,13 +128,12 @@ const Recruitment = () => {
         axios
           .delete(
             `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
-            // {
-            //   headers: authHeader(),
-            // }
+            {
+              headers: authHeader(),
+            }
           )
           .then(() => {
             toast.success("Xóa thành công");
-
           }),
           {
             headers: {
@@ -148,7 +145,6 @@ const Recruitment = () => {
       }
     }
   };
-
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -190,7 +186,7 @@ const Recruitment = () => {
       </div>
 
       <div>
-        <Recruitments recruitments={recruitment} handleDelete ={handleDelete}/>
+        <Recruitments recruitments={recruitment} handleDelete={handleDelete} />
       </div>
     </div>
   );

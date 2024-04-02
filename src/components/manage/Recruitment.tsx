@@ -35,14 +35,17 @@ import authHeader from "../authHeader/AuthHeader";
 
 type RecruitmentsProps = {
   recruitments: Recruitment[];
-  handleDelete: (id: number)=> void;
+  handleDelete: (id: number) => void;
 };
 
-const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete}) => {
+const Recruitments: React.FC<RecruitmentsProps> = ({
+  recruitments,
+  handleDelete,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecruitment, setSelectedRecruitment] =
     useState<Recruitment | null>(null);
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
@@ -108,16 +111,19 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete
       });
   };
 
-   // restore
+  // restore
   const restoreDelete = async (id: number) => {
     try {
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm${id}`
+          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm/${id}`,
+          {},
+          {
+            headers: authHeader(),
+          }
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          
         });
     } catch (error) {
       console.log(error);
@@ -220,7 +226,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete
                     : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
                 }
               </TableCell>
-              
+
               <TableCell>{recruitment.id_number}</TableCell>
               <TableCell>{recruitment.homeTown}</TableCell>
               <TableCell>{recruitment.gender}</TableCell>
@@ -247,14 +253,24 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete
                       onOpenUpdate();
                     }}
                   >
-                    Update
+                    Cập nhật
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(recruitment.id)}
                   >
-                    Delete
+                    Xóa
+                  </Button>
+
+                  <Button
+                    className="bg-[#FF0004] text-white"
+                    onClick={() => {
+                      setSelectedRecruitment(recruitment);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
                   </Button>
                 </TableCell>
               ) : (
@@ -271,6 +287,61 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete
           ))}
         </TableBody>
       </Table>
+
+      {/* update modal */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+          <ModalBody>
+            {selectedRecruitment && (
+              <div className="flex flex-row gap-10">
+                {/* <p>{selectedRecruitment.fullName}</p> */}
+                <div className="">
+                  <p>Họ và tên</p>
+                  <p>Ngày sinh</p>
+                  <p>Quê quán</p>
+                  <p>Giới tính</p>
+                  <p>Tình trạng hôn nhân</p>
+                  <p>SĐT</p>
+                  <p>Email</p>
+                  <p>Vị trí</p>
+                  <p>Kinh nghiệm</p>
+                  <p>Lĩnh vực</p>
+                  <p>Tốt nghiệp</p>
+                  <p>Mục tiêu</p>
+                  <p>Chổ làm việc</p>
+                  <p>CCCD hoặc CMND</p>
+                </div>
+                <div>
+                  <p>{selectedRecruitment.fullName}</p>
+                  {selectedRecruitment.dateOfBirth
+                    ? new Date(
+                        selectedRecruitment.dateOfBirth
+                      ).toLocaleDateString()
+                    : "N/A"}
+                  <p>{selectedRecruitment.homeTown}</p>
+                  <p>{selectedRecruitment.gender}</p>
+                  <p>{selectedRecruitment.maritalStatus}</p>
+                  <p>{selectedRecruitment.phoneNum}</p>
+                  <p>{selectedRecruitment.email}</p>
+                  <p>{selectedRecruitment.position}</p>
+                  <p>{selectedRecruitment.exp}</p>
+                  <p>{selectedRecruitment.field}</p>
+                  <p>{selectedRecruitment.graduate}</p>
+                  <p>{selectedRecruitment.target}</p>
+                  <p>{selectedRecruitment.workPlace}</p>
+                  <p>{selectedRecruitment.id_number}</p>
+                </div>
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onClose}>
+              Đóng
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
@@ -296,7 +367,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete
                 {/* choice date of birth */}
                 <Input className="py-3" type="text" label="Ngày sinh" />
 
-                  <Input className="py-3"
+                <Input
+                  className="py-3"
                   type="text"
                   label="CMND, CCCD hoặc giấy tờ khác tương đương"
                   value={selectedRecruitment.id_number}
@@ -306,10 +378,10 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete
                       id_number: e.target.value,
                     })
                   }
-                   />
+                />
 
-
-                <Input className="py-3"
+                <Input
+                  className="py-3"
                   type="text"
                   label="Quê quán"
                   value={selectedRecruitment.homeTown}
@@ -335,7 +407,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete
                 />
 
                 {/* multiple choice */}
-                <Input className="py-3"
+                <Input
+                  className="py-3"
                   type="text"
                   label="Tình trạng hôn nhân"
                   value={selectedRecruitment.maritalStatus}
@@ -347,7 +420,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete
                   }
                 />
 
-                <Input 
+                <Input
                   type="text"
                   label="Số điện thoại"
                   value={selectedRecruitment.phoneNum}
@@ -359,7 +432,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({ recruitments , handleDelete
                   }
                 />
 
-                <Input className="py-3"
+                <Input
+                  className="py-3"
                   type="text"
                   label="Email"
                   value={selectedRecruitment.email}
