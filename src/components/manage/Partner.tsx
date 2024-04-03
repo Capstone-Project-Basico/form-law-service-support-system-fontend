@@ -231,7 +231,9 @@ const Partners: React.FC<PartnersProps> = ({
                 <Link href={partner.link}>{partner.link}</Link>
               </TableCell>
               <TableCell>
-                {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
+                  <span style={{ color: partner.delete ? 'red' : 'green' }}>
+                  {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
+                  </span>
               </TableCell>
               {partner.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">

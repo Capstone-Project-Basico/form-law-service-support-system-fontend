@@ -92,18 +92,20 @@ export type User = {
   email: string;
   phoneNumber: number;
   roleName: string;
+  status: number;
 };
 
 export type Lawyer = {
   userId: number;
   userName: string;
-  roleName: string;
   email: string;
   phoneNumber: string;
   url: string;
   introduce: string;
   position: string;
   avatar: string;
+  roleName: string;
+  status: number;
 };
 
 export type Task = {

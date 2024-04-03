@@ -187,7 +187,9 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
 
 
               <TableCell>
-                {contact.delete ? "Không sử dụng" : "Đang hoạt động"}
+                  <span style={{ color: contact.delete ? 'red' : 'green' }}>
+                  {contact.delete ? "Không sử dụng" : "Đang hoạt động"}
+                  </span>
               </TableCell>
               {contact.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
