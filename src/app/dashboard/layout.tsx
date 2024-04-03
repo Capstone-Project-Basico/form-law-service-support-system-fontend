@@ -17,7 +17,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     const userString = localStorage.getItem("user");
     if (!userString) {
       console.log("No user found");
-      router.push("/"); // Redirect to login or another appropriate page
+      // router.push("/");
       return;
     }
 
