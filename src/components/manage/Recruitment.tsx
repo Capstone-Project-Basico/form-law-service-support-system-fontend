@@ -226,8 +226,10 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               <TableCell>{recruitment.workPlace}</TableCell> */}
               <TableCell>{recruitment.processStatus}</TableCell>
 
-              <TableCell>
-                {recruitment.deleted ? "Không sử dụng" : "Đang hoạt động"}
+              <TableCell >
+                  <span style={{ color: recruitment.deleted ? 'red' : 'green' }}>
+                  {recruitment.deleted ? "Không sử dụng" : "Đang hoạt động"}
+                  </span>
               </TableCell>
               {recruitment.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">

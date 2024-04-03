@@ -57,7 +57,7 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
   };
   // Filter Lawyers based on search term
   const filteredLawyers = lawyers.filter((lawyer) =>
-    lawyer.email.toLowerCase().includes(searchTerm.toLowerCase())
+  lawyer.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   //pagination
@@ -83,13 +83,12 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
         `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${selectedLawyer.userId}`,
         { 
           userName: selectedLawyer.userName,
-          email: selectedLawyer.email,
-          roleName: selectedLawyer.position,
+          avatar: selectedLawyer.avatar,
           introduce: selectedLawyer.introduce,
           phoneNumber: selectedLawyer.phoneNumber,
           url: selectedLawyer.url,
           position: selectedLawyer.position,
-          avatar: selectedLawyer.avatar,
+          
           
         },
         {
@@ -259,6 +258,9 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Vai trò
           </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Trạng thái
+          </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -291,7 +293,12 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
               <TableCell>{lawyer.position}</TableCell>
               <TableCell>{lawyer.introduce}</TableCell>
               <TableCell>{lawyer.roleName}</TableCell>
-              
+              <TableCell>
+                  <span style={{ color: lawyer.status ? 'red' : 'green' }}>
+                  {lawyer.status ? "Không sử dụng" : "Đang hoạt động"}
+                  </span>
+              </TableCell>
+              {lawyer.status === 0 ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-[#FF0004] text-white"
@@ -300,17 +307,26 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
                       onOpenUpdate();
                     }}
                   >
-                    Update
+                    Cập nhật
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(lawyer.userId)}
                   >
-                    Delete
+                    Xóa
                   </Button>
                 </TableCell>
-             
+              ) : (
+                <TableCell className="flex items-center justify-center">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    onClick={() => restoreDelete(lawyer.userId)}
+                  >
+                    Khôi phục
+                  </Button>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
@@ -336,7 +352,11 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
                     })
                   }
                 />
-                <input className="py-3" type="file" onChange={(e) => uploadUpdateFile(e)} />
+                <input
+                  className="py-3"
+                  type="file"
+                  onChange={(e) => uploadUpdateFile(e)}
+                />
                 <Input 
                   type="text"
                   label="Đường dẫn facebook "
@@ -348,17 +368,7 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
                     })
                   }
                 />
-                <Input
-                  type="text"
-                  label="Email"
-                  value={selectedLawyer.email}
-                  onChange={(e) =>
-                    setSelectedLawyer({
-                      ...selectedLawyer,
-                      email: e.target.value,
-                    })
-                  }
-                />
+                
                 <Input
                   type="text"
                   label="SĐT"
@@ -392,17 +402,7 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
                     })
                   }
                 />
-                <Input
-                  type="text"
-                  label="vai trò"
-                  value={selectedLawyer.roleName}
-                  onChange={(e) =>
-                    setSelectedLawyer({
-                      ...selectedLawyer,
-                      roleName: e.target.value,
-                    })
-                  }
-                />
+                
               </form>
             )}
           </ModalBody>

@@ -27,18 +27,20 @@ import {
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "@/constants/types/homeType";
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { storage } from "@/app/firebase";
-import Image from "next/image";
-import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
 
 type UsersProps = {
   users: User[];
+  handleDelete: (id: number)=> void;
+  restoreDelete: (id: number)=> void;
 };
 
-const Users: React.FC<UsersProps> = ({ users }) => {
+const Users: React.FC<UsersProps> = ({ 
+  users,
+  handleDelete,
+  restoreDelete,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
@@ -78,7 +80,7 @@ const Users: React.FC<UsersProps> = ({ users }) => {
     // Example: PUT request to update partner details
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/${selectedUser.userId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}user/updateRoleUser/${selectedUser.userId}?roleName=${selectedUser.roleName}`,
         {
           roleName: selectedUser.roleName,
         },
@@ -95,46 +97,7 @@ const Users: React.FC<UsersProps> = ({ users }) => {
   };
  
 
-  //delete
-  const handleDelete = async (userId: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa người dùng này không?"
-    );
-    if (isConfirmed) {
-      try {
-       
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
-            {
-              headers: authHeader(),
-            }
-          )
-          .then(() => {
-            
-            toast.success("Xóa thành công");
-          })
-
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  // restore
-  const restoreDelete = async (userId: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   return (
     <div>
@@ -187,7 +150,11 @@ const Users: React.FC<UsersProps> = ({ users }) => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Vai trò
           </TableColumn>
-         
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Trạng thái
+          </TableColumn>
+                 
+                 
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -200,11 +167,16 @@ const Users: React.FC<UsersProps> = ({ users }) => {
               <TableCell>{user.userName}</TableCell>
               <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>{user.roleName}</TableCell>
-             
+              <TableCell>
+                  <span style={{ color: user.status ? 'red' : 'green' }}>
+                  {user.status ? "Không sử dụng" : "Đang hoạt động"}
+                  </span>
+              </TableCell>
 
+              {user.status === 0 ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onPress={() => {
                       setSelectedUser(user);
                       onOpenUpdate();
@@ -220,10 +192,22 @@ const Users: React.FC<UsersProps> = ({ users }) => {
                     Delete
                   </Button>
                 </TableCell>    
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            ) : (
+              <TableCell className="flex gap-2 items-center justify-center">
+                <Button
+                  className="bg-blue-600 text-white"
+                  onClick={() => restoreDelete(user.userId)}
+                >
+                  Khôi phục
+                </Button>
+
+                
+              </TableCell>
+            )}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
