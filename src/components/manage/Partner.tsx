@@ -203,10 +203,10 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
           <Input
             classNames={{
               base: "w-full sm:max-w-[10rem] h-10",
-              mainWrapper: "h-full",
+              mainWrapper: "h-full ",
               input: "text-small",
               inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20 ",
             }}
             placeholder="Từ khóa tìm kiếm .."
             size="sm"
@@ -330,8 +330,12 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
                     })
                   }
                 />
-                <input className="py-3" type="file" onChange={(e) => uploadUpdateFile(e)} />
-                <Input 
+                <input
+                  className="py-3"
+                  type="file"
+                  onChange={(e) => uploadUpdateFile(e)}
+                />
+                <Input
                   type="text"
                   label="Link"
                   value={selectedPartner.link}

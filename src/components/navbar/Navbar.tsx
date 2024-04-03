@@ -162,6 +162,14 @@ const Navbar = () => {
           </NavbarItem>
 
           <NavbarItem>
+            <a href="/template">
+              <Button className="red-hover-button bg-white" radius="none">
+                BIỂU MẪU
+              </Button>
+            </a>
+          </NavbarItem>
+
+          <NavbarItem>
             <a href="/contactUs">
               <Button className="red-hover-button bg-white" radius="none">
                 LIÊN HỆ
