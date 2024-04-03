@@ -28,6 +28,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Partner } from "@/constants/types/homeType";
+import { ToastContainer, toast } from "react-toastify";
+
 import {
   ref,
   uploadBytes,
@@ -99,6 +101,59 @@ const Partner = () => {
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+   //delete
+   const handleDelete = async (partnerId: number) => {
+    const isConfirmed = window.confirm(
+      "Bạn có chắc muốn xóa đối tác này không?"
+    );
+    if (isConfirmed) {
+      try {
+        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
+        if (!userString) {
+          console.log("No user found");
+          return;
+        }
+        const user = JSON.parse(userString);
+
+        axios
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`
+          )
+          .then(() => {
+            toast.success("Xóa thành công");
+            fetchPartners()
+          }),
+          {
+            headers: {
+              Authorization: user.data.data.token,
+            },
+          };
+
+        // setPartners((prevPartners) =>
+        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
+        // );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // restore
+  const restoreDelete = async (partnerId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}partner/restoreDelete/${partnerId}`
+        )
+        .then((response) => {
+          toast.success("Khôi phục thành công");
+          fetchDeletedPartner()
+        });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -246,7 +301,10 @@ const Partner = () => {
       </div>
 
       <div>
-        <Partners partners={partners} />
+        <Partners partners={partners} 
+                  handleDelete = {handleDelete}
+                  restoreDelete= {restoreDelete}
+        />
       </div>
     </div>
   );
