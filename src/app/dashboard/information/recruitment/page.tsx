@@ -134,6 +134,7 @@ const Recruitment = () => {
           )
           .then(() => {
             toast.success("Xóa thành công");
+            fetchRecruitment()
           }),
           {
             headers: {
@@ -143,6 +144,26 @@ const Recruitment = () => {
       } catch (error) {
         console.log(error);
       }
+    }
+  };
+
+  // restore
+  const restoreDelete = async (id: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm/${id}`,
+          {},
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Khôi phục thành công");
+          fetchDeletedRecruitment()
+        });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -186,7 +207,9 @@ const Recruitment = () => {
       </div>
 
       <div>
-        <Recruitments recruitments={recruitment} handleDelete={handleDelete} />
+        <Recruitments recruitments={recruitment} 
+                      handleDelete={handleDelete} 
+                      restoreDelete={restoreDelete}  />    
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ type ContactsProps = {
 const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDelete  }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
@@ -147,7 +147,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
           <TableColumn className="bg-[#FF0004] text-white">
             SĐT
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          {/* <TableColumn className="bg-[#FF0004] text-white">
             Ngành
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
@@ -161,7 +161,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
             Pháp lý
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className="bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
@@ -178,11 +178,11 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
               <TableCell>{contact.fullName}</TableCell>
               <TableCell>{contact.email}</TableCell>
               <TableCell>{contact.phoneNum}</TableCell>      
-              <TableCell>{contact.career}</TableCell>
+              {/* <TableCell>{contact.career}</TableCell>
               <TableCell>{contact.city}</TableCell>
               <TableCell>{contact.businessTime}</TableCell>
               <TableCell>{contact.annualRevenue}</TableCell>
-              <TableCell>{contact.juridical}</TableCell>
+              <TableCell>{contact.juridical}</TableCell> */}
               <TableCell>{contact.status}</TableCell>
 
 
@@ -192,29 +192,49 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
               {contact.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onPress={() => {
                       setSelectedContact(contact);
                       onOpenUpdate();
                     }}
                   >
-                    Update
+                    Cập nhật
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(contact.contactId)}
                   >
-                    Delete
+                    Xóa
+                  </Button>
+
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedContact(contact);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
                   </Button>
                 </TableCell>
               ) : (
-                <TableCell className="flex items-center justify-center">
+                <TableCell className="flex gap-2 items-center justify-center">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onClick={() => restoreDelete(contact.contactId)}
                   >
                     Khôi phục
+                  </Button>
+
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedContact(contact);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
                   </Button>
                 </TableCell>
               )}
@@ -222,6 +242,48 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
           ))}
         </TableBody>
       </Table>
+      
+       {/* update modal */}
+       <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+          <ModalBody>
+            {selectedContact && (
+              <div className="flex flex-row gap-10">
+                {/* <p>{selectedContact.fullName}</p> */}
+                <div>
+                  <p>Họ và tên</p>
+                  <p className="py-2">Email</p>
+                  <p>SĐT</p>
+                  <p className="py-2">Ngành</p>
+                  <p>Thành phố</p>
+                  <p className="py-2">Thời gian kinh doanh</p>
+                  <p>Doanh thu hàng năm </p>
+                  <p className="py-2">Cần hỗ trợ pháp lý nào</p>
+                 
+                </div>
+                <div>
+                  <p >{selectedContact.fullName}</p>                 
+                  <p className="py-2">{selectedContact.email}</p>
+                  <p>{selectedContact.phoneNum}</p>
+                  <p className="py-2">{selectedContact.career}</p>
+                  <p>{selectedContact.city}</p>
+                  <p className="py-2">{selectedContact.businessTime}</p>
+                  <p>{selectedContact.annualRevenue}</p>
+                  <p className="py-2">{selectedContact.juridical}</p>
+                  
+                  
+                </div>
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onClose}>
+              Đóng
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>

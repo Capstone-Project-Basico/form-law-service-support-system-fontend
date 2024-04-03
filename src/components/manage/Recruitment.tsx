@@ -36,11 +36,14 @@ import authHeader from "../authHeader/AuthHeader";
 type RecruitmentsProps = {
   recruitments: Recruitment[];
   handleDelete: (id: number) => void;
+  restoreDelete: (id: number)=>void;
 };
+
 
 const Recruitments: React.FC<RecruitmentsProps> = ({
   recruitments,
   handleDelete,
+  restoreDelete,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecruitment, setSelectedRecruitment] =
@@ -111,24 +114,6 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
       });
   };
 
-  // restore
-  const restoreDelete = async (id: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm/${id}`,
-          {},
-          {
-            headers: authHeader(),
-          }
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <div>
@@ -206,7 +191,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
             Nơi làm việc
           </TableColumn> */}
           <TableColumn className="bg-[#FF0004] text-white">
-            Trạng thái
+            Tình trạng
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
             Trạng thái
@@ -247,7 +232,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               {recruitment.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onPress={() => {
                       setSelectedRecruitment(recruitment);
                       onOpenUpdate();
@@ -264,7 +249,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   </Button>
 
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-green-600 text-white"
                     onClick={() => {
                       setSelectedRecruitment(recruitment);
                       onOpen();
@@ -274,12 +259,22 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   </Button>
                 </TableCell>
               ) : (
-                <TableCell className="flex items-center justify-center">
+                <TableCell className="flex gap-2 items-center justify-center">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onClick={() => restoreDelete(recruitment.id)}
                   >
                     Khôi phục
+                  </Button>
+
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedRecruitment(recruitment);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
                   </Button>
                 </TableCell>
               )}
@@ -297,39 +292,39 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               <div className="flex flex-row gap-10">
                 {/* <p>{selectedRecruitment.fullName}</p> */}
                 <div className="">
-                  <p>Họ và tên</p>
+                  <p className="py-2">Họ và tên</p>
                   <p>Ngày sinh</p>
-                  <p>Quê quán</p>
+                  <p className="py-2">Quê quán</p>
                   <p>Giới tính</p>
-                  <p>Tình trạng hôn nhân</p>
+                  <p className="py-2">Tình trạng hôn nhân</p>
                   <p>SĐT</p>
-                  <p>Email</p>
+                  <p className="py-2">Email</p>
                   <p>Vị trí</p>
-                  <p>Kinh nghiệm</p>
+                  <p className="py-2">Kinh nghiệm</p>
                   <p>Lĩnh vực</p>
-                  <p>Tốt nghiệp</p>
+                  <p className="py-2">Tốt nghiệp</p>
                   <p>Mục tiêu</p>
-                  <p>Chổ làm việc</p>
+                  <p className="py-2">Chổ làm việc</p>
                   <p>CCCD hoặc CMND</p>
                 </div>
                 <div>
-                  <p>{selectedRecruitment.fullName}</p>
+                  <p className="py-2">{selectedRecruitment.fullName}</p>
                   {selectedRecruitment.dateOfBirth
                     ? new Date(
                         selectedRecruitment.dateOfBirth
                       ).toLocaleDateString()
                     : "N/A"}
-                  <p>{selectedRecruitment.homeTown}</p>
+                  <p className="py-2">{selectedRecruitment.homeTown}</p>
                   <p>{selectedRecruitment.gender}</p>
-                  <p>{selectedRecruitment.maritalStatus}</p>
+                  <p className="py-2">{selectedRecruitment.maritalStatus}</p>
                   <p>{selectedRecruitment.phoneNum}</p>
-                  <p>{selectedRecruitment.email}</p>
+                  <p className="py-2">{selectedRecruitment.email}</p>
                   <p>{selectedRecruitment.position}</p>
-                  <p>{selectedRecruitment.exp}</p>
+                  <p className="py-2">{selectedRecruitment.exp}</p>
                   <p>{selectedRecruitment.field}</p>
-                  <p>{selectedRecruitment.graduate}</p>
+                  <p className="py-2">{selectedRecruitment.graduate}</p>
                   <p>{selectedRecruitment.target}</p>
-                  <p>{selectedRecruitment.workPlace}</p>
+                  <p className="py-2">{selectedRecruitment.workPlace}</p>
                   <p>{selectedRecruitment.id_number}</p>
                 </div>
               </div>
