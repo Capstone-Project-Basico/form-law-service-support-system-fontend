@@ -15,17 +15,15 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import { Navbar as MyNavbar } from "@nextui-org/react";
-import {
-  DO_NOT_USE_OR_YOU_WILL_BE_FIRED_EXPERIMENTAL_REACT_NODES,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { practices } from "@/lib/navbarItems";
 import { researchAndPublications, about } from "@/lib/navbarItems";
 import { log } from "console";
 import axios from "axios";
-import { User } from "@/constants/types/homeType";
+import { ProfileSidebarItem, User } from "@/constants/types/homeType";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface UserLocal {
   data: {
@@ -213,9 +211,9 @@ const Navbar = () => {
         </NavbarContent>
 
         {/* login */}
-        <NavbarContent justify="end">
+        <NavbarContent justify="end" className="w-[165px] h-12">
           {user ? (
-            <Dropdown placement="bottom-end">
+            <Dropdown placement="bottom-end" className="w-80">
               <DropdownTrigger>
                 <Avatar
                   isBordered
@@ -231,12 +229,44 @@ const Navbar = () => {
                 <DropdownItem key="profile" className="h-14 gap-2">
                   <h2 className="font-semibold">{userData?.userName}</h2>
                 </DropdownItem>
-                <DropdownItem key="settings">My Settings</DropdownItem>
-                <DropdownItem key="team_settings">
-                  <Button>Thông tin của tôi</Button>
+                <DropdownItem key="profile" className="bg-[#F2F2F2]">
+                  <Link href="/profile" className="text-black">
+                    Cài đặt thông tin cá nhân
+                  </Link>
+                </DropdownItem>
+                <DropdownItem key="changePassword" className="bg-[#F2F2F2]">
+                  <Link href="/profile/changePassword" className="text-black">
+                    Đổi mật khẩu
+                  </Link>
+                </DropdownItem>
+                <DropdownItem key="wallet" className="bg-[#F2F2F2]">
+                  <Link href="/profile/wallet" className="text-black">
+                    Ví của bạn
+                  </Link>
+                </DropdownItem>
+                <DropdownItem key="manageTemplate" className="bg-[#F2F2F2]">
+                  <Link href="/profile/manageTemplate" className="text-black">
+                    Quản lí biểu mẫu
+                  </Link>
+                </DropdownItem>
+                <DropdownItem key="servicePack" className="bg-[#F2F2F2]">
+                  <Link href="/profile/servicePack" className="text-black">
+                    Gói dịch vụ
+                  </Link>
+                </DropdownItem>
+                <DropdownItem key="transactionHistory" className="bg-[#F2F2F2]">
+                  <Link
+                    href="/profile/transactionHistory"
+                    className="text-black"
+                  >
+                    Lịch sử giao dịch
+                  </Link>
                 </DropdownItem>
                 <DropdownItem key="logout" color="danger">
-                  Log Out
+                  <div className="flex flex-row  items-center gap-3">
+                    <FontAwesomeIcon icon={faRightFromBracket} />
+                    <p>Đăng xuất</p>
+                  </div>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -259,3 +289,21 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+const MenuItem = ({ item }: { item: ProfileSidebarItem }) => {
+  const pathname = usePathname();
+
+  return (
+    <div>
+      <Link
+        href={item.path}
+        className={`flex flex-row space-x-4 items-center p-2 rounded-lg hover:text-[#FF0004] ${
+          item.path === pathname ? "text-[#FF0004]" : ""
+        }`}
+      >
+        {item.icon}
+        <span className="font-semibold text-xl flex">{item.title}</span>
+      </Link>
+    </div>
+  );
+};
