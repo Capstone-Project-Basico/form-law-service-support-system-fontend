@@ -1,15 +1,16 @@
-"use client";
-import FileUpload from "@/components/file-upload";
-import { FormTemplate } from "@/constants/types/FormTemplate";
-import { SideNavItem } from "@/constants/types/homeType";
-import axiosClient from "@/lib/axiosClient";
-import { sideNavItems } from "@/lib/dashboardNavbar";
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
-import { Button, Input, Textarea } from "@nextui-org/react";
-import { Select, SelectItem } from "@nextui-org/select";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import * as React from "react";
+'use client';
+import FileUpload from '@/components/file-upload';
+import Loading from '@/components/loading';
+import { FormTemplate } from '@/constants/types/FormTemplate';
+import { SideNavItem } from '@/constants/types/homeType';
+import axiosClient from '@/lib/axiosClient';
+import { sideNavItems } from '@/lib/dashboardNavbar';
+import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/breadcrumbs';
+import { Button, Input, Textarea } from '@nextui-org/react';
+import { Select, SelectItem } from '@nextui-org/select';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import * as React from 'react';
 
 export interface IAddTemplatePageProps {}
 
@@ -127,7 +128,9 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
     if (res.status === 200) {
       const data = res.data.data;
       if (data !== null) {
+        setTitleInputError('Tên biểu mẫu đã tồn tại');
       } else {
+        setTitleInputError('');
       }
     }
   }
@@ -161,27 +164,7 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center w-full h-auto">
-        <div className="flex justify-center items-center space-x-1 text-sm text-gray-700">
-          <svg
-            fill="none"
-            className="w-6 h-6 animate-spin"
-            viewBox="0 0 32 32"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              clipRule="evenodd"
-              d="M15.165 8.53a.5.5 0 01-.404.58A7 7 0 1023 16a.5.5 0 011 0 8 8 0 11-9.416-7.874.5.5 0 01.58.404z"
-              fill="currentColor"
-              fill-rule="evenodd"
-            />
-          </svg>
-
-          <div>Loading ...</div>
-        </div>
-      </div>
-    );
+    return <Loading className="" />;
   }
 
   return (
