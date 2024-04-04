@@ -22,6 +22,7 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -35,21 +36,26 @@ import authHeader from "../authHeader/AuthHeader";
 
 type LawyersProps = {
   lawyers: Lawyer[];
+  handleDelete: (id: number)=> void;
+  restoreDelete: (id: number)=> void;
 };
 
-const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
+const Lawyers: React.FC<LawyersProps> = ({ 
+  lawyers,
+  handleDelete,
+  restoreDelete,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
-  //upload file
-  // const [imageUrls, setImageUrls] = useState<string[]>([]);
-  // const [imageUrl, setImageUrl] = useState<string>();
+
   const imagesListRef = ref(storage, "lawyers/");
+  
 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,12 +63,12 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
   };
   // Filter Lawyers based on search term
   const filteredLawyers = lawyers.filter((lawyer) =>
-  lawyer.email.toLowerCase().includes(searchTerm.toLowerCase())
+    lawyer.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   //pagination
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 4;
 
   const pages = Math.ceil(filteredLawyers.length / rowsPerPage);
 
@@ -81,15 +87,13 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
     axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${selectedLawyer.userId}`,
-        { 
+        {
           userName: selectedLawyer.userName,
           avatar: selectedLawyer.avatar,
-          introduce: selectedLawyer.introduce,
           phoneNumber: selectedLawyer.phoneNumber,
           url: selectedLawyer.url,
           position: selectedLawyer.position,
-          
-          
+          introduce: selectedLawyer.introduce,
         },
         {
           headers: authHeader(),
@@ -99,9 +103,10 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
         toast.success("Cập nhật thành công");
       })
       .catch((error) => {
-        console.error("Failed to update partner", error);
+        console.error("Failed to update user", error);
       });
   };
+ 
   //upload update file
   const uploadUpdateFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     // First, check if the files array is not null and has at least one file
@@ -133,7 +138,7 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
             console.log("File available at", downloadURL);
 
             if (!selectedLawyer) {
-              console.error("No lawyer selected for update.");
+              console.error("No Lawyer selected for update.");
               return;
             }
 
@@ -143,7 +148,7 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
               avatar: downloadURL,
             });
 
-            // Optionally: Update the partner's information in the database or state here
+            // Optionally: Update the Lawyer's information in the database or state here
             // This might involve calling an API endpoint or updating local state
           });
         }
@@ -153,47 +158,7 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
     }
   };
 
-  //delete
-  const handleDelete = async (userId: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa luật sư này không?"
-    );
-    if (isConfirmed) {
-      try {
-       
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
-            {
-              headers: authHeader(),
-            }
-          )
-          .then(() => {
-            
-            toast.success("Xóa thành công");
-          })
-
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  // restore
-  const restoreDelete = async (userId: number) => {
-    try {
-      axios
-
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   return (
     <div>
@@ -234,20 +199,20 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
         }
       >
         <TableHeader className="">
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Họ và tên
+        <TableColumn className=" bg-[#FF0004] text-white">
+            Email
           </TableColumn>
-          <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
+          <TableColumn className=" bg-[#FF0004] text-white">
             Hình ảnh
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Đường dẫn đến Facebook
-          </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            email
+          <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
+            Họ và tên
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             SĐT
+          </TableColumn>
+          {/* <TableColumn className=" bg-[#FF0004] text-white">
+            Đường dẫn Facebook
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Chức vụ
@@ -257,18 +222,21 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Vai trò
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className=" bg-[#FF0004] text-white">
             Trạng thái
           </TableColumn>
+                 
+                 
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
+
         </TableHeader>
         <TableBody>
           {items.map((lawyer, index) => (
             <TableRow key={index}>
-              <TableCell>{lawyer.userName}</TableCell>
+              <TableCell>{lawyer.email}</TableCell>
               <TableCell>
                 {
                   <Image
@@ -281,69 +249,146 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
                     }
                     alt=""
                     width={100}
-                    height={150}
+                    height={100}
                   />
                 }
               </TableCell>
-              <TableCell>
-                <Link href={lawyer.url}>{lawyer.url}</Link>
-              </TableCell>
-              <TableCell>{lawyer.email}</TableCell>
+              <TableCell>{lawyer.userName}</TableCell>
               <TableCell>{lawyer.phoneNumber}</TableCell>
+              {/* <TableCell>{lawyer.url}</TableCell>
               <TableCell>{lawyer.position}</TableCell>
               <TableCell>{lawyer.introduce}</TableCell>
-              <TableCell>{lawyer.roleName}</TableCell>
+              <TableCell>{lawyer.roleName}</TableCell> */}
               <TableCell>
                   <span style={{ color: lawyer.status ? 'red' : 'green' }}>
                   {lawyer.status ? "Không sử dụng" : "Đang hoạt động"}
                   </span>
               </TableCell>
+
               {lawyer.status === 0 ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onPress={() => {
                       setSelectedLawyer(lawyer);
                       onOpenUpdate();
                     }}
                   >
-                    Cập nhật
+                    Update
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(lawyer.userId)}
                   >
-                    Xóa
+                    Delete
                   </Button>
-                </TableCell>
-              ) : (
-                <TableCell className="flex items-center justify-center">
                   <Button
-                    className="bg-blue-600 text-white"
-                    onClick={() => restoreDelete(lawyer.userId)}
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedLawyer(lawyer);
+                      onOpen();
+                    }}
                   >
-                    Khôi phục
+                    Chi tiết
                   </Button>
-                </TableCell>
-              )}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                </TableCell>   
+                 
+            ) : (
+              <TableCell className="flex gap-2 items-center justify-center">
+                <Button
+                  className="bg-blue-600 text-white"
+                  onClick={() => restoreDelete(lawyer.userId)}
+                >
+                  Khôi phục
+                </Button>
+                <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedLawyer(lawyer);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
+                
+              </TableCell>
+            )}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+
+    {/* update modal */}
+    <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent style={{ width: '90%', maxWidth: '900px' }}>
+          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+          <ModalBody>
+            {selectedLawyer && (
+              <div className="flex flex-row gap-10">
+                
+                <div className="">
+                  <p className="py-2">Email</p>
+                  <p  className="py-2">Hình ảnh</p>
+                  <p className="py-28">Họ và tên</p>
+                  
+                  <p >SĐT</p>
+                  <p>Đường dẫn Facebook</p>
+                  <p className="py-2">Chức vụ</p>
+                  <p>Giới thiệu</p>
+                  <p className="py-2">Vai trò</p>
+                 
+                </div>
+                <div>
+                  <p  className="py-2">{selectedLawyer.email}</p>
+                 
+                  <p>{
+                  <Image
+                    src={
+                      selectedLawyer.avatar
+                        ? selectedLawyer.avatar.startsWith("http")
+                          ? selectedLawyer.avatar
+                          : `/${selectedLawyer.avatar}`
+                        : "/errorImage.png"
+                    }
+                    alt=""
+                    width={100}
+                    height={100}
+                  />
+                  }
+                  
+                  </p>
+                  <p className="py-5">{selectedLawyer.userName}</p>
+                  <p  >{selectedLawyer.phoneNumber}</p>
+                  <p>{selectedLawyer.position}</p>
+                  <p >{selectedLawyer.introduce}</p>
+                  <p>{selectedLawyer.roleName}</p>
+                  
+                 
+                </div>
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onClose}>
+              Đóng
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Cập nhật luật sư
+            Cập nhật người dùng
           </ModalHeader>
           <ModalBody>
             {selectedLawyer && (
               <form onSubmit={handleUpdateSubmit}>
                 <Input
                   type="text"
-                  label="Họ và tên"
+                  label="Tên luật sư"
                   value={selectedLawyer.userName}
                   onChange={(e) =>
                     setSelectedLawyer({
@@ -352,23 +397,12 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
                     })
                   }
                 />
+
                 <input
                   className="py-3"
                   type="file"
                   onChange={(e) => uploadUpdateFile(e)}
                 />
-                <Input 
-                  type="text"
-                  label="Đường dẫn facebook "
-                  value={selectedLawyer.url}
-                  onChange={(e) =>
-                    setSelectedLawyer({
-                      ...selectedLawyer,
-                      url: e.target.value,
-                    })
-                  }
-                />
-                
                 <Input
                   type="text"
                   label="SĐT"
@@ -377,6 +411,18 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
                     setSelectedLawyer({
                       ...selectedLawyer,
                       phoneNumber: e.target.value,
+                    })
+                  }
+                />
+
+                <Input
+                  type="text"
+                  label="Đường dẫn Facebook"
+                  value={selectedLawyer.url}
+                  onChange={(e) =>
+                    setSelectedLawyer({
+                      ...selectedLawyer,
+                      url: e.target.value,
                     })
                   }
                 />
@@ -402,7 +448,6 @@ const Lawyers: React.FC<LawyersProps> = ({ lawyers }) => {
                     })
                   }
                 />
-                
               </form>
             )}
           </ModalBody>

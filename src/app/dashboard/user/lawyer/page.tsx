@@ -40,33 +40,35 @@ import {
 import { storage } from "@/app/firebase";
 import Lawyers from "@/components/manage/Lawyer";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
+import authHeader from "@/components/authHeader/AuthHeader";
 
 const Lawyer = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
 
- //data
-  const [userName, setUserName] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [url, seturl] = useState("");
+  //data
   const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [position, setPosition] = useState("");
+  const [url, setUrl] = useState("");
+  const [avartar, setAvatar] = useState("");
   const [introduce, setIntroduce] = useState("");
+  const [position, setPosition] = useState("");
   const [roleName, setRoleName] = useState("");
-  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
 
-  let newLawyer = {
-    userName,
-    avatar,
-    url,
+  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
+  let newUser = {
     email,
+    avartar,
+    url,
+    userName,
     phoneNumber,
-    position,
     introduce,
+    position,
     roleName,
   };
-  const imagesListRef = ref(storage, "lawyers/");
+
   const [imageUpload, setImageUpload] = useState<File | null>(null);
 
   useEffect(() => {
@@ -74,7 +76,6 @@ const Lawyer = () => {
       case 1:
         fetchLawyers();
         break;
-      
       case 2:
         fetchDeletedLawyer();
         break;
@@ -91,56 +92,70 @@ const Lawyer = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}user/getAllLawyers`
       );
       setLawyers(response.data.data);
-    
+      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
     } catch (error) {
       console.error(error);
     }
   };
 
-   //get all deleted items
-   const fetchDeletedLawyer = async () => {
+  //get all deleted items
+  const fetchDeletedLawyer = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}user/getAllDeletedLawyers`
       );
       setLawyers(response.data.data);
-     
+      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
     } catch (error) {
       console.error(error);
     }
   };
-  
-  //upload file
-  const uploadFile = (e: any) => {
-    setImageUpload(e.target.files[0]);
-    let image = e.target.files[0];
 
-    if (image == null) return;
-    const storageRef = ref(storage, "/images/" + image.name + uuidv4()); // Create a reference to '/images/imageName'
-
-    const uploadTask = uploadBytesResumable(storageRef, image); // Start the file upload
-
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // Handle progress updates here, if you wish
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-      },
-      (error) => {
-        // Handle unsuccessful uploads here
-        console.error(error);
-      },
-      () => {
-        // Handle successful uploads on complete
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
-          setAvatar(downloadURL);
-        });
-      }
+  //delete
+  const handleDelete = async (userId: number) => {
+    const isConfirmed = window.confirm(
+      "Bạn có chắc muốn xóa người dùng này không?"
     );
+    if (isConfirmed) {
+      try {
+       
+        axios
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
+            {
+              headers: authHeader(),
+            }
+          )
+          .then(() => {
+            
+            toast.success("Xóa thành công");
+            fetchLawyers()
+          })
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // restore
+  const restoreDelete = async (userId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`,
+          {},
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Khôi phục thành công");
+          fetchDeletedLawyer()
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   
@@ -149,61 +164,12 @@ const Lawyer = () => {
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">
-              Quản lí người dùng
-            </p>
+            <p className="text-black font-bold text-3xl ">Quản lí người dùng</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <p className="text-[#FF0004] font-bold text-3xl">Luật sư</p>
           </BreadcrumbItem>
         </Breadcrumbs>
-
-        {/* <div className="flex justify-end">
-          <Button
-            className="flex justify-end w-[100px] bg-[#FF0004] text-white"
-            radius="full"
-            onPress={onOpen}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-            Tạo mới
-          </Button>
-          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <form onSubmit={handleSubmit}>
-                    <ModalHeader className="flex flex-col gap-1">
-                      Thêm đối tác
-                    </ModalHeader>
-                    <ModalBody>
-                      <Input
-                        type="text"
-                        label="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                      <input className="py-3" type="file" onChange={(e) => uploadFile(e)} />
-                      <Input
-                        type="text"
-                        label="Link"
-                        value={link}
-                        onChange={(e) => setLink(e.target.value)}
-                      />
-                    </ModalBody>
-                    <ModalFooter>
-                      <Button color="danger" variant="light" onPress={onClose}>
-                        Đóng
-                      </Button>
-                      <Button color="primary" onPress={onClose} type="submit">
-                        Thêm
-                      </Button>
-                    </ModalFooter>
-                  </form>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
-        </div> */}
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
@@ -216,11 +182,6 @@ const Lawyer = () => {
             radius="none"
           >
             TẤT CẢ
-          </Button>
-        </div>
-        <div>
-          <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
-            CHỜ DUYỆT
           </Button>
         </div>
         <div>
@@ -239,12 +200,11 @@ const Lawyer = () => {
 
       <div>
         <Lawyers lawyers={lawyers} 
-                  
-                  
-        />
+               handleDelete={handleDelete}       
+               restoreDelete={restoreDelete}  />    
       </div>
     </div>
   );
 };
 
-export default Lawyers;
+export default Lawyer;
