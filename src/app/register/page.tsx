@@ -51,7 +51,7 @@ const Page = () => {
 };
 
   return (
-    <div className="flex flex-col justify-center items-center pt-32 pb-[97px] bg-[#f3f3f3]">
+    <div className="flex flex-col justify-center items-center pt-16 pb-[90px] bg-[#f3f3f3]">
       <ToastContainer />
 
       <div className="bg-white p-20">
