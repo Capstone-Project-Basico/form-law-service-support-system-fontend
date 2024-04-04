@@ -83,7 +83,7 @@ const Navbar = () => {
   console.log(user);
   return (
     <div className={styles.container}>
-      <MyNavbar maxWidth="full" isBordered className="border-[#FF0004] px-8">
+      <MyNavbar maxWidth="full" isBordered className="border-[#FF0004] px-8 pb-1">
         <NavbarBrand>
           <a href="/">
             <Image
@@ -213,7 +213,7 @@ const Navbar = () => {
             </a>
           </NavbarItem>
           <NavbarItem>
-            <a href="/">
+            <a href="/Recruitment">
               <Button className="red-hover-button bg-white" radius="none">
                 TUYỂN DỤNG
               </Button>
