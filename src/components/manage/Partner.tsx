@@ -34,14 +34,14 @@ import { ToastContainer, toast } from "react-toastify";
 
 type PartnersProps = {
   partners: Partner[];
-  handleDelete: (id: number)=> void;
-  restoreDelete: (id: number)=> void;
+  handleDelete: (id: number) => void;
+  restoreDelete: (id: number) => void;
 };
 
-const Partners: React.FC<PartnersProps> = ({ 
+const Partners: React.FC<PartnersProps> = ({
   partners,
   handleDelete,
-  restoreDelete, 
+  restoreDelete,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
@@ -150,8 +150,6 @@ const Partners: React.FC<PartnersProps> = ({
     }
   };
 
- 
-
   return (
     <div>
       <ToastContainer />
@@ -231,9 +229,9 @@ const Partners: React.FC<PartnersProps> = ({
                 <Link href={partner.link}>{partner.link}</Link>
               </TableCell>
               <TableCell>
-                  <span style={{ color: partner.delete ? 'red' : 'green' }}>
+                <span style={{ color: partner.delete ? "red" : "green" }}>
                   {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
-                  </span>
+                </span>
               </TableCell>
               {partner.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">

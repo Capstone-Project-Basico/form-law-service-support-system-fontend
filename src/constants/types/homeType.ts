@@ -64,7 +64,7 @@ export type Contact = {
 export type Recruitment = {
   id: number;
   fullName: string;
-  dateOfBirth: Date;
+  dateOfBirth:  Date | null;
   homeTown: string;
   gender: string;
   maritalStatus: string;
@@ -112,11 +112,11 @@ export type Task = {
   id: number;
   taskName: string;
   description: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | null; // startDate can be a Date object or null
+  endDate: Date | null; 
   email: string;
-  status: boolean;
-  delete: boolean;
+  processStatus: string;
+  status: number;
 };
 
 export type CardTemplate = {

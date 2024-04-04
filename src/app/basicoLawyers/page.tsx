@@ -104,7 +104,7 @@ const Page = () => {
         </div>
 
         <div className="mb-32">
-          <div className="flex flex-cols-4 w-full h-[400px]">
+          <div className="flex flex-cols-4 w-full h-[400px] gap-5">
             {lawyers.map((lawyer, index) => (
               <div key={index} className="w-[262px] h-[350px]">
                 <div>
@@ -120,7 +120,7 @@ const Page = () => {
                     width={262}
                     height={300}
                   />
-                  <div className="bg-[#f3f3f3] py-8">
+                  <div className="bg-[#f3f3f3] py-8 pl-5">
                     <h2 className="text-[18px] font-bold">{lawyer.userName}</h2>
                     <p className="text-[15px] text-[#838383]">
                       {lawyer.position}

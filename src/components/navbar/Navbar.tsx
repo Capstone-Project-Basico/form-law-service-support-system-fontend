@@ -45,6 +45,10 @@ const Navbar = () => {
   //     return storedUser ? JSON.parse(storedUser) : null;
   //   }
   // };
+  const logout = () => {
+    window.localStorage.clear();
+    window.location.reload();
+  };
 
   const useUserFromStorage = () => {
     const [user, setUser] = useState<UserLocal | null>(null);
@@ -263,7 +267,10 @@ const Navbar = () => {
                   </Link>
                 </DropdownItem>
                 <DropdownItem key="logout" color="danger">
-                  <div className="flex flex-row  items-center gap-3">
+                  <div
+                    className="flex flex-row  items-center gap-3"
+                    onClick={() => logout()}
+                  >
                     <FontAwesomeIcon icon={faRightFromBracket} />
                     <p>Đăng xuất</p>
                   </div>

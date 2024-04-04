@@ -22,7 +22,7 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
-
+  ScrollShadow,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -36,11 +36,11 @@ import authHeader from "../authHeader/AuthHeader";
 
 type LawyersProps = {
   lawyers: Lawyer[];
-  handleDelete: (id: number)=> void;
-  restoreDelete: (id: number)=> void;
+  handleDelete: (id: number) => void;
+  restoreDelete: (id: number) => void;
 };
 
-const Lawyers: React.FC<LawyersProps> = ({ 
+const Lawyers: React.FC<LawyersProps> = ({
   lawyers,
   handleDelete,
   restoreDelete,
@@ -55,7 +55,6 @@ const Lawyers: React.FC<LawyersProps> = ({
   } = useDisclosure();
 
   const imagesListRef = ref(storage, "lawyers/");
-  
 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +105,7 @@ const Lawyers: React.FC<LawyersProps> = ({
         console.error("Failed to update user", error);
       });
   };
- 
+
   //upload update file
   const uploadUpdateFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     // First, check if the files array is not null and has at least one file
@@ -158,8 +157,6 @@ const Lawyers: React.FC<LawyersProps> = ({
     }
   };
 
-  
-
   return (
     <div>
       <ToastContainer />
@@ -199,18 +196,14 @@ const Lawyers: React.FC<LawyersProps> = ({
         }
       >
         <TableHeader className="">
-        <TableColumn className=" bg-[#FF0004] text-white">
-            Email
-          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">Email</TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Hình ảnh
           </TableColumn>
           <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
             Họ và tên
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            SĐT
-          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">SĐT</TableColumn>
           {/* <TableColumn className=" bg-[#FF0004] text-white">
             Đường dẫn Facebook
           </TableColumn>
@@ -226,12 +219,10 @@ const Lawyers: React.FC<LawyersProps> = ({
           <TableColumn className=" bg-[#FF0004] text-white">
             Trạng thái
           </TableColumn>
-                 
-                 
+
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
-
         </TableHeader>
         <TableBody>
           {items.map((lawyer, index) => (
@@ -260,9 +251,9 @@ const Lawyers: React.FC<LawyersProps> = ({
               <TableCell>{lawyer.introduce}</TableCell>
               <TableCell>{lawyer.roleName}</TableCell> */}
               <TableCell>
-                  <span style={{ color: lawyer.status ? 'red' : 'green' }}>
+                <span style={{ color: lawyer.status ? "red" : "green" }}>
                   {lawyer.status ? "Không sử dụng" : "Đang hoạt động"}
-                  </span>
+                </span>
               </TableCell>
 
               {lawyer.status === 0 ? (
@@ -292,17 +283,16 @@ const Lawyers: React.FC<LawyersProps> = ({
                   >
                     Chi tiết
                   </Button>
-                </TableCell>   
-                 
-            ) : (
-              <TableCell className="flex gap-2 items-center justify-center">
-                <Button
-                  className="bg-blue-600 text-white"
-                  onClick={() => restoreDelete(lawyer.userId)}
-                >
-                  Khôi phục
-                </Button>
-                <Button
+                </TableCell>
+              ) : (
+                <TableCell className="flex gap-2 items-center justify-center">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    onClick={() => restoreDelete(lawyer.userId)}
+                  >
+                    Khôi phục
+                  </Button>
+                  <Button
                     className="bg-green-600 text-white"
                     onClick={() => {
                       setSelectedLawyer(lawyer);
@@ -311,61 +301,93 @@ const Lawyers: React.FC<LawyersProps> = ({
                   >
                     Chi tiết
                   </Button>
-                
-              </TableCell>
-            )}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+                </TableCell>
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
-    {/* update modal */}
-    <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalContent style={{ width: '90%', maxWidth: '900px' }}>
+      {/* update modal */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent style={{ width: "90%", maxWidth: "900px" }}>
           <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
           <ModalBody>
             {selectedLawyer && (
-              <div className="flex flex-row gap-10">
-                
-                <div className="">
-                  <p className="py-2">Email</p>
-                  <p  className="py-2">Hình ảnh</p>
-                  <p className="py-28">Họ và tên</p>
-                  
-                  <p >SĐT</p>
-                  <p>Đường dẫn Facebook</p>
-                  <p className="py-2">Chức vụ</p>
-                  <p>Giới thiệu</p>
-                  <p className="py-2">Vai trò</p>
-                 
+              <div className="flex flex-col gap-10">
+                <div className="flex flex-row ">
+                  <p className="w-36">Email</p>
+                  <p>{selectedLawyer.email}</p>
                 </div>
-                <div>
-                  <p  className="py-2">{selectedLawyer.email}</p>
-                 
-                  <p>{
-                  <Image
-                    src={
-                      selectedLawyer.avatar
-                        ? selectedLawyer.avatar.startsWith("http")
-                          ? selectedLawyer.avatar
-                          : `/${selectedLawyer.avatar}`
-                        : "/errorImage.png"
+                <div className="flex flex-row my-5">
+                  <p className="w-36">Hình ảnh</p>
+                  <p>
+                    {
+                      <Image
+                        src={
+                          selectedLawyer.avatar &&
+                          selectedLawyer.avatar.startsWith("http")
+                            ? selectedLawyer.avatar
+                            : "/errorImage.png"
+                        }
+                        alt=""
+                        width={100}
+                        height={100}
+                      />
                     }
-                    alt=""
-                    width={100}
-                    height={100}
-                  />
-                  }
-                  
+                  </p>
+                </div>
+                <div className="flex flex-row">
+                  <p className="w-36">Họ và tên</p>
+                  <p>{selectedLawyer.userName}</p>
+                </div>
+
+                <div className="flex flex-row my-5">
+                  <p className="w-36">SĐT</p>
+                  <p>{selectedLawyer.phoneNumber}</p>
+                </div>
+
+                <div className="flex flex-row">
+                  <p className="w-36">Facebook</p>
+                  <p>{selectedLawyer.url}</p>
+                </div>
+                <div className="flex flex-row my-5">
+                  <p className="w-36">Chức vụ</p>
+                  <p>{selectedLawyer.position}</p>
+                </div>
+                <div className="flex flex-row">
+                  <p className="w-36">Giới thiệu</p>
+                  <ScrollShadow className="w-[650px] h-[150px]">
+                    <p>{selectedLawyer.introduce}</p>
+                  </ScrollShadow>
+                </div>
+                <div className="flex flex-row">
+                  <p className="w-36">Vai trò</p>
+                  <p>{selectedLawyer.roleName}</p>
+                </div>
+                {/* <div>
+                  <p>
+                    {
+                      <Image
+                        src={
+                          selectedLawyer.avatar
+                            ? selectedLawyer.avatar.startsWith("http")
+                              ? selectedLawyer.avatar
+                              : `/${selectedLawyer.avatar}`
+                            : "/errorImage.png"
+                        }
+                        alt=""
+                        width={100}
+                        height={100}
+                      />
+                    }
                   </p>
                   <p className="py-5">{selectedLawyer.userName}</p>
-                  <p  >{selectedLawyer.phoneNumber}</p>
+                  <p>{selectedLawyer.phoneNumber}</p>
                   <p>{selectedLawyer.position}</p>
-                  <p >{selectedLawyer.introduce}</p>
+                  <p>{selectedLawyer.introduce}</p>
                   <p>{selectedLawyer.roleName}</p>
-                  
-                 
-                </div>
+                </div> */}
               </div>
             )}
           </ModalBody>
