@@ -19,6 +19,9 @@ const config: Config = {
         sans: ["Roboto Condensed", "Arial", "Helvetica", "sans-serif"],
         // other fonts...
       },
+      scale: {
+        '200': '2',
+      },
     },
   },
   darkMode: "class",
