@@ -107,7 +107,7 @@ const Users: React.FC<UsersProps> = ({
           <Input
             classNames={{
               base: "w-full sm:max-w-[10rem] h-10",
-              mainWrapper: "h-full",
+              mainWrapper: "h-full w-96",
               input: "text-small",
               inputWrapper:
                 "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
