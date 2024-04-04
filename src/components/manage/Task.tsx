@@ -26,17 +26,17 @@ import {
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { Task } from "@/constants/types/homeType";
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { storage } from "@/app/firebase";
-import Image from "next/image";
-import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
+import authHeader from "../authHeader/AuthHeader";
 
 type TasksProps = {
   tasks: Task[];
+  handleDelete:(id: number)=>void;
+  restoreDelete:(id: number)=> void;
+
 };
 
-const Tasks: React.FC<TasksProps> = ({ tasks }) => {
+const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
@@ -81,6 +81,10 @@ const Tasks: React.FC<TasksProps> = ({ tasks }) => {
           description: selectedTask.description,
           startDate: selectedTask.startDate,
           endDate: selectedTask.endDate,
+          processStatus: selectedTask.processStatus,
+        },
+        {
+          headers: authHeader(),
         }
       )
       .then((response) => {
@@ -91,57 +95,6 @@ const Tasks: React.FC<TasksProps> = ({ tasks }) => {
       });
   };
  
-
-  //delete
-  const handleDelete = async (id: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa công việc này không?"
-    );
-    if (isConfirmed) {
-      try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
-          console.log("No user found");
-          return;
-        }
-        const user = JSON.parse(userString);
-
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}`
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-          }),
-          {
-            headers: {
-              Authorization: user.data.data.token,
-            },
-          };
-
-        // setPartners((prevPartners) =>
-        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-        // );
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  // restore
-  const restoreDelete = async (paridtnerId: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}`
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <div>
@@ -194,8 +147,11 @@ const Tasks: React.FC<TasksProps> = ({ tasks }) => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày kết thúc
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
+          {/* <TableColumn className=" bg-[#FF0004] text-white">
             Người đảm nhiệm
+          </TableColumn> */}
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Tình trạng
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Trạng thái
@@ -209,35 +165,62 @@ const Tasks: React.FC<TasksProps> = ({ tasks }) => {
             <TableRow key={index}>
               <TableCell>{task.taskName}</TableCell>
               <TableCell>{task.description}</TableCell>
-              <TableCell>{task.description}</TableCell>
-              <TableCell>{task.description}</TableCell>
-              <TableCell>{task.email}</TableCell>
-              <TableCell>{task.status}</TableCell>
+              <TableCell>
+                {
+                  task.startDate
+                    ? new Date(task.startDate).toLocaleDateString()
+                    : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
+                }
+              </TableCell>
+              <TableCell>
+                {
+                  task.endDate
+                    ? new Date(task.endDate).toLocaleDateString()
+                    : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
+                }
+              </TableCell>
+              <TableCell>{task.processStatus}</TableCell>
+              <TableCell >
+                  <span style={{ color: task.status ? 'red' : 'green' }}>
+                  {task.status ? "Không sử dụng" : "Đang hoạt động"}
+                  </span>
+              </TableCell>
               
-          
+              {task.status === 0 ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onPress={() => {
                       setSelectedTask(task);
                       onOpenUpdate();
                     }}
                   >
-                    Update
+                    Cập nhật
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(task.id)}
                   >
-                    Delete
+                    Xóa
                   </Button>
                 </TableCell>
-             
-             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+             ) : (
+              <TableCell className="flex gap-2 items-center justify-center">
+                <Button
+                  className="bg-blue-600 text-white"
+                  onClick={() => restoreDelete(task.id)}
+                >
+                  Khôi phục
+                </Button>
+
+                
+              </TableCell>
+            )}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
@@ -250,7 +233,7 @@ const Tasks: React.FC<TasksProps> = ({ tasks }) => {
               <form onSubmit={handleUpdateSubmit}>
                 <Input
                   type="text"
-                  label="Name"
+                  label="Tên công việc"
                   value={selectedTask.taskName}
                   onChange={(e) =>
                     setSelectedTask({
@@ -259,6 +242,49 @@ const Tasks: React.FC<TasksProps> = ({ tasks }) => {
                     })
                   }
                   />
+                   <Input
+                  type="text"
+                  label="Mô tả"
+                  value={selectedTask.description}
+                  onChange={(e) =>
+                    setSelectedTask({
+                      ...selectedTask,
+                      description: e.target.value,
+                    })
+                  }
+                  />
+                   
+                  <Input
+                    type="date"
+                    label="Ngày bắt đầu"
+                    value={selectedTask && selectedTask.startDate instanceof Date 
+                    ? selectedTask.startDate.toISOString().substring(0, 10) 
+                    : ''}
+                    onChange={(e) =>
+                    setSelectedTask({
+                    ...selectedTask,
+                    startDate: e.target.value ? new Date(e.target.value) : null,
+                    } as Task) // Ensure the type is Task when updating state
+                    }
+                    className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                    />
+
+                    <Input
+                    type="date"
+                    label="Ngày kết thúc"
+                    value={selectedTask && selectedTask.endDate instanceof Date 
+                    ? selectedTask.endDate.toISOString().substring(0, 10) 
+                    : ''}
+                    onChange={(e) =>
+                    setSelectedTask({
+                    ...selectedTask,
+                    endDate: e.target.value ? new Date(e.target.value) : null,
+                    } as Task) // Ensure the type is Task when updating state
+                    }
+                    className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                    />
+
+                  
               </form>
             )}
           </ModalBody>
