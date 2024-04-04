@@ -349,7 +349,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           <ModalBody>
             {selectedRecruitment && (
               <form onSubmit={handleUpdateSubmit}>
-                <Input
+                <Input className="py-2"
                   type="text"
                   label="Họ và tên"
                   value={selectedRecruitment.fullName}
@@ -361,8 +361,20 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   }
                 />
 
-                {/* choice date of birth */}
-                <Input className="py-3" type="text" label="Ngày sinh" />
+                    <Input
+                    type="date"
+                    label="Ngày bắt đầu"
+                    value={selectedRecruitment && selectedRecruitment.dateOfBirth instanceof Date 
+                    ? selectedRecruitment.dateOfBirth.toISOString().substring(0, 10) 
+                    : ''}
+                    onChange={(e) =>
+                    setSelectedRecruitment({
+                    ...selectedRecruitment,
+                    dateOfBirth: e.target.value ? new Date(e.target.value) : null,
+                    } as Recruitment) // Ensure the type is Task when updating state
+                    }
+                    className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                    />
 
                 <Input
                   className="py-3"

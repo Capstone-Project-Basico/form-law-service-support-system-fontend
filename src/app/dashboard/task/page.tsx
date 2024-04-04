@@ -28,6 +28,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Task } from "@/constants/types/homeType";
+import authHeader from "@/components/authHeader/AuthHeader";
+import { ToastContainer, toast } from "react-toastify";
 import {
   ref,
   uploadBytes,
@@ -50,15 +52,15 @@ const Task = () => {
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [status, setStatus] = useState("");
+  const [processStatus, setProcessStatus] = useState("");
 
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [task, setTask] = useState<Task[]>([]);
   let newUser = {
     taskName,
     description,
     startDate,
     endDate,
-    status,
+    processStatus,
   };
 
   const [imageUpload, setImageUpload] = useState<File | null>(null);
@@ -66,24 +68,27 @@ const Task = () => {
   useEffect(() => {
     switch (tabs) {
       case 1:
-        fetchTasks();
+        fetchTask();
         break;
       case 2:
         fetchDeletedTask();
         break;
       default:
-        fetchTasks();
+        fetchTask();
         break;
     }
   }, [tabs]);
 
   //get all items
-  const fetchTasks = async () => {
+  const fetchTask = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/getAllTask`
+        `${process.env.NEXT_PUBLIC_BASE_API}task/getAllTask`,
+        {
+          headers: authHeader(),
+        }
       );
-      setTasks(response.data.data);
+      setTask(response.data.data);
      
     } catch (error) {
       console.error(error);
@@ -94,14 +99,79 @@ const Task = () => {
   const fetchDeletedTask = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}`
+        `${process.env.NEXT_PUBLIC_BASE_API}task/getAllDeletedTask`,
+        {
+          headers: authHeader(),
+        }
       );
-      setTasks(response.data.data);
+      setTask(response.data.data);
       
     } catch (error) {
       console.error(error);
     }
   };
+
+  
+  //delete
+  const handleDelete = async (id: number) => {
+    const isConfirmed = window.confirm(
+      "Bạn có chắc muốn xóa công việc này không?"
+    );
+    if (isConfirmed) {
+      try {
+        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
+        if (!userString) {
+          console.log("No user found");
+          return;
+        }
+        const user = JSON.parse(userString);
+
+        axios
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}task/deleteTask/${id}`,
+            {
+              headers: authHeader(),
+            }
+          )
+          .then(() => {
+            toast.success("Xóa thành công");
+            fetchTask()
+          }),
+          {
+            headers: {
+              Authorization: user.data.data.token,
+            },
+          };
+
+        // setPartners((prevPartners) =>
+        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
+        // );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // restore
+  const restoreDelete = async (id: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}task/restoreTask/${id}`,
+          {},
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Khôi phục thành công");
+          fetchDeletedTask()
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   
   return (
@@ -149,7 +219,7 @@ const Task = () => {
       </div>
 
       <div>
-        <Tasks tasks={tasks} />
+        <Tasks tasks={task} handleDelete={handleDelete} restoreDelete={restoreDelete}/>
       </div>
     </div>
   );
