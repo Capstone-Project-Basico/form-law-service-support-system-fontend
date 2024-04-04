@@ -15,11 +15,17 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import { Navbar as MyNavbar } from "@nextui-org/react";
-import { useState } from "react";
+import {
+  DO_NOT_USE_OR_YOU_WILL_BE_FIRED_EXPERIMENTAL_REACT_NODES,
+  useEffect,
+  useState,
+} from "react";
 import { usePathname } from "next/navigation";
 import { practices } from "@/lib/navbarItems";
 import { researchAndPublications, about } from "@/lib/navbarItems";
 import { log } from "console";
+import axios from "axios";
+import { User } from "@/constants/types/homeType";
 
 interface UserLocal {
   data: {
@@ -33,24 +39,58 @@ const Navbar = () => {
   const [serviceDropdownVisible, setServiceDropdownVisible] = useState(false);
   const [researchDropdownVisible, setResearchDropdownVisible] = useState(false);
   const [aboutDropdownVisible, setAboutDropdownVisible] = useState(false);
-
+  const [userData, setUserData] = useState<User>();
   const pathname = usePathname();
-  const getUserFromStorage = () => {
-    if (typeof window !== "undefined") {
+  // const getUserFromStorage = () => {
+  //   if (typeof window !== "undefined") {
+  //     const storedUser = localStorage.getItem("user");
+  //     return storedUser ? JSON.parse(storedUser) : null;
+  //   }
+  // };
+
+  const useUserFromStorage = () => {
+    const [user, setUser] = useState<UserLocal | null>(null);
+
+    useEffect(() => {
       const storedUser = localStorage.getItem("user");
-      return storedUser ? JSON.parse(storedUser) : null;
-    }
+      setUser(storedUser ? JSON.parse(storedUser) : null);
+    }, []);
+
+    return user;
   };
 
-  const user: UserLocal | null = getUserFromStorage();
+  const user = useUserFromStorage();
+  const userId = user?.data.data.userId;
 
-  console.log(user)
+  useEffect(() => {
+    const getUserById = async () => {
+      if (!user) return;
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`)
+        .then((res) => {
+          setUserData(res.data.data);
+        })
+        .catch((error) => {
+          console.log("loi roi " + error);
+        });
+    };
+
+    getUserById();
+  }, [userId]);
+
+  console.log(user);
   return (
     <div className={styles.container}>
       <MyNavbar>
         <NavbarBrand>
           <a href="/">
-            <Image className=" !max-w-60" src="/logoBasico.jpg" alt="logo" width={200} height={70} />
+            <Image
+              className=" !max-w-60"
+              src="/logoBasico.jpg"
+              alt="logo"
+              width={200}
+              height={70}
+            />
           </a>
         </NavbarBrand>
         <NavbarContent>
@@ -156,6 +196,14 @@ const Navbar = () => {
           </NavbarItem>
 
           <NavbarItem>
+            <a href="/template">
+              <Button className="red-hover-button bg-white" radius="none">
+                BIỂU MẪU
+              </Button>
+            </a>
+          </NavbarItem>
+
+          <NavbarItem>
             <a href="/contactUs">
               <Button className="red-hover-button bg-white" radius="none">
                 LIÊN HỆ
@@ -167,52 +215,43 @@ const Navbar = () => {
         {/* login */}
         <NavbarContent justify="end">
           {user ? (
-            <div>
-              <Dropdown placement="bottom-end">
-                <DropdownTrigger>
-                  <Avatar
-                    isBordered
-                    as="button"
-                    className="transition-transform"
-                    color="secondary"
-                    name="Jason Hughes"
-                    size="sm"
-                    src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                  />
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Profile Actions" variant="flat">
-                  <DropdownItem key="profile" className="h-14 gap-2">
-                    <p className="font-semibold">Signed in as</p>
-                    <p className="font-semibold">zoey@example.com</p>
-                  </DropdownItem>
-                  <DropdownItem key="settings">My Settings</DropdownItem>
-                  <DropdownItem key="team_settings">Team Settings</DropdownItem>
-                  <DropdownItem key="analytics">Analytics</DropdownItem>
-                  <DropdownItem key="system">System</DropdownItem>
-                  <DropdownItem key="configurations">
-                    Configurations
-                  </DropdownItem>
-                  <DropdownItem key="help_and_feedback">
-                    Help & Feedback
-                  </DropdownItem>
-                  <DropdownItem key="logout" color="danger">
-                    Log Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
+            <Dropdown placement="bottom-end">
+              <DropdownTrigger>
+                <Avatar
+                  isBordered
+                  as="button"
+                  className="transition-transform"
+                  color="secondary"
+                  name="Jason Hughes"
+                  size="sm"
+                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Profile Actions" variant="flat">
+                <DropdownItem key="profile" className="h-14 gap-2">
+                  <h2 className="font-semibold">{userData?.userName}</h2>
+                </DropdownItem>
+                <DropdownItem key="settings">My Settings</DropdownItem>
+                <DropdownItem key="team_settings">
+                  <Button>Thông tin của tôi</Button>
+                </DropdownItem>
+                <DropdownItem key="logout" color="danger">
+                  Log Out
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           ) : (
-          <NavbarItem className="hidden lg:flex">
-            <Button
-              as={Link}
-              href="/login"
-              variant="bordered"
-              className="bg-white text-[#FF0004] border-[#FF0004] hover:bg-[#FF0004] hover:text-white"
-            >
-              Đăng nhập
-            </Button>
-          </NavbarItem>
-         )} 
+            <NavbarItem className="hidden lg:flex">
+              <Button
+                as={Link}
+                href="/login"
+                variant="bordered"
+                className="bg-white text-[#FF0004] border-[#FF0004] hover:bg-[#FF0004] hover:text-white"
+              >
+                Đăng nhập
+              </Button>
+            </NavbarItem>
+          )}
         </NavbarContent>
       </MyNavbar>
     </div>

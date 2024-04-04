@@ -101,7 +101,7 @@ const Lawyer = () => {
    const fetchDeletedLawyer = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllDeletedPartners`
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllDeletedLawyers`
       );
       setLawyers(response.data.data);
      
@@ -158,7 +158,52 @@ const Lawyer = () => {
           </BreadcrumbItem>
         </Breadcrumbs>
 
-        
+        {/* <div className="flex justify-end">
+          <Button
+            className="flex justify-end w-[100px] bg-[#FF0004] text-white"
+            radius="full"
+            onPress={onOpen}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+            Tạo mới
+          </Button>
+          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <form onSubmit={handleSubmit}>
+                    <ModalHeader className="flex flex-col gap-1">
+                      Thêm đối tác
+                    </ModalHeader>
+                    <ModalBody>
+                      <Input
+                        type="text"
+                        label="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                      <input className="py-3" type="file" onChange={(e) => uploadFile(e)} />
+                      <Input
+                        type="text"
+                        label="Link"
+                        value={link}
+                        onChange={(e) => setLink(e.target.value)}
+                      />
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button color="danger" variant="light" onPress={onClose}>
+                        Đóng
+                      </Button>
+                      <Button color="primary" onPress={onClose} type="submit">
+                        Thêm
+                      </Button>
+                    </ModalFooter>
+                  </form>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
+        </div> */}
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
@@ -173,7 +218,11 @@ const Lawyer = () => {
             TẤT CẢ
           </Button>
         </div>
-        
+        <div>
+          <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
+            CHỜ DUYỆT
+          </Button>
+        </div>
         <div>
           <Button
             className={`bg-white ${
@@ -189,10 +238,13 @@ const Lawyer = () => {
       </div>
 
       <div>
-        <Lawyers lawyers={lawyers} />
+        <Lawyers lawyers={lawyers} 
+                  
+                  
+        />
       </div>
     </div>
   );
 };
 
-export default Lawyer;
+export default Lawyers;

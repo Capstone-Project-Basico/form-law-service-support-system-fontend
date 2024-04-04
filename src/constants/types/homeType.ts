@@ -3,6 +3,8 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 export type Template = {
   name?: string;
   url?: string;
+  price: number;
+  fileUrl: string;
 };
 
 export type InputValues = {
@@ -90,18 +92,20 @@ export type User = {
   email: string;
   phoneNumber: number;
   roleName: string;
+  status: number;
 };
 
 export type Lawyer = {
   userId: number;
   userName: string;
-  roleName: string;
   email: string;
-  phoneNumber:string;
+  phoneNumber: string;
   url: string;
   introduce: string;
   position: string;
   avatar: string;
+  roleName: string;
+  status: number;
 };
 
 export type Task = {
@@ -109,10 +113,10 @@ export type Task = {
   taskName: string;
   description: string;
   startDate: Date;
-  endDate: Date ;
+  endDate: Date;
   email: string;
   status: boolean;
-  delete:boolean;
+  delete: boolean;
 };
 
 export type CardTemplate = {

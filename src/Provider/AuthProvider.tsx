@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 type Props = {
   children: React.ReactNode;
@@ -13,12 +13,12 @@ const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     const checkAuth = () => {
       // Check if user is authenticated
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         // Perform localStorage action
-        const userData = localStorage.getItem('userData');
-        const user = JSON.parse(userData || '{}');
+        const userData = localStorage.getItem("userData");
+        const user = JSON.parse(userData || "{}");
         if (new Date(user.expiration) < new Date()) {
-          router.push('/login');
+          // router.push('/login');
         }
       }
     };

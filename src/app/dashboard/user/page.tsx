@@ -40,6 +40,8 @@ import {
 import { storage } from "@/app/firebase";
 import Users from "@/components/manage/User";
 import { v4 as uuidv4 } from "uuid";
+import { ToastContainer, toast } from "react-toastify";
+import authHeader from "@/components/authHeader/AuthHeader";
 
 const User = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -92,12 +94,59 @@ const User = () => {
   const fetchDeletedUser = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/getAlDeletedUsers`
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllDeletedUsers`
       );
       setUsers(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  //delete
+  const handleDelete = async (userId: number) => {
+    const isConfirmed = window.confirm(
+      "Bạn có chắc muốn xóa người dùng này không?"
+    );
+    if (isConfirmed) {
+      try {
+       
+        axios
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
+            {
+              headers: authHeader(),
+            }
+          )
+          .then(() => {
+            
+            toast.success("Xóa thành công");
+            fetchUsers()
+          })
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // restore
+  const restoreDelete = async (userId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`,
+          {},
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Khôi phục thành công");
+          fetchDeletedUser()
+        });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -107,16 +156,12 @@ const User = () => {
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">
-              Quản lí người dùng
-            </p>
+            <p className="text-black font-bold text-3xl ">Quản lí thông tin</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Người dùng</p>
+            <p className="text-[#FF0004] font-bold text-3xl">Tuyển dụng</p>
           </BreadcrumbItem>
         </Breadcrumbs>
-
-       
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
@@ -131,7 +176,6 @@ const User = () => {
             TẤT CẢ
           </Button>
         </div>
-        
         <div>
           <Button
             className={`bg-white ${
@@ -147,7 +191,9 @@ const User = () => {
       </div>
 
       <div>
-        <Users users={users} />
+        <Users users={users} 
+               handleDelete={handleDelete}       
+               restoreDelete={restoreDelete}  />    
       </div>
     </div>
   );

@@ -1,7 +1,30 @@
-import HeaderComponent from "@/components/header";
-import Image from "next/image";
+"use client";
 
-const page = () => {
+import HeaderComponent from "@/components/header";
+import { User } from "@/constants/types/homeType";
+import axios from "axios";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+
+const Page = () => {
+  const [lawyers, setLawyers] = useState<User[]>([]);
+
+  useEffect(() => {
+    fetchAllLawyers();
+  }, []);
+
+  const fetchAllLawyers = () => {
+    try {
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getAllLawyers`)
+        .then((response) => {
+          setLawyers(response.data.data);
+          console.log("luat su o day?" + lawyers);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <HeaderComponent
@@ -75,14 +98,42 @@ const page = () => {
           chứng khoán thuộc nhóm dẫn đầu thị trường tại Việt Nam.
         </div>
 
-        <div className="font-bold text-[26px] pb-5 ">Luật sư BASICO</div>
+        <div className="font-bold text-[26px] mb-5 ">Luật sư BASICO</div>
         <div className="flex justify-center mb-[50px]">
           <div className="w-[60px] h-[6px] bg-[#FF0004]"></div>
         </div>
-        
+
+        <div className="mb-32">
+          <div className="flex flex-cols-4 w-full h-[400px]">
+            {lawyers.map((lawyer, index) => (
+              <div key={index} className="w-[262px] h-[350px]">
+                <div>
+                  <Image
+                    src={
+                      lawyer.avatar
+                        ? lawyer.avatar.startsWith("http")
+                          ? lawyer.avatar
+                          : "/LS_Hai.jpg"
+                        : "/LS_Hai.jpg"
+                    }
+                    alt=""
+                    width={262}
+                    height={300}
+                  />
+                  <div className="bg-[#f3f3f3] py-8">
+                    <h2 className="text-[18px] font-bold">{lawyer.userName}</h2>
+                    <p className="text-[15px] text-[#838383]">
+                      {lawyer.position}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </>
   );
 };
 
-export default page;
+export default Page;

@@ -1,13 +1,38 @@
-import Navbar from '../../components/dashboardNavbar/navbar';
-import Sidebar from '../../components/dashboardSidebar/sidebar';
+"use client";
 
-// import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import Navbar from "../../components/dashboardNavbar/navbar";
+import Sidebar from "../../components/dashboardSidebar/sidebar";
+
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 type LayoutProps = {
   children: React.ReactNode; // Typing the children prop
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const router = useRouter();
+  useEffect(() => {
+    const userString = localStorage.getItem("user");
+    if (!userString) {
+      console.log("No user found");
+      // router.push("/");
+      return;
+    }
+
+    const user = JSON.parse(userString);
+    const userRole = user?.data.data.roleName;
+
+    console.log(userRole);
+
+    // Check if the user role is not admin
+    if (userRole !== "ROLE_ADMIN") {
+      // Redirect non-admin users to the home page or login page
+      router.push("/");
+    }
+  }, [router]);
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-cow">

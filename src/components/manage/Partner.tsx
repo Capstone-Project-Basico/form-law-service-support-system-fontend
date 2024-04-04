@@ -34,9 +34,15 @@ import { ToastContainer, toast } from "react-toastify";
 
 type PartnersProps = {
   partners: Partner[];
+  handleDelete: (id: number)=> void;
+  restoreDelete: (id: number)=> void;
 };
 
-const Partners: React.FC<PartnersProps> = ({ partners }) => {
+const Partners: React.FC<PartnersProps> = ({ 
+  partners,
+  handleDelete,
+  restoreDelete, 
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
 
@@ -144,56 +150,7 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
     }
   };
 
-  //delete
-  const handleDelete = async (partnerId: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa đối tác này không?"
-    );
-    if (isConfirmed) {
-      try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
-          console.log("No user found");
-          return;
-        }
-        const user = JSON.parse(userString);
-
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-          }),
-          {
-            headers: {
-              Authorization: user.data.data.token,
-            },
-          };
-
-        // setPartners((prevPartners) =>
-        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-        // );
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  // restore
-  const restoreDelete = async (partnerId: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}partner/restoreDelete/${partnerId}`
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+ 
 
   return (
     <div>
@@ -203,10 +160,10 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
           <Input
             classNames={{
               base: "w-full sm:max-w-[10rem] h-10",
-              mainWrapper: "h-full",
+              mainWrapper: "h-full ",
               input: "text-small",
               inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20 ",
             }}
             placeholder="Từ khóa tìm kiếm .."
             size="sm"
@@ -274,31 +231,33 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
                 <Link href={partner.link}>{partner.link}</Link>
               </TableCell>
               <TableCell>
-                {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
+                  <span style={{ color: partner.delete ? 'red' : 'green' }}>
+                  {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
+                  </span>
               </TableCell>
               {partner.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onPress={() => {
                       setSelectedPartner(partner);
                       onOpenUpdate();
                     }}
                   >
-                    Update
+                    Cập nhật
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(partner.partnerId)}
                   >
-                    Delete
+                    Xóa
                   </Button>
                 </TableCell>
               ) : (
                 <TableCell className="flex items-center justify-center">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onClick={() => restoreDelete(partner.partnerId)}
                   >
                     Khôi phục
@@ -330,8 +289,12 @@ const Partners: React.FC<PartnersProps> = ({ partners }) => {
                     })
                   }
                 />
-                <input className="py-3" type="file" onChange={(e) => uploadUpdateFile(e)} />
-                <Input 
+                <input
+                  className="py-3"
+                  type="file"
+                  onChange={(e) => uploadUpdateFile(e)}
+                />
+                <Input
                   type="text"
                   label="Link"
                   value={selectedPartner.link}

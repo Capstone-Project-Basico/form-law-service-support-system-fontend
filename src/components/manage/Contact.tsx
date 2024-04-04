@@ -30,13 +30,14 @@ import { ToastContainer, toast } from "react-toastify";
 
 type ContactsProps = {
   contacts: Contact[];
-  handleDelete: (id: number) => void
+  handleDelete: (id: number)=> void;
+  restoreDelete: (id : number)=> void;
 };
 
-const Contacts: React.FC<ContactsProps> = ({ contacts,handleDelete }) => {
+const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDelete  }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
@@ -66,50 +67,36 @@ const Contacts: React.FC<ContactsProps> = ({ contacts,handleDelete }) => {
     return filteredContacts.slice(start, end);
   }, [page, filteredContacts]);
 
-  ///update
-  const handleUpdateSubmit = async () => {
-    if (!selectedContact) return; // Check if a contact is selected
-
-    // Example: PUT request to update contact details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}contact/updateContact/${selectedContact.contactId}`,
-        {
-            fullName : selectedContact.fullName,
-            email : selectedContact.email,
-            phoneNum : selectedContact.phoneNum,
-            career: selectedContact.career,
-            city: selectedContact.city,
-            businessTime: selectedContact.businessTime,
-            annualRevenue: selectedContact.annualRevenue,
-            juridical: selectedContact.juridical,
-            status: selectedContact.status,
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-      })
-      .catch((error) => {
-        console.error("Failed to update contact", error);
-      });
-  };
+  
+      ///update
+      const handleUpdateSubmit = async ( ) => {
+        if (!selectedContact) return; // Check if a contact is selected
+    
+        // Example: PUT request to update contact details
+        axios
+          .put(
+            `${process.env.NEXT_PUBLIC_BASE_API}contact/updateContact/${selectedContact.contactId}`,
+            {
+                fullName : selectedContact.fullName,
+                email : selectedContact.email,
+                phoneNum : selectedContact.phoneNum,
+                career: selectedContact.career,
+                city: selectedContact.city,
+                businessTime: selectedContact.businessTime,
+                annualRevenue: selectedContact.annualRevenue,
+                juridical: selectedContact.juridical,
+                status: selectedContact.status,
+            }
+          )
+          .then((response) => {
+            toast.success("Cập nhật thành công");
+          })
+          .catch((error) => {
+            console.error("Failed to update contact", error);
+          });
+      };
  
-
-
-  // restore
-  const restoreDelete = async (contactId: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}contact/restoreContact/${contactId}`
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      
   
 
   return (
@@ -160,7 +147,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts,handleDelete }) => {
           <TableColumn className="bg-[#FF0004] text-white">
             SĐT
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          {/* <TableColumn className="bg-[#FF0004] text-white">
             Ngành
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
@@ -174,7 +161,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts,handleDelete }) => {
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
             Pháp lý
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className="bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
@@ -191,43 +178,65 @@ const Contacts: React.FC<ContactsProps> = ({ contacts,handleDelete }) => {
               <TableCell>{contact.fullName}</TableCell>
               <TableCell>{contact.email}</TableCell>
               <TableCell>{contact.phoneNum}</TableCell>      
-              <TableCell>{contact.career}</TableCell>
+              {/* <TableCell>{contact.career}</TableCell>
               <TableCell>{contact.city}</TableCell>
               <TableCell>{contact.businessTime}</TableCell>
               <TableCell>{contact.annualRevenue}</TableCell>
-              <TableCell>{contact.juridical}</TableCell>
+              <TableCell>{contact.juridical}</TableCell> */}
               <TableCell>{contact.status}</TableCell>
 
 
               <TableCell>
-                {contact.delete ? "Không sử dụng" : "Đang hoạt động"}
+                  <span style={{ color: contact.delete ? 'red' : 'green' }}>
+                  {contact.delete ? "Không sử dụng" : "Đang hoạt động"}
+                  </span>
               </TableCell>
               {contact.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onPress={() => {
                       setSelectedContact(contact);
                       onOpenUpdate();
                     }}
                   >
-                    Update
+                    Cập nhật
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(contact.contactId)}
                   >
-                    Delete
+                    Xóa
+                  </Button>
+
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedContact(contact);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
                   </Button>
                 </TableCell>
               ) : (
-                <TableCell className="flex items-center justify-center">
+                <TableCell className="flex gap-2 items-center justify-center">
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className="bg-blue-600 text-white"
                     onClick={() => restoreDelete(contact.contactId)}
                   >
                     Khôi phục
+                  </Button>
+
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedContact(contact);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
                   </Button>
                 </TableCell>
               )}
@@ -235,6 +244,48 @@ const Contacts: React.FC<ContactsProps> = ({ contacts,handleDelete }) => {
           ))}
         </TableBody>
       </Table>
+      
+       {/* update modal */}
+       <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+          <ModalBody>
+            {selectedContact && (
+              <div className="flex flex-row gap-10">
+                {/* <p>{selectedContact.fullName}</p> */}
+                <div>
+                  <p>Họ và tên</p>
+                  <p className="py-2">Email</p>
+                  <p>SĐT</p>
+                  <p className="py-2">Ngành</p>
+                  <p>Thành phố</p>
+                  <p className="py-2">Thời gian kinh doanh</p>
+                  <p>Doanh thu hàng năm </p>
+                  <p className="py-2">Cần hỗ trợ pháp lý nào</p>
+                 
+                </div>
+                <div>
+                  <p >{selectedContact.fullName}</p>                 
+                  <p className="py-2">{selectedContact.email}</p>
+                  <p>{selectedContact.phoneNum}</p>
+                  <p className="py-2">{selectedContact.career}</p>
+                  <p>{selectedContact.city}</p>
+                  <p className="py-2">{selectedContact.businessTime}</p>
+                  <p>{selectedContact.annualRevenue}</p>
+                  <p className="py-2">{selectedContact.juridical}</p>
+                  
+                  
+                </div>
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onClose}>
+              Đóng
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
