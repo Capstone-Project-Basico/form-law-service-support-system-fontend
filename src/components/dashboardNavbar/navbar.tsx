@@ -35,7 +35,7 @@ const DashboardNavbar = () => {
             color="primary"
             href="/"
             variant="flat"
-            // onClick={() => logout}
+            onClick={() => logout()}
           >
             Logout
           </Button>
