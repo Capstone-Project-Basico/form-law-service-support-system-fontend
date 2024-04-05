@@ -135,7 +135,7 @@ const Page = () => {
     //     <CardTemplate key={index} itemDetail={item} />
     //   ))}
     // </div>
-    <div className="mx-10 ">
+    <div className="mx-10 my-20">
       <ToastContainer />
       <div className="flex flex-row border-b-1 mb-10 pb-3 w-full">
         <h1 className="flex text-xl font-extrabold border-l-5 border-[#FF0004] pl-5 items-center h-12">
