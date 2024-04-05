@@ -8,7 +8,7 @@ import { Header } from "@/constants/types/homeType";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 
 
-const page = (prop: Header) => {
+const page = () => {
   return (
     <>
       {/* <HeaderComponent
