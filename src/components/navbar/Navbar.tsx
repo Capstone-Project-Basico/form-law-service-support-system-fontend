@@ -82,7 +82,11 @@ const Navbar = () => {
 
   return (
     <div className={styles.container}>
-      <MyNavbar maxWidth="full" isBordered className="border-[#FF0004] px-8 pb-1">
+      <MyNavbar
+        maxWidth="full"
+        isBordered
+        className="border-[#FF0004] px-8 pb-1"
+      >
         <NavbarBrand>
           <a href="/">
             <Image
@@ -221,17 +225,18 @@ const Navbar = () => {
         </NavbarContent>
 
         {/* login */}
-        <NavbarContent justify="end" className="w-[165px] h-12">
+        <NavbarContent justify="end" className="w-[165px] h-5">
           {user ? (
             <Dropdown placement="bottom-end" className="w-80">
-              <DropdownTrigger>
+              <DropdownTrigger className="h-14">
                 <Avatar
+                  style={{ height: "60px" }}
                   isBordered
                   as="button"
                   className="transition-transform"
                   color="secondary"
                   name="Jason Hughes"
-                  size="sm"
+                  size="lg"
                   src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
                 />
               </DropdownTrigger>
