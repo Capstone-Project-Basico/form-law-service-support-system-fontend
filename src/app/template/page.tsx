@@ -1,7 +1,7 @@
 "use client";
 
 import { Template } from "@/constants/types/homeType";
-import CardTemplate from "@/sections/CardTemplate";
+// import CardTemplate from "@/sections/CardTemplate";
 import { useEffect, useState } from "react";
 import {
   Card,
