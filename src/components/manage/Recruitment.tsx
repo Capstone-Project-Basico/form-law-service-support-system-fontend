@@ -25,7 +25,7 @@ import {
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { Recruitment } from "@/constants/types/homeType";
+import { RecruitmentType } from "@/constants/types/homeType";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
@@ -34,11 +34,10 @@ import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
 
 type RecruitmentsProps = {
-  recruitments: Recruitment[];
+  recruitments: RecruitmentType[];
   handleDelete: (id: number) => void;
-  restoreDelete: (id: number)=>void;
+  restoreDelete: (id: number) => void;
 };
-
 
 const Recruitments: React.FC<RecruitmentsProps> = ({
   recruitments,
@@ -47,7 +46,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecruitment, setSelectedRecruitment] =
-    useState<Recruitment | null>(null);
+    useState<RecruitmentType | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
@@ -113,7 +112,6 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
         console.error("Failed to update recruitment", error);
       });
   };
-
 
   return (
     <div>
@@ -226,10 +224,10 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               <TableCell>{recruitment.workPlace}</TableCell> */}
               <TableCell>{recruitment.processStatus}</TableCell>
 
-              <TableCell >
-                  <span style={{ color: recruitment.deleted ? 'red' : 'green' }}>
+              <TableCell>
+                <span style={{ color: recruitment.deleted ? "red" : "green" }}>
                   {recruitment.deleted ? "Không sử dụng" : "Đang hoạt động"}
-                  </span>
+                </span>
               </TableCell>
               {recruitment.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
@@ -349,7 +347,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           <ModalBody>
             {selectedRecruitment && (
               <form onSubmit={handleUpdateSubmit}>
-                <Input className="py-2"
+                <Input
+                  className="py-2"
                   type="text"
                   label="Họ và tên"
                   value={selectedRecruitment.fullName}
@@ -361,20 +360,28 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   }
                 />
 
-                    <Input
-                    type="date"
-                    label="Ngày bắt đầu"
-                    value={selectedRecruitment && selectedRecruitment.dateOfBirth instanceof Date 
-                    ? selectedRecruitment.dateOfBirth.toISOString().substring(0, 10) 
-                    : ''}
-                    onChange={(e) =>
-                    setSelectedRecruitment({
-                    ...selectedRecruitment,
-                    dateOfBirth: e.target.value ? new Date(e.target.value) : null,
-                    } as Recruitment) // Ensure the type is Task when updating state
-                    }
-                    className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    />
+                <Input
+                  type="date"
+                  label="Ngày bắt đầu"
+                  value={
+                    selectedRecruitment &&
+                    selectedRecruitment.dateOfBirth instanceof Date
+                      ? selectedRecruitment.dateOfBirth
+                          .toISOString()
+                          .substring(0, 10)
+                      : ""
+                  }
+                  onChange={
+                    (e) =>
+                      setSelectedRecruitment({
+                        ...selectedRecruitment,
+                        dateOfBirth: e.target.value
+                          ? new Date(e.target.value)
+                          : null,
+                      } as RecruitmentType) // Ensure the type is Task when updating state
+                  }
+                  className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                />
 
                 <Input
                   className="py-3"
