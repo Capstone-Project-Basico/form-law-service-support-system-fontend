@@ -27,7 +27,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { Recruitment } from "@/constants/types/homeType";
+import { RecruitmentType } from "@/constants/types/homeType";
 import Recruitments from "@/components/manage/Recruitment";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
@@ -53,7 +53,7 @@ const Recruitment = () => {
   const [workPlace, setWorkPlace] = useState("");
   const [processStatus, setprocessStatus] = useState("");
 
-  const [recruitment, setRecruitment] = useState<Recruitment[]>([]);
+  const [recruitment, setRecruitment] = useState<RecruitmentType[]>([]);
 
   let newRecruitment = {
     fullName,
@@ -134,7 +134,7 @@ const Recruitment = () => {
           )
           .then(() => {
             toast.success("Xóa thành công");
-            fetchRecruitment()
+            fetchRecruitment();
           }),
           {
             headers: {
@@ -160,7 +160,7 @@ const Recruitment = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedRecruitment()
+          fetchDeletedRecruitment();
         });
     } catch (error) {
       console.log(error);
@@ -207,9 +207,11 @@ const Recruitment = () => {
       </div>
 
       <div>
-        <Recruitments recruitments={recruitment} 
-                      handleDelete={handleDelete} 
-                      restoreDelete={restoreDelete}  />    
+        <Recruitments
+          recruitments={recruitment}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
+        />
       </div>
     </div>
   );

@@ -1,10 +1,12 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 export type Template = {
-  name?: string;
+  title?: string;
+  id: number;
   url?: string;
   price: number;
   fileUrl: string;
+  message: string;
 };
 
 export type InputValues = {
@@ -61,10 +63,10 @@ export type Contact = {
   delete: boolean;
 };
 
-export type Recruitment = {
+export type RecruitmentType = {
   id: number;
   fullName: string;
-  dateOfBirth:  Date | null;
+  dateOfBirth: Date | null;
   homeTown: string;
   gender: string;
   maritalStatus: string;
@@ -113,7 +115,7 @@ export type Task = {
   taskName: string;
   description: string;
   startDate: Date | null; // startDate can be a Date object or null
-  endDate: Date | null; 
+  endDate: Date | null;
   email: string;
   processStatus: string;
   status: number;

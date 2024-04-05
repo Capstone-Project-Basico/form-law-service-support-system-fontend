@@ -38,11 +38,13 @@ const Page = () => {
         axios.defaults.headers.common['Authorization'] = `${response}`;
 
         switch (response.data.data.roleName) {
-          case 'ROLE_ADMIN':
-            router.push('/dashboard');
+          case "ROLE_ADMIN":
+            router.push("/dashboard");
+            toast.success("Đăng nhập thành công");
             break;
-          case 'ROLE_CUSTOMER':
-            router.push('/');
+          case "ROLE_CUSTOMER":
+            router.push("/");
+            toast.success("Đăng nhập thành công");
             break;
           default:
             router.push('/');

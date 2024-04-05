@@ -18,9 +18,38 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
 
+interface UserLocal {
+  data: {
+    data: {
+      userId: string;
+    };
+  };
+}
 const Page = () => {
+  const router = useRouter();
   const [templates, setTemplates] = useState<Template[]>([]);
+
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
+  const userId = user?.data.data.userId;
+
+  const [quantity, setQuantity] = useState(1);
+  const [price, setPrice] = useState(1);
+  const [itemId, setItemId] = useState(0);
+  const [dataOrder, setDataOrder] = useState({
+    userId,
+    cartRequestList: [{ itemId, quantity, price }],
+  });
 
   const getTemplate = async () => {
     axios
@@ -35,6 +64,71 @@ const Page = () => {
     getTemplate();
   }, []);
 
+  const handleBuy = async (formId: number, price: number) => {
+    try {
+      if (!user) {
+        Swal.fire({
+          title: "Bạn chưa đăng nhập, bạn có muốn đăng nhập?",
+          showDenyButton: true,
+          // showCancelButton: true,
+          confirmButtonText: "Có",
+          denyButtonText: `Không`,
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            // Swal.fire("Saved!", "", "success");
+            router.push("/login");
+          } else if (result.isDenied) {
+            Swal.fire("Bạn cần đăng nhập để sử dụng tính năng này", "", "info");
+            return;
+          }
+        });
+        return;
+      } else {
+        // setItemId(formId);
+        const updatedDataOrder = {
+          userId,
+          cartRequestList: [{ itemId: formId, quantity, price }],
+        };
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_BASE_API}order/createOrderFormTemplateDetail`,
+            updatedDataOrder
+          )
+          .then((response) => {
+            const orderId = response.data.data;
+            Swal.fire({
+              title: "Bạn có chấp nhận thanh toán",
+              showDenyButton: true,
+              // showCancelButton: true,
+              confirmButtonText: "Có",
+              denyButtonText: `Không`,
+            }).then((result) => {
+              /* Read more about isConfirmed, isDenied below */
+              if (result.isConfirmed) {
+                payForTemplate(orderId);
+              } else if (result.isDenied) {
+                Swal.fire("Vui lòng thanh toán để sử dụng", "", "info");
+                return;
+              }
+            });
+          });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const payForTemplate = (orderId: string) => {
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetail/${orderId}`
+      )
+      .then((res) => {
+        toast.success(`${res.data.data}`);
+      });
+  };
+
   return (
     // <div className="columns-3 pb-10 gap-10 ">
     //   {(templates || []).map((item: Template, index: number) => (
@@ -42,6 +136,7 @@ const Page = () => {
     //   ))}
     // </div>
     <div className="mx-10 ">
+      <ToastContainer />
       <div className="flex flex-row border-b-1 mb-10 pb-3 w-full">
         <h1 className="flex text-xl font-extrabold border-l-5 border-[#FF0004] pl-5 items-center h-12">
           Biểu mẫu
@@ -84,7 +179,7 @@ const Page = () => {
                   shadow="sm"
                   radius="lg"
                   width="100%"
-                  alt={template.name}
+                  alt={template.title}
                   className="w-full object-cover h-[281px]"
                   src={
                     template.fileUrl
@@ -112,8 +207,14 @@ const Page = () => {
                 </div>
               </CardBody>
               <CardFooter className="flex flex-col items-start">
-                <p className="text-default-500">{template.price}Đ</p>
-                <b>Tên biểu mẫu{template.name}</b>
+                <p className="text-default-500">{template.price}</p>
+                <b>{template.message}</b>
+                <Button
+                  onClick={() => handleBuy(template.id, template.price)}
+                  className="bg-[#FF0004]"
+                >
+                  Mua
+                </Button>
               </CardFooter>
             </Card>
           </div>
