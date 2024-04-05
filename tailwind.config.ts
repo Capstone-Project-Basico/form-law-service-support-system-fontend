@@ -21,6 +21,9 @@ const config: Config = {
       colors: {
         primary: '#FF0004',
       },
+      scale: {
+        '200': '2',
+      },
     },
   },
   darkMode: 'class',

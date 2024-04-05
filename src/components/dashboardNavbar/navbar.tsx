@@ -15,7 +15,7 @@ const DashboardNavbar = () => {
   return (
     <Navbar maxWidth="full" isBordered className="border-[#FF0004] px-8">
       <NavbarBrand className="">
-        <a href="/">
+        <a href="/dashboard">
           <Image
             src="/logoBasico.jpg"
             alt=""
