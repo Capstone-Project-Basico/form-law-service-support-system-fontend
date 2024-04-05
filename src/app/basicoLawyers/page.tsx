@@ -27,10 +27,33 @@ const Page = () => {
   };
   return (
     <>
-      <HeaderComponent
-        title="LĨNH VỰC CHUYÊN MÔN"
-        link=" Dịch Vụ Luật Sư Nội Bộ"
-      />
+   
+    {/* header */}
+    <div className="relative w-full h-[300px] ">
+        <Image
+        className="w-full h-full object-cover"
+        alt="bg image"
+        src="/doanluasu5_6.jpg"
+        layout="fill"
+        objectFit="cover"
+        objectPosition="center"
+    />
+    <div className="absolute inset-0 bg-black bg-opacity-50 z-0"></div>
+        
+    <div className="flex flex-col absolute z-20 inset-0 p-24 text-white mx-[366px] ">
+      
+      <div className="min-h-20">
+        <div className="text-3xl font-bold text-white">LIÊN HỆ VỚI CHÚNG TÔI</div>
+        <div className="text-xl text-white">BASICO đồng hành với quý khách hàng xây dựng nền tảng kinh doanh bền vững.</div>
+      </div>
+
+      <div className="absolute bottom-0 left-24 right-24 bg-black bg-opacity-60 py-2 px-4 max-w-[250px] " >
+        <a href="/" className="text-white font-bold text-sm">Basico Law Firm</a>
+      <span className="text-red-500 font-bold text-sm ml-2">› Liên Hệ</span>
+    </div>
+  </div>
+</div>
+      {/* body */}
       <div className="flex flex-col justify-center items-center text-black pt-[100px] mx-[366px] w-[1140px]">
         <div className="p-5 bg-[#ddcaad] text-[23px] mb-9 leading-6 ">
           <strong>
