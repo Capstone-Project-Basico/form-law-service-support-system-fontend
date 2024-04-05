@@ -72,35 +72,13 @@ const Page = (props: Props) => {
     }
   }, []);
 
-  const getFile = async (id: number) => {
-    // fetch file
-    const res = await axiosClient.get('formTemplateVersion/download/' + id, { responseType: 'blob' });
-    const file = new Blob([res.data]);
-
-    const form = new FormData();
-    form.append('file', file);
-
-    const htmlRes = await axiosClient.post('https://demo-converter-to-html.onrender.com/api/documents/convert', form, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    const html = htmlRes.data;
-    console.log(html);
-  };
-
-  useEffect(() => {
-    getFile(33);
-  }, []);
-
   return (
     <div className="w-full h-[40rem]">
       <Table
         isHeaderSticky
         classNames={{
           base: ' max-h-[40rem] ',
-          table: 'min-h-[420px] overflow-scroll',
+          table: ' overflow-scroll',
         }}
       >
         <TableHeader columns={columns} className="text-white">

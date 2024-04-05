@@ -103,7 +103,7 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
       }
       if (res.data.status === 'STANDARDIZED') {
         console.log('standardized');
-        router.push('/dashboard');
+        router.push('/dashboard/template/list-template');
       }
     }
   }
