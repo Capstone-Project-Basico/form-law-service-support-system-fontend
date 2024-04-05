@@ -80,7 +80,6 @@ const Navbar = () => {
     getUserById();
   }, [userId]);
 
-  console.log(user);
   return (
     <div className={styles.container}>
       <MyNavbar>

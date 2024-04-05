@@ -44,9 +44,11 @@ const Page = () => {
         switch (response.data.data.roleName) {
           case "ROLE_ADMIN":
             router.push("/dashboard");
+            toast.success("Đăng nhập thành công");
             break;
           case "ROLE_CUSTOMER":
             router.push("/");
+            toast.success("Đăng nhập thành công");
             break;
           default:
             router.push("/");
