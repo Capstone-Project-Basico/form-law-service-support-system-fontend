@@ -75,7 +75,7 @@ export default function FileUpload({ file, setFile, ...props }: IFileUploadProps
 
         <p className="mt-2 text-gray-500 tracking-wide">Upload or darg & drop your file. </p>
 
-        <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} />
+        <input id="dropzone-file" type="file" accept=".docx" className="hidden" onChange={handleFileChange} />
       </label>
     </div>
   );

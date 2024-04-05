@@ -9,11 +9,9 @@ export const sideNavItems: SideNavItem[] = [
     icon: <FontAwesomeIcon icon={faHouse} className="w-7 h-7 text-[#FF0004]" />,
   },
   {
-    title: "Quản lí thông tin",
-    path: "/dashboard/information",
-    icon: (
-      <FontAwesomeIcon icon={faCircleInfo} className="w-7 h-7 text-[#FF0004]" />
-    ),
+    title: 'Quản lí thông tin',
+    path: '/dashboard/information',
+    icon: <FontAwesomeIcon icon={faCircleInfo} className="w-7 h-7 text-[#FF0004]" />,
     subMenu: true,
     subMenuItems: [
       { title: 'Liên hệ', path: '/dashboard/information/contact' },
@@ -22,18 +20,13 @@ export const sideNavItems: SideNavItem[] = [
     ],
   },
   {
-    title: "Quản lí dịch vụ",
-    path: "/dashboard/service",
-    icon: (
-      <FontAwesomeIcon
-        icon={faBarsStaggered}
-        className="w-7 h-7 text-[#FF0004]"
-      />
-    ),
+    title: 'Quản lí dịch vụ',
+    path: '/dashboard/service',
+    icon: <FontAwesomeIcon icon={faBarsStaggered} className="w-7 h-7 text-[#FF0004]" />,
     subMenu: true,
     subMenuItems: [
-      { title: "Biểu mẫu", path: "/dashboard/service/manageTemplate" },
-      { title: "Gói dịch vụ", path: "/dashboard/service/pack" },
+      { title: 'Biểu mẫu', path: '/dashboard/service/manageTemplate' },
+      { title: 'Gói dịch vụ', path: '/dashboard/service/pack' },
     ],
   },
 
@@ -64,7 +57,7 @@ export const sideNavItems: SideNavItem[] = [
     subMenu: true,
     subMenuItems: [
       { title: 'Tạo mới', path: '/dashboard/template/add-template' },
-      { title: 'Danh sách template', path: '/dashboard/template/list-template' },
+      { title: 'Danh sách template', path: '/dashboard/template' },
     ],
   },
 ];

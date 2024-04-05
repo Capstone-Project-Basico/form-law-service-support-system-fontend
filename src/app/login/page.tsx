@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { Button, Input } from "@nextui-org/react";
-import { useState, ChangeEvent, FormEvent } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash, faKey } from "@fortawesome/free-solid-svg-icons";
-import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
-import axios from "axios";
-import Link from "next/link";
-import { faFacebook, faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { useRouter } from "next/navigation";
-import { ToastContainer, toast } from "react-toastify";
+import { Button, Input } from '@nextui-org/react';
+import { useState, ChangeEvent, FormEvent } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash, faKey } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import axios from 'axios';
+import Link from 'next/link';
+import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { useRouter } from 'next/navigation';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const router = useRouter();
   let dataLogin = {
     email: email,
@@ -29,17 +29,13 @@ const Page = () => {
       .post(`${process.env.NEXT_PUBLIC_BASE_API}auth/generateToken`, dataLogin)
       .then((response) => {
         const user = {
-          expiration: new Date().getTime() + 1000 * 60 * 10,
+          expiration: new Date().getTime() + 1000 * 60 * 25,
           ...response.data.data,
         };
-        localStorage.setItem("userData", JSON.stringify(user));
-        localStorage.setItem("user", JSON.stringify(response));
-        localStorage.setItem(
-          "auth-token",
-          JSON.stringify(response.data.data.token)
-        );
-        axios.defaults.headers.common["Authorization"] = `${response}`;
-        console.log(response.data.data.roleName);
+        localStorage.setItem('userData', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(response));
+        localStorage.setItem('auth-token', JSON.stringify(response.data.data.token));
+        axios.defaults.headers.common['Authorization'] = `${response}`;
 
         switch (response.data.data.roleName) {
           case "ROLE_ADMIN":
@@ -51,11 +47,11 @@ const Page = () => {
             toast.success("Đăng nhập thành công");
             break;
           default:
-            router.push("/");
+            router.push('/');
         }
         setTimeout(() => {
           localStorage.clear();
-          toast.success("Hết thời gian đăng nhập");
+          toast.success('Hết thời gian đăng nhập');
         }, 6000000);
       })
       .catch((error) => {
@@ -82,9 +78,7 @@ const Page = () => {
                 placeholder="Nhập email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                startContent={
-                  <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5" />
-                }
+                startContent={<FontAwesomeIcon icon={faEnvelope} className="w-5 h-5" />}
               />
             </div>
             <div className="flex w-[662px]">
@@ -93,29 +87,17 @@ const Page = () => {
                 placeholder="Mật khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                startContent={
-                  <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
-                }
+                startContent={<FontAwesomeIcon icon={faKey} className="w-5 h-5" />}
                 endContent={
-                  <button
-                    className="focus:outline-none"
-                    type="button"
-                    onClick={toggleVisibility}
-                  >
+                  <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
                     {isVisible ? (
-                      <FontAwesomeIcon
-                        icon={faEye}
-                        className="text-2xl text-default-400 pointer-events-none"
-                      />
+                      <FontAwesomeIcon icon={faEye} className="text-2xl text-default-400 pointer-events-none" />
                     ) : (
-                      <FontAwesomeIcon
-                        icon={faEyeSlash}
-                        className="text-2xl text-default-400 pointer-events-none"
-                      />
+                      <FontAwesomeIcon icon={faEyeSlash} className="text-2xl text-default-400 pointer-events-none" />
                     )}
                   </button>
                 }
-                type={isVisible ? "text" : "password"}
+                type={isVisible ? 'text' : 'password'}
               />
             </div>
             <div className="flex justify-end font-bold mt-4">
@@ -123,16 +105,11 @@ const Page = () => {
                 Quên mật khẩu
               </a>
             </div>
-            <Button
-              type="submit"
-              className="bg-[#F00004] text-white w-full my-4"
-            >
+            <Button type="submit" className="bg-[#F00004] text-white w-full my-4">
               Đăng nhập
             </Button>
 
-            <p className="flex justify-center items-center mb-4">
-              Hoặc đăng nhập bằng
-            </p>
+            <p className="flex justify-center items-center mb-4">Hoặc đăng nhập bằng</p>
 
             <div className="flex gap-5 mb-4">
               <Button className="bg-[#FF0004] text-white w-80">
@@ -147,7 +124,7 @@ const Page = () => {
             </div>
 
             <div className="flex justify-center">
-              Bạn chưa có tài khoản?{" "}
+              Bạn chưa có tài khoản?{' '}
               <strong>
                 &nbsp;
                 <a href="/register" className="text- hover:text-[#ff0000]">

@@ -82,7 +82,7 @@ const Navbar = () => {
 
   return (
     <div className={styles.container}>
-      <MyNavbar>
+      <MyNavbar maxWidth="full" isBordered className="border-[#FF0004] px-8 pb-1">
         <NavbarBrand>
           <a href="/">
             <Image
@@ -211,6 +211,13 @@ const Navbar = () => {
               </Button>
             </a>
           </NavbarItem>
+          <NavbarItem>
+            <a href="/Recruitment">
+              <Button className="red-hover-button bg-white" radius="none">
+                TUYỂN DỤNG
+              </Button>
+            </a>
+          </NavbarItem>
         </NavbarContent>
 
         {/* login */}
@@ -277,14 +284,23 @@ const Navbar = () => {
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <NavbarItem className="hidden lg:flex">
+            <NavbarItem className="hidden lg:flex gap-2">
               <Button
                 as={Link}
                 href="/login"
                 variant="bordered"
-                className="bg-white text-[#FF0004] border-[#FF0004] hover:bg-[#FF0004] hover:text-white"
+                className="bg-white text-[#FF0004] border-[#FF0004] hover:bg-red-200 hover:text-[#FF0004] font-bold"
               >
                 Đăng nhập
+              </Button>
+
+              <Button
+                as={Link}
+                href="/register"
+                variant="bordered"
+                className="bg-[#FF0004] text-white border-[#FF0004] font-bold"
+              >
+                Đăng ký
               </Button>
             </NavbarItem>
           )}
