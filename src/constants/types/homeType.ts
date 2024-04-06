@@ -41,7 +41,7 @@ export type ProfileSidebarItem = {
   icon?: JSX.Element;
 };
 
-export type Partner = {
+export type PartnerType = {
   partnerId: number;
   name: string;
   avatar: string; // Assuming you have an image URL or similar
@@ -81,6 +81,13 @@ export type RecruitmentType = {
   id_number: string;
   processStatus: boolean;
   deleted: boolean;
+};
+
+export type PostType = {
+  content: string;
+  userName: string;
+  cateName: string;
+  delete: boolean;
 };
 
 export type User = {
