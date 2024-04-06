@@ -95,7 +95,7 @@ const Page = (props: Props) => {
         </div>
         <div className="grow">
           <div className="overflow-y-scroll max-h-[39rem] min-h-[39rem] w-[850px] mx-auto p-10 border-2">
-            <div className="content-center p-20 border-1 border-black" ref={templateRef}></div>
+            <div className="content-center min-h-[35rem] p-20 border-1 border-black" ref={templateRef}></div>
           </div>
         </div>
       </form>
