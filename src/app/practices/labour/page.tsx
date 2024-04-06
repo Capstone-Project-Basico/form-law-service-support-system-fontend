@@ -6,7 +6,7 @@ const page = () => {
   return (
     <>
       <HeaderComponent title="LĨNH VỰC CHUYÊN MÔN" link="Lao Động" />
-      <div className="flex flex-col justify-center items-center bg-white text-black px-[366px] ">
+      <div className="flex flex-col justify-center items-center bg-white text-black px-[366px] pt-16">
         <h1 className="text-3xl font-bold mb-9">Lao động</h1>
         <p className="w-[1125px] font-bold">
           Quản trị lao động hiệu quả đóng vai trò là một trong những nhân tố

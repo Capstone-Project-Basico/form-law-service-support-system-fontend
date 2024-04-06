@@ -1,8 +1,13 @@
 "use client";
 
 import { Template } from "@/constants/types/homeType";
+import HeaderComponent from "@/components/header";
 // import CardTemplate from "@/sections/CardTemplate";
 import { useEffect, useState } from "react";
+
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { GoogleMaps } from "@/components/ui/GoogleMaps";
+import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 import {
   Card,
   CardHeader,
@@ -21,6 +26,7 @@ import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
+
 
 interface UserLocal {
   data: {
@@ -135,6 +141,12 @@ const Page = () => {
     //     <CardTemplate key={index} itemDetail={item} />
     //   ))}
     // </div>
+    <>
+    <HeaderComponent
+        title="BIỂU MẪU"
+        link="BIỂU MẪU"
+      />
+
     <div className="mx-10 my-20">
       <ToastContainer />
       <div className="flex flex-row border-b-1 mb-10 pb-3 w-full">
@@ -232,6 +244,7 @@ const Page = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 export default Page;

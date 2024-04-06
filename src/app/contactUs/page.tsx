@@ -32,7 +32,7 @@ const page = () => {
             <div className="text-3xl font-bold text-white">
               LIÊN HỆ VỚI CHÚNG TÔI
             </div>
-            <div className="text-xl text-white">
+            <div className="text-xl text-white pt-5 font-lora italic opacity-80"style={{ letterSpacing: '1px' }}>
               BASICO đồng hành với quý khách hàng xây dựng nền tảng kinh doanh
               bền vững.
             </div>

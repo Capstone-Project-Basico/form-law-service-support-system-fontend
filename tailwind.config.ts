@@ -15,9 +15,13 @@ const config: Config = {
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       fontFamily: {
-        sans: ['Roboto Condensed', 'Arial', 'Helvetica', 'sans-serif'],
+        sans: ['Roboto Condensed', 'Arial', 'Helvetica', 'sans-serif'],'lora': ['Lora', 'serif'],
         // other fonts...
       },
+      letterSpacing: {
+        custom: '1px',
+      },
+      
       colors: {
         primary: '#FF0004',
       },
