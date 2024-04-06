@@ -6,7 +6,7 @@ const page = () => {
   return (
     <>
       <HeaderComponent title="LĨNH VỰC CHUYÊN MÔN" link="Sở Hữu Trí Tuệ" />
-      <div className="flex flex-col justify-center items-center bg-white text-black px-[366px] ">
+      <div className="flex flex-col justify-center items-center bg-white text-black px-[366px] pt-16">
         <h1 className="text-3xl font-bold mb-9">Sở hữu trí tuệ</h1>
         <p className="w-[1125px]">
           Trong lĩnh vực sở hữu trí tuệ,

@@ -12,7 +12,7 @@ const page = () => {
     <>
       {/* <div className="flex flex-col justify-center items-center pt-32 pb-[97px] ">
       <ToastContainer /> */}
-      <div className="bg-white py-10 pt-32 pb-[510px]">
+      <div className="bg-white py-10 pt-32 pb-[436px] ">
         <div className="  max-w-6xl mx-auto flex justify-between items-center">
           {/* Phần bên trái */}
           <div className="flex flex-col items-center space-y-5">

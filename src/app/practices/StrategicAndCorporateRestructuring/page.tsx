@@ -9,7 +9,7 @@ const page = () => {
         title="LĨNH VỰC CHUYÊN MÔN"
         link="Tư Vấn Chiến Lược Và Tái Cấu Trúc Doanh Nghiệp"
       />
-      <div className="flex flex-col justify-center items-center mx-[374px]">
+      <div className="flex flex-col justify-center items-center mx-[374px] pt-16">
         <div className="text-3xl font-bold mb-9">
           Tư vấn chiến lược và Tái cấu trúc doanh nghiệp
         </div>

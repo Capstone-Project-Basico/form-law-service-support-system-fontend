@@ -16,9 +16,9 @@ const page = () => {
         title="LĨNH VỰC CHUYÊN MÔN"
         link="Đào Tạo Pháp Lý Cho Doanh Nghiệp"
       />
-      <div className="flex flex-col justify-center items-center mx-[374px]">
+      <div className="flex flex-col justify-center items-center mx-[374px] pt-16">
         <div className="text-3xl font-bold mb-9">
-          Tư vấn chiến lược và Tái cấu trúc doanh nghiệp
+        Đào tạo pháp lý cho doanh nghiệp
         </div>
         <p>
           {" "}
@@ -30,9 +30,8 @@ const page = () => {
           triển khai các chương trình đào tạo nghiệp vụ pháp lý cho các ngân
           hàng, định chế tài chính và doanh nghiệp.
         </p>
-        <p>
-          Các sản phẩm đào tạo luôn bao gồm tổng quan kiến thức pháp lý, các kỹ
-          năng pháp lý và các kinh nghiệm pháp lý cần thiết.
+        <p className="pr-56">
+          Các sản phẩm đào tạo luôn bao gồm tổng quan kiến thức pháp lý, các kỹ năng pháp lý và các kinh nghiệm pháp lý cần thiết.
         </p>
         <p>
           Qua mỗi năm đều có hàng nghìn lượt học viên tham gia các khóa học lý

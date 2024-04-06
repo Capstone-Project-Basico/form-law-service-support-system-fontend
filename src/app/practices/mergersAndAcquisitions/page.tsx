@@ -6,7 +6,8 @@ const page = () => {
   return (
     <>
       <HeaderComponent title="LĨNH VỰC CHUYÊN MÔN" link="Tư Vấn M&A" />
-      <div className="flex flex-col justify-center items-center bg-white text-black px-[366px] ">
+
+      <div className="flex flex-col justify-center items-center bg-white text-black px-[366px] pt-16">
         <h1 className="text-3xl font-bold">Tư vấn M&A</h1>
         <p className="w-[1125px] my-9">
           Khi tư vấn cho các tập đoàn, doanh nghiệp, doanh nhân lớn trong các
