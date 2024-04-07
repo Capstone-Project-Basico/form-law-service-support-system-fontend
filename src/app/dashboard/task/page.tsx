@@ -27,7 +27,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { Task } from "@/constants/types/homeType";
+import { TaskType } from "@/constants/types/homeType";
 import authHeader from "@/components/authHeader/AuthHeader";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -89,7 +89,6 @@ const Task = () => {
         }
       );
       setTask(response.data.data);
-     
     } catch (error) {
       console.error(error);
     }
@@ -105,13 +104,11 @@ const Task = () => {
         }
       );
       setTask(response.data.data);
-      
     } catch (error) {
       console.error(error);
     }
   };
 
-  
   //delete
   const handleDelete = async (id: number) => {
     const isConfirmed = window.confirm(
@@ -127,15 +124,12 @@ const Task = () => {
         const user = JSON.parse(userString);
 
         axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}task/deleteTask/${id}`,
-            {
-              headers: authHeader(),
-            }
-          )
+          .delete(`${process.env.NEXT_PUBLIC_BASE_API}task/deleteTask/${id}`, {
+            headers: authHeader(),
+          })
           .then(() => {
             toast.success("Xóa thành công");
-            fetchTask()
+            fetchTask();
           }),
           {
             headers: {
@@ -165,30 +159,24 @@ const Task = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedTask()
+          fetchDeletedTask();
         });
     } catch (error) {
       console.log(error);
     }
   };
 
-
-  
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">
-              Quản lí công việc
-            </p>
+            <p className="text-black font-bold text-3xl ">Quản lí công việc</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <p className="text-[#FF0004] font-bold text-3xl">Công việc</p>
           </BreadcrumbItem>
         </Breadcrumbs>
-
-       
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
@@ -203,7 +191,7 @@ const Task = () => {
             TẤT CẢ
           </Button>
         </div>
-        
+
         <div>
           <Button
             className={`bg-white ${
@@ -219,7 +207,11 @@ const Task = () => {
       </div>
 
       <div>
-        <Tasks tasks={task} handleDelete={handleDelete} restoreDelete={restoreDelete}/>
+        <Tasks
+          tasks={task}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
+        />
       </div>
     </div>
   );

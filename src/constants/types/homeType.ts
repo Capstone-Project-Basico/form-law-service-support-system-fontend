@@ -90,6 +90,12 @@ export type PostType = {
   delete: boolean;
 };
 
+export type Category = {
+  cateId: number;
+  cateName: string;
+  delete: boolean;
+};
+
 export type User = {
   userId: number;
   userName: string;
@@ -117,7 +123,7 @@ export type Lawyer = {
   status: number;
 };
 
-export type Task = {
+export type TaskType = {
   id: number;
   taskName: string;
   description: string;
