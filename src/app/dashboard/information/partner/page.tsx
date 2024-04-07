@@ -237,9 +237,9 @@ const Partner = () => {
                       Thêm đối tác
                     </ModalHeader>
                     <ModalBody>
-                      <Input
+                      <Input className="font-bold"
                         type="text"
-                        label="Name"
+                        label="Tên đối tác"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />

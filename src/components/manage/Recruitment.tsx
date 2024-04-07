@@ -362,7 +362,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
 
                 <Input
                   type="date"
-                  label="Ngày bắt đầu"
+                  label="Ngày sinh"
                   value={
                     selectedRecruitment &&
                     selectedRecruitment.dateOfBirth instanceof Date

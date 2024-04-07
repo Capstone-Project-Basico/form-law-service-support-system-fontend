@@ -8,9 +8,67 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GoogleMaps } from "@/components/ui/GoogleMaps";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 import { ToastContainer, toast } from "react-toastify";
-import { useState } from 'react';
+import { RecruitmentType } from "@/constants/types/homeType";
+import Recruitments from "@/components/manage/Recruitment";
+import { FormEvent, useEffect, useState } from "react";
+import axios from "axios";
 const page = () => {
+
  
+  //data
+  const [fullName, setFullName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [id_number, setIdNumber] = useState("");
+  const [homeTown, setHomeTown] = useState("");
+  const [maritalStatus, setMaritalStatus] = useState("");
+  const [gender, setGender] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNum, setPhoneNum] = useState("");
+  const [position, setPosition] = useState("");
+  const [exp, setExp] = useState("");
+  const [field, setField] = useState("");
+  const [graduate, setGraduate] = useState("");
+  const [target, setTarget] = useState("");
+  const [workPlace, setWorkPlace] = useState("");
+  const [processStatus, setprocessStatus] = useState("");
+  const [recruitment, setRecruitment] = useState<RecruitmentType[]>([]);
+
+  const [selectedRecruitment, setSelectedRecruitment] =
+  useState<RecruitmentType | null>(null);
+
+  let newRecruitment = {
+    fullName,
+    dateOfBirth,
+    id_number,
+    homeTown,
+    maritalStatus,
+    gender,
+    email,
+    phoneNum,
+    position,
+    exp,
+    field,
+    graduate,
+    target,
+    workPlace,
+    processStatus,
+  };
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/createNewRecruitmentForm`,
+        newRecruitment
+      )
+
+      .then((response) => {
+        setRecruitment((prevPartners) => [...prevPartners, response.data.data]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   /// Initialize the step state to 1 to represent the first step in the process.
   const [step, setStep] = useState(1);
 
@@ -24,8 +82,10 @@ const page = () => {
     setStep(prevStep => (prevStep > 1 ? prevStep - 1 : prevStep)); // Decrement the step value if it's greater than 1.
   };
 
+
+  // Giao diện website của tuyển dụng
   switch (step) {
-    case 1:
+    case 1: 
       return (
         <div className="bg-white py-10 pt-32 pb-[436px] ">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
@@ -114,10 +174,115 @@ const page = () => {
        
       </div>
       );
-  case 3:
-      // Step 3 content
-      // ...and so on for further steps.
 
+
+  case 3:
+      return (
+    <form onSubmit={handleSubmit} className="space-y-4  pb-[100px] pt-20 ">
+      <div>
+        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+          Họ tên (*)</label>
+        <input 
+          type="text" 
+          name="fullName" 
+          value={fullName} 
+          onChange={(e) => setFullName(e.target.value)}
+          required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div >
+        <label htmlFor="dob" className="text-sm font-medium text-gray-700">
+          Ngày sinh</label>
+        <input 
+          type="date" 
+
+          value={
+            selectedRecruitment &&
+            selectedRecruitment.dateOfBirth instanceof Date
+              ? selectedRecruitment.dateOfBirth
+                  .toISOString()
+                  .substring(0, 10)
+              : ""
+          }
+          onChange={
+            (e) =>
+              setSelectedRecruitment({
+                ...selectedRecruitment,
+                dateOfBirth: e.target.value
+                  ? new Date(e.target.value)
+                  : null,
+              } as RecruitmentType) // Ensure the type is Task when updating state
+          }
+          className="form-input block w-full py-2 text-base font-normal
+           text-gray-700 bg-white bg-clip-padding  rounded transition 
+           ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
+           />
+      </div>
+
+
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+        CMND, CCCD hoặc giấy tờ khác tương đương (*)</label>
+        <input 
+        type="text" 
+        value={id_number} 
+        onChange={(e) => setIdNumber(e.target.value)}
+        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+        Quê quán (*)</label>
+        <input 
+        type="text" 
+        value={homeTown} 
+        onChange={(e) => setHomeTown(e.target.value)}
+        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+        Giới tính</label>
+        <input 
+        type="text" 
+        value={gender} 
+        onChange={(e) => setGender(e.target.value)}
+        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+        Tình trạng hôn nhân</label>
+        <input 
+        type="text" 
+        value={maritalStatus} 
+        onChange={(e) => setMaritalStatus(e.target.value)}
+        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+        Số điện thoại (*)</label>
+        <input 
+        type="text" 
+        value={phoneNum} 
+        onChange={(e) => setPhoneNum(e.target.value)}
+        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email (*)</label>
+        <input 
+        type="email" 
+        name="email" 
+        value={email} 
+        onChange={(e) => setEmail(e.target.value)}
+        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <button type="submit" className="mt-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">Gửi</button>
+    </form>
+  );
     default:
       // A default case to handle an unknown step.
       return (
