@@ -27,7 +27,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { Partner } from "@/constants/types/homeType";
+import { PartnerType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
 
 import {
@@ -52,7 +52,7 @@ const Partner = () => {
   const [avatar, setAvatar] = useState("");
   const [link, setLink] = useState("");
   // const [imageRef, setImageRef] = useState<StorageReference | undefined>();
-  const [partners, setPartners] = useState<Partner[]>([]);
+  const [partners, setPartners] = useState<PartnerType[]>([]);
   let newPartner = {
     name,
     avatar,
@@ -104,8 +104,8 @@ const Partner = () => {
     }
   };
 
-   //delete
-   const handleDelete = async (partnerId: number) => {
+  //delete
+  const handleDelete = async (partnerId: number) => {
     const isConfirmed = window.confirm(
       "Bạn có chắc muốn xóa đối tác này không?"
     );
@@ -124,7 +124,7 @@ const Partner = () => {
           )
           .then(() => {
             toast.success("Xóa thành công");
-            fetchPartners()
+            fetchPartners();
           }),
           {
             headers: {
@@ -150,7 +150,7 @@ const Partner = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedPartner()
+          fetchDeletedPartner();
         });
     } catch (error) {
       console.log(error);
@@ -212,9 +212,7 @@ const Partner = () => {
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">
-              Quản lí thông tin
-            </p>
+            <p className="text-black font-bold text-3xl ">Quản lí thông tin</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <p className="text-[#FF0004] font-bold text-3xl">Đối tác</p>
@@ -245,7 +243,11 @@ const Partner = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
-                      <input className="py-3" type="file" onChange={(e) => uploadFile(e)} />
+                      <input
+                        className="py-3"
+                        type="file"
+                        onChange={(e) => uploadFile(e)}
+                      />
                       <Input
                         type="text"
                         label="Link"
@@ -301,9 +303,10 @@ const Partner = () => {
       </div>
 
       <div>
-        <Partners partners={partners} 
-                  handleDelete = {handleDelete}
-                  restoreDelete= {restoreDelete}
+        <Partners
+          partners={partners}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
         />
       </div>
     </div>

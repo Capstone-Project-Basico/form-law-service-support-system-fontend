@@ -25,7 +25,7 @@ import {
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { Partner } from "@/constants/types/homeType";
+import { PartnerType } from "@/constants/types/homeType";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
@@ -33,7 +33,7 @@ import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 
 type PartnersProps = {
-  partners: Partner[];
+  partners: PartnerType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
 };
@@ -44,7 +44,9 @@ const Partners: React.FC<PartnersProps> = ({
   restoreDelete,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
+  const [selectedPartner, setSelectedPartner] = useState<PartnerType | null>(
+    null
+  );
 
   const {
     isOpen: isOpenUpdate,
