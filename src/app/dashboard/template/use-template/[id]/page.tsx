@@ -9,7 +9,6 @@ type Props = {};
 
 const Page = (props: Props) => {
   const params = useParams<{ id: string }>();
-  console.log(params.id);
 
   const templateRef = useRef<HTMLDivElement>(null);
 
@@ -86,17 +85,17 @@ const Page = (props: Props) => {
   return (
     <div className="p-5">
       <h1 className="text-2xl font-semibold text-left">Use Template</h1>
-      <form onSubmit={handleSubmit} className="flex">
+      <form onSubmit={handleSubmit} className="">
         <div className="basis-3/12 mt-5">
-          <Input className="m-2" variant="bordered" label="Tên biểu mẫu" type="text" name="formName" />
-          <button type="submit" className="bg-primary hover:bg-red-400 text-white font-bold py-2 px-4 rounded m-5">
+          <Input className="m-2 w-40" variant="bordered" label="Tên biểu mẫu" type="text" name="formName" />
+        </div>
+        <div className="w-[850px] mx-auto">
+          <div className="overflow-y-scroll max-h-[39rem] min-h-[39rem]  mx-auto p-10 border-2">
+            <div className="content-center min-h-[35rem] p-10 border-1 border-black" ref={templateRef}></div>
+          </div>
+          <button type="submit" className="w-full bg-primary hover:bg-red-400 text-white font-bold py-2 px-4 rounded m-5">
             Submit
           </button>
-        </div>
-        <div className="grow">
-          <div className="overflow-y-scroll max-h-[39rem] min-h-[39rem] w-[850px] mx-auto p-10 border-2">
-            <div className="content-center min-h-[35rem] p-20 border-1 border-black" ref={templateRef}></div>
-          </div>
         </div>
       </form>
     </div>

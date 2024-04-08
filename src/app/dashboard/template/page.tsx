@@ -27,22 +27,22 @@ const Page = (props: Props) => {
       key: 'id',
     },
     {
-      title: 'Version Number',
+      title: 'Version',
       dataIndex: 'versionNumber',
       key: 'versionNumber',
     },
     {
-      title: 'Price',
+      title: 'Giá',
       dataIndex: 'price',
       key: 'price',
     },
     {
-      title: 'Status',
+      title: 'Tình trạng',
       dataIndex: 'status',
       key: 'status',
     },
     {
-      title: 'Message',
+      title: 'Thông báo',
       dataIndex: 'message',
       key: 'message',
     },
@@ -52,11 +52,11 @@ const Page = (props: Props) => {
     //   key: 'fileUrl',
     // },
     {
-      title: 'download',
+      title: 'Tải xuống',
       key: 'download',
     },
     {
-      title: 'use',
+      title: 'Sử dụng',
       key: 'use',
     },
   ];
@@ -64,9 +64,15 @@ const Page = (props: Props) => {
   const renderCell = useCallback((item: FormTemplateVersion, columnKey: Key) => {
     switch (columnKey) {
       case 'download':
-        return <a href={process.env.NEXT_PUBLIC_BASE_API + 'formTemplateVersion/download/' + item.id}>Download</a>;
+        return <a href={process.env.NEXT_PUBLIC_BASE_API + 'formTemplateVersion/download/' + item.id}>Tải xuống</a>;
       case 'use':
-        return <Link href={`/dashboard/template/use-template/${item.id}`}>Use</Link>;
+        return <Link href={`/dashboard/template/use-template/${item.id}`}>Sử dụng</Link>;
+      case 'status':
+        return item.status === 'STANDARDIZED' ? (
+          <span className="text-green-500">Chuẩn hóa</span>
+        ) : (
+          <span className="text-red-500">Chưa chuẩn hóa</span>
+        );
       default:
         return getKeyValue(item, columnKey);
     }

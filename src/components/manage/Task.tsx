@@ -33,10 +33,13 @@ type TasksProps = {
   tasks: TaskType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
-
 };
 
-const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => {
+const Tasks: React.FC<TasksProps> = ({
+  tasks,
+  handleDelete,
+  restoreDelete,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
 
@@ -94,7 +97,6 @@ const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => 
         console.error("Failed to update partner", error);
       });
   };
-
 
   return (
     <div>
@@ -182,6 +184,7 @@ const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => 
               <TableCell>{task.processStatus}</TableCell>
               <TableCell >
                 <span style={{ color: task.status ? 'red' : 'green' }}>
+
                   {task.status ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
               </TableCell>
@@ -213,8 +216,6 @@ const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => 
                   >
                     Khôi phục
                   </Button>
-
-
                 </TableCell>
               )}
             </TableRow>
@@ -283,8 +284,6 @@ const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => 
                   }
                   className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                 />
-
-
               </form>
             )}
           </ModalBody>

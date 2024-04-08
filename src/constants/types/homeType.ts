@@ -88,6 +88,8 @@ export type PostType = {
   userName: string;
   cateName: string;
   delete: boolean;
+  cateId: string;
+  userId: string;
 };
 
 export type Category = {
