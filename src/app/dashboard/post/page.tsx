@@ -32,10 +32,22 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import authHeader from "@/components/authHeader/AuthHeader";
+import dynamic from "next/dynamic";
+const EditorWithNoSSR = dynamic(() => import("@/components/Editor"), {
+  ssr: false,
+});
+
+interface UserLocal {
+  data: {
+    data: {
+      userId: string;
+    };
+  };
+}
 
 const Post = () => {
   const [tabs, setTabs] = useState(1);
@@ -43,6 +55,23 @@ const Post = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [content, setContent] = useState("");
+  const [cateId, setCateId] = useState<number | undefined>();
+  // const [newPost, setNewPost] = useState<Category>();
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
+  const userId = user?.data.data.userId;
+  const newPost = {
+    content,
+    cateId,
+    userId,
+  };
 
   useEffect(() => {
     switch (tabs) {
@@ -98,6 +127,17 @@ const Post = () => {
     }
   };
 
+  //add new category
+  const handleSubmit = async () => {
+    axios
+      .post(`${process.env.NEXT_PUBLIC_BASE_API}post/createPost`, newPost, {
+        headers: authHeader(),
+      })
+      .then((response) => {
+        toast.success("Khôi phục thành công");
+      });
+  };
+
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -144,29 +184,27 @@ const Post = () => {
                   Thêm bài viết mới
                 </ModalHeader>
                 <ModalBody>
-                  <Select
-                    items={categories}
-                    label="Chọn loại cho bài viết"
-                    placeholder="Thể loại"
-                    labelPlacement="outside"
-                    className="max-w-xs"
-                  >
-                    {(category) => (
-                      <SelectItem
-                        key={category.cateId}
-                        textValue={category.cateName}
-                      >
-                        <div className="flex gap-2 items-center">
-                          <div className="flex flex-col">
-                            <span className="text-small">
-                              {category.cateName}
-                            </span>
-                          </div>
-                        </div>
-                      </SelectItem>
-                    )}
-                  </Select>
-                  <CKEditor
+                  <form onSubmit={handleSubmit}>
+                    <Select
+                      // items={categories}
+                      label="Chọn loại cho bài viết"
+                      placeholder="Thể loại"
+                      labelPlacement="outside"
+                      className="font-bold"
+                      onChange={(event) =>
+                        setCateId(Number(event.target.value))
+                      }
+                    >
+                      {categories.map((category) => (
+                        <SelectItem
+                          key={category.cateId}
+                          value={category.cateId}
+                        >
+                          {category.cateName}
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    {/* <CKEditor
                     editor={ClassicEditor}
                     data="<p>Thêm nội dung vào đây để tạo bài viết!</p>"
                     onReady={(editor) => {
@@ -183,13 +221,25 @@ const Post = () => {
                     onFocus={(event, editor) => {
                       console.log("Focus.", editor);
                     }}
-                  />
+                  /> */}
+                    <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
+                    <EditorWithNoSSR
+                      onChange={(data: string) => setContent(data)}
+                    />
+                  </form>
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>
                     Đóng
                   </Button>
-                  <Button color="primary" onPress={onClose} type="submit">
+                  <Button
+                    color="primary"
+                    onPress={() => {
+                      handleSubmit();
+                      onClose;
+                    }}
+                    type="submit"
+                  >
                     Thêm
                   </Button>
                 </ModalFooter>

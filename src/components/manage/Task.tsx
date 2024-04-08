@@ -25,27 +25,30 @@ import {
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { Task } from "@/constants/types/homeType";
+import { TaskType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
 
 type TasksProps = {
-  tasks: Task[];
-  handleDelete:(id: number)=>void;
-  restoreDelete:(id: number)=> void;
-
+  tasks: TaskType[];
+  handleDelete: (id: number) => void;
+  restoreDelete: (id: number) => void;
 };
 
-const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => {
+const Tasks: React.FC<TasksProps> = ({
+  tasks,
+  handleDelete,
+  restoreDelete,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
 
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
- 
+
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -94,7 +97,6 @@ const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => 
         console.error("Failed to update partner", error);
       });
   };
- 
 
   return (
     <div>
@@ -180,12 +182,12 @@ const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => 
                 }
               </TableCell>
               <TableCell>{task.processStatus}</TableCell>
-              <TableCell >
-                  <span style={{ color: task.status ? 'red' : 'green' }}>
+              <TableCell>
+                <span style={{ color: task.status ? "red" : "green" }}>
                   {task.status ? "Không sử dụng" : "Đang hoạt động"}
-                  </span>
+                </span>
               </TableCell>
-              
+
               {task.status === 0 ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
@@ -205,22 +207,20 @@ const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => 
                     Xóa
                   </Button>
                 </TableCell>
-             ) : (
-              <TableCell className="flex gap-2 items-center justify-center">
-                <Button
-                  className="bg-blue-600 text-white"
-                  onClick={() => restoreDelete(task.id)}
-                >
-                  Khôi phục
-                </Button>
-
-                
-              </TableCell>
-            )}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+              ) : (
+                <TableCell className="flex gap-2 items-center justify-center">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    onClick={() => restoreDelete(task.id)}
+                  >
+                    Khôi phục
+                  </Button>
+                </TableCell>
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
@@ -241,8 +241,8 @@ const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => 
                       taskName: e.target.value,
                     })
                   }
-                  />
-                   <Input
+                />
+                <Input
                   type="text"
                   label="Mô tả"
                   value={selectedTask.description}
@@ -252,39 +252,47 @@ const Tasks: React.FC<TasksProps> = ({ tasks, handleDelete, restoreDelete }) => 
                       description: e.target.value,
                     })
                   }
-                  />
-                   
-                  <Input
-                    type="date"
-                    label="Ngày bắt đầu"
-                    value={selectedTask && selectedTask.startDate instanceof Date 
-                    ? selectedTask.startDate.toISOString().substring(0, 10) 
-                    : ''}
-                    onChange={(e) =>
-                    setSelectedTask({
-                    ...selectedTask,
-                    startDate: e.target.value ? new Date(e.target.value) : null,
-                    } as Task) // Ensure the type is Task when updating state
-                    }
-                    className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    />
+                />
 
-                    <Input
-                    type="date"
-                    label="Ngày kết thúc"
-                    value={selectedTask && selectedTask.endDate instanceof Date 
-                    ? selectedTask.endDate.toISOString().substring(0, 10) 
-                    : ''}
-                    onChange={(e) =>
-                    setSelectedTask({
-                    ...selectedTask,
-                    endDate: e.target.value ? new Date(e.target.value) : null,
-                    } as Task) // Ensure the type is Task when updating state
-                    }
-                    className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    />
+                <Input
+                  type="date"
+                  label="Ngày bắt đầu"
+                  value={
+                    selectedTask && selectedTask.startDate instanceof Date
+                      ? selectedTask.startDate.toISOString().substring(0, 10)
+                      : ""
+                  }
+                  onChange={
+                    (e) =>
+                      setSelectedTask({
+                        ...selectedTask,
+                        startDate: e.target.value
+                          ? new Date(e.target.value)
+                          : null,
+                      } as TaskType) // Ensure the type is Task when updating state
+                  }
+                  className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                />
 
-                  
+                <Input
+                  type="date"
+                  label="Ngày kết thúc"
+                  value={
+                    selectedTask && selectedTask.endDate instanceof Date
+                      ? selectedTask.endDate.toISOString().substring(0, 10)
+                      : ""
+                  }
+                  onChange={
+                    (e) =>
+                      setSelectedTask({
+                        ...selectedTask,
+                        endDate: e.target.value
+                          ? new Date(e.target.value)
+                          : null,
+                      } as TaskType) // Ensure the type is Task when updating state
+                  }
+                  className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                />
               </form>
             )}
           </ModalBody>

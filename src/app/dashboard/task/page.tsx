@@ -54,7 +54,7 @@ const Task = () => {
   const [endDate, setEndDate] = useState("");
   const [processStatus, setProcessStatus] = useState("");
 
-  const [task, setTask] = useState<Task[]>([]);
+  const [task, setTask] = useState<TaskType[]>([]);
   let newUser = {
     taskName,
     description,
