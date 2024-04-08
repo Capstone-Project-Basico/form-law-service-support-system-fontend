@@ -63,6 +63,7 @@ const page = () => {
 
       .then((response) => {
         setRecruitment((prevPartners) => [...prevPartners, response.data.data]);
+        toast.success("Gửi thành công");
       })
       .catch((error) => {
         console.log(error);
@@ -156,10 +157,10 @@ const page = () => {
           </div>
           <div className="pt-5">
           <button
-          onClick={goBack}
-          className="text-sm text-blue-600 hover:text-blue-700 mt-4">
-          ← Quay Lại
-        </button>
+            onClick={goBack}
+            className="text-sm text-blue-600 hover:text-blue-700 mt-4">
+              ← Quay Lại
+            </button>
         </div>
         </div>
   
@@ -178,7 +179,8 @@ const page = () => {
 
   case 3:
       return (
-    <form onSubmit={handleSubmit} className="space-y-4  pb-[100px] pt-20 ">
+        <div className="flex justify-center items-center min-h-screen">
+    <form onSubmit={handleSubmit} className="space-y-8  pb-[50px]  ">
       <div>
         <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
           Họ tên (*)</label>
@@ -187,11 +189,11 @@ const page = () => {
           name="fullName" 
           value={fullName} 
           onChange={(e) => setFullName(e.target.value)}
-          required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+          required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
       </div>
 
       <div >
-        <label htmlFor="dob" className="text-sm font-medium text-gray-700">
+        <label htmlFor="dob" className=" block text-sm font-medium text-gray-700">
           Ngày sinh</label>
         <input 
           type="date" 
@@ -213,10 +215,8 @@ const page = () => {
                   : null,
               } as RecruitmentType) // Ensure the type is Task when updating state
           }
-          className="form-input block w-full py-2 text-base font-normal
-           text-gray-700 bg-white bg-clip-padding  rounded transition 
-           ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" 
-           />
+          className="form-input block w-full h-8 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+          />
       </div>
 
 
@@ -227,7 +227,7 @@ const page = () => {
         type="text" 
         value={id_number} 
         onChange={(e) => setIdNumber(e.target.value)}
-        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+        required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
       </div>
 
       <div>
@@ -237,27 +237,40 @@ const page = () => {
         type="text" 
         value={homeTown} 
         onChange={(e) => setHomeTown(e.target.value)}
-        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+        required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
       </div>
 
       <div>
         <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
         Giới tính</label>
-        <input 
-        type="text" 
+        <select 
+        id="gender" 
         value={gender} 
-        onChange={(e) => setGender(e.target.value)}
-        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+        onChange={(e) => setGender(e.target.value)} 
+        required 
+        className="mt-1 block w-[400px] h-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">Vui lòng chọn</option>
+          <option value="Nam">Nam</option>
+          <option value="Nữ">Nữ</option>
+        </select>
       </div>
 
       <div>
         <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
         Tình trạng hôn nhân</label>
-        <input 
-        type="text" 
+        <select 
+        id="maritalStatus"  
         value={maritalStatus} 
         onChange={(e) => setMaritalStatus(e.target.value)}
-        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+        required 
+        className="mt-1 block w-[400px] h-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">Chọn tình trạng hôn nhân</option>
+          <option value="Đang trong thời kỳ hôn nhân">Đang trong thời kỳ hôn nhân</option>
+          <option value="Độc thân">Độc thân</option>
+        </select>
+        
       </div>
 
       <div>
@@ -267,7 +280,7 @@ const page = () => {
         type="text" 
         value={phoneNum} 
         onChange={(e) => setPhoneNum(e.target.value)}
-        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+        required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
       </div>
 
       <div>
@@ -277,11 +290,21 @@ const page = () => {
         name="email" 
         value={email} 
         onChange={(e) => setEmail(e.target.value)}
-        required className="mt-1 block w-[400px] border border-gray-300 rounded-md shadow-sm" />
+        required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
       </div>
 
       <button type="submit" className="mt-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">Gửi</button>
+      <div className="">
+          <button
+          onClick={goBack}
+          className="text-sm text-blue-600 hover:text-blue-700 mt-4">
+          ← Quay Lại
+        </button>
+        </div>
+      
     </form>
+    </div>
+    
   );
     default:
       // A default case to handle an unknown step.
