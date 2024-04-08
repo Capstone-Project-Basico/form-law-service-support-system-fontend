@@ -326,7 +326,7 @@ const Lawyers: React.FC<LawyersProps> = ({
                       <Image
                         src={
                           selectedLawyer.avatar &&
-                          selectedLawyer.avatar.startsWith("http")
+                            selectedLawyer.avatar.startsWith("http")
                             ? selectedLawyer.avatar
                             : "/errorImage.png"
                         }

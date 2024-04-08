@@ -126,11 +126,11 @@ const Partner = () => {
             toast.success("Xóa thành công");
             fetchPartners();
           }),
-          {
-            headers: {
-              Authorization: user.data.data.token,
-            },
-          };
+        {
+          headers: {
+            Authorization: user.data.data.token,
+          },
+        };
 
         // setPartners((prevPartners) =>
         //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
@@ -274,9 +274,8 @@ const Partner = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -290,10 +289,9 @@ const Partner = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 3 &&
+            className={`bg-white ${tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(3)}
           >

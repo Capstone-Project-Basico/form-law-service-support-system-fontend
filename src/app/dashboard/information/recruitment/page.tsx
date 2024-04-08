@@ -136,11 +136,11 @@ const Recruitment = () => {
             toast.success("Xóa thành công");
             fetchRecruitment();
           }),
-          {
-            headers: {
-              Authorization: user.data.data.token,
-            },
-          };
+        {
+          headers: {
+            Authorization: user.data.data.token,
+          },
+        };
       } catch (error) {
         console.log(error);
       }
@@ -183,9 +183,8 @@ const Recruitment = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -194,10 +193,9 @@ const Recruitment = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 &&
+            className={`bg-white ${tabs === 2 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(2)}
           >

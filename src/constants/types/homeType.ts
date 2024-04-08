@@ -49,7 +49,7 @@ export type PartnerType = {
   delete: boolean;
 };
 
-export type Contact = {
+export type ContactType = {
   contactId: number;
   fullName: string;
   email: string;

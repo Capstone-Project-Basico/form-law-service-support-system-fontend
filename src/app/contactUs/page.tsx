@@ -32,7 +32,7 @@ const page = () => {
             <div className="text-3xl font-bold text-white">
               LIÊN HỆ VỚI CHÚNG TÔI
             </div>
-            <div className="text-xl text-white pt-5 font-lora italic opacity-80"style={{ letterSpacing: '1px' }}>
+            <div className="text-xl text-white pt-5 font-lora italic opacity-80" style={{ letterSpacing: '1px' }}>
               BASICO đồng hành với quý khách hàng xây dựng nền tảng kinh doanh
               bền vững.
             </div>
@@ -95,14 +95,18 @@ const page = () => {
                 <strong>E-mail: </strong> hai.tm@basico.com.vn
               </p>
             </div>
+            <div className="pt-5" >
+              <a href="contactUs/contact">
+                <Button
+                  className="h-12 bg-white border border-[#ff675b] text-[#ff675b] hover:bg-[#ff675b] hover:text-white"
+                  radius="none"
+                >
+                  GỬI YÊU CẦU
+                  <FontAwesomeIcon icon={faAngleRight} className="size-4 ml-1" />
 
-            <Button
-              className="bg-white border border-[#FF0004] text-[#FF0004] hover:bg-[#FF0004] hover:text-[#FF0004]"
-              radius="none"
-            >
-              GỬI YÊU CẦU
-              <FontAwesomeIcon icon={faAngleRight} className="size-4 ml-1" />
-            </Button>
+                </Button>
+              </a>
+            </div>
           </div>
           {/* right */}
           <div>
