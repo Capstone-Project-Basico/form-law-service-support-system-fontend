@@ -21,14 +21,14 @@ import {
   NavbarContent,
   NavbarItem,
   MenuItem,
- 
+
 } from "@nextui-org/react";
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { Contact } from "@/constants/types/homeType";
+import { ContactType } from "@/constants/types/homeType";
 import Contacts from "@/components/manage/Contact";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
@@ -36,7 +36,7 @@ import { ToastContainer, toast } from "react-toastify";
 const Contact = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
- //data
+  //data
   const [fullName, serFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNum, setPhoneNum] = useState("");
@@ -44,9 +44,9 @@ const Contact = () => {
   const [city, setCity] = useState("");
   const [businessTime, setBusinessTime] = useState("");
   const [annualRevenue, setAnnualRevenue] = useState("");
-  const [juridical , setJuridical] = useState("");
-  const [status , setStatus] = useState("");
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [juridical, setJuridical] = useState("");
+  const [status, setStatus] = useState("");
+  const [contacts, setContacts] = useState<ContactType[]>([]);
 
   let newContact = {
     fullName,
@@ -70,18 +70,18 @@ const Contact = () => {
         break;
       default:
         fetchContacts();
-        break;``
+        break; ``
     }
   }, [tabs]);
 
   //get all contact
   const fetchContacts = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllContact`
-        );
-        setContacts(response.data.data);
-      
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllContact`
+      );
+      setContacts(response.data.data);
+
     } catch (error) {
       console.error(error);
     }
@@ -94,48 +94,48 @@ const Contact = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllDeletedContact`
       );
       setContacts(response.data.data);
-      
+
     } catch (error) {
       console.error(error);
     }
   };
 
-  
-    //delete
-    const handleDelete = async (contactId: number) => {
-      const isConfirmed = window.confirm(
-        "Bạn có chắc muốn xóa liên hệ này không?"
-      );
-      if (isConfirmed) {
-        try {
-          const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-          if (!userString) {
-            console.log("No user found");
-            return;
-          }
-          const user = JSON.parse(userString);
-  
-          axios
-            .delete(
-              `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`
-            )
-            .then(() => {
-              toast.success("Xóa thành công");
-              fetchContacts()
-            }),
-            {
-              headers: {
-                Authorization: user.data.data.token,
-              },
-            };
-  
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    };
 
-     // restore
+  //delete
+  const handleDelete = async (contactId: number) => {
+    const isConfirmed = window.confirm(
+      "Bạn có chắc muốn xóa liên hệ này không?"
+    );
+    if (isConfirmed) {
+      try {
+        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
+        if (!userString) {
+          console.log("No user found");
+          return;
+        }
+        const user = JSON.parse(userString);
+
+        axios
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`
+          )
+          .then(() => {
+            toast.success("Xóa thành công");
+            fetchContacts()
+          }),
+        {
+          headers: {
+            Authorization: user.data.data.token,
+          },
+        };
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // restore
   const restoreDelete = async (contactId: number) => {
     try {
       axios
@@ -151,7 +151,7 @@ const Contact = () => {
     }
   };
 
-  
+
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -165,27 +165,25 @@ const Contact = () => {
           <BreadcrumbItem>
             <p className="text-[#FF0004] font-bold text-3xl">Liên hệ</p>
           </BreadcrumbItem>
-        </Breadcrumbs>       
+        </Breadcrumbs>
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
             TẤT CẢ
           </Button>
-        </div>    
+        </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 &&
+            className={`bg-white ${tabs === 2 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(2)}
           >
@@ -195,7 +193,7 @@ const Contact = () => {
       </div>
 
       <div>
-        <Contacts contacts={contacts} handleDelete= {handleDelete} restoreDelete={restoreDelete}/>
+        <Contacts contacts={contacts} handleDelete={handleDelete} restoreDelete={restoreDelete} />
       </div>
     </div>
   );

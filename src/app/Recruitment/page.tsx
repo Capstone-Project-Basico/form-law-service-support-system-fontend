@@ -14,7 +14,7 @@ import { FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 const page = () => {
 
- 
+
   //data
   const [fullName, setFullName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -34,7 +34,7 @@ const page = () => {
   const [recruitment, setRecruitment] = useState<RecruitmentType[]>([]);
 
   const [selectedRecruitment, setSelectedRecruitment] =
-  useState<RecruitmentType | null>(null);
+    useState<RecruitmentType | null>(null);
 
   let newRecruitment = {
     fullName,
@@ -86,226 +86,232 @@ const page = () => {
 
   // Giao diện website của tuyển dụng
   switch (step) {
-    case 1: 
+    case 1:
       return (
         <div className="bg-white py-10 pt-32 pb-[436px] ">
-      <div className="max-w-6xl mx-auto flex justify-between items-center">
-        {/* Left side */}
-        <div className="flex flex-col items-center space-y-5">
-          <h1 className="text-3xl font-bold text-gray-800">
-            THAM GIA ỨNG TUYỂN
-          </h1>
-          <button
-            onClick={goToNextStep}
-            className="bg-[#419641] text-white px-6 py-3 rounded-full hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
-          >
-            NHẤN VÀO ĐÂY
-          </button>
-        </div>
+          <div className="max-w-6xl mx-auto flex justify-between items-center">
+            {/* Left side */}
+            <div className="flex flex-col items-center space-y-5">
+              <h1 className="text-3xl font-bold text-gray-800">
+                THAM GIA ỨNG TUYỂN
+              </h1>
+              <button
+                onClick={goToNextStep}
+                className="bg-[#419641] text-white px-6 py-3 rounded-full hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
+              >
+                NHẤN VÀO ĐÂY
+              </button>
+            </div>
 
-        {/* Right side */}
-        <div className="space-y-3 bg-white p-4 ">
-          <div className="text-center pb-">
-            <h2 className="text-3xl pb-3 font-semibold text-gray-800">
-              <strong>
-                BA<span className="text-[#ff0000]">S</span>I
-                <span className="text-[#ff0000]">CO </span>
-              </strong>{" "}
-              tìm kiếm nhân sự
-            </h2>
-          </div>
-          <div className="pl-4 pr-10 py-2 rounded-full bg-gray-100 shadow-inner">
-            <div className="flex items-center space-x-2">
-              <span className="text-red-500">✔</span>
-              <p className="text-gray-800">
-                01 Khát vọng trở thành luật sư giỏi
-              </p>
-            </div>
-          </div>
-          <div className="pl-4 pr-10 py-2 rounded-full bg-gray-100 shadow-inner">
-            <div className="flex items-center space-x-2">
-              <span className="text-red-500">✔</span>
-              <p className="text-gray-800 text-3">
-                02 Hiểu, tin tưởng và muốn góp sức chinh phục các mục tiêu của
-                BASICO
-              </p>
+            {/* Right side */}
+            <div className="space-y-3 bg-white p-4 ">
+              <div className="text-center pb-">
+                <h2 className="text-3xl pb-3 font-semibold text-gray-800">
+                  <strong>
+                    BA<span className="text-[#ff0000]">S</span>I
+                    <span className="text-[#ff0000]">CO </span>
+                  </strong>{" "}
+                  tìm kiếm nhân sự
+                </h2>
+              </div>
+              <div className="pl-4 pr-10 py-2 rounded-full bg-gray-100 shadow-inner">
+                <div className="flex items-center space-x-2">
+                  <span className="text-red-500">✔</span>
+                  <p className="text-gray-800">
+                    01 Khát vọng trở thành luật sư giỏi
+                  </p>
+                </div>
+              </div>
+              <div className="pl-4 pr-10 py-2 rounded-full bg-gray-100 shadow-inner">
+                <div className="flex items-center space-x-2">
+                  <span className="text-red-500">✔</span>
+                  <p className="text-gray-800 text-3">
+                    02 Hiểu, tin tưởng và muốn góp sức chinh phục các mục tiêu của
+                    BASICO
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-        );
-    
+      );
+
     case 2:
       return (
         // JSX for step 2...
         <div className="flex max-w-6xl mx-auto my-10 pt-16 overflow-hidden pb-[200px]">
-        {/* Left side with the red background */}
-        <div className="flex-1 text-white ">
-          <div  className=" bg-[#e25a60] p-10 text-center">
-          <p className=" font-bold mb-4">CẢM ƠN BẠN ĐÃ QUYẾT ĐỊNH THAM GIA ỨNG TUYỂN TRỰC TUYẾN TẠI BASICO.</p>
-          <p className="font-bold mb-4">VUI LÒNG CUNG CẤP MỘT SỐ THÔNG TIN ĐỂ BASICO CÓ SỰ XÉT TUYỂN PHÙ HỢP VỚI NHU CẦU ỨNG TUYỂN CỦA BẠN.</p>
-          {/* Include any form elements here */}
+          {/* Left side with the red background */}
+          <div className="flex-1 text-white ">
+            <div className=" bg-[#e25a60] p-10 text-center">
+              <p className=" font-bold mb-4">CẢM ƠN BẠN ĐÃ QUYẾT ĐỊNH THAM GIA ỨNG TUYỂN TRỰC TUYẾN TẠI BASICO.</p>
+              <p className="font-bold mb-4">VUI LÒNG CUNG CẤP MỘT SỐ THÔNG TIN ĐỂ BASICO CÓ SỰ XÉT TUYỂN PHÙ HỢP VỚI NHU CẦU ỨNG TUYỂN CỦA BẠN.</p>
+              {/* Include any form elements here */}
+            </div>
+            <div className="pt-10 pl-32">
+              <button
+                onClick={goToNextStep}
+                className="bg-[#419641] text-white px-6 py-3 rounded-full hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
+              >
+                NHẤN VÀO ĐÂY ĐỂ THAM GIA
+              </button>
+            </div>
+            <div className="pt-5">
+              <button
+                onClick={goBack}
+                className="text-sm text-blue-600 hover:text-blue-700 mt-4">
+                ← Quay Lại
+              </button>
+            </div>
           </div>
-          <div className="pt-10 pl-32">
-          <button 
-            onClick={goToNextStep}
-            className="bg-[#419641] text-white px-6 py-3 rounded-full hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
-          >
-            NHẤN VÀO ĐÂY ĐỂ THAM GIA
-          </button>
-          </div>
-          <div className="pt-5">
-          <button
-            onClick={goBack}
-            className="text-sm text-blue-600 hover:text-blue-700 mt-4">
-              ← Quay Lại
-            </button>
-        </div>
-        </div>
-  
-        {/* Right side with the recruitment image */}
-        <div className="w-1/2">
+
+          {/* Right side with the recruitment image */}
+          <div className="w-1/2">
             <div className="">
-                <img src="/tuyen-dung.jpg" 
-                alt="Recruitment Image" 
-                className="w-full h-full object-cover"/>
+              <img src="/tuyen-dung.jpg"
+                alt="Recruitment Image"
+                className="w-full h-full object-cover" />
+            </div>
           </div>
+
         </div>
-       
-      </div>
       );
 
 
-  case 3:
+    case 3:
       return (
         <div className="flex justify-center items-center min-h-screen">
-    <form onSubmit={handleSubmit} className="space-y-8  pb-[50px]  ">
-      <div>
-        <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-          Họ tên (*)</label>
-        <input 
-          type="text" 
-          name="fullName" 
-          value={fullName} 
-          onChange={(e) => setFullName(e.target.value)}
-          required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
-      </div>
+          <form onSubmit={handleSubmit} className="space-y-8  pb-[50px]  ">
+            <div>
+              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+                Họ tên (*)</label>
+              <input
+                type="text"
+                name="fullName"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+            </div>
 
-      <div >
-        <label htmlFor="dob" className=" block text-sm font-medium text-gray-700">
-          Ngày sinh</label>
-        <input 
-          type="date" 
+            <div >
+              <label htmlFor="dob" className=" block text-sm font-medium text-gray-700">
+                Ngày sinh</label>
+              <input
+                type="date"
 
-          value={
-            selectedRecruitment &&
-            selectedRecruitment.dateOfBirth instanceof Date
-              ? selectedRecruitment.dateOfBirth
-                  .toISOString()
-                  .substring(0, 10)
-              : ""
-          }
-          onChange={
-            (e) =>
-              setSelectedRecruitment({
-                ...selectedRecruitment,
-                dateOfBirth: e.target.value
-                  ? new Date(e.target.value)
-                  : null,
-              } as RecruitmentType) // Ensure the type is Task when updating state
-          }
-          className="form-input block w-full h-8 py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-          />
-      </div>
+                value={
+                  selectedRecruitment &&
+                    selectedRecruitment.dateOfBirth instanceof Date
+                    ? selectedRecruitment.dateOfBirth
+                      .toISOString()
+                      .substring(0, 10)
+                    : ""
+                }
+                onChange={
+                  (e) =>
+                    setSelectedRecruitment({
+                      ...selectedRecruitment,
+                      dateOfBirth: e.target.value
+                        ? new Date(e.target.value)
+                        : null,
+                    } as RecruitmentType) // Ensure the type is Task when updating state
+                }
+                className="form-input block w-full h-8 py-2 text-base font-normal
+           text-gray-700 bg-white bg-clip-padding border border-gray-300  rounded transition 
+           ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              />
+            </div>
 
 
-      <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-        CMND, CCCD hoặc giấy tờ khác tương đương (*)</label>
-        <input 
-        type="text" 
-        value={id_number} 
-        onChange={(e) => setIdNumber(e.target.value)}
-        required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
-      </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                CMND, CCCD hoặc giấy tờ khác tương đương (*)</label>
+              <input
+                type="text"
+                value={id_number}
+                onChange={(e) => setIdNumber(e.target.value)}
+                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+            </div>
 
-      <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-        Quê quán (*)</label>
-        <input 
-        type="text" 
-        value={homeTown} 
-        onChange={(e) => setHomeTown(e.target.value)}
-        required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
-      </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Quê quán (*)</label>
+              <input
+                type="text"
+                value={homeTown}
+                onChange={(e) => setHomeTown(e.target.value)}
+                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+            </div>
 
-      <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-        Giới tính</label>
-        <select 
-        id="gender" 
-        value={gender} 
-        onChange={(e) => setGender(e.target.value)} 
-        required 
-        className="mt-1 block w-[400px] h-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-        >
-          <option value="">Vui lòng chọn</option>
-          <option value="Nam">Nam</option>
-          <option value="Nữ">Nữ</option>
-        </select>
-      </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Giới tính</label>
+              <select
+                id="gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Vui lòng chọn</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+              </select>
+            </div>
 
-      <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-        Tình trạng hôn nhân</label>
-        <select 
-        id="maritalStatus"  
-        value={maritalStatus} 
-        onChange={(e) => setMaritalStatus(e.target.value)}
-        required 
-        className="mt-1 block w-[400px] h-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-        >
-          <option value="">Chọn tình trạng hôn nhân</option>
-          <option value="Đang trong thời kỳ hôn nhân">Đang trong thời kỳ hôn nhân</option>
-          <option value="Độc thân">Độc thân</option>
-        </select>
-        
-      </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Tình trạng hôn nhân</label>
+              <select
+                id="maritalStatus"
+                value={maritalStatus}
+                onChange={(e) => setMaritalStatus(e.target.value)}
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Chọn tình trạng hôn nhân</option>
+                <option value="Đang trong thời kỳ hôn nhân">Đang trong thời kỳ hôn nhân</option>
+                <option value="Độc thân">Độc thân</option>
+              </select>
 
-      <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-        Số điện thoại (*)</label>
-        <input 
-        type="text" 
-        value={phoneNum} 
-        onChange={(e) => setPhoneNum(e.target.value)}
-        required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
-      </div>
+            </div>
 
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email (*)</label>
-        <input 
-        type="email" 
-        name="email" 
-        value={email} 
-        onChange={(e) => setEmail(e.target.value)}
-        required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
-      </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Số điện thoại (*)</label>
+              <input
+                type="text"
+                value={phoneNum}
+                onChange={(e) => setPhoneNum(e.target.value)}
+                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+            </div>
 
-      <button type="submit" className="mt-2 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">Gửi</button>
-      <div className="">
-          <button
-          onClick={goBack}
-          className="text-sm text-blue-600 hover:text-blue-700 mt-4">
-          ← Quay Lại
-        </button>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email (*)</label>
+              <input
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className=" mt-2 px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-green-600 hover:bg-green-700"
+              >Gửi</button>
+            </div>
+            <div >
+              <button
+                onClick={goBack}
+                className="text-sm text-blue-600 hover:text-blue-700 mt-4">
+                ← Quay Lại
+              </button>
+            </div>
+
+          </form>
         </div>
-      
-    </form>
-    </div>
-    
-  );
+
+      );
     default:
       // A default case to handle an unknown step.
       return (

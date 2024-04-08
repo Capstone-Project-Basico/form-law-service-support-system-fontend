@@ -131,11 +131,11 @@ const Task = () => {
             toast.success("Xóa thành công");
             fetchTask();
           }),
-          {
-            headers: {
-              Authorization: user.data.data.token,
-            },
-          };
+        {
+          headers: {
+            Authorization: user.data.data.token,
+          },
+        };
 
         // setPartners((prevPartners) =>
         //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
@@ -182,9 +182,8 @@ const Task = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -194,10 +193,9 @@ const Task = () => {
 
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 &&
+            className={`bg-white ${tabs === 2 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(2)}
           >

@@ -311,8 +311,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   <p className="py-2">{selectedRecruitment.fullName}</p>
                   {selectedRecruitment.dateOfBirth
                     ? new Date(
-                        selectedRecruitment.dateOfBirth
-                      ).toLocaleDateString()
+                      selectedRecruitment.dateOfBirth
+                    ).toLocaleDateString()
                     : "N/A"}
                   <p className="py-2">{selectedRecruitment.homeTown}</p>
                   <p>{selectedRecruitment.gender}</p>
@@ -365,10 +365,10 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   label="Ngày sinh"
                   value={
                     selectedRecruitment &&
-                    selectedRecruitment.dateOfBirth instanceof Date
+                      selectedRecruitment.dateOfBirth instanceof Date
                       ? selectedRecruitment.dateOfBirth
-                          .toISOString()
-                          .substring(0, 10)
+                        .toISOString()
+                        .substring(0, 10)
                       : ""
                   }
                   onChange={

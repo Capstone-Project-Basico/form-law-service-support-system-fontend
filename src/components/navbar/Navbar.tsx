@@ -85,7 +85,7 @@ const Navbar = () => {
       <MyNavbar
         maxWidth="full"
         isBordered
-        className="border-[#FF0004] px-8 pb-1"
+        className="border px-8 pb-1" style={{ borderColor: 'rgba(255, 0, 4, 0.1)' }}
       >
         <NavbarBrand>
           <a href="/">
