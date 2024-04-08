@@ -69,7 +69,7 @@ const Partners: React.FC<PartnersProps> = ({
 
   //pagination
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 4;
+  const rowsPerPage = 5;
 
   const pages = Math.ceil(filteredPartners.length / rowsPerPage);
 

@@ -65,7 +65,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
 
   //pagination
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 5;
+  const rowsPerPage = 8;
 
   const pages = Math.ceil(filteredRecruitments.length / rowsPerPage);
 
