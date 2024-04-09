@@ -27,7 +27,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { Lawyer } from "@/constants/types/homeType";
+import { LawyerType } from "@/constants/types/homeType";
 import {
   ref,
   uploadBytes,
@@ -57,7 +57,7 @@ const Lawyer = () => {
   const [position, setPosition] = useState("");
   const [roleName, setRoleName] = useState("");
 
-  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
+  const [lawyers, setLawyers] = useState<LawyerType[]>([]);
   let newUser = {
     email,
     avartar,

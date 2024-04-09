@@ -27,7 +27,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { User } from "@/constants/types/homeType";
+import { UserType } from "@/constants/types/homeType";
 import {
   ref,
   uploadBytes,
@@ -53,7 +53,7 @@ const User = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [roleName, setRoleName] = useState("");
 
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserType[]>([]);
   let newUser = {
     email,
     userName,

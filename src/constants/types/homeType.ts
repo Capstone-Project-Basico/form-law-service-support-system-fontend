@@ -98,7 +98,7 @@ export type Category = {
   delete: boolean;
 };
 
-export type User = {
+export type UserType = {
   userId: number;
   userName: string;
   password: string;
@@ -112,7 +112,7 @@ export type User = {
   status: number;
 };
 
-export type Lawyer = {
+export type LawyerType = {
   userId: number;
   userName: string;
   email: string;
