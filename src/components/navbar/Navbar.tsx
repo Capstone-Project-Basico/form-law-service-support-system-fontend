@@ -16,12 +16,12 @@ import {
 } from "@nextui-org/react";
 import { Navbar as MyNavbar } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { practices } from "@/lib/navbarItems";
 import { researchAndPublications, about } from "@/lib/navbarItems";
 import { log } from "console";
 import axios from "axios";
-import { ProfileSidebarItem, User } from "@/constants/types/homeType";
+import { ProfileSidebarItem, UserType } from "@/constants/types/homeType";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -32,13 +32,21 @@ interface UserLocal {
     };
   };
 }
+const MENU = [
+  { name: "LUẬT SƯ CỦA BASICO", path: "/basicoLawyers" },
+  { name: "BIỂU MẪU", path: "/template" },
+  { name: "LIÊN HỆ", path: "/contactUs" },
+  { name: "TUYỂN DỤNG", path: "/Recruitment" },
+];
 
 const Navbar = () => {
   const [serviceDropdownVisible, setServiceDropdownVisible] = useState(false);
   const [researchDropdownVisible, setResearchDropdownVisible] = useState(false);
   const [aboutDropdownVisible, setAboutDropdownVisible] = useState(false);
-  const [userData, setUserData] = useState<User>();
+  const [userData, setUserData] = useState<UserType>();
   const pathname = usePathname();
+  const router = useRouter();
+
   // const getUserFromStorage = () => {
   //   if (typeof window !== "undefined") {
   //     const storedUser = localStorage.getItem("user");
@@ -50,18 +58,9 @@ const Navbar = () => {
     window.location.reload();
   };
 
-  const useUserFromStorage = () => {
-    const [user, setUser] = useState<UserLocal | null>(null);
+  const storedUser = localStorage.getItem("user");
 
-    useEffect(() => {
-      const storedUser = localStorage.getItem("user");
-      setUser(storedUser ? JSON.parse(storedUser) : null);
-    }, []);
-
-    return user;
-  };
-
-  const user = useUserFromStorage();
+  const user = storedUser ? JSON.parse(storedUser) : null;
   const userId = user?.data.data.userId;
 
   useEffect(() => {
@@ -85,7 +84,8 @@ const Navbar = () => {
       <MyNavbar
         maxWidth="full"
         isBordered
-        className="border px-8 pb-1" style={{ borderColor: 'rgba(255, 0, 4, 0.1)' }}
+        className="border px-8 pb-1"
+        style={{ borderColor: "rgba(255, 0, 4, 0.1)" }}
       >
         <NavbarBrand>
           <a href="/">
@@ -110,17 +110,21 @@ const Navbar = () => {
               radius="none"
             >
               <DropdownTrigger>
-                <Link
-                  href="/practices"
+                <div
+                  // href="/practices"
                   className={`link ${
                     pathname === "/practices" ? "isActive" : ""
                   }`}
                   color="secondary"
                 >
-                  <Button className={styles.hoverButton} radius="none">
+                  <Button
+                    className={styles.hoverButton}
+                    radius="none"
+                    onClick={() => router.push("/practices")}
+                  >
                     DỊCH VỤ
                   </Button>
-                </Link>
+                </div>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
                 {practices.map((practice) => (
@@ -145,11 +149,20 @@ const Navbar = () => {
               radius="none"
             >
               <DropdownTrigger>
-                <Link href="/researchAndPublications">
-                  <Button className={styles.hoverButton} radius="none">
+                <div
+                  className={`link ${
+                    pathname === "/researchAndPublications" ? "isActive" : ""
+                  }`}
+                  color="secondary"
+                >
+                  <Button
+                    className={styles.hoverButton}
+                    radius="none"
+                    onClick={() => router.push("/researchAndPublications")}
+                  >
                     NGHIÊN CỨU SÁNG TẠO
                   </Button>
-                </Link>
+                </div>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
                 {researchAndPublications.map((research) => (
@@ -174,11 +187,18 @@ const Navbar = () => {
               radius="none"
             >
               <DropdownTrigger>
-                <Link href="/about">
-                  <Button className={styles.hoverButton} radius="none">
+                <div
+                  className={`link ${pathname === "/about" ? "isActive" : ""}`}
+                  color="secondary"
+                >
+                  <Button
+                    className={styles.hoverButton}
+                    radius="none"
+                    onClick={() => router.push("/about")}
+                  >
                     GIỚI THIỆU
                   </Button>
-                </Link>
+                </div>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
                 {about.map((ab) => (
@@ -191,24 +211,26 @@ const Navbar = () => {
               </DropdownMenu>
             </Dropdown>
           </NavbarItem>
+          {MENU.map((item) => {
+            return (
+              <NavbarItem key={item.name}>
+                <div
+                  className={`link ${pathname === item.path ? "isActive" : ""}`}
+                  color="secondary"
+                >
+                  <Button
+                    className={styles.hoverButton}
+                    radius="none"
+                    onClick={() => router.push(item.path)}
+                  >
+                    {item.name}
+                  </Button>
+                </div>
+              </NavbarItem>
+            );
+          })}
 
-          <NavbarItem>
-            <a href="/basicoLawyers">
-              <Button className="red-hover-button bg-white" radius="none">
-                LUẬT SƯ CỦA BASICO
-              </Button>
-            </a>
-          </NavbarItem>
-
-          <NavbarItem>
-            <a href="/template">
-              <Button className="red-hover-button bg-white" radius="none">
-                BIỂU MẪU
-              </Button>
-            </a>
-          </NavbarItem>
-
-          <NavbarItem>
+          {/* <NavbarItem>
             <a href="/contactUs">
               <Button className="red-hover-button bg-white" radius="none">
                 LIÊN HỆ
@@ -221,7 +243,7 @@ const Navbar = () => {
                 TUYỂN DỤNG
               </Button>
             </a>
-          </NavbarItem>
+          </NavbarItem> */}
         </NavbarContent>
 
         {/* login */}

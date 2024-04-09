@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -53,6 +53,7 @@ const Lawyers: React.FC<LawyersProps> = ({
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
+  const [isUploadAvt, setUploadAvt] = useState(false);
 
   const imagesListRef = ref(storage, "lawyers/");
 
@@ -79,35 +80,40 @@ const Lawyers: React.FC<LawyersProps> = ({
   }, [page, filteredLawyers]);
 
   //update
-  const handleUpdateSubmit = async () => {
-    if (!selectedLawyer) return; // Check if a Lawyer is selected
+  const handleUpdateSubmit = useCallback(
+    async (selectedLawyer: any) => {
+      // if (!selectedLawyer) return; // Check if a Lawyer is selected
 
-    // Example: PUT request to update Lawyer details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${selectedLawyer.userId}`,
-        {
-          userName: selectedLawyer.userName,
-          avatar: selectedLawyer.avatar,
-          phoneNumber: selectedLawyer.phoneNumber,
-          url: selectedLawyer.url,
-          position: selectedLawyer.position,
-          introduce: selectedLawyer.introduce,
-        },
-        {
-          headers: authHeader(),
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-      })
-      .catch((error) => {
-        console.error("Failed to update user", error);
-      });
-  };
+      // Example: PUT request to update Lawyer details
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${selectedLawyer.userId}`,
+          {
+            userName: selectedLawyer.userName,
+            avatar: selectedLawyer.avatar,
+            phoneNumber: selectedLawyer.phoneNumber,
+            url: selectedLawyer.url,
+            position: selectedLawyer.position,
+            introduce: selectedLawyer.introduce,
+          },
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Cập nhật thành công");
+        })
+        .catch((error) => {
+          console.error("Failed to update user", error);
+        });
+    },
+    [selectedLawyer]
+  );
 
   //upload update file
-  const uploadUpdateFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadUpdateFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadAvt(true);
+
     // First, check if the files array is not null and has at least one file
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0]; // Safely access the first file
@@ -117,9 +123,9 @@ const Lawyers: React.FC<LawyersProps> = ({
       const storageRef = ref(storage, uniqueFileName);
 
       const uploadTask = uploadBytesResumable(storageRef, file); // Start the file upload
-
+      debugger;
       // Listen for state changes, errors, and completion of the upload.
-      uploadTask.on(
+      await uploadTask.on(
         "state_changed",
         (snapshot) => {
           // Optional: monitor upload progress
@@ -146,6 +152,7 @@ const Lawyers: React.FC<LawyersProps> = ({
               ...selectedLawyer,
               avatar: downloadURL,
             });
+            setUploadAvt(false);
 
             // Optionally: Update the Lawyer's information in the database or state here
             // This might involve calling an API endpoint or updating local state
@@ -154,6 +161,7 @@ const Lawyers: React.FC<LawyersProps> = ({
       );
     } else {
       console.error("No file selected for upload.");
+      setUploadAvt(false);
     }
   };
 
@@ -326,7 +334,7 @@ const Lawyers: React.FC<LawyersProps> = ({
                       <Image
                         src={
                           selectedLawyer.avatar &&
-                            selectedLawyer.avatar.startsWith("http")
+                          selectedLawyer.avatar.startsWith("http")
                             ? selectedLawyer.avatar
                             : "/errorImage.png"
                         }
@@ -407,7 +415,7 @@ const Lawyers: React.FC<LawyersProps> = ({
           </ModalHeader>
           <ModalBody>
             {selectedLawyer && (
-              <form onSubmit={handleUpdateSubmit}>
+              <form>
                 <Input
                   type="text"
                   label="Tên luật sư"
@@ -423,7 +431,9 @@ const Lawyers: React.FC<LawyersProps> = ({
                 <input
                   className="py-3"
                   type="file"
-                  onChange={(e) => uploadUpdateFile(e)}
+                  onChange={async (e) => {
+                    uploadUpdateFile(e);
+                  }}
                 />
                 <Input
                   type="text"
@@ -480,10 +490,10 @@ const Lawyers: React.FC<LawyersProps> = ({
             <Button
               color="primary"
               onPress={() => {
-                handleUpdateSubmit();
+                if (isUploadAvt) return;
+                handleUpdateSubmit(selectedLawyer);
                 onCloseUpdate();
               }}
-              type="submit"
             >
               Cập nhật
             </Button>

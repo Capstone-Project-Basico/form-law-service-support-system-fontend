@@ -109,6 +109,7 @@ const page = () => {
                 name="fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+                placeholder="Họ tên"
                 required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
             </div>
 
@@ -120,6 +121,7 @@ const page = () => {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                placeholder="email"
                 required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
             </div>
 
@@ -130,6 +132,7 @@ const page = () => {
                 type="text"
                 value={phoneNum}
                 onChange={(e) => setPhoneNum(e.target.value)}
+                placeholder="SĐT"
                 required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
             </div>
 

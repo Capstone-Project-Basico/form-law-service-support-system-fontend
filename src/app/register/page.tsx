@@ -118,7 +118,7 @@ const Page = () => {
           </div>
           
           
-          <div className="flex w-[662px]">
+          <div className="flex w-[662px] pb-5">
             <Input
               label="Repeat Password"
               placeholder="Nhập lại mật khẩu"
@@ -134,6 +134,7 @@ const Page = () => {
                 >
                   {isVisible ? (
                     <FontAwesomeIcon
+                    
                       icon={faEye}
                       className="text-2xl text-default-400 pointer-events-none"
                     />
@@ -154,7 +155,7 @@ const Page = () => {
           <Button type="submit" className="bg-[#F00044] text-white w-full my-4">
             Đăng ký
           </Button>
-          <div className="flex justify-center">
+          <div className="flex justify-center pb-2">
             Hoặc đăng ký bằng
           </div>
           
