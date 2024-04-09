@@ -53,6 +53,8 @@ const Partner = () => {
   const [link, setLink] = useState("");
   // const [imageRef, setImageRef] = useState<StorageReference | undefined>();
   const [partners, setPartners] = useState<PartnerType[]>([]);
+  //const [selectedPartner, setSelectedPartner] = useState<PartnerType | null>(null);
+
   let newPartner = {
     name,
     avatar,
@@ -60,6 +62,9 @@ const Partner = () => {
   };
   const imagesListRef = ref(storage, "partners/");
   const [imageUpload, setImageUpload] = useState<File | null>(null);
+  // const [selectedPartner, setSelectedPartner] = useState<PartnerType | null>(
+  //   null
+  // );
 
   useEffect(() => {
     switch (tabs) {
@@ -126,11 +131,11 @@ const Partner = () => {
             toast.success("Xóa thành công");
             fetchPartners();
           }),
-        {
-          headers: {
-            Authorization: user.data.data.token,
-          },
-        };
+          {
+            headers: {
+              Authorization: user.data.data.token,
+            },
+          };
 
         // setPartners((prevPartners) =>
         //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
@@ -139,6 +144,29 @@ const Partner = () => {
         console.log(error);
       }
     }
+  };
+
+  //update
+  const handleUpdateSubmit = async (selectedPartner: any) => {
+    //if (!selectedPartner) return; // Check if a partner is selected
+
+    // Example: PUT request to update partner details
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
+        {
+          name: selectedPartner.name,
+          avatar: selectedPartner.avatar,
+          link: selectedPartner.link,
+        }
+      )
+      .then((response) => {
+        toast.success("Cập nhật thành công");
+        fetchPartners();
+      })
+      .catch((error) => {
+        console.error("Failed to update partner", error);
+      });
   };
 
   // restore
@@ -157,7 +185,6 @@ const Partner = () => {
     }
   };
 
-  // };
   //upload file
   const uploadFile = (e: any) => {
     setImageUpload(e.target.files[0]);
@@ -237,7 +264,8 @@ const Partner = () => {
                       Thêm đối tác
                     </ModalHeader>
                     <ModalBody>
-                      <Input className="font-bold"
+                      <Input
+                        className="font-bold"
                         type="text"
                         label="Tên đối tác"
                         value={name}
@@ -274,8 +302,9 @@ const Partner = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            className={`bg-white ${
+              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -289,9 +318,10 @@ const Partner = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${tabs === 3 &&
+            className={`bg-white ${
+              tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            }`}
             radius="none"
             onClick={() => setTabs(3)}
           >
@@ -305,6 +335,7 @@ const Partner = () => {
           partners={partners}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>
     </div>

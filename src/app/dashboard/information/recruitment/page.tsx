@@ -54,6 +54,8 @@ const Recruitment = () => {
   const [processStatus, setprocessStatus] = useState("");
 
   const [recruitment, setRecruitment] = useState<RecruitmentType[]>([]);
+  // const [selectedRecruitment, setSelectedRecruitment] =
+  // useState<RecruitmentType | null>(null);
 
   let newRecruitment = {
     fullName,
@@ -167,6 +169,45 @@ const Recruitment = () => {
     }
   };
 
+  ///update
+  const handleUpdateSubmit = async (selectedRecruitment: any) => {
+    // if (!selectedRecruitment) return; // Check if a Recruitment is selected
+    // Example: PUT request to update Recruitment details
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/updateRecruitmentForm/${selectedRecruitment.id}`,
+        {
+          fullName: selectedRecruitment.fullName,
+          dateOfBirth: selectedRecruitment.dateOfBirth,
+          id_number: selectedRecruitment.id_number,
+          homeTown: selectedRecruitment.homeTown,
+          gender: selectedRecruitment.gender,
+          maritalStatus: selectedRecruitment.maritalStatus,
+          email: selectedRecruitment.email,
+          phoneNum: selectedRecruitment.phoneNum,
+          position: selectedRecruitment.position,
+          exp: selectedRecruitment.exp,
+          field: selectedRecruitment.field,
+          graduate: selectedRecruitment.graduate,
+          target: selectedRecruitment.target,
+          workPlace: selectedRecruitment.workPlace,
+          processStatus: selectedRecruitment.processStatus,
+        },
+        {
+          headers: authHeader(),
+        }
+      )
+      .then((response) => {
+        toast.success("Cập nhật thành công");
+        fetchRecruitment();
+        
+      })
+      .catch((error) => {
+        console.error("Failed to update recruitment", error);
+      });
+  };
+
+
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -209,6 +250,7 @@ const Recruitment = () => {
           recruitments={recruitment}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          handleUpdateSubmit = {handleUpdateSubmit}
         />
       </div>
     </div>

@@ -37,12 +37,14 @@ type RecruitmentsProps = {
   recruitments: RecruitmentType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleUpdateSubmit: (data: any) => void;
 };
 
 const Recruitments: React.FC<RecruitmentsProps> = ({
   recruitments,
   handleDelete,
   restoreDelete,
+  handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecruitment, setSelectedRecruitment] =
@@ -75,43 +77,6 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
 
     return filteredRecruitments.slice(start, end);
   }, [page, filteredRecruitments]);
-
-  ///update
-  const handleUpdateSubmit = async () => {
-    if (!selectedRecruitment) return; // Check if a Recruitment is selected
-
-    // Example: PUT request to update Recruitment details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/updateRecruitmentForm/${selectedRecruitment.id}`,
-        {
-          fullName: selectedRecruitment.fullName,
-          dateOfBirth: selectedRecruitment.dateOfBirth,
-          id_number: selectedRecruitment.id_number,
-          homeTown: selectedRecruitment.homeTown,
-          gender: selectedRecruitment.gender,
-          maritalStatus: selectedRecruitment.maritalStatus,
-          email: selectedRecruitment.email,
-          phoneNum: selectedRecruitment.phoneNum,
-          position: selectedRecruitment.position,
-          exp: selectedRecruitment.exp,
-          field: selectedRecruitment.field,
-          graduate: selectedRecruitment.graduate,
-          target: selectedRecruitment.target,
-          workPlace: selectedRecruitment.workPlace,
-          processStatus: selectedRecruitment.processStatus,
-        },
-        {
-          headers: authHeader(),
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-      })
-      .catch((error) => {
-        console.error("Failed to update recruitment", error);
-      });
-  };
 
   return (
     <div>
@@ -311,8 +276,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   <p className="py-2">{selectedRecruitment.fullName}</p>
                   {selectedRecruitment.dateOfBirth
                     ? new Date(
-                      selectedRecruitment.dateOfBirth
-                    ).toLocaleDateString()
+                        selectedRecruitment.dateOfBirth
+                      ).toLocaleDateString()
                     : "N/A"}
                   <p className="py-2">{selectedRecruitment.homeTown}</p>
                   <p>{selectedRecruitment.gender}</p>
@@ -346,7 +311,15 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           </ModalHeader>
           <ModalBody>
             {selectedRecruitment && (
-              <form onSubmit={handleUpdateSubmit}>
+              <form
+                id="recruitment"
+                onSubmit={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                  handleUpdateSubmit(selectedRecruitment);
+                  onCloseUpdate();
+                }}
+              >
                 <Input
                   className="py-2"
                   type="text"
@@ -365,10 +338,10 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   label="Ngày sinh"
                   value={
                     selectedRecruitment &&
-                      selectedRecruitment.dateOfBirth instanceof Date
+                    selectedRecruitment.dateOfBirth instanceof Date
                       ? selectedRecruitment.dateOfBirth
-                        .toISOString()
-                        .substring(0, 10)
+                          .toISOString()
+                          .substring(0, 10)
                       : ""
                   }
                   onChange={
@@ -467,14 +440,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                handleUpdateSubmit();
-                onCloseUpdate();
-              }}
-              type="submit"
-            >
+            <Button color="primary" type="submit" form="recruitment">
               Cập nhật
             </Button>
           </ModalFooter>

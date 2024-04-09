@@ -36,12 +36,14 @@ type PartnersProps = {
   partners: PartnerType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleUpdateSubmit: (data: any) => void;
 };
 
 const Partners: React.FC<PartnersProps> = ({
   partners,
   handleDelete,
   restoreDelete,
+  handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPartner, setSelectedPartner] = useState<PartnerType | null>(
@@ -80,27 +82,6 @@ const Partners: React.FC<PartnersProps> = ({
     return filteredPartners.slice(start, end);
   }, [page, filteredPartners]);
 
-  //update
-  const handleUpdateSubmit = async () => {
-    if (!selectedPartner) return; // Check if a partner is selected
-
-    // Example: PUT request to update partner details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
-        {
-          name: selectedPartner.name,
-          avatar: selectedPartner.avatar,
-          link: selectedPartner.link,
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-      })
-      .catch((error) => {
-        console.error("Failed to update partner", error);
-      });
-  };
   //upload update file
   const uploadUpdateFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     // First, check if the files array is not null and has at least one file
@@ -277,7 +258,15 @@ const Partners: React.FC<PartnersProps> = ({
           </ModalHeader>
           <ModalBody>
             {selectedPartner && (
-              <form onSubmit={handleUpdateSubmit}>
+              <form
+                id="partner"
+                onSubmit={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                  handleUpdateSubmit(selectedPartner);
+                  onCloseUpdate();
+                }}
+              >
                 <Input
                   type="text"
                   label="Name"
@@ -312,14 +301,7 @@ const Partners: React.FC<PartnersProps> = ({
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                handleUpdateSubmit();
-                onCloseUpdate();
-              }}
-              type="submit"
-            >
+            <Button color="primary" type="submit" form="partner">
               Cập nhật
             </Button>
           </ModalFooter>
