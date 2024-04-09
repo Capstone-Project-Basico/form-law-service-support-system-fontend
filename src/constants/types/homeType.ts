@@ -139,3 +139,13 @@ export type TaskType = {
 export type CardTemplate = {
   itemDetail?: Template;
 };
+
+export type Pack = {
+  packageId: string;
+  packageName: string;
+  description: string;
+  dateCreated: Date | null;
+  price: number;
+  itemPackageList: [];
+  deleted: boolean;
+};
