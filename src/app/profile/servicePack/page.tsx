@@ -40,12 +40,12 @@ const ServicePack = () => {
           các gói dịch vụ với các đặc quyền theo từng gói
         </p>
       </div>
-      {servicePacks.map((servicePack) => (
-        <div
-          key={servicePack.packageId}
-          className="grid grid-cols-3 justify-center items-center mt-10"
-        >
-          <div className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md">
+      <div className="grid grid-cols-3 justify-center items-center mt-10">
+        {servicePacks.map((servicePack) => (
+          <div
+            key={servicePack.packageId}
+            className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md"
+          >
             <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
               {servicePack.packageName}
             </h2>
@@ -55,8 +55,8 @@ const ServicePack = () => {
             </h1>
             <Button className="text-white bg-[#FF0004] my-5">Đăng ký</Button>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
