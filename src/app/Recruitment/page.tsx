@@ -12,9 +12,7 @@ import { RecruitmentType } from "@/constants/types/homeType";
 import Recruitments from "@/components/manage/Recruitment";
 import { FormEvent, useEffect, useState } from "react";
 import axios from "axios";
-const page = () => {
-
-
+const Page = () => {
   //data
   const [fullName, setFullName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -75,14 +73,13 @@ const page = () => {
 
   // Handler for going to the next step.
   const goToNextStep = () => {
-    setStep(prevStep => prevStep + 1); // Safely increment the step value.
+    setStep((prevStep) => prevStep + 1); // Safely increment the step value.
   };
 
   // Handler for going back to the previous step.
   const goBack = () => {
-    setStep(prevStep => (prevStep > 1 ? prevStep - 1 : prevStep)); // Decrement the step value if it's greater than 1.
+    setStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep)); // Decrement the step value if it's greater than 1.
   };
-
 
   // Giao diện website của tuyển dụng
   switch (step) {
@@ -126,8 +123,8 @@ const page = () => {
                 <div className="flex items-center space-x-2">
                   <span className="text-red-500">✔</span>
                   <p className="text-gray-800 text-3">
-                    02 Hiểu, tin tưởng và muốn góp sức chinh phục các mục tiêu của
-                    BASICO
+                    02 Hiểu, tin tưởng và muốn góp sức chinh phục các mục tiêu
+                    của BASICO
                   </p>
                 </div>
               </div>
@@ -143,8 +140,14 @@ const page = () => {
           {/* Left side with the red background */}
           <div className="flex-1 text-white ">
             <div className=" bg-[#e25a60] p-10 text-center">
-              <p className=" font-bold mb-4">CẢM ƠN BẠN ĐÃ QUYẾT ĐỊNH THAM GIA ỨNG TUYỂN TRỰC TUYẾN TẠI BASICO.</p>
-              <p className="font-bold mb-4">VUI LÒNG CUNG CẤP MỘT SỐ THÔNG TIN ĐỂ BASICO CÓ SỰ XÉT TUYỂN PHÙ HỢP VỚI NHU CẦU ỨNG TUYỂN CỦA BẠN.</p>
+              <p className=" font-bold mb-4">
+                CẢM ƠN BẠN ĐÃ QUYẾT ĐỊNH THAM GIA ỨNG TUYỂN TRỰC TUYẾN TẠI
+                BASICO.
+              </p>
+              <p className="font-bold mb-4">
+                VUI LÒNG CUNG CẤP MỘT SỐ THÔNG TIN ĐỂ BASICO CÓ SỰ XÉT TUYỂN PHÙ
+                HỢP VỚI NHU CẦU ỨNG TUYỂN CỦA BẠN.
+              </p>
               {/* Include any form elements here */}
             </div>
             <div className="pt-10 pl-32">
@@ -158,7 +161,8 @@ const page = () => {
             <div className="pt-5">
               <button
                 onClick={goBack}
-                className="text-sm text-blue-600 hover:text-blue-700 mt-4">
+                className="text-sm text-blue-600 hover:text-blue-700 mt-4"
+              >
                 ← Quay Lại
               </button>
             </div>
@@ -167,43 +171,52 @@ const page = () => {
           {/* Right side with the recruitment image */}
           <div className="w-1/2">
             <div className="">
-              <img src="/tuyen-dung.jpg"
+              <img
+                src="/tuyen-dung.jpg"
                 alt="Recruitment Image"
-                className="w-full h-full object-cover" />
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
-
         </div>
       );
-
 
     case 3:
       return (
         <div className="flex justify-center items-center min-h-screen">
           <form onSubmit={handleSubmit} className="space-y-8  pb-[50px]  ">
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-                Họ tên (*)</label>
+              <label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Họ tên (*)
+              </label>
               <input
                 type="text"
                 name="fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm"
+              />
             </div>
 
-            <div >
-              <label htmlFor="dob" className=" block text-sm font-medium text-gray-700">
-                Ngày sinh</label>
+            <div>
+              <label
+                htmlFor="dob"
+                className=" block text-sm font-medium text-gray-700"
+              >
+                Ngày sinh
+              </label>
               <input
                 type="date"
-
                 value={
                   selectedRecruitment &&
-                    selectedRecruitment.dateOfBirth instanceof Date
+                  selectedRecruitment.dateOfBirth instanceof Date
                     ? selectedRecruitment.dateOfBirth
-                      .toISOString()
-                      .substring(0, 10)
+                        .toISOString()
+                        .substring(0, 10)
                     : ""
                 }
                 onChange={
@@ -221,30 +234,45 @@ const page = () => {
               />
             </div>
 
-
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                CMND, CCCD hoặc giấy tờ khác tương đương (*)</label>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                CMND, CCCD hoặc giấy tờ khác tương đương (*)
+              </label>
               <input
                 type="text"
                 value={id_number}
                 onChange={(e) => setIdNumber(e.target.value)}
-                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm"
+              />
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Quê quán (*)</label>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Quê quán (*)
+              </label>
               <input
                 type="text"
                 value={homeTown}
                 onChange={(e) => setHomeTown(e.target.value)}
-                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm"
+              />
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Giới tính</label>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Giới tính
+              </label>
               <select
                 id="gender"
                 value={gender}
@@ -259,8 +287,12 @@ const page = () => {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Tình trạng hôn nhân</label>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Tình trạng hôn nhân
+              </label>
               <select
                 id="maritalStatus"
                 value={maritalStatus}
@@ -269,48 +301,63 @@ const page = () => {
                 className="mt-1 block w-[400px] h-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Chọn tình trạng hôn nhân</option>
-                <option value="Đang trong thời kỳ hôn nhân">Đang trong thời kỳ hôn nhân</option>
+                <option value="Đang trong thời kỳ hôn nhân">
+                  Đang trong thời kỳ hôn nhân
+                </option>
                 <option value="Độc thân">Độc thân</option>
               </select>
-
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Số điện thoại (*)</label>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Số điện thoại (*)
+              </label>
               <input
                 type="text"
                 value={phoneNum}
                 onChange={(e) => setPhoneNum(e.target.value)}
-                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm"
+              />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email (*)</label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email (*)
+              </label>
               <input
                 type="email"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm"
+              />
             </div>
             <div className="flex justify-end">
               <button
                 type="submit"
                 className=" mt-2 px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-green-600 hover:bg-green-700"
-              >Gửi</button>
+              >
+                Gửi
+              </button>
             </div>
-            <div >
+            <div>
               <button
                 onClick={goBack}
-                className="text-sm text-blue-600 hover:text-blue-700 mt-4">
+                className="text-sm text-blue-600 hover:text-blue-700 mt-4"
+              >
                 ← Quay Lại
               </button>
             </div>
-
           </form>
         </div>
-
       );
     default:
       // A default case to handle an unknown step.
@@ -324,4 +371,4 @@ const page = () => {
   }
 };
 
-export default page;
+export default Page;
