@@ -1,7 +1,29 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import authHeader from "@/components/authHeader/AuthHeader";
 import { Button } from "@nextui-org/react";
-import React from "react";
+import { Pack } from "@/constants/types/homeType";
 
 const ServicePack = () => {
+  const [servicePacks, setServicePacks] = useState<Pack[]>([]);
+
+  useEffect(() => {
+    getAllPacks();
+  });
+
+  const getAllPacks = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`,
+        {
+          headers: authHeader(),
+        }
+      );
+      setServicePacks(response.data.data);
+    } catch (error) {}
+  };
   return (
     <div className="w-[950px]">
       <div className="flex flex-col justify-center items-center">
@@ -19,17 +41,21 @@ const ServicePack = () => {
         </p>
       </div>
       <div className="grid grid-cols-3 justify-center items-center mt-10">
-        <div className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md">
-          <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
-            Basic
-          </h2>
-          <p className="text-xl pt-3">Được sử dụng 30 biểu mẫu luật</p>
-          <p className="text-xl pb-3">Được các luật sư của Basico góp ý </p>
-          <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
-            30,000Đ cho 1 tháng
-          </h1>
-          <Button className="text-white bg-[#FF0004] my-5">Đăng ký</Button>
-        </div>
+        {servicePacks.map((servicePack) => (
+          <div
+            key={servicePack.packageId}
+            className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md"
+          >
+            <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
+              {servicePack.packageName}
+            </h2>
+            <p className="text-xl pt-3">{servicePack.description}</p>
+            <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
+              {servicePack.price} cho 1 tháng
+            </h1>
+            <Button className="text-white bg-[#FF0004] my-5">Đăng ký</Button>
+          </div>
+        ))}
       </div>
     </div>
   );

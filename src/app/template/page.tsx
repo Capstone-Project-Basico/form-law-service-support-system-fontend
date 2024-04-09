@@ -27,7 +27,6 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 
-
 interface UserLocal {
   data: {
     data: {
@@ -142,97 +141,95 @@ const Page = () => {
     //   ))}
     // </div>
     <>
-    <HeaderComponent
-        title="BIỂU MẪU"
-        link="BIỂU MẪU"
-      />
+      <HeaderComponent title="BIỂU MẪU" link="BIỂU MẪU" />
 
-    <div className="mx-10 my-20">
-      <ToastContainer />
-      <div className="flex flex-row border-b-1 mb-10 pb-3 w-full">
-        <h1 className="flex text-xl font-extrabold border-l-5 border-[#FF0004] pl-5 items-center h-12">
-          Biểu mẫu
-        </h1>
+      <div className="mx-10 my-20">
+        <ToastContainer />
+        <div className="flex flex-row border-b-1 mb-10 pb-3 w-full">
+          <h1 className="flex text-xl font-extrabold border-l-5 border-[#FF0004] pl-5 items-center h-12">
+            Biểu mẫu
+          </h1>
 
-        <div className="ml-auto flex flex-col justify-end items-start w-72">
-          <div className="text-[#FF0004] border-b-1 mb-3 w-72">Tìm kiếm</div>
-          <div className="">
-            <Input
-              classNames={{
-                base: "w-full sm:max-w-[10rem] h-10 ",
-                mainWrapper: "h-full w-72",
-                input: "text-small",
-                inputWrapper:
-                  "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20 ",
-              }}
-              placeholder="Từ khóa tìm kiếm .."
-              size="sm"
-              type="search"
-              radius="none"
-              // value={searchTerm}
-              // onChange={handleSearchChange}
-            />
+          <div className="ml-auto flex flex-col justify-end items-start w-72">
+            <div className="text-[#FF0004] border-b-1 mb-3 w-72">Tìm kiếm</div>
+            <div className="">
+              <Input
+                classNames={{
+                  base: "w-full sm:max-w-[10rem] h-10 ",
+                  mainWrapper: "h-full w-72",
+                  input: "text-small",
+                  inputWrapper:
+                    "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20 ",
+                }}
+                placeholder="Từ khóa tìm kiếm .."
+                size="sm"
+                type="search"
+                radius="none"
+                // value={searchTerm}
+                // onChange={handleSearchChange}
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-3 mx-56 gap-10">
-        {templates.map((template, index) => (
-          <div key={index} className="">
-            <Card
-              shadow="sm"
-              key={index}
-              isPressable
-              onPress={() => console.log("item pressed")}
-              className="w-72 h-96"
-            >
-              <CardBody className="group relative">
-                <Image
-                  shadow="sm"
-                  radius="lg"
-                  width="100%"
-                  alt={template.title}
-                  className="w-full object-cover h-[281px]"
-                  src={
-                    template.fileUrl
-                      ? template.fileUrl.startsWith("http")
-                        ? template.fileUrl
-                        : "/errorImage.png"
-                      : "/errorImage.png"
-                  }
-                />
-                <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
-                  <Button className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
-                    <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
-                    Xem trước
-                  </Button>
+        <div className="grid grid-cols-3 mx-56 gap-10">
+          {templates.map((template, index) => (
+            <div key={index} className="">
+              <Card
+                shadow="sm"
+                key={index}
+                isPressable
+                onPress={() => console.log("item pressed")}
+                className="w-72 h-96"
+              >
+                <CardBody className="group relative">
+                  <Image
+                    shadow="sm"
+                    radius="lg"
+                    width="100%"
+                    alt={template.title}
+                    className="w-full object-cover h-[281px]"
+                    // src={
+                    //   template.fileUrl
+                    //     ? template.fileUrl.startsWith("http")
+                    //       ? template.fileUrl
+                    //       : "/errorImage.png"
+                    //     : "/errorImage.png"
+                    // }
+                    src="/bieumau.jpg"
+                  />
+                  <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
+                    <Button className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
+                      <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
+                      Xem trước
+                    </Button>
+                    <Button
+                      className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
+                      variant="faded"
+                    >
+                      <FontAwesomeIcon
+                        icon={faPenToSquare}
+                        className="size-4 ml-1"
+                      />
+                      Dùng mẫu
+                    </Button>
+                  </div>
+                </CardBody>
+                <CardFooter className="flex flex-col items-start">
+                  <p className="text-default-500">{template.price}</p>
+                  <b>{template.message}</b>
                   <Button
-                    className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
-                    variant="faded"
+                    onClick={() => handleBuy(template.id, template.price)}
+                    className="bg-[#FF0004]"
                   >
-                    <FontAwesomeIcon
-                      icon={faPenToSquare}
-                      className="size-4 ml-1"
-                    />
-                    Dùng mẫu
+                    Mua
                   </Button>
-                </div>
-              </CardBody>
-              <CardFooter className="flex flex-col items-start">
-                <p className="text-default-500">{template.price}</p>
-                <b>{template.message}</b>
-                <Button
-                  onClick={() => handleBuy(template.id, template.price)}
-                  className="bg-[#FF0004]"
-                >
-                  Mua
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        ))}
-        <div className="flex w-full justify-center">
-          {/* <Pagination
+                </CardFooter>
+              </Card>
+            </div>
+          ))}
+          <div className="flex w-full justify-center">
+            {/* <Pagination
             isCompact
             showControls
             showShadow
@@ -241,9 +238,9 @@ const Page = () => {
             total={pages}
             onChange={(page) => setPage(page)}
           /> */}
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 };

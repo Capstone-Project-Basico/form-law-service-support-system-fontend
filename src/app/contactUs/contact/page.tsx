@@ -10,11 +10,10 @@ import { FormEvent, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { ContactType } from "@/constants/types/homeType";
 import Contacts from "@/components/manage/Contact";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
-const page = () => {
-
+const Page = () => {
   //data
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,8 +26,9 @@ const page = () => {
   const [status, setStatus] = useState("");
   const [contact, setContact] = useState<ContactType[]>([]);
 
-  const [selectedContact, setSelectedContact] =
-    useState<ContactType | null>(null);
+  const [selectedContact, setSelectedContact] = useState<ContactType | null>(
+    null
+  );
 
   let newContact = {
     fullName,
@@ -63,12 +63,12 @@ const page = () => {
 
   // Handler for going to the next step.
   const goToNextStep = () => {
-    setStep(prevStep => prevStep + 1); // Safely increment the step value.
+    setStep((prevStep) => prevStep + 1); // Safely increment the step value.
   };
 
   // Handler for going back to the previous step.
   const goBack = () => {
-    setStep(prevStep => (prevStep > 1 ? prevStep - 1 : prevStep)); // Decrement the step value if it's greater than 1.
+    setStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep)); // Decrement the step value if it's greater than 1.
   };
 
   switch (step) {
@@ -77,68 +77,94 @@ const page = () => {
         <div className="flex flex-col items-center justify-center pb-[100px]">
           <div className="">
             <div className="pt-20 pl-64 pb-5">
-              <img src="/law.png"
+              <img
+                src="/law.png"
                 alt="Contact Image"
-                className="w-50 h-full object-cover" />
+                className="w-50 h-full object-cover"
+              />
             </div>
             <div>
               <h2 className="text-center  text-[#9dc02e] text-2xl  mb-2">
                 Bắt đầu để nhận trợ giúp pháp lý cho doanh nghiệp của bạn.
               </h2>
-              <p className="p-5 text-[#2c2c2c] text-center">Chỉ mất 2 phút cho việc yêu cầu.</p>
+              <p className="p-5 text-[#2c2c2c] text-center">
+                Chỉ mất 2 phút cho việc yêu cầu.
+              </p>
             </div>
           </div>
           {/* Action Button */}
           <button
             onClick={goToNextStep}
-            className="h-12 w-36 bg-[#419641] hover:bg-green-700 text-white py-2 px-4 rounded-full">
+            className="h-12 w-36 bg-[#419641] hover:bg-green-700 text-white py-2 px-4 rounded-full"
+          >
             BẮT ĐẦU
           </button>
         </div>
-
       );
     case 2:
       return (
         <div className="flex justify-center items-center min-h-screen">
           <form onSubmit={handleSubmit} className="space-y-8  pb-[50px]  ">
             <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-                Họ tên của bạn ?</label>
+              <label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Họ tên của bạn ?
+              </label>
               <input
                 type="text"
                 name="fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Họ tên"
-                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm"
+              />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Địa chỉ Email của bạn ?</label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Địa chỉ Email của bạn ?
+              </label>
               <input
                 type="email"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="email"
-                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm"
+              />
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Số điện thoại nào chúng tôi có thể liện hệ với bạn?</label>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Số điện thoại nào chúng tôi có thể liện hệ với bạn?
+              </label>
               <input
                 type="text"
                 value={phoneNum}
                 onChange={(e) => setPhoneNum(e.target.value)}
                 placeholder="SĐT"
-                required className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm" />
+                required
+                className="mt-1 block w-[400px] h-8 border border-gray-300 rounded-md shadow-sm"
+              />
             </div>
 
             <div>
-              <label htmlFor="career" className="block text-sm font-medium text-gray-700">
-                Doanh nghiệp bạn kinh doanh ngành gì ?</label>
+              <label
+                htmlFor="career"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Doanh nghiệp bạn kinh doanh ngành gì ?
+              </label>
               <select
                 id="career"
                 value={career}
@@ -151,18 +177,28 @@ const page = () => {
                 <option value="Dịch vụ tài chính">2. Dịch vụ tài chính</option>
                 <option value="Bảo hiểm">3. Bảo hiểm</option>
                 <option value="Bất động sản">4. Bất động sản</option>
-                <option value="Hàng và Dịch vụ công nghiệp">5. Hàng và Dịch vụ công nghiệp</option>
-                <option value="Xây dựng và Vật liệu">6. Xây dựng và Vật liệu</option>
+                <option value="Hàng và Dịch vụ công nghiệp">
+                  5. Hàng và Dịch vụ công nghiệp
+                </option>
+                <option value="Xây dựng và Vật liệu">
+                  6. Xây dựng và Vật liệu
+                </option>
                 <option value="Hàng tiêu dùng">7. Hàng tiêu dùng</option>
                 <option value="Dịch vụ tiêu chí">8. Dịch vụ tiêu chí</option>
-                <option value="Tiện ích cộng đồng">9. Tiện ích cộng đồng</option>
+                <option value="Tiện ích cộng đồng">
+                  9. Tiện ích cộng đồng
+                </option>
                 <option value="Dược phẩm và ý tế">10. Dược phẩm và ý tế</option>
                 <option value="Dầu khí">11. Dầu khí</option>
                 <option value="Nguyên vật liệu">12. Nguyên vật liệu</option>
-                <option value="Công nghệ thông tin">13. Công nghệ thông tin</option>
+                <option value="Công nghệ thông tin">
+                  13. Công nghệ thông tin
+                </option>
                 <option value="Viễn thông">14. Viễn thông</option>
                 <option value="Tư vấn">15. Tư vấn</option>
-                <option value="Thương mại điện tử">16. Thương mại điện tử</option>
+                <option value="Thương mại điện tử">
+                  16. Thương mại điện tử
+                </option>
                 <option value="Giáo dục">17. Giáo dục</option>
                 <option value="Khởi nghiệp">18. Khởi nghiệp</option>
                 <option value="Ngành khác">19. Ngành khác</option>
@@ -170,8 +206,12 @@ const page = () => {
             </div>
 
             <div>
-              <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                Doanh nghiệp của bạn hoạt động chính ở tỉnh thành nào?</label>
+              <label
+                htmlFor="city"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Doanh nghiệp của bạn hoạt động chính ở tỉnh thành nào?
+              </label>
               <select
                 id="city"
                 value={city}
@@ -245,8 +285,12 @@ const page = () => {
             </div>
 
             <div>
-              <label htmlFor="businessTime" className="block text-sm font-medium text-gray-700">
-                Bạn đã kinh doanh được bao lâu?</label>
+              <label
+                htmlFor="businessTime"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Bạn đã kinh doanh được bao lâu?
+              </label>
               <select
                 id="businessTime"
                 value={businessTime}
@@ -259,13 +303,16 @@ const page = () => {
                 <option value="0 - 2 năm">0 - 2 năm</option>
                 <option value="2 - 10 năm">2 - 10 năm</option>
                 <option value="Hơn 10 năm">Hơn 10 năm</option>
-
               </select>
             </div>
 
             <div>
-              <label htmlFor="annualRevenue" className="block text-sm font-medium text-gray-700">
-                Doanh thu hàng năm của doanh nghiệp bạn là bao nhiêu?</label>
+              <label
+                htmlFor="annualRevenue"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Doanh thu hàng năm của doanh nghiệp bạn là bao nhiêu?
+              </label>
               <select
                 id="annualRevenue"
                 value={annualRevenue}
@@ -278,13 +325,16 @@ const page = () => {
                 <option value="5 tỷ đến dưới 20 tỷ">5 tỷ đến dưới 20 tỷ</option>
                 <option value="20 tỷ đến 200 tỷ">20 tỷ đến 200 tỷ</option>
                 <option value="Trên 200 tỷ">Hơn 10 năm</option>
-
               </select>
             </div>
 
             <div>
-              <label htmlFor="juridical" className="block text-sm font-medium text-gray-700">
-                Doanh nghiệp của bạn cần những loại trợ giúp pháp lý nào?</label>
+              <label
+                htmlFor="juridical"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Doanh nghiệp của bạn cần những loại trợ giúp pháp lý nào?
+              </label>
               <select
                 id="juridical"
                 value={juridical}
@@ -293,13 +343,16 @@ const page = () => {
                 className="mt-1 block w-[400px] h-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Chọn trợ giúp phù hợp</option>
-                <option value="Dịch vụ luật sư nội bộ">Dịch vụ luật sư nội bộ</option>
-                <option value="Trang tụng và giải quyết tranh chấp">Trang tụng và giải quyết tranh chấp</option>
+                <option value="Dịch vụ luật sư nội bộ">
+                  Dịch vụ luật sư nội bộ
+                </option>
+                <option value="Trang tụng và giải quyết tranh chấp">
+                  Trang tụng và giải quyết tranh chấp
+                </option>
                 <option value="Tư vấn pháp lý">Tư vấn pháp lý</option>
                 <option value="Đánh giá hợp đồng">Đánh giá hợp đồng</option>
                 <option value="Soạn thảo hợp đồng">Soạn thảo hợp đồng</option>
                 <option value="Các như cầu khác">Các như cầu khác</option>
-
               </select>
             </div>
 
@@ -307,16 +360,18 @@ const page = () => {
               <button
                 type="submit"
                 className=" mt-2 px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-green-600 hover:bg-green-700"
-              >Gửi</button>
+              >
+                Gửi
+              </button>
             </div>
-            <div >
+            <div>
               <button
                 onClick={goBack}
-                className="text-sm text-blue-600 hover:text-blue-700 mt-4">
+                className="text-sm text-blue-600 hover:text-blue-700 mt-4"
+              >
                 ← Quay Lại
               </button>
             </div>
-
           </form>
         </div>
       );
@@ -332,5 +387,4 @@ const page = () => {
   }
 };
 
-
-export default page;
+export default Page;
