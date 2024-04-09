@@ -26,7 +26,7 @@ import {
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { Lawyer } from "@/constants/types/homeType";
+import { LawyerType } from "@/constants/types/homeType";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
@@ -35,7 +35,7 @@ import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
 
 type LawyersProps = {
-  lawyers: Lawyer[];
+  lawyers: LawyerType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
 };
@@ -46,7 +46,7 @@ const Lawyers: React.FC<LawyersProps> = ({
   restoreDelete,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLawyer, setSelectedLawyer] = useState<Lawyer | null>(null);
+  const [selectedLawyer, setSelectedLawyer] = useState<LawyerType | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
