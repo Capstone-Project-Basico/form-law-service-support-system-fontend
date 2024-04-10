@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import authHeader from "@/components/authHeader/AuthHeader";
 import { Button } from "@nextui-org/react";
-import { Pack } from "@/constants/types/homeType";
+import { PackType } from "@/constants/types/homeType";
 
 const BuyPacks = () => {
-  const [servicePacks, setServicePacks] = useState<Pack[]>([]);
+  const [servicePacks, setServicePacks] = useState<PackType[]>([]);
 
   useEffect(() => {
     getAllPacks();
