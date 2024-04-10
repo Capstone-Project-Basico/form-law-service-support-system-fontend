@@ -1,6 +1,6 @@
 "use client";
 
-import { ProfileSidebarItem, User } from "@/constants/types/homeType";
+import { ProfileSidebarItem, UserType } from "@/constants/types/homeType";
 import {
   Button,
   Input,
@@ -25,7 +25,7 @@ interface UserLocal {
 }
 
 const Profile = () => {
-  const [userProfile, setUserProfile] = useState<User>();
+  const [userProfile, setUserProfile] = useState<UserType>();
   const [isEditing, setIsEditing] = useState(false);
   const [userName, setUserName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
