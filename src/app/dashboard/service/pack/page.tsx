@@ -73,7 +73,7 @@ const Pack = () => {
   const fetchPacks = async () => {
     try {
       const response = await axios.get(
-        `${process.env.BASE_API}packageTemplate/getAllPackage`
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
       );
       setPacks(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -87,7 +87,7 @@ const Pack = () => {
     e.preventDefault();
     axios
       .post(
-        `${process.env.BASE_API}packageTemplate/createPackageFormTemplate`,
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/createPackageFormTemplate`,
         newPack,
         { headers: authHeader() }
       )

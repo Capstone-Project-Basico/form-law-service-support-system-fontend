@@ -79,7 +79,9 @@ const Page = (props: Props) => {
           return (
             <a
               href={
-                process.env.BASE_API + "formTemplateVersion/download/" + item.id
+                process.env.NEXT_PUBLIC_BASE_API +
+                "formTemplateVersion/download/" +
+                item.id
               }
             >
               Tải xuống

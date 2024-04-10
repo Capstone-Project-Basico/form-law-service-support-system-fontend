@@ -64,9 +64,12 @@ const Page = () => {
   const fetchTemplates = async () => {
     try {
       axios
-        .get(`${process.env.BASE_API}formTemplate/getAllFormTemplates`, {
-          headers: authHeader(),
-        })
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}formTemplate/getAllFormTemplates`,
+          {
+            headers: authHeader(),
+          }
+        )
         .then((response) => {
           setTemplates(response.data.data);
         });
@@ -79,7 +82,7 @@ const Page = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     axios
-      .post(`${process.env.BASE_API}`, newPartner)
+      .post(`${process.env.NEXT_PUBLIC_BASE_API}`, newPartner)
 
       .then((response) => {
         // setPartners((prevPartners) => [...prevPartners, response.data.data]);

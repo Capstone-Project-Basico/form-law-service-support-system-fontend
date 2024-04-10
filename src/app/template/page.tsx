@@ -58,10 +58,12 @@ const Page = () => {
   });
 
   const getTemplate = async () => {
-    axios.get(`${process.env.BASE_API}formTemplateVersion`).then((response) => {
-      setTemplates(response.data.data);
-      console.log(response.data.data);
-    });
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion`)
+      .then((response) => {
+        setTemplates(response.data.data);
+        console.log(response.data.data);
+      });
   };
 
   useEffect(() => {
@@ -96,7 +98,7 @@ const Page = () => {
         };
         axios
           .post(
-            `${process.env.BASE_API}order/createOrderFormTemplateDetail`,
+            `${process.env.NEXT_PUBLIC_BASE_API}order/createOrderFormTemplateDetail`,
             updatedDataOrder
           )
           .then((response) => {
@@ -126,7 +128,7 @@ const Page = () => {
   const payForTemplate = (orderId: string) => {
     axios
       .put(
-        `${process.env.BASE_API}order/payOrderFormTemplateDetail/${orderId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetail/${orderId}`,
         {},
         { headers: authHeader() }
       )

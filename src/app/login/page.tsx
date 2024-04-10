@@ -26,7 +26,7 @@ const Page = () => {
     e.preventDefault();
 
     axios
-      .post(`${process.env.BASE_API}auth/generateToken`, dataLogin)
+      .post(`${process.env.NEXT_PUBLIC_BASE_API}auth/generateToken`, dataLogin)
       .then((response) => {
         const user = {
           expiration: new Date().getTime() + 1000 * 60 * 25,

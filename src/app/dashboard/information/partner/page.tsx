@@ -88,7 +88,7 @@ const Partner = () => {
   const fetchPartners = async () => {
     try {
       const response = await axios.get(
-        `${process.env.BASE_API}partner/getAllPartners`
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`
       );
       setPartners(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -101,7 +101,7 @@ const Partner = () => {
   const fetchDeletedPartner = async () => {
     try {
       const response = await axios.get(
-        `${process.env.BASE_API}partner/getAllDeletedPartners`
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllDeletedPartners`
       );
       setPartners(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -117,15 +117,10 @@ const Partner = () => {
     );
     if (isConfirmed) {
       try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
-          console.log("No user found");
-          return;
-        }
-        const user = JSON.parse(userString);
-
         axios
-          .delete(`${process.env.BASE_API}partner/deletePartner/${partnerId}`)
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`
+          )
           .then(() => {
             toast.success("Xóa thành công");
             fetchPartners();
@@ -150,7 +145,7 @@ const Partner = () => {
     // Example: PUT request to update partner details
     axios
       .put(
-        `${process.env.BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
         {
           name: selectedPartner.name,
           avatar: selectedPartner.avatar,
@@ -170,7 +165,9 @@ const Partner = () => {
   const restoreDelete = async (partnerId: number) => {
     try {
       axios
-        .put(`${process.env.BASE_API}partner/restoreDelete/${partnerId}`)
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}partner/restoreDelete/${partnerId}`
+        )
         .then((response) => {
           toast.success("Khôi phục thành công");
           fetchDeletedPartner();
@@ -217,7 +214,10 @@ const Partner = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     axios
-      .post(`${process.env.BASE_API}partner/createNewPartner`, newPartner)
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/createNewPartner`,
+        newPartner
+      )
 
       .then((response) => {
         setPartners((prevPartners) => [...prevPartners, response.data.data]);

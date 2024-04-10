@@ -81,7 +81,7 @@ const User = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        `${process.env.BASE_API}user/getAllUsers`
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`
       );
       setUsers(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -94,7 +94,7 @@ const User = () => {
   const fetchDeletedUser = async () => {
     try {
       const response = await axios.get(
-        `${process.env.BASE_API}user/getAllDeletedUsers`
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllDeletedUsers`
       );
       setUsers(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -111,9 +111,12 @@ const User = () => {
     if (isConfirmed) {
       try {
         axios
-          .delete(`${process.env.BASE_API}user/deleteUser/${userId}`, {
-            headers: authHeader(),
-          })
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
+            {
+              headers: authHeader(),
+            }
+          )
           .then(() => {
             toast.success("Xóa thành công");
             fetchUsers();
@@ -129,7 +132,7 @@ const User = () => {
     try {
       axios
         .put(
-          `${process.env.BASE_API}user/restoreDelete/${userId}`,
+          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`,
           {},
           {
             headers: authHeader(),

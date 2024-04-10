@@ -45,7 +45,10 @@ const Page = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     axios
-      .post(`${process.env.BASE_API}contact/createNewContact`, newContact)
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/createNewContact`,
+        newContact
+      )
 
       .then((response) => {
         setContact((prevContacts) => [...prevContacts, response.data.data]);

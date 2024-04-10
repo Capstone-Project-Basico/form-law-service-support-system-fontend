@@ -79,7 +79,7 @@ const Contacts: React.FC<ContactsProps> = ({
     // Example: PUT request to update contact details
     axios
       .put(
-        `${process.env.BASE_API}contact/updateContact/${selectedContact.contactId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/updateContact/${selectedContact.contactId}`,
         {
           fullName: selectedContact.fullName,
           email: selectedContact.email,

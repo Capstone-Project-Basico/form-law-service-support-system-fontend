@@ -72,7 +72,7 @@ const Navbar = () => {
     const getUserById = async () => {
       if (!user) return;
       axios
-        .get(`${process.env.BASE_API}user/getUserById/${userId}`)
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`)
         .then((res) => {
           setUserData(res.data.data);
         })
