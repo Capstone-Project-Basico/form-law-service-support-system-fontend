@@ -42,6 +42,7 @@ import {
 import { storage } from "@/app/firebase";
 import Partners from "@/components/manage/Partner";
 import { v4 as uuidv4 } from "uuid";
+import authHeader from "@/components/authHeader/AuthHeader";
 
 const Partner = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -132,9 +133,7 @@ const Partner = () => {
             fetchPartners();
           }),
           {
-            headers: {
-              Authorization: user.data.data.token,
-            },
+            headers: authHeader(),
           };
 
         // setPartners((prevPartners) =>
