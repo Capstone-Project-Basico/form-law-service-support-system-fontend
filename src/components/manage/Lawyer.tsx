@@ -38,12 +38,14 @@ type LawyersProps = {
   lawyers: LawyerType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleUpdateSubmit: (data: any) => void;
 };
 
 const Lawyers: React.FC<LawyersProps> = ({
   lawyers,
   handleDelete,
   restoreDelete,
+  handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLawyer, setSelectedLawyer] = useState<LawyerType | null>(null);
@@ -79,40 +81,10 @@ const Lawyers: React.FC<LawyersProps> = ({
     return filteredLawyers.slice(start, end);
   }, [page, filteredLawyers]);
 
-  //update
-  const handleUpdateSubmit = useCallback(
-    async (selectedLawyer: any) => {
-      // if (!selectedLawyer) return; // Check if a Lawyer is selected
-
-      // Example: PUT request to update Lawyer details
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${selectedLawyer.userId}`,
-          {
-            userName: selectedLawyer.userName,
-            avatar: selectedLawyer.avatar,
-            phoneNumber: selectedLawyer.phoneNumber,
-            url: selectedLawyer.url,
-            position: selectedLawyer.position,
-            introduce: selectedLawyer.introduce,
-          },
-          {
-            headers: authHeader(),
-          }
-        )
-        .then((response) => {
-          toast.success("Cập nhật thành công");
-        })
-        .catch((error) => {
-          console.error("Failed to update user", error);
-        });
-    },
-    [selectedLawyer]
-  );
-
   //upload update file
-  const uploadUpdateFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUploadAvt(true);
+  //const uploadUpdateFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadUpdateFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //setUploadAvt(true);
 
     // First, check if the files array is not null and has at least one file
     if (e.target.files && e.target.files.length > 0) {
@@ -123,9 +95,9 @@ const Lawyers: React.FC<LawyersProps> = ({
       const storageRef = ref(storage, uniqueFileName);
 
       const uploadTask = uploadBytesResumable(storageRef, file); // Start the file upload
-      debugger;
       // Listen for state changes, errors, and completion of the upload.
-      await uploadTask.on(
+      //await uploadTask.on(
+      uploadTask.on(
         "state_changed",
         (snapshot) => {
           // Optional: monitor upload progress
@@ -161,7 +133,7 @@ const Lawyers: React.FC<LawyersProps> = ({
       );
     } else {
       console.error("No file selected for upload.");
-      setUploadAvt(false);
+      //setUploadAvt(false);
     }
   };
 
@@ -408,15 +380,40 @@ const Lawyers: React.FC<LawyersProps> = ({
       </Modal>
 
       {/* update modal */}
-      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
+      <Modal
+        style={{ width: "50%", maxWidth: "500px" }}
+        isOpen={isOpenUpdate}
+        onClose={onCloseUpdate}
+        className="w-[600px] h-[700px]"
+      >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Cập nhật người dùng
+            Cập nhật luật sư
           </ModalHeader>
           <ModalBody>
             {selectedLawyer && (
-              <form>
+              <form
+                id="partner"
+                onSubmit={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                  handleUpdateSubmit(selectedLawyer);
+                  onCloseUpdate();
+                }}
+              >
                 <Input
+                  type="text"
+                  label="Email"
+                  value={selectedLawyer.email}
+                  onChange={(e) =>
+                    setSelectedLawyer({
+                      ...selectedLawyer,
+                      email: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  className="pt-4"
                   type="text"
                   label="Tên luật sư"
                   value={selectedLawyer.userName}
@@ -431,9 +428,8 @@ const Lawyers: React.FC<LawyersProps> = ({
                 <input
                   className="py-3"
                   type="file"
-                  onChange={async (e) => {
-                    uploadUpdateFile(e);
-                  }}
+                  //onChange={async (e) => {uploadUpdateFile(e);}}
+                  onChange={(e) => uploadUpdateFile(e)}
                 />
                 <Input
                   type="text"
@@ -448,6 +444,7 @@ const Lawyers: React.FC<LawyersProps> = ({
                 />
 
                 <Input
+                  className="py-4"
                   type="text"
                   label="Đường dẫn Facebook"
                   value={selectedLawyer.url}
@@ -469,17 +466,26 @@ const Lawyers: React.FC<LawyersProps> = ({
                     })
                   }
                 />
-                <Input
-                  type="text"
-                  label="Giới thiệu"
-                  value={selectedLawyer.introduce}
-                  onChange={(e) =>
-                    setSelectedLawyer({
-                      ...selectedLawyer,
-                      introduce: e.target.value,
-                    })
-                  }
-                />
+
+                <div className="w-full flex flex-col pt-5">
+                  <label
+                    htmlFor="introduce"
+                    className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Giới thiệu
+                  </label>
+                  <textarea
+                    id="introduce"
+                    className="form-textarea mt-1 block w-full h-24 rounded-[5px] border-1 border-opacity-50 focus:ring-blue-300 focus:border-blue-300 resize-y bg-gray-100"
+                    value={selectedLawyer.introduce}
+                    onChange={(e) =>
+                      setSelectedLawyer({
+                        ...selectedLawyer,
+                        introduce: e.target.value,
+                      })
+                    }
+                  ></textarea>
+                </div>
               </form>
             )}
           </ModalBody>
@@ -487,14 +493,8 @@ const Lawyers: React.FC<LawyersProps> = ({
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                if (isUploadAvt) return;
-                handleUpdateSubmit(selectedLawyer);
-                onCloseUpdate();
-              }}
-            >
+            {/* <Button color="primary"onPress={() => {if (isUploadAvt) return; handleUpdateSubmit(selectedLawyer); onCloseUpdate();}}> */}
+            <Button color="primary" type="submit" form="partner">
               Cập nhật
             </Button>
           </ModalFooter>

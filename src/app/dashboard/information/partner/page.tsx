@@ -141,7 +141,6 @@ const Partner = () => {
   //update
   const handleUpdateSubmit = async (selectedPartner: any) => {
     //if (!selectedPartner) return; // Check if a partner is selected
-
     // Example: PUT request to update partner details
     axios
       .put(
@@ -221,6 +220,8 @@ const Partner = () => {
 
       .then((response) => {
         setPartners((prevPartners) => [...prevPartners, response.data.data]);
+        toast.success("tạo mới thành công");
+        fetchPartners();
       })
       .catch((error) => {
         console.log(error);

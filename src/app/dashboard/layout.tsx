@@ -28,7 +28,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   // Check if the user role is not admin
   if (userRole !== "ROLE_ADMIN") {
-    debugger;
     // Redirect non-admin users to the home page or login page
     router.push("/");
     return null;

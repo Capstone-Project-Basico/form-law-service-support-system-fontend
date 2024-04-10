@@ -30,6 +30,7 @@ import Link from "next/link";
 import { TaskType } from "@/constants/types/homeType";
 import authHeader from "@/components/authHeader/AuthHeader";
 import { ToastContainer, toast } from "react-toastify";
+
 import {
   ref,
   uploadBytes,
@@ -50,12 +51,13 @@ const Task = () => {
   //data
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [processStatus, setProcessStatus] = useState("");
 
   const [task, setTask] = useState<TaskType[]>([]);
-  let newUser = {
+  const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
+  let newTask = {
     taskName,
     description,
     startDate,
@@ -185,6 +187,24 @@ const Task = () => {
     }
   };
 
+  //add a new task
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    axios
+      .post(`${process.env.NEXT_PUBLIC_BASE_API}task/createNewTask`, newTask, {
+        headers: authHeader(),
+      })
+      .then((response) => {
+        setTask((prevTasks) => [...prevTasks, response.data.data]);
+        toast.success("tạo mới thành công");
+        fetchTask();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -196,6 +216,82 @@ const Task = () => {
             <p className="text-[#FF0004] font-bold text-3xl">Công việc</p>
           </BreadcrumbItem>
         </Breadcrumbs>
+        <div className="flex justify-end">
+          <Button
+            className="flex justify-end w-[100px] bg-[#FF0004] text-white"
+            radius="full"
+            onPress={onOpen}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+            Tạo mới
+          </Button>
+          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <form onSubmit={handleSubmit}>
+                    <ModalHeader className="flex flex-col gap-1">
+                      Thêm đối tác
+                    </ModalHeader>
+                    <ModalBody>
+                      <Input
+                        className="font-bold"
+                        type="text"
+                        label="Tên công việc"
+                        value={taskName}
+                        onChange={(e) => setTaskName(e.target.value)}
+                      />
+                      <Input
+                        type="text"
+                        label="Mô tả"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+
+                      <Input
+                        type="date"
+                        label="Ngày bắt đầu"
+                        value={
+                          startDate
+                            ? startDate.toISOString().substring(0, 10)
+                            : ""
+                        }
+                        onChange={(e) =>
+                          setStartDate(
+                            e.target.value ? new Date(e.target.value) : null
+                          )
+                        }
+                        className="form-input"
+                      />
+                      {/* Ngày kết thúc */}
+                      <Input
+                        type="date"
+                        label="Ngày kết thúc"
+                        value={
+                          endDate ? endDate.toISOString().substring(0, 10) : ""
+                        }
+                        onChange={(e) =>
+                          setEndDate(
+                            e.target.value ? new Date(e.target.value) : null
+                          )
+                        }
+                        className="form-input"
+                      />
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button color="danger" variant="light" onPress={onClose}>
+                        Đóng
+                      </Button>
+                      <Button color="primary" onPress={onClose} type="submit">
+                        Thêm
+                      </Button>
+                    </ModalFooter>
+                  </form>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
+        </div>
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
