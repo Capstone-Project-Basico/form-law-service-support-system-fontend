@@ -48,7 +48,7 @@ const Profile = () => {
     const getUserById = async () => {
       if (!user) return;
       axios
-        .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`)
+        .get(`${process.env.BASE_API}user/getUserById/${userId}`)
         .then((res) => {
           setUserProfile(res.data.data);
           setUserName(res.data.data.userName);
@@ -68,7 +68,7 @@ const Profile = () => {
 
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${userProfile.userId}`,
+        `${process.env.BASE_API}user/updateProfile/${userProfile.userId}`,
         data,
         {
           headers: authHeader(),

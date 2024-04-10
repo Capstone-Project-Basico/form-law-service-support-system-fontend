@@ -55,7 +55,7 @@ const Page = () => {
     e.preventDefault();
     axios
       .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/createNewRecruitmentForm`,
+        `${process.env.BASE_API}recruitmentForm/createNewRecruitmentForm`,
         newRecruitment
       )
 

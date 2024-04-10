@@ -32,7 +32,7 @@ const ProfileSidebar = () => {
   const getDataUser = () => {
     try {
       axios
-        .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`)
+        .get(`${process.env.BASE_API}user/getUserById/${userId}`)
         .then((response) => {
           setProfileData(response.data.data);
         });

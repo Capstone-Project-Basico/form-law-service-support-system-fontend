@@ -87,7 +87,7 @@ const Lawyers: React.FC<LawyersProps> = ({
       // Example: PUT request to update Lawyer details
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${selectedLawyer.userId}`,
+          `${process.env.BASE_API}user/updateProfile/${selectedLawyer.userId}`,
           {
             userName: selectedLawyer.userName,
             avatar: selectedLawyer.avatar,

@@ -79,7 +79,7 @@ const Contact = () => {
   const fetchContacts = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllContact`
+        `${process.env.BASE_API}contact/getAllContact`
       );
       setContacts(response.data.data);
     } catch (error) {
@@ -91,7 +91,7 @@ const Contact = () => {
   const fetchDeletedContact = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllDeletedContact`
+        `${process.env.BASE_API}contact/getAllDeletedContact`
       );
       setContacts(response.data.data);
     } catch (error) {
@@ -114,9 +114,7 @@ const Contact = () => {
         const user = JSON.parse(userString);
 
         axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`
-          )
+          .delete(`${process.env.BASE_API}contact/deleteContact/${contactId}`)
           .then(() => {
             toast.success("Xóa thành công");
             fetchContacts();
@@ -134,9 +132,7 @@ const Contact = () => {
   const restoreDelete = async (contactId: number) => {
     try {
       axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}contact/restoreContact/${contactId}`
-        )
+        .put(`${process.env.BASE_API}contact/restoreContact/${contactId}`)
         .then((response) => {
           toast.success("Khôi phục thành công");
           fetchDeletedContact();

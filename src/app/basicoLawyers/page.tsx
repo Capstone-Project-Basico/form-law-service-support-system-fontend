@@ -16,7 +16,7 @@ const Page = () => {
   const fetchAllLawyers = () => {
     try {
       axios
-        .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getAllLawyers`)
+        .get(`${process.env.BASE_API}user/getAllLawyers`)
         .then((response) => {
           setLawyers(response.data.data);
           console.log("luat su o day?" + lawyers);

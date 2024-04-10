@@ -78,7 +78,7 @@ const Tasks: React.FC<TasksProps> = ({
     // Example: PUT request to update Task details
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/updateTask/${selectedTask.id}`,
+        `${process.env.BASE_API}task/updateTask/${selectedTask.id}`,
         {
           taskName: selectedTask.taskName,
           description: selectedTask.description,
@@ -182,9 +182,8 @@ const Tasks: React.FC<TasksProps> = ({
                 }
               </TableCell>
               <TableCell>{task.processStatus}</TableCell>
-              <TableCell >
-                <span style={{ color: task.status ? 'red' : 'green' }}>
-
+              <TableCell>
+                <span style={{ color: task.status ? "red" : "green" }}>
                   {task.status ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
               </TableCell>
@@ -258,14 +257,19 @@ const Tasks: React.FC<TasksProps> = ({
                 <Input
                   type="date"
                   label="Ngày bắt đầu"
-                  value={selectedTask && selectedTask.startDate instanceof Date
-                    ? selectedTask.startDate.toISOString().substring(0, 10)
-                    : ''}
-                  onChange={(e) =>
-                    setSelectedTask({
-                      ...selectedTask,
-                      startDate: e.target.value ? new Date(e.target.value) : null,
-                    } as TaskType) // Ensure the type is Task when updating state
+                  value={
+                    selectedTask && selectedTask.startDate instanceof Date
+                      ? selectedTask.startDate.toISOString().substring(0, 10)
+                      : ""
+                  }
+                  onChange={
+                    (e) =>
+                      setSelectedTask({
+                        ...selectedTask,
+                        startDate: e.target.value
+                          ? new Date(e.target.value)
+                          : null,
+                      } as TaskType) // Ensure the type is Task when updating state
                   }
                   className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                 />
@@ -273,14 +277,19 @@ const Tasks: React.FC<TasksProps> = ({
                 <Input
                   type="date"
                   label="Ngày kết thúc"
-                  value={selectedTask && selectedTask.endDate instanceof Date
-                    ? selectedTask.endDate.toISOString().substring(0, 10)
-                    : ''}
-                  onChange={(e) =>
-                    setSelectedTask({
-                      ...selectedTask,
-                      endDate: e.target.value ? new Date(e.target.value) : null,
-                    } as TaskType) // Ensure the type is Task when updating state
+                  value={
+                    selectedTask && selectedTask.endDate instanceof Date
+                      ? selectedTask.endDate.toISOString().substring(0, 10)
+                      : ""
+                  }
+                  onChange={
+                    (e) =>
+                      setSelectedTask({
+                        ...selectedTask,
+                        endDate: e.target.value
+                          ? new Date(e.target.value)
+                          : null,
+                      } as TaskType) // Ensure the type is Task when updating state
                   }
                   className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                 />

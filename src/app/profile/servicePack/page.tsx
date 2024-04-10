@@ -34,7 +34,7 @@ const ServicePack = () => {
   const getAllPurchasedPacks = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}orderPackageTemplate/getAllCheckOutPackageTemplateDetailByUser/${userId}`,
+        `${process.env.BASE_API}orderPackageTemplate/getAllCheckOutPackageTemplateDetailByUser/${userId}`,
         {
           headers: authHeader(),
         }
