@@ -1,19 +1,17 @@
-'use client';
+"use client";
 
-import axios from 'axios';
+import authHeader from "@/components/authHeader/AuthHeader";
+import axios from "axios";
 
 const getToken = () => {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
 
-  return JSON.parse(localStorage.getItem('auth-token') || '{}');
+  return JSON.parse(localStorage.getItem("auth-token") || "{}");
 };
 
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API,
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${getToken()}`,
-  },
+  headers: authHeader(),
 });
 
 axiosClient.interceptors.response.use(

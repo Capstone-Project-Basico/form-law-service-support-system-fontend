@@ -33,6 +33,14 @@ import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "@/components/authHeader/AuthHeader";
 
+interface UserLocal {
+  data: {
+    data: {
+      userId: string;
+    };
+  };
+}
+
 const Recruitment = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
@@ -74,6 +82,15 @@ const Recruitment = () => {
     workPlace,
     processStatus,
   };
+
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
 
   useEffect(() => {
     switch (tabs) {
@@ -120,12 +137,10 @@ const Recruitment = () => {
     );
     if (isConfirmed) {
       try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
+        if (!user) {
           console.log("No user found");
           return;
         }
-        const user = JSON.parse(userString);
 
         axios
           .delete(
@@ -138,11 +153,9 @@ const Recruitment = () => {
             toast.success("Xóa thành công");
             fetchRecruitment();
           }),
-        {
-          headers: {
-            Authorization: user.data.data.token,
-          },
-        };
+          {
+            headers: authHeader(),
+          };
       } catch (error) {
         console.log(error);
       }
@@ -200,13 +213,11 @@ const Recruitment = () => {
       .then((response) => {
         toast.success("Cập nhật thành công");
         fetchRecruitment();
-        
       })
       .catch((error) => {
         console.error("Failed to update recruitment", error);
       });
   };
-
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -224,8 +235,9 @@ const Recruitment = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            className={`bg-white ${
+              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -234,9 +246,10 @@ const Recruitment = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${tabs === 2 &&
+            className={`bg-white ${
+              tabs === 2 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            }`}
             radius="none"
             onClick={() => setTabs(2)}
           >
@@ -250,7 +263,7 @@ const Recruitment = () => {
           recruitments={recruitment}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
-          handleUpdateSubmit = {handleUpdateSubmit}
+          handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>
     </div>

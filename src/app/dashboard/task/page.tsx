@@ -116,13 +116,6 @@ const Task = () => {
     );
     if (isConfirmed) {
       try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
-          console.log("No user found");
-          return;
-        }
-        const user = JSON.parse(userString);
-
         axios
           .delete(`${process.env.NEXT_PUBLIC_BASE_API}task/deleteTask/${id}`, {
             headers: authHeader(),
@@ -132,9 +125,7 @@ const Task = () => {
             fetchTask();
           }),
           {
-            headers: {
-              Authorization: user.data.data.token,
-            },
+            headers: authHeader(),
           };
 
         // setPartners((prevPartners) =>

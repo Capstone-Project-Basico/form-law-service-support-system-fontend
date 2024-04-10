@@ -31,6 +31,7 @@ import { ContactType } from "@/constants/types/homeType";
 import Contacts from "@/components/manage/Contact";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
+import authHeader from "@/components/authHeader/AuthHeader";
 
 const Contact = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -105,13 +106,6 @@ const Contact = () => {
     );
     if (isConfirmed) {
       try {
-        const userString = localStorage.getItem("user"); // Assuming the token is stored with the key "token"
-        if (!userString) {
-          console.log("No user found");
-          return;
-        }
-        const user = JSON.parse(userString);
-
         axios
           .delete(
             `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`
@@ -121,9 +115,7 @@ const Contact = () => {
             fetchContacts();
           }),
           {
-            headers: {
-              Authorization: user.data.data.token,
-            },
+            headers: authHeader(),
           };
       } catch (error) {
         console.log(error);
