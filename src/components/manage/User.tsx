@@ -26,12 +26,12 @@ import {
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { User } from "@/constants/types/homeType";
+import { UserType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
 
 type UsersProps = {
-  users: User[];
+  users: UserType[];
   handleDelete: (id: number)=> void;
   restoreDelete: (id: number)=> void;
 };
@@ -42,7 +42,7 @@ const Users: React.FC<UsersProps> = ({
   restoreDelete,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
   const {
     isOpen: isOpenUpdate,

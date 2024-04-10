@@ -13,25 +13,25 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
-  useEffect(() => {
-    const userString = localStorage.getItem("user");
-    if (!userString) {
-      console.log("No user found");
-      // router.push("/");
-      return;
-    }
+  const userString = localStorage.getItem("user");
+  if (!userString) {
+    console.log("No user found");
+    // router.push("/");
+    return;
+  }
 
-    const user = JSON.parse(userString);
-    const userRole = user?.data.data.roleName;
+  const user = JSON.parse(userString);
+  const userRole = user?.data.data.roleName;
 
-    console.log(userRole);
+  console.log(user);
 
-    // Check if the user role is not admin
-    if (userRole !== "ROLE_ADMIN") {
-      // Redirect non-admin users to the home page or login page
-      router.push("/");
-    }
-  }, [router]);
+  // Check if the user role is not admin
+  if (userRole !== "ROLE_ADMIN") {
+    debugger;
+    // Redirect non-admin users to the home page or login page
+    router.push("/");
+    return null;
+  }
 
   return (
     <div className="flex flex-col">
