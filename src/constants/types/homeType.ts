@@ -84,12 +84,14 @@ export type RecruitmentType = {
 };
 
 export type PostType = {
+  title: string;
   content: string;
   userName: string;
   cateName: string;
   delete: boolean;
   cateId: string;
   userId: string;
+  postId: string;
 };
 
 export type PostCategory = {
@@ -155,3 +157,12 @@ export type PackType = {
   itemPackageList: [];
   deleted: boolean;
 };
+
+export interface UserLocal {
+  data: {
+    data: {
+      userId: string;
+      roleName: string;
+    };
+  };
+}
