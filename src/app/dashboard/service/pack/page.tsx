@@ -22,19 +22,22 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import axios from "axios";
 import React, { FormEvent, useEffect, useState } from "react";
 import { faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { PackType } from "@/constants/types/homeType";
+import { PackType, PostType } from "@/constants/types/homeType";
 import authHeader from "@/components/authHeader/AuthHeader";
 
 const Pack = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
   const [packs, setPacks] = useState<PackType[]>([]);
+  const [posts, setPosts] = useState<PostType[]>([]);
 
   const {
     isOpen: isOpenUpdate,
@@ -45,6 +48,9 @@ const Pack = () => {
   //data
   const [packageName, setPackageName] = useState("");
   const [price, setPrice] = useState<Number | undefined>();
+  const [description, setDescription] = useState("");
+  const [listItem, setListItem] = useState([]);
+
   let newPack = {
     packageName,
     price,
@@ -53,6 +59,7 @@ const Pack = () => {
   const [selectedPartner, setSelectedPartner] = useState<PackType | null>(null);
 
   useEffect(() => {
+    fetchPosts();
     switch (tabs) {
       case 1:
         fetchPacks();
@@ -80,6 +87,16 @@ const Pack = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  //get all posts
+  const fetchPosts = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}post/getAllPosts`
+      );
+      setPosts(response.data.data);
+    } catch (error) {}
   };
 
   //add a new partner
@@ -171,6 +188,24 @@ const Pack = () => {
                         value={price !== undefined ? price.toString() : ""}
                         onChange={(e) => setPrice(Number(e.target.value))}
                       />
+                      <Input
+                        type="text"
+                        label="Chi tiết"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+                      <Select
+                        label="Favorite Animal"
+                        placeholder="Select an animal"
+                        selectionMode="multiple"
+                        className="max-w-xs"
+                      >
+                        {posts.map((post, index) => (
+                          <SelectItem key={index} value={post.postId}>
+                            {post.title}
+                          </SelectItem>
+                        ))}
+                      </Select>
                     </ModalBody>
                     <ModalFooter>
                       <Button color="danger" variant="light" onPress={onClose}>
