@@ -111,6 +111,38 @@ const Lawyer = () => {
     }
   };
 
+  //update
+  //const handleUpdateSubmit = useCallback(async (selectedLawyer: any) => {
+  const handleUpdateSubmit = async (selectedLawyer: any) => {
+    // if (!selectedLawyer) return; // Check if a Lawyer is selected
+    // Example: PUT request to update Lawyer details
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${selectedLawyer.userId}`,
+        {
+          email: selectedLawyer.email,
+          userName: selectedLawyer.userName,
+          avatar: selectedLawyer.avatar,
+          phoneNumber: selectedLawyer.phoneNumber,
+          url: selectedLawyer.url,
+          position: selectedLawyer.position,
+          introduce: selectedLawyer.introduce,
+        },
+        {
+          headers: authHeader(),
+        }
+      )
+      .then((response) => {
+        toast.success("Cập nhật thành công");
+        fetchLawyers();
+      })
+      .catch((error) => {
+        console.error("Failed to update user", error);
+      });
+
+    //[selectedLawyer]
+  };
+
   //delete
   const handleDelete = async (userId: number) => {
     const isConfirmed = window.confirm(
@@ -199,6 +231,7 @@ const Lawyer = () => {
           lawyers={lawyers}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>
     </div>
