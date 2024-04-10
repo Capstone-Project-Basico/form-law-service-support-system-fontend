@@ -110,7 +110,6 @@ const User = () => {
     );
     if (isConfirmed) {
       try {
-       
         axios
           .delete(
             `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
@@ -119,11 +118,9 @@ const User = () => {
             }
           )
           .then(() => {
-            
             toast.success("Xóa thành công");
-            fetchUsers()
-          })
-
+            fetchUsers();
+          });
       } catch (error) {
         console.log(error);
       }
@@ -143,14 +140,37 @@ const User = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedUser()
+          fetchDeletedUser();
         });
     } catch (error) {
       console.log(error);
     }
   };
 
-  
+  //update
+  const handleUpdateSubmit = async (selectedUser: any) => {
+    //if (!selectedUser) return; // Check if a partner is selected
+
+    // Example: PUT request to update partner details
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/updateRoleUser/${selectedUser.userId}?roleName=${selectedUser.roleName}`,
+        {
+          roleName: selectedUser.roleName,
+        },
+        {
+          headers: authHeader(),
+        }
+      )
+      .then((response) => {
+        toast.success("Cập nhật thành công");
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.error("Failed to update user", error);
+      });
+  };
+
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -191,9 +211,12 @@ const User = () => {
       </div>
 
       <div>
-        <Users users={users} 
-               handleDelete={handleDelete}       
-               restoreDelete={restoreDelete}  />    
+        <Users
+          users={users}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
+          handleUpdateSubmit={handleUpdateSubmit}
+        />
       </div>
     </div>
   );

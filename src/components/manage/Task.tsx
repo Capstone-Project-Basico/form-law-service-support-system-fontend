@@ -33,12 +33,14 @@ type TasksProps = {
   tasks: TaskType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleUpdateSubmit: (data: any) => void;
 };
 
 const Tasks: React.FC<TasksProps> = ({
   tasks,
   handleDelete,
   restoreDelete,
+  handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
@@ -70,33 +72,6 @@ const Tasks: React.FC<TasksProps> = ({
 
     return filteredPartners.slice(start, end);
   }, [page, filteredPartners]);
-
-  //update
-  const handleUpdateSubmit = async () => {
-    if (!selectedTask) return; // Check if a Task is selected
-
-    // Example: PUT request to update Task details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/updateTask/${selectedTask.id}`,
-        {
-          taskName: selectedTask.taskName,
-          description: selectedTask.description,
-          startDate: selectedTask.startDate,
-          endDate: selectedTask.endDate,
-          processStatus: selectedTask.processStatus,
-        },
-        {
-          headers: authHeader(),
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-      })
-      .catch((error) => {
-        console.error("Failed to update partner", error);
-      });
-  };
 
   return (
     <div>
@@ -182,9 +157,8 @@ const Tasks: React.FC<TasksProps> = ({
                 }
               </TableCell>
               <TableCell>{task.processStatus}</TableCell>
-              <TableCell >
-                <span style={{ color: task.status ? 'red' : 'green' }}>
-
+              <TableCell>
+                <span style={{ color: task.status ? "red" : "green" }}>
                   {task.status ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
               </TableCell>
@@ -227,11 +201,19 @@ const Tasks: React.FC<TasksProps> = ({
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Cập nhật đối tác
+            Cập nhật công việc
           </ModalHeader>
           <ModalBody>
             {selectedTask && (
-              <form onSubmit={handleUpdateSubmit}>
+              <form
+                id="task"
+                onSubmit={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                  handleUpdateSubmit(selectedTask);
+                  onCloseUpdate();
+                }}
+              >
                 <Input
                   type="text"
                   label="Tên công việc"
@@ -244,6 +226,7 @@ const Tasks: React.FC<TasksProps> = ({
                   }
                 />
                 <Input
+                  className="pt-3 pb-3"
                   type="text"
                   label="Mô tả"
                   value={selectedTask.description}
@@ -258,14 +241,19 @@ const Tasks: React.FC<TasksProps> = ({
                 <Input
                   type="date"
                   label="Ngày bắt đầu"
-                  value={selectedTask && selectedTask.startDate instanceof Date
-                    ? selectedTask.startDate.toISOString().substring(0, 10)
-                    : ''}
-                  onChange={(e) =>
-                    setSelectedTask({
-                      ...selectedTask,
-                      startDate: e.target.value ? new Date(e.target.value) : null,
-                    } as TaskType) // Ensure the type is Task when updating state
+                  value={
+                    selectedTask && selectedTask.startDate instanceof Date
+                      ? selectedTask.startDate.toISOString().substring(0, 10)
+                      : ""
+                  }
+                  onChange={
+                    (e) =>
+                      setSelectedTask({
+                        ...selectedTask,
+                        startDate: e.target.value
+                          ? new Date(e.target.value)
+                          : null,
+                      } as TaskType) // Ensure the type is Task when updating state
                   }
                   className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                 />
@@ -273,14 +261,19 @@ const Tasks: React.FC<TasksProps> = ({
                 <Input
                   type="date"
                   label="Ngày kết thúc"
-                  value={selectedTask && selectedTask.endDate instanceof Date
-                    ? selectedTask.endDate.toISOString().substring(0, 10)
-                    : ''}
-                  onChange={(e) =>
-                    setSelectedTask({
-                      ...selectedTask,
-                      endDate: e.target.value ? new Date(e.target.value) : null,
-                    } as TaskType) // Ensure the type is Task when updating state
+                  value={
+                    selectedTask && selectedTask.endDate instanceof Date
+                      ? selectedTask.endDate.toISOString().substring(0, 10)
+                      : ""
+                  }
+                  onChange={
+                    (e) =>
+                      setSelectedTask({
+                        ...selectedTask,
+                        endDate: e.target.value
+                          ? new Date(e.target.value)
+                          : null,
+                      } as TaskType) // Ensure the type is Task when updating state
                   }
                   className="form-input block w-full py-2 text-base font-normal text-gray-700 bg-white bg-clip-padding  rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                 />
@@ -291,14 +284,7 @@ const Tasks: React.FC<TasksProps> = ({
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                handleUpdateSubmit();
-                onCloseUpdate();
-              }}
-              type="submit"
-            >
+            <Button color="primary" type="submit" form="task">
               Cập nhật
             </Button>
           </ModalFooter>

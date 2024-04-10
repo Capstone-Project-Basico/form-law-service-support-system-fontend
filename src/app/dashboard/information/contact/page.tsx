@@ -21,7 +21,6 @@ import {
   NavbarContent,
   NavbarItem,
   MenuItem,
-
 } from "@nextui-org/react";
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
@@ -70,7 +69,8 @@ const Contact = () => {
         break;
       default:
         fetchContacts();
-        break; ``
+        break;
+        ``;
     }
   }, [tabs]);
 
@@ -81,7 +81,6 @@ const Contact = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllContact`
       );
       setContacts(response.data.data);
-
     } catch (error) {
       console.error(error);
     }
@@ -94,12 +93,10 @@ const Contact = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllDeletedContact`
       );
       setContacts(response.data.data);
-
     } catch (error) {
       console.error(error);
     }
   };
-
 
   //delete
   const handleDelete = async (contactId: number) => {
@@ -121,18 +118,46 @@ const Contact = () => {
           )
           .then(() => {
             toast.success("Xóa thành công");
-            fetchContacts()
+            fetchContacts();
           }),
-        {
-          headers: {
-            Authorization: user.data.data.token,
-          },
-        };
-
+          {
+            headers: {
+              Authorization: user.data.data.token,
+            },
+          };
       } catch (error) {
         console.log(error);
       }
     }
+  };
+
+  ///update
+  const handleUpdateSubmit = async (selectedContact: any) => {
+    //if (!selectedContact) return; // Check if a contact is selected
+
+    // Example: PUT request to update contact details
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/updateContact/${selectedContact.contactId}`,
+        {
+          fullName: selectedContact.fullName,
+          email: selectedContact.email,
+          phoneNum: selectedContact.phoneNum,
+          career: selectedContact.career,
+          city: selectedContact.city,
+          businessTime: selectedContact.businessTime,
+          annualRevenue: selectedContact.annualRevenue,
+          juridical: selectedContact.juridical,
+          status: selectedContact.status,
+        }
+      )
+      .then((response) => {
+        toast.success("Cập nhật thành công");
+        fetchContacts();
+      })
+      .catch((error) => {
+        console.error("Failed to update contact", error);
+      });
   };
 
   // restore
@@ -144,23 +169,19 @@ const Contact = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedContact()
+          fetchDeletedContact();
         });
     } catch (error) {
       console.log(error);
     }
   };
 
-
-
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">
-              Quản lí thông tin
-            </p>
+            <p className="text-black font-bold text-3xl ">Quản lí thông tin</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <p className="text-[#FF0004] font-bold text-3xl">Liên hệ</p>
@@ -171,8 +192,9 @@ const Contact = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            className={`bg-white ${
+              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -181,9 +203,10 @@ const Contact = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${tabs === 2 &&
+            className={`bg-white ${
+              tabs === 2 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            }`}
             radius="none"
             onClick={() => setTabs(2)}
           >
@@ -193,7 +216,12 @@ const Contact = () => {
       </div>
 
       <div>
-        <Contacts contacts={contacts} handleDelete={handleDelete} restoreDelete={restoreDelete} />
+        <Contacts
+          contacts={contacts}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
+          handleUpdateSubmit={handleUpdateSubmit}
+        />
       </div>
     </div>
   );

@@ -118,7 +118,6 @@ const Lawyer = () => {
     );
     if (isConfirmed) {
       try {
-       
         axios
           .delete(
             `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
@@ -127,11 +126,9 @@ const Lawyer = () => {
             }
           )
           .then(() => {
-            
             toast.success("Xóa thành công");
-            fetchLawyers()
-          })
-
+            fetchLawyers();
+          });
       } catch (error) {
         console.log(error);
       }
@@ -151,14 +148,13 @@ const Lawyer = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedLawyer()
+          fetchDeletedLawyer();
         });
     } catch (error) {
       console.log(error);
     }
   };
 
-  
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -199,9 +195,11 @@ const Lawyer = () => {
       </div>
 
       <div>
-        <Lawyers lawyers={lawyers} 
-               handleDelete={handleDelete}       
-               restoreDelete={restoreDelete}  />    
+        <Lawyers
+          lawyers={lawyers}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
+        />
       </div>
     </div>
   );

@@ -32,18 +32,25 @@ type ContactsProps = {
   contacts: ContactType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleUpdateSubmit: (data: any) => void;
 };
 
-const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDelete }) => {
+const Contacts: React.FC<ContactsProps> = ({
+  contacts,
+  handleDelete,
+  restoreDelete,
+  handleUpdateSubmit,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedContact, setSelectedContact] = useState<ContactType | null>(null);
+  const [selectedContact, setSelectedContact] = useState<ContactType | null>(
+    null
+  );
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
-
 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,38 +73,6 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
 
     return filteredContacts.slice(start, end);
   }, [page, filteredContacts]);
-
-
-  ///update
-  const handleUpdateSubmit = async () => {
-    if (!selectedContact) return; // Check if a contact is selected
-
-    // Example: PUT request to update contact details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}contact/updateContact/${selectedContact.contactId}`,
-        {
-          fullName: selectedContact.fullName,
-          email: selectedContact.email,
-          phoneNum: selectedContact.phoneNum,
-          career: selectedContact.career,
-          city: selectedContact.city,
-          businessTime: selectedContact.businessTime,
-          annualRevenue: selectedContact.annualRevenue,
-          juridical: selectedContact.juridical,
-          status: selectedContact.status,
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-      })
-      .catch((error) => {
-        console.error("Failed to update contact", error);
-      });
-  };
-
-
-
 
   return (
     <div>
@@ -141,12 +116,8 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
           <TableColumn className="bg-[#FF0004] text-white">
             Họ và Tên
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Email
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            SĐT
-          </TableColumn>
+          <TableColumn className="bg-[#FF0004] text-white">Email</TableColumn>
+          <TableColumn className="bg-[#FF0004] text-white">SĐT</TableColumn>
           {/* <TableColumn className="bg-[#FF0004] text-white">
             Ngành
           </TableColumn>
@@ -185,9 +156,8 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
               <TableCell>{contact.juridical}</TableCell> */}
               <TableCell>{contact.status}</TableCell>
 
-
               <TableCell>
-                <span style={{ color: contact.delete ? 'red' : 'green' }}>
+                <span style={{ color: contact.delete ? "red" : "green" }}>
                   {contact.delete ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
               </TableCell>
@@ -262,10 +232,9 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
                   <p className="py-2">Thời gian kinh doanh</p>
                   <p>Doanh thu hàng năm </p>
                   <p className="py-2">Cần hỗ trợ pháp lý nào</p>
-
                 </div>
                 <div>
-                  <p >{selectedContact.fullName}</p>
+                  <p>{selectedContact.fullName}</p>
                   <p className="py-2">{selectedContact.email}</p>
                   <p>{selectedContact.phoneNum}</p>
                   <p className="py-2">{selectedContact.career}</p>
@@ -273,8 +242,6 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
                   <p className="py-2">{selectedContact.businessTime}</p>
                   <p>{selectedContact.annualRevenue}</p>
                   <p className="py-2">{selectedContact.juridical}</p>
-
-
                 </div>
               </div>
             )}
@@ -295,7 +262,15 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
           </ModalHeader>
           <ModalBody>
             {selectedContact && (
-              <form onSubmit={handleUpdateSubmit}>
+              <form
+                id="contact"
+                onSubmit={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                  handleUpdateSubmit(selectedContact);
+                  onCloseUpdate();
+                }}
+              >
                 <Input
                   type="text"
                   label="Họ và tên"
@@ -308,7 +283,8 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
                   }
                 />
 
-                <Input className="py-3"
+                <Input
+                  className="py-3"
                   type="text"
                   label="Email"
                   value={selectedContact.email}
@@ -338,14 +314,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, handleDelete, restoreDele
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                handleUpdateSubmit();
-                onCloseUpdate();
-              }}
-              type="submit"
-            >
+            <Button color="primary" type="submit" form="contact">
               Cập nhật
             </Button>
           </ModalFooter>
