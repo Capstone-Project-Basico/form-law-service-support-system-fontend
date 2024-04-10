@@ -58,9 +58,14 @@ const Navbar = () => {
     window.location.reload();
   };
 
-  const storedUser = localStorage.getItem("user");
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
 
-  const user = storedUser ? JSON.parse(storedUser) : null;
+  const user: UserLocal | null = getUserFromStorage();
   const userId = user?.data.data.userId;
 
   useEffect(() => {

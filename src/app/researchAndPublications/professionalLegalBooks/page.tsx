@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   faCalendarDays,
@@ -9,8 +11,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Input } from "@nextui-org/react";
 import HeaderComponent from "@/components/header";
 import Side from "@/components/side";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-const page = () => {
+const Page = () => {
+  const [posts, setPosts] = useState();
+  useEffect(() => {
+    getAllPosts();
+  }, []);
+  const getAllPosts = () => {
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_BASE_API}post/findPostByCateName?cateName=Sách pháp lý nghiệp vụ`
+      )
+      .then((response) => {
+        setPosts(response.data.data);
+      });
+  };
   return (
     <>
       <HeaderComponent
@@ -18,7 +35,6 @@ const page = () => {
         link=" Sách Pháp Lý Nghiệp Vụ"
       />
       <div className="flex flex-rows-2 pt-20 bg-white text-black px-96">
-        {/* 1 */}
         <div className="grid grid-cols-4 w-[847px]">
           {/* first book */}
           <div className="px-[15px] w-[196px] h-[492px]">
@@ -44,7 +60,7 @@ const page = () => {
           </div>
 
           {/* second book */}
-          <div className="px-[15px] w-48 h-[492px]">
+          {/* <div className="px-[15px] w-48 h-[492px]">
             <Image
               alt=""
               src="/books/HNGN2.jpg"
@@ -69,13 +85,12 @@ const page = () => {
               <FontAwesomeIcon icon={faComment} className="size-4 ml-1" />
               <hr />
             </div>
-          </div>
+          </div> */}
         </div>
-        {/* 2 */}
         <Side />
       </div>
     </>
   );
 };
 
-export default page;
+export default Page;
