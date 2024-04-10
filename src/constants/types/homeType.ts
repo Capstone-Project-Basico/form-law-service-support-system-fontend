@@ -92,6 +92,12 @@ export type PostType = {
   userId: string;
 };
 
+export type PostCategory = {
+  cateId: number;
+  cateName: string;
+  delete: boolean;
+};
+
 export type Category = {
   cateId: number;
   cateName: string;
@@ -140,7 +146,7 @@ export type CardTemplate = {
   itemDetail?: Template;
 };
 
-export type Pack = {
+export type PackType = {
   packageId: string;
   packageName: string;
   description: string;

@@ -21,15 +21,21 @@ import {
   NavbarContent,
   NavbarItem,
   MenuItem,
+  Pagination,
 } from "@nextui-org/react";
 import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import { PackType } from "@/constants/types/homeType";
+import authHeader from "@/components/authHeader/AuthHeader";
 
 const Pack = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [tabs, setTabs] = useState(1);
+  const [packs, setPacks] = useState<PackType[]>([]);
+
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
@@ -37,11 +43,43 @@ const Pack = () => {
   } = useDisclosure();
 
   //data
-  const [name, setName] = useState("");
-  const [link, setLink] = useState("");
-  let newPartner = {
-    name,
-    link,
+  const [packageName, setPackageName] = useState("");
+  const [price, setPrice] = useState<Number | undefined>();
+  let newPack = {
+    packageName,
+    price,
+  };
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedPartner, setSelectedPartner] = useState<PackType | null>(null);
+
+  useEffect(() => {
+    switch (tabs) {
+      case 1:
+        fetchPacks();
+        break;
+      case 2:
+        console.log("dang cho duyet ne");
+        break;
+      case 3:
+        // fetchDeletedPartner();
+        break;
+      default:
+        fetchPacks();
+        break;
+    }
+  }, [tabs]);
+
+  //get all items
+  const fetchPacks = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
+      );
+      setPacks(response.data.data);
+      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   //add a new partner
@@ -49,8 +87,9 @@ const Pack = () => {
     e.preventDefault();
     axios
       .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/createNewPartner`,
-        newPartner
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/createPackageFormTemplate`,
+        newPack,
+        { headers: authHeader() }
       )
 
       .then((response) => {
@@ -60,6 +99,29 @@ const Pack = () => {
         console.log(error);
       });
   };
+
+  //search
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+  // Filter partners based on search term
+  const filteredPartners = packs.filter((packageName) =>
+    packageName.packageName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  //pagination
+  const [page, setPage] = React.useState(1);
+  const rowsPerPage = 5;
+
+  const pages = Math.ceil(filteredPartners.length / rowsPerPage);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return filteredPartners.slice(start, end);
+  }, [page, filteredPartners]);
+
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2 border-b-2 pb-5">
@@ -92,15 +154,22 @@ const Pack = () => {
                     <ModalBody>
                       <Input
                         type="text"
-                        label="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        label="Tên gói"
+                        value={packageName}
+                        onChange={(e) => setPackageName(e.target.value)}
                       />
                       <Input
-                        type="text"
-                        label="Link"
-                        value={link}
-                        onChange={(e) => setLink(e.target.value)}
+                        type="number"
+                        label="Giá gói"
+                        endContent={
+                          <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">
+                              Đồng
+                            </span>
+                          </div>
+                        }
+                        value={price !== undefined ? price.toString() : ""}
+                        onChange={(e) => setPrice(Number(e.target.value))}
                       />
                     </ModalBody>
                     <ModalFooter>
@@ -118,31 +187,111 @@ const Pack = () => {
           </Modal>
         </div>
       </div>
-      <div className="flex justify-center items-center">
-        <div className="grid grid-cols-3 justify-center items-center mt-20">
-          <div className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md">
-            <div className="flex justify-end items-end w-full gap-1">
-              <Button className="bg-red-200" onClick={() => onOpenUpdate()}>
-                <FontAwesomeIcon icon={faPen} className="text-[#FF0004]" />
-              </Button>
-              <Button className="bg-red-200">
-                <FontAwesomeIcon icon={faTrash} className="text-[#FF0004]" />
-              </Button>
-            </div>
-            <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
-              Basic
-            </h2>
-            <p className="text-xl pt-3">Được sử dụng 30 biểu mẫu luật</p>
-            <p className="text-xl pb-3">Được các luật sư của Basico góp ý </p>
-            <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
-              30,000Đ cho 1 tháng
-            </h1>
-            <Button className="text-white bg-[#FF0004] mb-5 mt-5">
-              Đăng ký
-            </Button>
-          </div>
+      <div className="flex flex-row gap-10 font-bold border-b-1 my-5">
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            onClick={() => setTabs(1)}
+            radius="none"
+          >
+            TẤT CẢ
+          </Button>
+        </div>
+        <div>
+          <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
+            CHỜ DUYỆT
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 3 &&
+              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            radius="none"
+            onClick={() => setTabs(3)}
+          >
+            ĐÃ XÓA
+          </Button>
         </div>
       </div>
+      <Table
+        aria-label="Example static collection table"
+        bottomContent={
+          <div className="flex w-full justify-center">
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="secondary"
+              page={page}
+              total={pages}
+              onChange={(page) => setPage(page)}
+            />
+          </div>
+        }
+      >
+        <TableHeader className="">
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Tên gói
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">Giá</TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Chi tiết
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Trạng thái
+          </TableColumn>
+          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
+            Tương tác
+          </TableColumn>
+        </TableHeader>
+        <TableBody>
+          {items.map((partner, index) => (
+            <TableRow key={index}>
+              <TableCell>{partner.packageName}</TableCell>
+              <TableCell>{partner.price}</TableCell>
+              <TableCell>{partner.description}</TableCell>
+              <TableCell>
+                <span style={{ color: partner.deleted ? "red" : "green" }}>
+                  {partner.deleted ? "Không sử dụng" : "Đang hoạt động"}
+                </span>
+              </TableCell>
+              {partner.deleted === false ? (
+                <TableCell className="flex gap-2 items-center  justify-center ">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    onPress={() => {
+                      setSelectedPartner(partner);
+                      onOpenUpdate();
+                    }}
+                  >
+                    Cập nhật
+                  </Button>
+
+                  <Button
+                    className="bg-[#FF0004] text-white"
+                    // onClick={() => handleDelete(partner.partnerId)}
+                  >
+                    Xóa
+                  </Button>
+                </TableCell>
+              ) : (
+                <TableCell className="flex items-center justify-center">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    // onClick={() => restoreDelete(partner.partnerId)}
+                  >
+                    Khôi phục
+                  </Button>
+                </TableCell>
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>

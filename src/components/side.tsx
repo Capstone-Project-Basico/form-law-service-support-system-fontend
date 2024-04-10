@@ -1,13 +1,38 @@
+"use client";
+
+import { PostCategory } from "@/constants/types/homeType";
 import {
   faChevronRight,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@nextui-org/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { postSidebars } from "@/lib/postSide";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Side = () => {
+  const [postCategories, setPostCategories] = useState<PostCategory[]>([]);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    getAllPostCategories();
+  }, []);
+
+  const getAllPostCategories = () => {
+    try {
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}category/getAllCategories`)
+        .then((response) => {
+          setPostCategories(response.data.data);
+        });
+    } catch (error) {}
+  };
+
   return (
-    <div className="px-4 w-[292px]">
+    <div className="px-4 w-[345px]">
       <div className="flex flex-row border mb-10">
         <input
           type="text"
@@ -23,18 +48,26 @@ const Side = () => {
         CHUYÊN MỤC
       </div>
       <div className="mb-10">
-        {/* 1 */}
-        <div className="flex flex-row items-center py-3">
-          <FontAwesomeIcon
-            icon={faChevronRight}
-            className="size-3 mx-1 text-[#FF0004]"
-          />
-          <p className="pl-[18px] hover:text-[#FF0004] cursor-pointer">
-            Bài viết nghiên cứu trên báo chí
-          </p>
-        </div>
-        <hr />
-        {/* 2 */}
+        {postSidebars.map((category) => (
+          <div key={category.title}>
+            <Link
+              href={category.link}
+              className={`flex flex-row space-x-4 items-center p-2 rounded-lg hover:text-[#FF0004] ${
+                category.link === pathname ? "text-[#FF0004]" : ""
+              }`}
+            >
+              <div className="flex flex-row items-center py-3">
+                <FontAwesomeIcon
+                  icon={faChevronRight}
+                  className="size-3 mx-1 text-[#FF0004]"
+                />
+                <p className="pl-[18px]">{category.title}</p>
+              </div>
+            </Link>
+            <hr />
+          </div>
+        ))}
+        {/* 
         <div className="flex flex-row items-center py-3">
           <FontAwesomeIcon
             icon={faChevronRight}
@@ -46,7 +79,6 @@ const Side = () => {
         </div>
         <hr />
 
-        {/* 3 */}
         <div className="flex flex-row items-center py-3">
           <FontAwesomeIcon
             icon={faChevronRight}
@@ -58,7 +90,6 @@ const Side = () => {
         </div>
         <hr />
 
-        {/* 4 */}
         <div className="flex flex-row items-center py-3">
           <FontAwesomeIcon
             icon={faChevronRight}
@@ -70,7 +101,6 @@ const Side = () => {
         </div>
         <hr />
 
-        {/* 5 */}
         <div className="flex flex-row items-center py-3">
           <FontAwesomeIcon
             icon={faChevronRight}
@@ -82,7 +112,6 @@ const Side = () => {
         </div>
         <hr />
 
-        {/* 6 */}
         <div className="flex flex-row items-center py-3">
           <FontAwesomeIcon
             icon={faChevronRight}
@@ -91,7 +120,7 @@ const Side = () => {
           <p className="pl-[18px] hover:text-[#FF0004] cursor-pointer">
             Tư liệu video
           </p>
-        </div>
+        </div> */}
       </div>
 
       {/* calender */}
