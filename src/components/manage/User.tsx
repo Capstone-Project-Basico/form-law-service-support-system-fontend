@@ -78,7 +78,7 @@ const Users: React.FC<UsersProps> = ({
     // Example: PUT request to update partner details
     axios
       .put(
-        `${process.env.BASE_API}user/updateRoleUser/${selectedUser.userId}?roleName=${selectedUser.roleName}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}user/updateRoleUser/${selectedUser.userId}?roleName=${selectedUser.roleName}`,
         {
           roleName: selectedUser.roleName,
         },

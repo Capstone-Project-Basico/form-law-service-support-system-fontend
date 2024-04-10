@@ -24,7 +24,7 @@ const Side = () => {
   const getAllPostCategories = () => {
     try {
       axios
-        .get(`${process.env.BASE_API}category/getAllCategories`)
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}category/getAllCategories`)
         .then((response) => {
           setPostCategories(response.data.data);
         });

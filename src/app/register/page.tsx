@@ -47,7 +47,7 @@ const Page = () => {
     // Try to register the user
     try {
       await axios.post(
-        `${process.env.BASE_API}auth/registerNewUser`,
+        `${process.env.NEXT_PUBLIC_BASE_API}auth/registerNewUser`,
         dataRegister
       );
       router.push("/login");

@@ -78,7 +78,7 @@ const Tasks: React.FC<TasksProps> = ({
     // Example: PUT request to update Task details
     axios
       .put(
-        `${process.env.BASE_API}task/updateTask/${selectedTask.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}task/updateTask/${selectedTask.id}`,
         {
           taskName: selectedTask.taskName,
           description: selectedTask.description,

@@ -110,7 +110,7 @@ const Recruitment = () => {
   const fetchRecruitment = async () => {
     try {
       const response = await axios.get(
-        `${process.env.BASE_API}recruitmentForm/getAllRecruitmentForm`
+        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/getAllRecruitmentForm`
       );
       setRecruitment(response.data.data);
     } catch (error) {
@@ -122,7 +122,7 @@ const Recruitment = () => {
   const fetchDeletedRecruitment = async () => {
     try {
       const response = await axios.get(
-        `${process.env.BASE_API}recruitmentForm/getAllDeletedRecruitmentForm`
+        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/getAllDeletedRecruitmentForm`
       );
       setRecruitment(response.data.data);
     } catch (error) {
@@ -144,7 +144,7 @@ const Recruitment = () => {
 
         axios
           .delete(
-            `${process.env.BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
+            `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
             {
               headers: authHeader(),
             }
@@ -167,7 +167,7 @@ const Recruitment = () => {
     try {
       axios
         .put(
-          `${process.env.BASE_API}recruitmentForm/restoreRecruitmentForm/${id}`,
+          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm/${id}`,
           {},
           {
             headers: authHeader(),
@@ -188,7 +188,7 @@ const Recruitment = () => {
     // Example: PUT request to update Recruitment details
     axios
       .put(
-        `${process.env.BASE_API}recruitmentForm/updateRecruitmentForm/${selectedRecruitment.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/updateRecruitmentForm/${selectedRecruitment.id}`,
         {
           fullName: selectedRecruitment.fullName,
           dateOfBirth: selectedRecruitment.dateOfBirth,

@@ -89,7 +89,7 @@ const Lawyer = () => {
   const fetchLawyers = async () => {
     try {
       const response = await axios.get(
-        `${process.env.BASE_API}user/getAllLawyers`
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllLawyers`
       );
       setLawyers(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -102,7 +102,7 @@ const Lawyer = () => {
   const fetchDeletedLawyer = async () => {
     try {
       const response = await axios.get(
-        `${process.env.BASE_API}user/getAllDeletedLawyers`
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllDeletedLawyers`
       );
       setLawyers(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -119,9 +119,12 @@ const Lawyer = () => {
     if (isConfirmed) {
       try {
         axios
-          .delete(`${process.env.BASE_API}user/deleteUser/${userId}`, {
-            headers: authHeader(),
-          })
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
+            {
+              headers: authHeader(),
+            }
+          )
           .then(() => {
             toast.success("Xóa thành công");
             fetchLawyers();
@@ -137,7 +140,7 @@ const Lawyer = () => {
     try {
       axios
         .put(
-          `${process.env.BASE_API}user/restoreDelete/${userId}`,
+          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`,
           {},
           {
             headers: authHeader(),
