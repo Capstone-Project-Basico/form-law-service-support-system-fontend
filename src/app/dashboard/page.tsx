@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import AddTemplate from "@/sections/AddTemplate";
 import { useState } from "react";
