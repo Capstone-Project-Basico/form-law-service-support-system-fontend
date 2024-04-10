@@ -89,7 +89,7 @@ const Lawyer = () => {
   const fetchLawyers = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllLawyers`
+        `${process.env.BASE_API}user/getAllLawyers`
       );
       setLawyers(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -102,7 +102,7 @@ const Lawyer = () => {
   const fetchDeletedLawyer = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllDeletedLawyers`
+        `${process.env.BASE_API}user/getAllDeletedLawyers`
       );
       setLawyers(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -118,20 +118,14 @@ const Lawyer = () => {
     );
     if (isConfirmed) {
       try {
-       
         axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
-            {
-              headers: authHeader(),
-            }
-          )
-          .then(() => {
-            
-            toast.success("Xóa thành công");
-            fetchLawyers()
+          .delete(`${process.env.BASE_API}user/deleteUser/${userId}`, {
+            headers: authHeader(),
           })
-
+          .then(() => {
+            toast.success("Xóa thành công");
+            fetchLawyers();
+          });
       } catch (error) {
         console.log(error);
       }
@@ -143,7 +137,7 @@ const Lawyer = () => {
     try {
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`,
+          `${process.env.BASE_API}user/restoreDelete/${userId}`,
           {},
           {
             headers: authHeader(),
@@ -151,14 +145,13 @@ const Lawyer = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedLawyer()
+          fetchDeletedLawyer();
         });
     } catch (error) {
       console.log(error);
     }
   };
 
-  
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -199,9 +192,11 @@ const Lawyer = () => {
       </div>
 
       <div>
-        <Lawyers lawyers={lawyers} 
-               handleDelete={handleDelete}       
-               restoreDelete={restoreDelete}  />    
+        <Lawyers
+          lawyers={lawyers}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
+        />
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ const FormDownload = () => {
       if (name) {
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_API}file/formfields/${name}`
+            `${process.env.BASE_API}file/formfields/${name}`
           );
           const data = await res.json();
           setForm(data);

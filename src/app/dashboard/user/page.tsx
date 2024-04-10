@@ -81,7 +81,7 @@ const User = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`
+        `${process.env.BASE_API}user/getAllUsers`
       );
       setUsers(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -94,7 +94,7 @@ const User = () => {
   const fetchDeletedUser = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllDeletedUsers`
+        `${process.env.BASE_API}user/getAllDeletedUsers`
       );
       setUsers(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -110,20 +110,14 @@ const User = () => {
     );
     if (isConfirmed) {
       try {
-       
         axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}user/deleteUser/${userId}`,
-            {
-              headers: authHeader(),
-            }
-          )
-          .then(() => {
-            
-            toast.success("Xóa thành công");
-            fetchUsers()
+          .delete(`${process.env.BASE_API}user/deleteUser/${userId}`, {
+            headers: authHeader(),
           })
-
+          .then(() => {
+            toast.success("Xóa thành công");
+            fetchUsers();
+          });
       } catch (error) {
         console.log(error);
       }
@@ -135,7 +129,7 @@ const User = () => {
     try {
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}user/restoreDelete/${userId}`,
+          `${process.env.BASE_API}user/restoreDelete/${userId}`,
           {},
           {
             headers: authHeader(),
@@ -143,14 +137,13 @@ const User = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedUser()
+          fetchDeletedUser();
         });
     } catch (error) {
       console.log(error);
     }
   };
 
-  
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -191,9 +184,11 @@ const User = () => {
       </div>
 
       <div>
-        <Users users={users} 
-               handleDelete={handleDelete}       
-               restoreDelete={restoreDelete}  />    
+        <Users
+          users={users}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
+        />
       </div>
     </div>
   );

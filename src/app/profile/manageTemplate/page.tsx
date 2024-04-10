@@ -37,7 +37,7 @@ const ManageTemplate = () => {
   const getAllTemplate = async () => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_BASE_API}order/getAllCheckOutFormTemplateDetailByUser/${userId}`
+        `${process.env.BASE_API}order/getAllCheckOutFormTemplateDetailByUser/${userId}`
       )
       .then((response) => {
         const allOrder = response.data.data;
@@ -49,7 +49,7 @@ const ManageTemplate = () => {
 
   const getTemplate = async (id: number) => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/${id}`)
+      .get(`${process.env.BASE_API}formTemplateVersion/${id}`)
       .then((res) => {
         setTemplates([res.data.data]);
       });

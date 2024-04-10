@@ -83,7 +83,7 @@ const Task = () => {
   const fetchTask = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/getAllTask`,
+        `${process.env.BASE_API}task/getAllTask`,
         {
           headers: authHeader(),
         }
@@ -98,7 +98,7 @@ const Task = () => {
   const fetchDeletedTask = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/getAllDeletedTask`,
+        `${process.env.BASE_API}task/getAllDeletedTask`,
         {
           headers: authHeader(),
         }
@@ -124,7 +124,7 @@ const Task = () => {
         const user = JSON.parse(userString);
 
         axios
-          .delete(`${process.env.NEXT_PUBLIC_BASE_API}task/deleteTask/${id}`, {
+          .delete(`${process.env.BASE_API}task/deleteTask/${id}`, {
             headers: authHeader(),
           })
           .then(() => {
@@ -149,7 +149,7 @@ const Task = () => {
     try {
       axios
         .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}task/restoreTask/${id}`,
+          `${process.env.BASE_API}task/restoreTask/${id}`,
           {},
           {
             headers: authHeader(),

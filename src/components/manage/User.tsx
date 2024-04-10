@@ -22,7 +22,6 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
-
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -32,11 +31,11 @@ import authHeader from "../authHeader/AuthHeader";
 
 type UsersProps = {
   users: UserType[];
-  handleDelete: (id: number)=> void;
-  restoreDelete: (id: number)=> void;
+  handleDelete: (id: number) => void;
+  restoreDelete: (id: number) => void;
 };
 
-const Users: React.FC<UsersProps> = ({ 
+const Users: React.FC<UsersProps> = ({
   users,
   handleDelete,
   restoreDelete,
@@ -49,7 +48,6 @@ const Users: React.FC<UsersProps> = ({
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
-  
 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +78,7 @@ const Users: React.FC<UsersProps> = ({
     // Example: PUT request to update partner details
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/updateRoleUser/${selectedUser.userId}?roleName=${selectedUser.roleName}`,
+        `${process.env.BASE_API}user/updateRoleUser/${selectedUser.userId}?roleName=${selectedUser.roleName}`,
         {
           roleName: selectedUser.roleName,
         },
@@ -95,9 +93,6 @@ const Users: React.FC<UsersProps> = ({
         console.error("Failed to update user", error);
       });
   };
- 
-
-  
 
   return (
     <div>
@@ -138,27 +133,21 @@ const Users: React.FC<UsersProps> = ({
         }
       >
         <TableHeader className="">
-        <TableColumn className=" bg-[#FF0004] text-white">
-            Email
-          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">Email</TableColumn>
           <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
             Họ và tên
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            SĐT
-          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">SĐT</TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Vai trò
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Trạng thái
           </TableColumn>
-                 
-                 
+
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
-
         </TableHeader>
         <TableBody>
           {items.map((user, index) => (
@@ -168,9 +157,9 @@ const Users: React.FC<UsersProps> = ({
               <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>{user.roleName}</TableCell>
               <TableCell>
-                  <span style={{ color: user.status ? 'red' : 'green' }}>
+                <span style={{ color: user.status ? "red" : "green" }}>
                   {user.status ? "Không sử dụng" : "Đang hoạt động"}
-                  </span>
+                </span>
               </TableCell>
 
               {user.status === 0 ? (
@@ -191,23 +180,21 @@ const Users: React.FC<UsersProps> = ({
                   >
                     Delete
                   </Button>
-                </TableCell>    
-            ) : (
-              <TableCell className="flex gap-2 items-center justify-center">
-                <Button
-                  className="bg-blue-600 text-white"
-                  onClick={() => restoreDelete(user.userId)}
-                >
-                  Khôi phục
-                </Button>
-
-                
-              </TableCell>
-            )}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+                </TableCell>
+              ) : (
+                <TableCell className="flex gap-2 items-center justify-center">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    onClick={() => restoreDelete(user.userId)}
+                  >
+                    Khôi phục
+                  </Button>
+                </TableCell>
+              )}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
@@ -229,7 +216,6 @@ const Users: React.FC<UsersProps> = ({
                     })
                   }
                 />
-               
               </form>
             )}
           </ModalBody>

@@ -95,7 +95,7 @@ const Post = () => {
   const fetchPosts = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/getAllPosts`
+        `${process.env.BASE_API}post/getAllPosts`
       );
       setPosts(response.data.data);
     } catch (error) {}
@@ -105,7 +105,7 @@ const Post = () => {
   const fetchDeletedPosts = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/getAllDeletedPosts`
+        `${process.env.BASE_API}post/getAllDeletedPosts`
       );
       setPosts(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -118,7 +118,7 @@ const Post = () => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}category/getAllCategories`,
+        `${process.env.BASE_API}category/getAllCategories`,
         { headers: authHeader() }
       );
       setCategories(response.data.data);
@@ -130,7 +130,7 @@ const Post = () => {
   //add new category
   const handleSubmit = async () => {
     axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_API}post/createPost`, newPost, {
+      .post(`${process.env.BASE_API}post/createPost`, newPost, {
         headers: authHeader(),
       })
       .then((response) => {

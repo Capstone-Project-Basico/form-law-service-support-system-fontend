@@ -22,7 +22,7 @@ const Page = () => {
   const getAllPosts = () => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/findPostByCateName?cateName=Sách pháp lý nghiệp vụ`
+        `${process.env.BASE_API}post/findPostByCateName?cateName=Sách pháp lý nghiệp vụ`
       )
       .then((response) => {
         setPosts(response.data.data);

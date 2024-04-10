@@ -10,7 +10,7 @@ const getToken = () => {
 };
 
 const axiosClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_API,
+  baseURL: process.env.BASE_API,
   headers: authHeader(),
 });
 

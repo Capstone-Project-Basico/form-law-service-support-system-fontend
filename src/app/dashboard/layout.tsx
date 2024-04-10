@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import { useEffect } from "react";
 import Navbar from "../../components/dashboardNavbar/navbar";
@@ -6,7 +6,7 @@ import Sidebar from "../../components/dashboardSidebar/sidebar";
 
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 type LayoutProps = {
   children: React.ReactNode; // Typing the children prop
