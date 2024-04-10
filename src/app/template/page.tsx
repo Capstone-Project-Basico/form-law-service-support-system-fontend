@@ -26,6 +26,7 @@ import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
+import authHeader from "@/components/authHeader/AuthHeader";
 
 interface UserLocal {
   data: {
@@ -127,7 +128,9 @@ const Page = () => {
   const payForTemplate = (orderId: string) => {
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetail/${orderId}`
+        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetail/${orderId}`,
+        {},
+        { headers: authHeader() }
       )
       .then((res) => {
         toast.success(`${res.data.data}`);
