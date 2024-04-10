@@ -6,6 +6,7 @@ import Sidebar from "../../components/dashboardSidebar/sidebar";
 
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { UserLocal } from "@/constants/types/homeType";
 // export const dynamic = "force-dynamic";
 
 type LayoutProps = {
@@ -14,17 +15,24 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
-  const userString = localStorage.getItem("user");
-  if (!userString) {
-    console.log("No user found");
-    // router.push("/");
-    return;
-  }
+  // const userString = localStorage.getItem("user");
+  // if (!userString) {
+  //   console.log("No user found");
+  //   // router.push("/");
+  //   return;
+  // }
 
-  const user = JSON.parse(userString);
+  // const user = JSON.parse(userString);
+  // const userRole = user?.data.data.roleName;
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
   const userRole = user?.data.data.roleName;
-
-  console.log(user);
 
   // Check if the user role is not admin
   if (userRole !== "ROLE_ADMIN") {
