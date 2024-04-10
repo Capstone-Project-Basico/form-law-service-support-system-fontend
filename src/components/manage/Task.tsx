@@ -33,12 +33,14 @@ type TasksProps = {
   tasks: TaskType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleUpdateSubmit: (data: any) => void;
 };
 
 const Tasks: React.FC<TasksProps> = ({
   tasks,
   handleDelete,
   restoreDelete,
+  handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
@@ -70,33 +72,6 @@ const Tasks: React.FC<TasksProps> = ({
 
     return filteredPartners.slice(start, end);
   }, [page, filteredPartners]);
-
-  //update
-  const handleUpdateSubmit = async () => {
-    if (!selectedTask) return; // Check if a Task is selected
-
-    // Example: PUT request to update Task details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/updateTask/${selectedTask.id}`,
-        {
-          taskName: selectedTask.taskName,
-          description: selectedTask.description,
-          startDate: selectedTask.startDate,
-          endDate: selectedTask.endDate,
-          processStatus: selectedTask.processStatus,
-        },
-        {
-          headers: authHeader(),
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-      })
-      .catch((error) => {
-        console.error("Failed to update partner", error);
-      });
-  };
 
   return (
     <div>
@@ -226,11 +201,19 @@ const Tasks: React.FC<TasksProps> = ({
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Cập nhật đối tác
+            Cập nhật công việc
           </ModalHeader>
           <ModalBody>
             {selectedTask && (
-              <form onSubmit={handleUpdateSubmit}>
+              <form
+                id="task"
+                onSubmit={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                  handleUpdateSubmit(selectedTask);
+                  onCloseUpdate();
+                }}
+              >
                 <Input
                   type="text"
                   label="Tên công việc"
@@ -243,6 +226,7 @@ const Tasks: React.FC<TasksProps> = ({
                   }
                 />
                 <Input
+                  className="pt-3 pb-3"
                   type="text"
                   label="Mô tả"
                   value={selectedTask.description}
@@ -300,14 +284,7 @@ const Tasks: React.FC<TasksProps> = ({
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                handleUpdateSubmit();
-                onCloseUpdate();
-              }}
-              type="submit"
-            >
+            <Button color="primary" type="submit" form="task">
               Cập nhật
             </Button>
           </ModalFooter>

@@ -147,6 +147,30 @@ const User = () => {
     }
   };
 
+  //update
+  const handleUpdateSubmit = async (selectedUser: any) => {
+    //if (!selectedUser) return; // Check if a partner is selected
+
+    // Example: PUT request to update partner details
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/updateRoleUser/${selectedUser.userId}?roleName=${selectedUser.roleName}`,
+        {
+          roleName: selectedUser.roleName,
+        },
+        {
+          headers: authHeader(),
+        }
+      )
+      .then((response) => {
+        toast.success("Cập nhật thành công");
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.error("Failed to update user", error);
+      });
+  };
+
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -191,6 +215,7 @@ const User = () => {
           users={users}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>
     </div>

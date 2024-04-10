@@ -32,12 +32,14 @@ type ContactsProps = {
   contacts: ContactType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleUpdateSubmit: (data: any) => void;
 };
 
 const Contacts: React.FC<ContactsProps> = ({
   contacts,
   handleDelete,
   restoreDelete,
+  handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContact, setSelectedContact] = useState<ContactType | null>(
@@ -71,34 +73,6 @@ const Contacts: React.FC<ContactsProps> = ({
 
     return filteredContacts.slice(start, end);
   }, [page, filteredContacts]);
-
-  ///update
-  const handleUpdateSubmit = async () => {
-    if (!selectedContact) return; // Check if a contact is selected
-
-    // Example: PUT request to update contact details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}contact/updateContact/${selectedContact.contactId}`,
-        {
-          fullName: selectedContact.fullName,
-          email: selectedContact.email,
-          phoneNum: selectedContact.phoneNum,
-          career: selectedContact.career,
-          city: selectedContact.city,
-          businessTime: selectedContact.businessTime,
-          annualRevenue: selectedContact.annualRevenue,
-          juridical: selectedContact.juridical,
-          status: selectedContact.status,
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-      })
-      .catch((error) => {
-        console.error("Failed to update contact", error);
-      });
-  };
 
   return (
     <div>
@@ -288,7 +262,15 @@ const Contacts: React.FC<ContactsProps> = ({
           </ModalHeader>
           <ModalBody>
             {selectedContact && (
-              <form onSubmit={handleUpdateSubmit}>
+              <form
+                id="contact"
+                onSubmit={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                  handleUpdateSubmit(selectedContact);
+                  onCloseUpdate();
+                }}
+              >
                 <Input
                   type="text"
                   label="Họ và tên"
@@ -332,14 +314,7 @@ const Contacts: React.FC<ContactsProps> = ({
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                handleUpdateSubmit();
-                onCloseUpdate();
-              }}
-              type="submit"
-            >
+            <Button color="primary" type="submit" form="contact">
               Cập nhật
             </Button>
           </ModalFooter>

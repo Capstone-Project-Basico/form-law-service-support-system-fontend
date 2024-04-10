@@ -123,6 +123,35 @@ const Contact = () => {
     }
   };
 
+  ///update
+  const handleUpdateSubmit = async (selectedContact: any) => {
+    //if (!selectedContact) return; // Check if a contact is selected
+
+    // Example: PUT request to update contact details
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/updateContact/${selectedContact.contactId}`,
+        {
+          fullName: selectedContact.fullName,
+          email: selectedContact.email,
+          phoneNum: selectedContact.phoneNum,
+          career: selectedContact.career,
+          city: selectedContact.city,
+          businessTime: selectedContact.businessTime,
+          annualRevenue: selectedContact.annualRevenue,
+          juridical: selectedContact.juridical,
+          status: selectedContact.status,
+        }
+      )
+      .then((response) => {
+        toast.success("Cập nhật thành công");
+        fetchContacts();
+      })
+      .catch((error) => {
+        console.error("Failed to update contact", error);
+      });
+  };
+
   // restore
   const restoreDelete = async (contactId: number) => {
     try {
@@ -183,6 +212,7 @@ const Contact = () => {
           contacts={contacts}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>
     </div>

@@ -127,7 +127,7 @@ const Pack = () => {
       <div className="grid grid-cols-2 border-b-2 pb-5">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">Quản lí thông tin</p>
+            <p className="text-black font-bold text-3xl ">Quản lí dịch vụ</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <p className="text-[#FF0004] font-bold text-3xl">Gói dịch vụ</p>

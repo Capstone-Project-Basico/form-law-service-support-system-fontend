@@ -137,6 +137,34 @@ const Task = () => {
     }
   };
 
+  //update
+  const handleUpdateSubmit = async (selectedTask: any) => {
+    //if (!selectedTask) return; // Check if a Task is selected
+
+    // Example: PUT request to update Task details
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}task/updateTask/${selectedTask.id}`,
+        {
+          taskName: selectedTask.taskName,
+          description: selectedTask.description,
+          startDate: selectedTask.startDate,
+          endDate: selectedTask.endDate,
+          processStatus: selectedTask.processStatus,
+        },
+        {
+          headers: authHeader(),
+        }
+      )
+      .then((response) => {
+        toast.success("Cập nhật thành công");
+        fetchTask();
+      })
+      .catch((error) => {
+        console.error("Failed to update partner", error);
+      });
+  };
+
   // restore
   const restoreDelete = async (id: number) => {
     try {
@@ -202,6 +230,7 @@ const Task = () => {
           tasks={task}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>
     </div>

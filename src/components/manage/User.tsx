@@ -33,12 +33,14 @@ type UsersProps = {
   users: UserType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleUpdateSubmit: (data: any) => void;
 };
 
 const Users: React.FC<UsersProps> = ({
   users,
   handleDelete,
   restoreDelete,
+  handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
@@ -70,29 +72,6 @@ const Users: React.FC<UsersProps> = ({
 
     return filteredUsers.slice(start, end);
   }, [page, filteredUsers]);
-
-  //update
-  const handleUpdateSubmit = async () => {
-    if (!selectedUser) return; // Check if a partner is selected
-
-    // Example: PUT request to update partner details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}user/updateRoleUser/${selectedUser.userId}?roleName=${selectedUser.roleName}`,
-        {
-          roleName: selectedUser.roleName,
-        },
-        {
-          headers: authHeader(),
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-      })
-      .catch((error) => {
-        console.error("Failed to update user", error);
-      });
-  };
 
   return (
     <div>
@@ -204,7 +183,15 @@ const Users: React.FC<UsersProps> = ({
           </ModalHeader>
           <ModalBody>
             {selectedUser && (
-              <form onSubmit={handleUpdateSubmit}>
+              <form
+                id="user"
+                onSubmit={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                  handleUpdateSubmit(selectedUser);
+                  onCloseUpdate();
+                }}
+              >
                 <Input
                   type="text"
                   label="Vai trò"
@@ -223,14 +210,7 @@ const Users: React.FC<UsersProps> = ({
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                handleUpdateSubmit();
-                onCloseUpdate();
-              }}
-              type="submit"
-            >
+            <Button color="primary" type="submit" form="user">
               Cập nhật
             </Button>
           </ModalFooter>
