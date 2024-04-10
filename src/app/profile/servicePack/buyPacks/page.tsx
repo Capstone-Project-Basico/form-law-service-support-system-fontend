@@ -4,42 +4,24 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import authHeader from "@/components/authHeader/AuthHeader";
 import { Button } from "@nextui-org/react";
-import { PackType } from "@/constants/types/homeType";
-import Link from "next/link";
+import { Pack } from "@/constants/types/homeType";
 
-interface UserLocal {
-  data: {
-    data: {
-      userId: string;
-    };
-  };
-}
-const ServicePack = () => {
-  const [purchasedPacks, setPurchasedPack] = useState<PackType[]>([]);
-
-  const getUserFromStorage = () => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
-      return storedUser ? JSON.parse(storedUser) : null;
-    }
-  };
-
-  const user: UserLocal | null = getUserFromStorage();
-  const userId = user?.data.data.userId;
+const BuyPacks = () => {
+  const [servicePacks, setServicePacks] = useState<Pack[]>([]);
 
   useEffect(() => {
-    getAllPurchasedPacks();
+    getAllPacks();
   });
 
-  const getAllPurchasedPacks = async () => {
+  const getAllPacks = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}orderPackageTemplate/getAllCheckOutPackageTemplateDetailByUser/${userId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`,
         {
           headers: authHeader(),
         }
       );
-      setPurchasedPack(response.data.data);
+      setServicePacks(response.data.data);
     } catch (error) {}
   };
   return (
@@ -58,11 +40,8 @@ const ServicePack = () => {
           các gói dịch vụ với các đặc quyền theo từng gói
         </p>
       </div>
-      <Link href="/profile/servicePack/buyPacks">
-        <h1 className="text-[#FF0004]">Mua gói tại đây</h1>
-      </Link>
-      <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5">
-        {purchasedPacks.map((servicePack) => (
+      <div className="grid grid-cols-3 justify-center items-center mt-10">
+        {servicePacks.map((servicePack) => (
           <div
             key={servicePack.packageId}
             className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md"
@@ -82,4 +61,4 @@ const ServicePack = () => {
   );
 };
 
-export default ServicePack;
+export default BuyPacks;
