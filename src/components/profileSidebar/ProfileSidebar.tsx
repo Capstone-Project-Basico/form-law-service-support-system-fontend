@@ -5,7 +5,7 @@ import { Button, Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import Image from "next/image";
 import { profileSidebar } from "@/lib/profileSidebar";
 import Link from "next/link";
-import { ProfileSidebarItem, User } from "@/constants/types/homeType";
+import { ProfileSidebarItem, UserType } from "@/constants/types/homeType";
 import { usePathname } from "next/navigation";
 import axios from "axios";
 
@@ -18,7 +18,7 @@ interface UserLocal {
 }
 
 const ProfileSidebar = () => {
-  const [profileData, setProfileData] = useState<User>();
+  const [profileData, setProfileData] = useState<UserType>();
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
