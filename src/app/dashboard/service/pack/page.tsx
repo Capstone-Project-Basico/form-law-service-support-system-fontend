@@ -157,7 +157,7 @@ const Pack = () => {
   }, [page, filteredPacks]);
 
   //delete
-  const handleDelete = async (packageId: number) => {
+  const handleDelete = async (packageId: string) => {
     // const isConfirmed = window.confirm(
     //   "Bạn có chắc muốn xóa đối tác này không?"
     // );
