@@ -36,12 +36,14 @@ type PostsProps = {
   posts: PostType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleUpdateSubmit: (data: any) => void;
 };
 
 const Posts: React.FC<PostsProps> = ({
   posts,
   handleDelete,
   restoreDelete,
+  handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
@@ -63,7 +65,7 @@ const Posts: React.FC<PostsProps> = ({
   };
   // Filter post based on search title
   const filteredPosts = posts.filter((post) =>
-    post.content.toLowerCase().includes(searchTerm.toLowerCase())
+    post.cateName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   //pagination
@@ -119,15 +121,19 @@ const Posts: React.FC<PostsProps> = ({
       >
         <TableHeader className="">
           <TableColumn className=" bg-[#FF0004] text-white">
+            Tên bài viết
+          </TableColumn>
+          {/* <TableColumn className=" bg-[#FF0004] text-white">
             Nôi dung
-          </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn>
+          </TableColumn> */}
+
           <TableColumn className=" bg-[#FF0004] text-white">
             Người tạo
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">Loại</TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Trạng thái
+          </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -135,14 +141,16 @@ const Posts: React.FC<PostsProps> = ({
         <TableBody>
           {items.map((post, index) => (
             <TableRow key={index}>
-              <TableCell>{post.content}</TableCell>
+              <TableCell>{post.title}</TableCell>
+              {/* <TableCell>{post.content}</TableCell> */}
+
+              <TableCell>{post.userName}</TableCell>
+              <TableCell>{post.cateName}</TableCell>
               <TableCell>
                 <span style={{ color: post.deleted ? "red" : "green" }}>
                   {post.deleted ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
               </TableCell>
-              <TableCell>{post.userName}</TableCell>
-              <TableCell>{post.cateName}</TableCell>
               {post.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
@@ -161,6 +169,15 @@ const Posts: React.FC<PostsProps> = ({
                   >
                     Xóa
                   </Button>
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedPost(post);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
                 </TableCell>
               ) : (
                 <TableCell className="flex gap-2 items-center justify-center">
@@ -173,6 +190,15 @@ const Posts: React.FC<PostsProps> = ({
                   >
                     Khôi phục
                   </Button>
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedPost(post);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
                 </TableCell>
               )}
             </TableRow>
@@ -180,7 +206,56 @@ const Posts: React.FC<PostsProps> = ({
         </TableBody>
       </Table>
 
-      {/* update modal
+      {/* detail modal */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent
+          style={{ width: "90%", maxWidth: "8000px", height: "90%" }}
+        >
+          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+          <ModalBody
+            style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
+          >
+            {selectedPost && (
+              <div className="flex flex-col gap-10">
+                <div className="flex flex-row ">
+                  <p className="w-40">Tên bài viết</p>
+                  <p className="pl-10">{selectedPost.title}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Người tạo</p>
+                  <p className="pl-10">{selectedPost.userName}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Loại</p>
+                  <p className="pl-10">{selectedPost.cateName}</p>
+                </div>
+
+                <div className="flex flex-col ">
+                  <p className="w-40 pb-3">Nội dung:</p>
+                  <div
+                    className="pl-10 content-div border-2 "
+                    dangerouslySetInnerHTML={{
+                      __html: selectedPost.content || "",
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              className="button-danger bg-[#FF0004] text-white"
+              onPress={onClose}
+            >
+              Đóng
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
@@ -200,7 +275,7 @@ const Posts: React.FC<PostsProps> = ({
                 <Input
                   className="py-2"
                   type="text"
-                  label="Họ và tên"
+                  label="Tên bài viết"
                   value={selectedPost.title}
                   onChange={(e) =>
                     setSelectedPost({
@@ -221,7 +296,7 @@ const Posts: React.FC<PostsProps> = ({
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal> */}
+      </Modal>
     </div>
   );
 };

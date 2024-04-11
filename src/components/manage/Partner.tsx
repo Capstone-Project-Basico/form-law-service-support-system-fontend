@@ -254,7 +254,7 @@ const Partners: React.FC<PartnersProps> = ({
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Cập nhật đối tác
+            Cập nhật liên hệ
           </ModalHeader>
           <ModalBody>
             {selectedPartner && (
