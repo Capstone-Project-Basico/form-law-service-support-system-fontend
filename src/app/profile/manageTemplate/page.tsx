@@ -15,6 +15,7 @@ import {
 import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 interface UserLocal {
   data: {
     data: {
@@ -23,6 +24,7 @@ interface UserLocal {
   };
 }
 const ManageTemplate = () => {
+  const router = useRouter();
   const [templates, setTemplates] = useState<Template[]>([]);
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -95,6 +97,11 @@ const ManageTemplate = () => {
                   <Button
                     className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
                     variant="faded"
+                    onClick={() =>
+                      router.push(
+                        `/profile/manageTemplate/use-template/${template.id}`
+                      )
+                    }
                   >
                     <FontAwesomeIcon
                       icon={faPenToSquare}
