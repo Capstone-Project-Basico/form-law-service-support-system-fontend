@@ -248,7 +248,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
         </TableBody>
       </Table>
 
-      {/* update modal */}
+      {/* detail modal */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent
           style={{ width: "50%", maxWidth: "500px", height: "70%" }}
@@ -352,7 +352,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Cập nhật liên hệ
+            Cập nhật tuyển dụng
           </ModalHeader>
           <ModalBody>
             {selectedRecruitment && (

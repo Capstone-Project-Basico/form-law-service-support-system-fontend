@@ -187,6 +187,32 @@ const Post = () => {
     }
   };
 
+  ///update
+  const handleUpdateSubmit = async (selectedPost: any) => {
+    // if (!selectedRecruitment) return; // Check if a Recruitment is selected
+    // Example: PUT request to update Recruitment details
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}post/updatePost/${selectedPost.id}`,
+        {
+          title: selectedPost.title,
+          content: selectedPost.content,
+          userId: selectedPost.userId,
+          cateId: selectedPost.cateId,
+        },
+        {
+          headers: authHeader(),
+        }
+      )
+      .then((response) => {
+        toast.success("Cập nhật thành công");
+        fetchPosts();
+      })
+      .catch((error) => {
+        console.error("Failed to update post", error);
+      });
+  };
+
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -232,6 +258,7 @@ const Post = () => {
                 <ModalHeader className="flex flex-col gap-1">
                   Thêm bài viết mới
                 </ModalHeader>
+
                 <ModalBody
                   style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
                 >
@@ -339,6 +366,7 @@ const Post = () => {
           posts={post}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>
     </div>
