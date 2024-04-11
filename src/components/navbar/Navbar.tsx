@@ -84,6 +84,7 @@ const Navbar = () => {
     getUserById();
   }, [userId]);
 
+  console.log("pathname:", pathname.includes("/practices"));
   return (
     <div className={styles.container}>
       <MyNavbar
@@ -115,21 +116,22 @@ const Navbar = () => {
               radius="none"
             >
               <DropdownTrigger>
-                <div
-                  // href="/practices"
-                  className={`link ${
-                    pathname === "/practices" ? "isActive" : ""
-                  }`}
-                  color="secondary"
+                <Button
+                  className={styles.hoverButton}
+                  radius="none"
+                  onClick={() => {
+                    router.push("/practices");
+                  }}
                 >
-                  <Button
-                    className={styles.hoverButton}
-                    radius="none"
-                    onClick={() => router.push("/practices")}
+                  <div
+                    // href="/practices"
+                    className={`link ${
+                      pathname.includes("/practices") ? "text-secondary" : ""
+                    }`}
                   >
                     DỊCH VỤ
-                  </Button>
-                </div>
+                  </div>
+                </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
                 {practices.map((practice) => (
@@ -235,7 +237,7 @@ const Navbar = () => {
             );
           })}
 
-          {/* <NavbarItem>
+          <NavbarItem>
             <a href="/contactUs">
               <Button className="red-hover-button bg-white" radius="none">
                 LIÊN HỆ
@@ -248,7 +250,7 @@ const Navbar = () => {
                 TUYỂN DỤNG
               </Button>
             </a>
-          </NavbarItem> */}
+          </NavbarItem>
         </NavbarContent>
 
         {/* login */}

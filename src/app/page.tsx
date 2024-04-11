@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import Carousel from "../components/home/Carousel";
 import Divine from "@/components/home/Divine";

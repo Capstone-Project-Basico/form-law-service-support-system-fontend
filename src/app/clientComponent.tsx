@@ -1,10 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import { Providers } from "./providers";
+import dynamic from "next/dynamic";
 
+const Navbar = dynamic(() => import("@/components/navbar/Navbar"), {
+  ssr: false,
+});
 export default function ExampleClientComponent({
   children,
 }: {
