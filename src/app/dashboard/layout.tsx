@@ -35,9 +35,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const userRole = user?.data.data.roleName;
 
   // Check if the user role is not admin
+
+  useEffect(() => {
+    if (userRole !== "ROLE_ADMIN") {
+      // Redirect non-admin users to the home page or login page
+      router.push("/");
+    }
+  }, [userRole]);
+
   if (userRole !== "ROLE_ADMIN") {
-    // Redirect non-admin users to the home page or login page
-    router.push("/");
     return null;
   }
 

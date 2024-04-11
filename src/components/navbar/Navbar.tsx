@@ -237,7 +237,7 @@ const Navbar = () => {
             );
           })}
 
-          <NavbarItem>
+          {/* <NavbarItem>
             <a href="/contactUs">
               <Button className="red-hover-button bg-white" radius="none">
                 LIÊN HỆ
@@ -250,7 +250,7 @@ const Navbar = () => {
                 TUYỂN DỤNG
               </Button>
             </a>
-          </NavbarItem>
+          </NavbarItem> */}
         </NavbarContent>
 
         {/* login */}
