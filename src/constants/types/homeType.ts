@@ -88,7 +88,7 @@ export type PostType = {
   content: string;
   userName: string;
   cateName: string;
-  delete: boolean;
+  deleted: boolean;
   cateId: string;
   userId: string;
   postId: string;
