@@ -250,53 +250,98 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
 
       {/* update modal */}
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalContent>
+        <ModalContent
+          style={{ width: "50%", maxWidth: "500px", height: "70%" }}
+        >
           <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
-          <ModalBody>
+          <ModalBody
+            style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
+          >
             {selectedRecruitment && (
-              <div className="flex flex-row gap-10">
-                {/* <p>{selectedRecruitment.fullName}</p> */}
-                <div className="">
-                  <p className="py-2">Họ và tên</p>
-                  <p>Ngày sinh</p>
-                  <p className="py-2">Quê quán</p>
-                  <p>Giới tính</p>
-                  <p className="py-2">Tình trạng hôn nhân</p>
-                  <p>SĐT</p>
-                  <p className="py-2">Email</p>
-                  <p>Vị trí</p>
-                  <p className="py-2">Kinh nghiệm</p>
-                  <p>Lĩnh vực</p>
-                  <p className="py-2">Tốt nghiệp</p>
-                  <p>Mục tiêu</p>
-                  <p className="py-2">Chổ làm việc</p>
-                  <p>CCCD hoặc CMND</p>
+              <div className="flex flex-col gap-10">
+                <div className="flex flex-row ">
+                  <p className="w-40">Họ và tên</p>
+                  <p className="pl-10">{selectedRecruitment.fullName}</p>
                 </div>
-                <div>
-                  <p className="py-2">{selectedRecruitment.fullName}</p>
-                  {selectedRecruitment.dateOfBirth
-                    ? new Date(
-                        selectedRecruitment.dateOfBirth
-                      ).toLocaleDateString()
-                    : "N/A"}
-                  <p className="py-2">{selectedRecruitment.homeTown}</p>
-                  <p>{selectedRecruitment.gender}</p>
-                  <p className="py-2">{selectedRecruitment.maritalStatus}</p>
-                  <p>{selectedRecruitment.phoneNum}</p>
-                  <p className="py-2">{selectedRecruitment.email}</p>
-                  <p>{selectedRecruitment.position}</p>
-                  <p className="py-2">{selectedRecruitment.exp}</p>
-                  <p>{selectedRecruitment.field}</p>
-                  <p className="py-2">{selectedRecruitment.graduate}</p>
-                  <p>{selectedRecruitment.target}</p>
-                  <p className="py-2">{selectedRecruitment.workPlace}</p>
-                  <p>{selectedRecruitment.id_number}</p>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Ngày sinh</p>
+                  <p className="pl-10">
+                    {selectedRecruitment.dateOfBirth
+                      ? new Date(
+                          selectedRecruitment.dateOfBirth
+                        ).toLocaleDateString()
+                      : "N/A"}
+                  </p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Quê quán</p>
+                  <p className="pl-10">{selectedRecruitment.homeTown}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Giới tính</p>
+                  <p className="pl-10">{selectedRecruitment.gender}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Tình trạng hôn nhân</p>
+                  <p className="pl-10">{selectedRecruitment.maritalStatus}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">SĐT</p>
+                  <p className="pl-10">{selectedRecruitment.phoneNum}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Email</p>
+                  <p className="pl-10">{selectedRecruitment.email}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Vị trí</p>
+                  <p className="pl-10">{selectedRecruitment.position}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Kinh nghiệm</p>
+                  <p className="pl-10">{selectedRecruitment.exp}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Lĩnh vực</p>
+                  <p className="pl-10">{selectedRecruitment.field}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Tốt nghiệp</p>
+                  <p className="pl-10">{selectedRecruitment.graduate}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Mục tiêu</p>
+                  <p className="pl-10">{selectedRecruitment.target}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Chỗ làm việc</p>
+                  <p className="pl-10">{selectedRecruitment.workPlace}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">CCCD hoặc CMND</p>
+                  <p className="pl-10">{selectedRecruitment.id_number}</p>
                 </div>
               </div>
             )}
           </ModalBody>
           <ModalFooter>
-            <Button color="danger" variant="light" onPress={onClose}>
+            <Button
+              className="button-danger bg-[#FF0004] text-white"
+              onPress={onClose}
+            >
               Đóng
             </Button>
           </ModalFooter>

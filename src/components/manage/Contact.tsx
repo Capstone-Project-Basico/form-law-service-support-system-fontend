@@ -217,37 +217,58 @@ const Contacts: React.FC<ContactsProps> = ({
 
       {/* update modal */}
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+        <ModalContent style={{ width: "50%", maxWidth: "500px" }}>
+          <ModalHeader className="flex flex-col gap-1 ">Chi tiết</ModalHeader>
           <ModalBody>
             {selectedContact && (
-              <div className="flex flex-row gap-10">
-                {/* <p>{selectedContact.fullName}</p> */}
-                <div>
-                  <p>Họ và tên</p>
-                  <p className="py-2">Email</p>
-                  <p>SĐT</p>
-                  <p className="py-2">Ngành</p>
-                  <p>Thành phố</p>
-                  <p className="py-2">Thời gian kinh doanh</p>
-                  <p>Doanh thu hàng năm </p>
-                  <p className="py-2">Cần hỗ trợ pháp lý nào</p>
+              <div className="flex flex-col gap-10">
+                <div className="flex flex-row ">
+                  <p className="w-40">Họ và tên</p>
+                  <p className="pl-10">{selectedContact.fullName}</p>
                 </div>
-                <div>
-                  <p>{selectedContact.fullName}</p>
-                  <p className="py-2">{selectedContact.email}</p>
-                  <p>{selectedContact.phoneNum}</p>
-                  <p className="py-2">{selectedContact.career}</p>
-                  <p>{selectedContact.city}</p>
-                  <p className="py-2">{selectedContact.businessTime}</p>
-                  <p>{selectedContact.annualRevenue}</p>
-                  <p className="py-2">{selectedContact.juridical}</p>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Email</p>
+                  <p className="pl-10">{selectedContact.email}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">SĐT</p>
+                  <p className="pl-10">{selectedContact.phoneNum}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Kinh doanh ngành</p>
+                  <p className="pl-10">{selectedContact.career}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Thành phố</p>
+                  <p className="pl-10">{selectedContact.city}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Thời gian kinh doanh</p>
+                  <p className="pl-10">{selectedContact.businessTime}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Doanh thu hàng năm</p>
+                  <p className="pl-10">{selectedContact.annualRevenue}</p>
+                </div>
+
+                <div className="flex flex-row ">
+                  <p className="w-40">Cần hỗ trợ pháp lý nào</p>
+                  <p className="pl-10">{selectedContact.juridical}</p>
                 </div>
               </div>
             )}
           </ModalBody>
           <ModalFooter>
-            <Button color="danger" variant="light" onPress={onClose}>
+            <Button
+              className="button-danger bg-[#FF0004] text-white"
+              onPress={onClose}
+            >
               Đóng
             </Button>
           </ModalFooter>

@@ -134,7 +134,8 @@ const Post = () => {
         headers: authHeader(),
       })
       .then((response) => {
-        toast.success("Khôi phục thành công");
+        toast.success("Tạo thành công");
+        fetchPosts();
       });
   };
 
@@ -177,13 +178,15 @@ const Post = () => {
           Tạo mới
         </Button>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-          <ModalContent className="w-[900px] h-[400px] max-w-none">
+          <ModalContent className="w-[12000px] h-[900px] max-w-none">
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">
                   Thêm bài viết mới
                 </ModalHeader>
-                <ModalBody>
+                <ModalBody
+                  style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
+                >
                   <form onSubmit={handleSubmit}>
                     <Select
                       // items={categories}
@@ -248,6 +251,7 @@ const Post = () => {
           </ModalContent>
         </Modal>
       </div>
+
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
@@ -260,19 +264,19 @@ const Post = () => {
             TẤT CẢ
           </Button>
         </div>
-        <div>
+        {/* <div>
           <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
             CHỜ DUYỆT
           </Button>
-        </div>
+        </div> */}
         <div>
           <Button
             className={`bg-white ${
-              tabs === 3 &&
+              tabs === 2 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
             radius="none"
-            onClick={() => setTabs(3)}
+            onClick={() => setTabs(2)}
           >
             ĐÃ XÓA
           </Button>
@@ -334,13 +338,13 @@ const Post = () => {
             <TableRow key={index}>
               <TableCell>{post.content}</TableCell>
               <TableCell>
-                <span style={{ color: post.delete ? "red" : "green" }}>
-                  {post.delete ? "Không sử dụng" : "Đang hoạt động"}
+                <span style={{ color: post.deleted ? "red" : "green" }}>
+                  {post.deleted ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
               </TableCell>
               <TableCell>{post.userName}</TableCell>
               <TableCell>{post.cateName}</TableCell>
-              {post.delete === false ? (
+              {post.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-blue-600 text-white"
