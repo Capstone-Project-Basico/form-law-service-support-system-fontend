@@ -30,14 +30,18 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { PackType, PostType } from "@/constants/types/homeType";
+import { PackType } from "@/constants/types/homeType";
 import authHeader from "@/components/authHeader/AuthHeader";
+import { ToastContainer, toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const Pack = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
   const [packs, setPacks] = useState<PackType[]>([]);
-  const [posts, setPosts] = useState<PostType[]>([]);
+  const [templates, setTemplates] = React.useState<FormTemplateVersion[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedPartner, setSelectedPartner] = useState<PackType | null>(null);
 
   const {
     isOpen: isOpenUpdate,
@@ -49,14 +53,27 @@ const Pack = () => {
   const [packageName, setPackageName] = useState("");
   const [price, setPrice] = useState<Number | undefined>();
   const [description, setDescription] = useState("");
-  const [listItem, setListItem] = useState([]);
+  const [listItem, setListItem] = useState<
+    { itemId: string; quantity: number }[]
+  >([]);
+
+  const handleSelectionChange = (selected: any) => {
+    console.log(selected.target.value);
+    const selectedIds = selected.target.value.split(",");
+    const newItems = selectedIds.map((id: number) => ({
+      itemId: id,
+      quantity: 5, // Set the quantity to 5 for each selected template
+    }));
+
+    setListItem(newItems);
+  };
 
   let newPack = {
     packageName,
     price,
+    description,
+    listItem,
   };
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPartner, setSelectedPartner] = useState<PackType | null>(null);
 
   useEffect(() => {
     fetchPosts();
@@ -89,13 +106,13 @@ const Pack = () => {
     }
   };
 
-  //get all posts
+  //get all templates
   const fetchPosts = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/getAllPosts`
+        `${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion`
       );
-      setPosts(response.data.data);
+      setTemplates(response.data.data);
     } catch (error) {}
   };
 
@@ -122,7 +139,7 @@ const Pack = () => {
     setSearchTerm(event.target.value);
   };
   // Filter partners based on search term
-  const filteredPartners = packs.filter((packageName) =>
+  const filteredPacks = packs.filter((packageName) =>
     packageName.packageName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -130,17 +147,78 @@ const Pack = () => {
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 5;
 
-  const pages = Math.ceil(filteredPartners.length / rowsPerPage);
+  const pages = Math.ceil(filteredPacks.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return filteredPartners.slice(start, end);
-  }, [page, filteredPartners]);
+    return filteredPacks.slice(start, end);
+  }, [page, filteredPacks]);
 
+  //delete
+  const handleDelete = async (packageId: string) => {
+    // const isConfirmed = window.confirm(
+    //   "Bạn có chắc muốn xóa đối tác này không?"
+    // );
+    // if (isConfirmed) {
+    //   try {
+    //     axios
+    //       .delete(
+    //         `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${packageId}`
+    //       )
+    //       .then(() => {
+    //         toast.success("Xóa thành công");
+    //         fetchPacks();
+    //       }),
+    //       {
+    //         headers: authHeader(),
+    //       };
+
+    //     // setPartners((prevPartners) =>
+    //     //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
+    //     // );
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+    Swal.fire({
+      title: "Bạn có muốn xóa gói này không?",
+      showDenyButton: true,
+      // showCancelButton: true,
+      confirmButtonText: "Có",
+      denyButtonText: `Không`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        try {
+          axios
+            .delete(
+              `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${packageId}`
+            )
+            .then(() => {
+              toast.success("Xóa thành công");
+              fetchPacks();
+            }),
+            {
+              headers: authHeader(),
+            };
+
+          // setPartners((prevPartners) =>
+          //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
+          // );
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Bạn đã hủy xóa", "", "error");
+        return;
+      }
+    });
+  };
   return (
     <div className="w-full mt-5 ml-5 mr-5">
+      <ToastContainer />
       <div className="grid grid-cols-2 border-b-2 pb-5">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
@@ -195,14 +273,15 @@ const Pack = () => {
                         onChange={(e) => setDescription(e.target.value)}
                       />
                       <Select
-                        label="Favorite Animal"
-                        placeholder="Select an animal"
+                        placeholder="Chọn biểu mẫu"
                         selectionMode="multiple"
-                        className="max-w-xs"
+                        className=""
+                        value={listItem.map((item) => item.itemId)}
+                        onChange={(e) => handleSelectionChange(e)}
                       >
-                        {posts.map((post, index) => (
-                          <SelectItem key={index} value={post.postId}>
-                            {post.title}
+                        {templates.map((template) => (
+                          <SelectItem key={template.id} value={template.id}>
+                            {template.message}
                           </SelectItem>
                         ))}
                       </Select>
@@ -284,22 +363,22 @@ const Pack = () => {
           </TableColumn>
         </TableHeader>
         <TableBody>
-          {items.map((partner, index) => (
+          {items.map((pack, index) => (
             <TableRow key={index}>
-              <TableCell>{partner.packageName}</TableCell>
-              <TableCell>{partner.price}</TableCell>
-              <TableCell>{partner.description}</TableCell>
+              <TableCell>{pack.packageName}</TableCell>
+              <TableCell>{pack.price}</TableCell>
+              <TableCell>{pack.description}</TableCell>
               <TableCell>
-                <span style={{ color: partner.deleted ? "red" : "green" }}>
-                  {partner.deleted ? "Không sử dụng" : "Đang hoạt động"}
+                <span style={{ color: pack.deleted ? "red" : "green" }}>
+                  {pack.deleted ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
               </TableCell>
-              {partner.deleted === false ? (
+              {pack.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-blue-600 text-white"
                     onPress={() => {
-                      setSelectedPartner(partner);
+                      setSelectedPartner(pack);
                       onOpenUpdate();
                     }}
                   >
@@ -308,7 +387,7 @@ const Pack = () => {
 
                   <Button
                     className="bg-[#FF0004] text-white"
-                    // onClick={() => handleDelete(partner.partnerId)}
+                    onClick={() => handleDelete(pack.packageId)}
                   >
                     Xóa
                   </Button>
