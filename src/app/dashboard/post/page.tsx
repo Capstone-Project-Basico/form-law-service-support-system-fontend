@@ -37,6 +37,8 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import authHeader from "@/components/authHeader/AuthHeader";
 import dynamic from "next/dynamic";
+import Posts from "@/components/manage/Post";
+
 const EditorWithNoSSR = dynamic(() => import("@/components/Editor"), {
   ssr: false,
 });
@@ -51,11 +53,12 @@ interface UserLocal {
 
 const Post = () => {
   const [tabs, setTabs] = useState(1);
-  const [posts, setPosts] = useState<PostType[]>([]);
+  const [post, setPost] = useState<PostType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [categories, setCategories] = useState<Category[]>([]);
   const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
   const [cateId, setCateId] = useState<number | undefined>();
   // const [newPost, setNewPost] = useState<Category>();
   const getUserFromStorage = () => {
@@ -68,6 +71,7 @@ const Post = () => {
   const user: UserLocal | null = getUserFromStorage();
   const userId = user?.data.data.userId;
   const newPost = {
+    title,
     content,
     cateId,
     userId,
@@ -79,13 +83,11 @@ const Post = () => {
         fetchPosts();
         break;
       case 2:
-        console.log("dang cho duyet ne");
-        break;
-      case 3:
         fetchDeletedPosts();
         break;
+
       default:
-        // fetchPartners();
+        fetchPosts();
         break;
     }
     fetchCategories();
@@ -97,7 +99,7 @@ const Post = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}post/getAllPosts`
       );
-      setPosts(response.data.data);
+      setPost(response.data.data);
     } catch (error) {}
   };
 
@@ -107,8 +109,7 @@ const Post = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}post/getAllDeletedPosts`
       );
-      setPosts(response.data.data);
-      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+      setPost(response.data.data);
     } catch (error) {
       console.error(error);
     }
@@ -127,7 +128,7 @@ const Post = () => {
     }
   };
 
-  //add new category
+  //add new post
   const handleSubmit = async () => {
     axios
       .post(`${process.env.NEXT_PUBLIC_BASE_API}post/createPost`, newPost, {
@@ -139,12 +140,59 @@ const Post = () => {
       });
   };
 
+  //delete
+  const handleDelete = async (postId: number) => {
+    const isConfirmed = window.confirm(
+      "Bạn có chắc muốn xóa bài viết này không?"
+    );
+    if (isConfirmed) {
+      try {
+        axios
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}post/deletePost/${postId}`,
+            {
+              headers: authHeader(),
+            }
+          )
+          .then(() => {
+            toast.success("Xóa thành công");
+            fetchPosts();
+          }),
+          {
+            headers: authHeader(),
+          };
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  // restore
+  const restoreDelete = async (postId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}post/restorePost/${postId}`,
+          {},
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Khôi phục thành công");
+          fetchDeletedPosts();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
   // Filter partners based on search term
-  const filteredPartners = posts.filter((post) =>
+  const filteredPosts = post.filter((post) =>
     post.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -152,14 +200,14 @@ const Post = () => {
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 4;
 
-  const pages = Math.ceil(filteredPartners.length / rowsPerPage);
+  const pages = Math.ceil(filteredPosts.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return filteredPartners.slice(start, end);
-  }, [page, filteredPartners]);
+    return filteredPosts.slice(start, end);
+  }, [page, filteredPosts]);
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -188,6 +236,13 @@ const Post = () => {
                   style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
                 >
                   <form onSubmit={handleSubmit}>
+                    <Input
+                      className="font-bold pb-5"
+                      type="text"
+                      label="Tên bài viết"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
                     <Select
                       // items={categories}
                       label="Chọn loại cho bài viết"
@@ -264,11 +319,7 @@ const Post = () => {
             TẤT CẢ
           </Button>
         </div>
-        {/* <div>
-          <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
-            CHỜ DUYỆT
-          </Button>
-        </div> */}
+
         <div>
           <Button
             className={`bg-white ${
@@ -284,99 +335,12 @@ const Post = () => {
       </div>
 
       <div>
-        <div className="my-10 flex flex-row">
-          <Input
-            classNames={{
-              base: "w-full sm:max-w-[10rem] h-10",
-              mainWrapper: "h-full w-96",
-              input: "text-small",
-              inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20 ",
-            }}
-            placeholder="Từ khóa tìm kiếm .."
-            size="sm"
-            type="search"
-            radius="none"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        </div>
+        <Posts
+          posts={post}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
+        />
       </div>
-      <Table
-        aria-label="Example static collection table"
-        bottomContent={
-          <div className="flex w-full justify-center">
-            <Pagination
-              isCompact
-              showControls
-              showShadow
-              color="secondary"
-              page={page}
-              total={pages}
-              onChange={(page) => setPage(page)}
-            />
-          </div>
-        }
-      >
-        <TableHeader className="">
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Tên đối tác
-          </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Người tạo
-          </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">Loại</TableColumn>
-          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
-            Tương tác
-          </TableColumn>
-        </TableHeader>
-        <TableBody>
-          {items.map((post, index) => (
-            <TableRow key={index}>
-              <TableCell>{post.content}</TableCell>
-              <TableCell>
-                <span style={{ color: post.deleted ? "red" : "green" }}>
-                  {post.deleted ? "Không sử dụng" : "Đang hoạt động"}
-                </span>
-              </TableCell>
-              <TableCell>{post.userName}</TableCell>
-              <TableCell>{post.cateName}</TableCell>
-              {post.deleted === false ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    // onPress={() => {
-                    //   setSelectedPartner(partner);
-                    //   onOpenUpdate();
-                    // }}
-                  >
-                    Cập nhật
-                  </Button>
-
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    // onClick={() => handleDelete(partner.partnerId)}
-                  >
-                    Xóa
-                  </Button>
-                </TableCell>
-              ) : (
-                <TableCell className="flex items-center justify-center">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    // onClick={() => restoreDelete(partner.partnerId)}
-                  >
-                    Khôi phục
-                  </Button>
-                </TableCell>
-              )}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
     </div>
   );
 };

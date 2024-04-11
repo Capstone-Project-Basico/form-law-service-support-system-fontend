@@ -91,7 +91,7 @@ export type PostType = {
   deleted: boolean;
   cateId: string;
   userId: string;
-  postId: string;
+  postId: number;
 };
 
 export type PostCategory = {
