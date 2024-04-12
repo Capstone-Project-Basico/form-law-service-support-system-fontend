@@ -209,6 +209,7 @@ const Post = () => {
         fetchPosts();
       })
       .catch((error) => {
+        toast.error("Thất bại, vui lòng điền đầy đủ thông tin");
         console.error("Failed to update post", error);
       });
   };
@@ -367,6 +368,7 @@ const Post = () => {
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
           handleUpdateSubmit={handleUpdateSubmit}
+          categories={categories}
         />
       </div>
     </div>

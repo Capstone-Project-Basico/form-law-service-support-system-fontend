@@ -22,21 +22,29 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { PostType } from "@/constants/types/homeType";
+import { Category, PostType } from "@/constants/types/homeType";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
+import dynamic from "next/dynamic";
+
+const EditorWithNoSSR = dynamic(() => import("@/components/Editor"), {
+  ssr: false,
+});
 
 type PostsProps = {
   posts: PostType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
+  categories: Category[];
 };
 
 const Posts: React.FC<PostsProps> = ({
@@ -44,6 +52,7 @@ const Posts: React.FC<PostsProps> = ({
   handleDelete,
   restoreDelete,
   handleUpdateSubmit,
+  categories,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
@@ -65,7 +74,7 @@ const Posts: React.FC<PostsProps> = ({
   };
   // Filter post based on search title
   const filteredPosts = posts.filter((post) =>
-    post.cateName.toLowerCase().includes(searchTerm.toLowerCase())
+    (post.title || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   //pagination
@@ -141,7 +150,13 @@ const Posts: React.FC<PostsProps> = ({
         <TableBody>
           {items.map((post, index) => (
             <TableRow key={index}>
-              <TableCell>{post.title}</TableCell>
+              <TableCell>
+                {post.title ? (
+                  post.title
+                ) : (
+                  <p className="text-[#FF0004]">Bài viết này chưa có tên</p>
+                )}
+              </TableCell>
               {/* <TableCell>{post.content}</TableCell> */}
 
               <TableCell>{post.userName}</TableCell>
@@ -157,6 +172,8 @@ const Posts: React.FC<PostsProps> = ({
                     className="bg-blue-600 text-white"
                     onPress={() => {
                       setSelectedPost(post);
+                      console.log(post);
+
                       onOpenUpdate();
                     }}
                   >
@@ -207,33 +224,35 @@ const Posts: React.FC<PostsProps> = ({
       </Table>
 
       {/* detail modal */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} hideCloseButton>
         <ModalContent
           style={{ width: "90%", maxWidth: "8000px", height: "90%" }}
         >
-          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1 font-bold bg-[#FF0004] mb-5">
+            Chi tiết
+          </ModalHeader>
           <ModalBody
             style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
           >
             {selectedPost && (
               <div className="flex flex-col gap-10">
                 <div className="flex flex-row ">
-                  <p className="w-40">Tên bài viết</p>
+                  <p className="w-40 font-semibold">Tên bài viết:</p>
                   <p className="pl-10">{selectedPost.title}</p>
                 </div>
 
                 <div className="flex flex-row ">
-                  <p className="w-40">Người tạo</p>
+                  <p className="w-40 font-semibold">Người tạo:</p>
                   <p className="pl-10">{selectedPost.userName}</p>
                 </div>
 
                 <div className="flex flex-row ">
-                  <p className="w-40">Loại</p>
+                  <p className="w-40 font-semibold">Loại:</p>
                   <p className="pl-10">{selectedPost.cateName}</p>
                 </div>
 
                 <div className="flex flex-col ">
-                  <p className="w-40 pb-3">Nội dung:</p>
+                  <p className="w-40 pb-3 font-semibold">Nội dung:</p>
                   <div
                     className="pl-10 content-div border-2 "
                     dangerouslySetInnerHTML={{
@@ -257,16 +276,17 @@ const Posts: React.FC<PostsProps> = ({
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
-        <ModalContent>
+        <ModalContent className="w-[12000px] h-[900px] max-w-none">
           <ModalHeader className="flex flex-col gap-1">
             Cập nhật liên hệ
           </ModalHeader>
-          <ModalBody>
+          <ModalBody
+            style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
+          >
             {selectedPost && (
               <form
                 id="post"
                 onSubmit={(e) => {
-                  console.log(e);
                   e.preventDefault();
                   handleUpdateSubmit(selectedPost);
                   onCloseUpdate();
@@ -284,6 +304,35 @@ const Posts: React.FC<PostsProps> = ({
                     })
                   }
                 />
+                <Select
+                  label="Chọn loại cho bài viết"
+                  placeholder="Thể loại"
+                  labelPlacement="outside"
+                  className="font-bold"
+                  defaultSelectedKeys={[selectedPost.cateId]}
+                  onChange={(e) =>
+                    setSelectedPost({
+                      ...selectedPost,
+                      cateId: e.target.value,
+                    })
+                  }
+                >
+                  {categories.map((category) => (
+                    <SelectItem key={category.cateId} value={category.cateId}>
+                      {category.cateName}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
+                <EditorWithNoSSR
+                  onChange={(data: string) =>
+                    setSelectedPost({
+                      ...selectedPost,
+                      content: data,
+                    })
+                  }
+                  initialData={selectedPost.content}
+                />
               </form>
             )}
           </ModalBody>
@@ -291,7 +340,7 @@ const Posts: React.FC<PostsProps> = ({
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button color="primary" type="submit" form="recruitment">
+            <Button color="primary" type="submit" form="post">
               Cập nhật
             </Button>
           </ModalFooter>
