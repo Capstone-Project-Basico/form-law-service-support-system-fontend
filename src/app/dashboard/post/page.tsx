@@ -33,12 +33,11 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import authHeader from "@/components/authHeader/AuthHeader";
-import dynamic from "next/dynamic";
 import Posts from "@/components/manage/Post";
 import { Editor } from "primereact/editor";
+import { encodeToBase64 } from "@/utils/base64";
+import Swal from "sweetalert2";
 
 interface UserLocal {
   data: {
@@ -79,7 +78,11 @@ const Post = () => {
       case 1:
         fetchPosts();
         break;
+
       case 2:
+        fetchPendingPosts();
+        break;
+      case 3:
         fetchDeletedPosts();
         break;
 
@@ -90,13 +93,33 @@ const Post = () => {
     fetchCategories();
   }, [tabs]);
 
+  const handleEditorChange = (e: any) => {
+    // Assuming e.htmlValue contains the actual HTML content from the editor
+    const encodedContent = encodeToBase64(e.htmlValue || "");
+    setContent(encodedContent);
+  };
+
   //get all
   const fetchPosts = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/getAllPosts`
+        `${process.env.NEXT_PUBLIC_BASE_API}post/findAllActivePost`
       );
       setPost(response.data.data);
+    } catch (error) {}
+  };
+
+  //get all pending posts
+  const fetchPendingPosts = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}post/getAllPosts`
+      );
+      const filteredPosts = response.data.data.filter(
+        (post: PostType) =>
+          post.processStatus === "CHỜ DUYỆT" && post.deleted === false
+      );
+      setPost(filteredPosts);
     } catch (error) {}
   };
 
@@ -139,29 +162,40 @@ const Post = () => {
 
   //delete
   const handleDelete = async (postId: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa bài viết này không?"
-    );
-    if (isConfirmed) {
-      try {
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}post/deletePost/${postId}`,
+    Swal.fire({
+      title: "Bạn có muốn xóa bài viết này không?",
+      showDenyButton: true,
+      confirmButtonText: "Có",
+      denyButtonText: `Không`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          axios
+            .delete(
+              `${process.env.NEXT_PUBLIC_BASE_API}post/deletePost/${postId}`,
+              {
+                headers: authHeader(),
+              }
+            )
+            .then(() => {
+              toast.success("Xóa thành công");
+              if (tabs === 1) {
+                fetchPosts();
+              } else {
+                fetchPendingPosts();
+              }
+            }),
             {
               headers: authHeader(),
-            }
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-            fetchPosts();
-          }),
-          {
-            headers: authHeader(),
-          };
-      } catch (error) {
-        console.log(error);
+            };
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Bạn đã hủy xóa", "", "error");
+        return;
       }
-    }
+    });
   };
 
   // restore
@@ -184,17 +218,38 @@ const Post = () => {
     }
   };
 
+  // approve
+  const handleApprove = async (postId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}post/approvePost/${postId}`,
+          {},
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Bài viết đã được chấp nhận");
+          fetchPosts();
+          fetchPendingPosts();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   ///update
   const handleUpdateSubmit = async (selectedPost: any) => {
     // if (!selectedRecruitment) return; // Check if a Recruitment is selected
     // Example: PUT request to update Recruitment details
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/updatePost/${selectedPost.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}post/updatePost/${selectedPost.postId}`,
         {
           title: selectedPost.title,
           content: selectedPost.content,
-          userId: selectedPost.userId,
+          userId: userId,
           cateId: selectedPost.cateId,
         },
         {
@@ -291,7 +346,8 @@ const Post = () => {
                     <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
                     <Editor
                       value={content}
-                      onTextChange={(e) => setContent(e.htmlValue || "")} // Ensures that 'text' is never null
+                      // onTextChange={(e) => setContent(e.htmlValue || "")}
+                      onTextChange={(e) => handleEditorChange(e)}
                       style={{ height: "320px" }}
                     />
                   </form>
@@ -333,11 +389,23 @@ const Post = () => {
         <div>
           <Button
             className={`bg-white ${
-              tabs === 2 &&
+              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            onClick={() => setTabs(2)}
+            radius="none"
+          >
+            CHỜ DUYỆT
+          </Button>
+        </div>
+
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
             radius="none"
-            onClick={() => setTabs(2)}
+            onClick={() => setTabs(3)}
           >
             ĐÃ XÓA
           </Button>
@@ -349,6 +417,7 @@ const Post = () => {
           posts={post}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          handleApprove={handleApprove}
           handleUpdateSubmit={handleUpdateSubmit}
           categories={categories}
         />

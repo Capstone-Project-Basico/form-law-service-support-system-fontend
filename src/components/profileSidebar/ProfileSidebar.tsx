@@ -5,7 +5,7 @@ import { Button, Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import Image from "next/image";
 import { profileSidebar } from "@/lib/profileSidebar";
 import Link from "next/link";
-import { ProfileSidebarItem, UserType } from "@/constants/types/homeType";
+import { ProfileSidebarItem, UserType, WalletType } from "@/constants/types/homeType";
 import { usePathname } from "next/navigation";
 import axios from "axios";
 
@@ -19,6 +19,7 @@ interface UserLocal {
 
 const ProfileSidebar = () => {
   const [profileData, setProfileData] = useState<UserType>();
+  const [wallet, setWallet] = useState<WalletType>();
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
@@ -39,8 +40,21 @@ const ProfileSidebar = () => {
     } catch (error) {}
   };
 
+  const getWallet = () => {
+    try {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+        )
+        .then((response) => {
+          setProfileData(response.data.data);
+        });
+    } catch (error) {}
+  };
+
   useEffect(() => {
     getDataUser();
+    getWallet();
   }, []);
   return (
     <div className="">

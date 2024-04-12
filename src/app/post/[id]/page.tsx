@@ -1,6 +1,7 @@
 "use client";
 
 import { PostType } from "@/constants/types/homeType";
+import { decodeFromBase64 } from "@/utils/base64";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -27,7 +28,7 @@ const Page = () => {
     <div
       className="pl-10 content-div border-2 "
       dangerouslySetInnerHTML={{
-        __html: post?.content || "",
+        __html: decodeFromBase64(post?.content) || "",
       }}
     ></div>
   );
