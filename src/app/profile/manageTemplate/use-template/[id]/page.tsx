@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import axiosClient from "@/lib/axiosClient";
-import { Input } from "@nextui-org/react";
-import { useParams } from "next/navigation";
-import React, { useEffect, useRef } from "react";
+import axiosClient from '@/lib/axiosClient';
+import { Input } from '@nextui-org/react';
+import { useParams } from 'next/navigation';
+import React, { useEffect, useRef } from 'react';
 
 type Props = {};
 
@@ -14,25 +14,9 @@ const Page = (props: Props) => {
 
   const getFile = async (id: number) => {
     // fetch file
-    const res = await axiosClient.get("formTemplateVersion/download/" + id, {
-      responseType: "blob",
-    });
-    const file = new Blob([res.data]);
+    const res = await axiosClient.get('formTemplateVersion/html/' + id);
 
-    const form = new FormData();
-    form.append("file", file);
-
-    const htmlRes = await axiosClient.post(
-      "https://demo-converter-to-html.onrender.com/api/documents/convert",
-      form,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
-    const html = htmlRes.data;
+    const html = res.data;
     return html;
   };
 
@@ -66,17 +50,15 @@ const Page = (props: Props) => {
   };
 
   const postUserForm = async (data: any) => {
-    const res = await axiosClient.post("userForm", data, {
-      responseType: "blob",
-    });
+    const res = await axiosClient.post('userForm', data, { responseType: 'blob' });
     const file = new Blob([res.data]);
     const url = URL.createObjectURL(file);
 
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     document.body.appendChild(a);
 
-    a.download = data.name + ".docx";
+    a.download = data.name + '.docx';
     a.click();
   };
 
@@ -95,25 +77,13 @@ const Page = (props: Props) => {
       <h1 className="text-2xl font-semibold text-left">Use Template</h1>
       <form onSubmit={handleSubmit} className="">
         <div className="basis-3/12 mt-5">
-          <Input
-            className="m-2 w-40"
-            variant="bordered"
-            label="Tên biểu mẫu"
-            type="text"
-            name="formName"
-          />
+          <Input className="m-2 w-40" variant="bordered" label="Tên biểu mẫu" type="text" name="formName" />
         </div>
         <div className="w-[850px] mx-auto">
           <div className="overflow-y-scroll max-h-[39rem] min-h-[39rem]  mx-auto p-10 border-2">
-            <div
-              className="content-center min-h-[35rem] p-10 border-1 border-black"
-              ref={templateRef}
-            ></div>
+            <div className="content-center min-h-[35rem] p-10 border-1 border-black" ref={templateRef}></div>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-primary hover:bg-red-400 text-white font-bold py-2 px-4 rounded m-5"
-          >
+          <button type="submit" className="w-full bg-primary hover:bg-red-400 text-white font-bold py-2 px-4 rounded m-5">
             Submit
           </button>
         </div>
