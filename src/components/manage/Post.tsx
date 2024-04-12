@@ -54,7 +54,7 @@ const Posts: React.FC<PostsProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
