@@ -289,9 +289,11 @@ const Lawyers: React.FC<LawyersProps> = ({
       </Table>
 
       {/* update modal */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} hideCloseButton>
         <ModalContent style={{ width: "90%", maxWidth: "900px" }}>
-          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+            Chi tiết
+          </ModalHeader>
           <ModalBody>
             {selectedLawyer && (
               <div className="flex flex-col gap-10">
@@ -384,10 +386,11 @@ const Lawyers: React.FC<LawyersProps> = ({
         style={{ width: "50%", maxWidth: "500px" }}
         isOpen={isOpenUpdate}
         onClose={onCloseUpdate}
-        className="w-[600px] h-[700px]"
+        className="w-[600px] h-[700px] "
+        hideCloseButton
       >
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
             Cập nhật luật sư
           </ModalHeader>
           <ModalBody>

@@ -238,12 +238,12 @@ const Pack = () => {
             <FontAwesomeIcon icon={faPlus} />
             Tạo mới
           </Button>
-          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+          <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
             <ModalContent>
               {(onClose) => (
                 <>
                   <form onSubmit={handleSubmit}>
-                    <ModalHeader className="flex flex-col gap-1">
+                    <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
                       Thêm gói dịch vụ
                     </ModalHeader>
                     <ModalBody>
@@ -407,9 +407,9 @@ const Pack = () => {
         </TableBody>
       </Table>
       {/* update modal */}
-      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
+      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
             Cập nhật gói dịch vụ
           </ModalHeader>
           <ModalBody>

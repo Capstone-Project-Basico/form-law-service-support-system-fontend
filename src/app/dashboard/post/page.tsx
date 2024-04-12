@@ -252,11 +252,11 @@ const Post = () => {
           <FontAwesomeIcon icon={faPlus} />
           Tạo mới
         </Button>
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
           <ModalContent className="w-[12000px] h-[900px] max-w-none">
             {(onClose) => (
               <>
-                <ModalHeader className="flex flex-col gap-1">
+                <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
                   Thêm bài viết mới
                 </ModalHeader>
 
