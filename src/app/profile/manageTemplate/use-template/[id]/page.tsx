@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import axiosClient from '@/lib/axiosClient';
-import { Input } from '@nextui-org/react';
-import { useParams } from 'next/navigation';
-import React, { useEffect, useRef } from 'react';
+import axiosClient from "@/lib/axiosClient";
+import { Input } from "@nextui-org/react";
+import { useParams } from "next/navigation";
+import React, { useEffect, useRef } from "react";
 
 type Props = {};
 
@@ -14,7 +14,7 @@ const Page = (props: Props) => {
 
   const getFile = async (id: number) => {
     // fetch file
-    const res = await axiosClient.get('formTemplateVersion/html/' + id);
+    const res = await axiosClient.get("formTemplateVersion/html/" + id);
 
     const html = res.data;
     return html;
@@ -50,15 +50,17 @@ const Page = (props: Props) => {
   };
 
   const postUserForm = async (data: any) => {
-    const res = await axiosClient.post('userForm', data, { responseType: 'blob' });
+    const res = await axiosClient.post("userForm", data, {
+      responseType: "blob",
+    });
     const file = new Blob([res.data]);
     const url = URL.createObjectURL(file);
 
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     document.body.appendChild(a);
 
-    a.download = data.name + '.docx';
+    a.download = data.name + ".docx";
     a.click();
   };
 
@@ -74,9 +76,11 @@ const Page = (props: Props) => {
 
   return (
     <div className="p-5">
-      <h1 className="text-2xl font-semibold text-left">Use Template</h1>
-      <form onSubmit={handleSubmit} className="">
-        <div className="basis-3/12 mt-5 border">
+      <h1 className="text-2xl font-semibold text-left text-white">
+        Use Template
+      </h1>
+      <form onSubmit={handleSubmit} className="bg-white">
+        <div className="bg-white basis-3/12 mt-5 border">
           <div className="p-4">
             <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
               <div className="relative flex items-center justify-between h-16">
@@ -91,13 +95,25 @@ const Page = (props: Props) => {
                   </div>
                 </div>
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                  <button disabled className="bg-primary opacity-20 text-white px-4 py-2 rounded-md text-sm font-medium" aria-label="Preview">
+                  <button
+                    disabled
+                    className="bg-primary opacity-20 text-white px-4 py-2 rounded-md text-sm font-medium"
+                    aria-label="Preview"
+                  >
                     Xem trước
                   </button>
-                  <button disabled className="bg-primary opacity-20 text-white px-4 py-2 ml-3 rounded-md text-sm font-medium" aria-label="Save">
+                  <button
+                    disabled
+                    className="bg-primary opacity-20 text-white px-4 py-2 ml-3 rounded-md text-sm font-medium"
+                    aria-label="Save"
+                  >
                     Lưu lại
                   </button>
-                  <button type="submit" className="bg-primary text-white px-4 py-2 ml-3 rounded-md text-sm font-medium" aria-label="Download">
+                  <button
+                    type="submit"
+                    className="bg-primary text-white px-4 py-2 ml-3 rounded-md text-sm font-medium"
+                    aria-label="Download"
+                  >
                     Lưu và tải xuống
                   </button>
                 </div>
@@ -108,7 +124,10 @@ const Page = (props: Props) => {
         </div>
         <div className="w-[850px] mx-auto">
           <div className="overflow-y-scroll max-h-[39rem] min-h-[39rem]  mx-auto p-10 border-2">
-            <div className="content-center min-h-[35rem] p-10 border-1 border-black" ref={templateRef}></div>
+            <div
+              className="content-center min-h-[35rem] p-10 border-1 border-black"
+              ref={templateRef}
+            ></div>
           </div>
         </div>
       </form>
