@@ -92,6 +92,7 @@ export type PostType = {
   cateId: string;
   userId: string;
   postId: number;
+  processStatus: string;
 };
 
 export type PostCategory = {
@@ -118,6 +119,14 @@ export type UserType = {
   phoneNumber: number;
   roleName: string;
   status: number;
+};
+
+export type WalletType = {
+  walletId: string;
+  balance: number;
+  updateAt: Date;
+  userId: number;
+  email: string;
 };
 
 export type LawyerType = {
