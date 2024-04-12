@@ -14,19 +14,9 @@ const Page = (props: Props) => {
 
   const getFile = async (id: number) => {
     // fetch file
-    const res = await axiosClient.get('formTemplateVersion/download/' + id, { responseType: 'blob' });
-    const file = new Blob([res.data]);
+    const res = await axiosClient.get('formTemplateVersion/html/' + id);
 
-    const form = new FormData();
-    form.append('file', file);
-
-    const htmlRes = await axiosClient.post('https://demo-converter-to-html.onrender.com/api/documents/convert', form, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    const html = htmlRes.data;
+    const html = res.data;
     return html;
   };
 

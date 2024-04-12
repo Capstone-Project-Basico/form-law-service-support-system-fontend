@@ -154,7 +154,20 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4">
+    <form onSubmit={handleSubmit} className="w-full mt-4 p-4">
+      <div className="py-4">
+        <Breadcrumbs color="danger" size="lg" className="text-3xl">
+          <BreadcrumbItem>
+            <p className="text-black font-bold text-3xl ">Quản lí dịch vụ</p>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <p className="text-black font-bold text-3xl">Biểu mẫu</p>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <p className="text-[#FF0004] font-bold text-3xl">Tạo mới</p>
+          </BreadcrumbItem>
+        </Breadcrumbs>
+      </div>
       <div className="flex w-full gap-4 py-4">
         <div className="basis-7/12  m-auto bg-white p-5 rounded-md border-1 border-gray-400 ">
           <h4 className="my-auto text-base font-semibold mb-9">Thông tin biểu mẫu</h4>
