@@ -31,14 +31,12 @@ import { Category, PostType } from "@/constants/types/homeType";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
-import dynamic from "next/dynamic";
-
 const EditorWithNoSSR = dynamic(() => import("@/components/Editor"), {
   ssr: false,
 });
-
 type PostsProps = {
   posts: PostType[];
   handleDelete: (id: number) => void;
@@ -56,6 +54,7 @@ const Posts: React.FC<PostsProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {

@@ -290,24 +290,7 @@ const Post = () => {
                         </SelectItem>
                       ))}
                     </Select>
-                    {/* <CKEditor
-                    editor={ClassicEditor}
-                    data="<p>Thêm nội dung vào đây để tạo bài viết!</p>"
-                    onReady={(editor) => {
-                      // You can use the editor instance here
-                      console.log("Editor is ready to use!", editor);
-                    }}
-                    onChange={(event, editor) => {
-                      const data = editor.getData();
-                      console.log({ event, editor, data });
-                    }}
-                    onBlur={(event, editor) => {
-                      console.log("Blur.", editor);
-                    }}
-                    onFocus={(event, editor) => {
-                      console.log("Focus.", editor);
-                    }}
-                  /> */}
+
                     <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
                     <EditorWithNoSSR
                       onChange={(data: string) => setContent(data)}

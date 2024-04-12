@@ -59,10 +59,10 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center pt-16 pb-[90px] bg-[#f3f3f3]">
+    <div className="flex flex-col justify-center items-center pt-16 pb-[90px] bg-custom-bg bg-cover ">
       <ToastContainer />
 
-      <div className="bg-white p-20">
+      <div className="bg-white p-20 rounded-2xl">
         <div className="flex flex-col justify-center items-center mt-50">
           <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
             <div className="text-2xl">Làm việc với các luật sư xuất sắc</div>
@@ -158,7 +158,7 @@ const Page = () => {
 
               <Button
                 type="submit"
-                className="bg-[#F00044] text-white w-full my-4"
+                className="bg-[#FF0004] text-white w-full my-4"
               >
                 Đăng ký
               </Button>

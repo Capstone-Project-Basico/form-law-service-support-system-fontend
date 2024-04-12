@@ -44,8 +44,8 @@ const ProfileSidebar = () => {
   }, []);
   return (
     <div className="">
-      <div className="flex flex-col w-[387px] gap-2 rounded-lg">
-        <div className="bg-white">
+      <div className="flex flex-col w-[387px] gap-2 ">
+        <div className="bg-white rounded-2xl">
           <div className="flex flex-row">
             <Image src="/User-avatar.png" alt="" width={100} height={100} />
             <div>
@@ -55,9 +55,9 @@ const ProfileSidebar = () => {
           </div>
         </div>
         <div>
-          <div className="bg-white rounded-lg">
-            <Navbar className="flex items-start w-[350px] h-[425px] pt-10">
-              <NavbarContent className="flex flex-col gap-8 items-start ">
+          <div className="bg-white rounded-2xl ">
+            <Navbar className="flex items-start w-[350px] h-[425px] pt-10 rounded-2xl">
+              <NavbarContent className="flex flex-col gap-8 items-start">
                 <NavbarItem className="text-xl">
                   <div className="flex flex-col space-y-2 ">
                     {profileSidebar.map((item, idx) => {

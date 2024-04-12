@@ -4,7 +4,7 @@ import React from "react";
 
 const Wallet = () => {
   return (
-    <div className="w-[950px] bg-white px-10 pt-5">
+    <div className="w-[950px]  bg-white px-10 pt-5 rounded-2xl">
       <h2 className="text-xl font-semibold">Nạp tiền vào tài khoản</h2>
       <p className="text-[14px]">
         Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới

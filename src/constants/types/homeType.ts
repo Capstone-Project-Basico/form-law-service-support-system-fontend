@@ -89,7 +89,7 @@ export type PostType = {
   userName: string;
   cateName: string;
   deleted: boolean;
-  cateId: string;
+  cateId: number;
   userId: string;
   postId: number;
 };
