@@ -83,8 +83,6 @@ const Navbar = () => {
 
     getUserById();
   }, [userId]);
-
-  console.log("pathname:", pathname.includes("/practices"));
   return (
     <div className={styles.container}>
       <MyNavbar
