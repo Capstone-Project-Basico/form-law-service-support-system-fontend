@@ -112,7 +112,11 @@ const Page = () => {
             }).then((result) => {
               /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {
-                payForTemplate(orderId);
+                try {
+                  payForTemplate(orderId);
+                } catch (error) {
+                  Swal.fire(`${error}`, "", "error");
+                }
               } else if (result.isDenied) {
                 Swal.fire("Vui lòng thanh toán để sử dụng", "", "info");
                 return;
