@@ -100,4 +100,19 @@ export const about = [
     link: "/about/ourClients",
     subTitle: "First",
   },
+  {
+    title: "TƯ LIỆU ẢNH",
+    link: "/about/photography",
+    subTitle: "First",
+  },
+  {
+    title: "TƯ LIỆU VIDEO",
+    link: "/about/video",
+    subTitle: "First",
+  },
+  {
+    title: "DỊCH VỤ",
+    link: "/about/service",
+    subTitle: "First",
+  },
 ];

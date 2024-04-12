@@ -185,7 +185,7 @@ const Page = () => {
               <Card
                 shadow="sm"
                 key={index}
-                isPressable
+                isPressable={false}
                 onPress={() => console.log("item pressed")}
                 className="w-72 h-96"
               >

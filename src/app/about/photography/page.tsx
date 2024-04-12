@@ -21,7 +21,7 @@ const Page = () => {
   const getAllPosts = () => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/findPostByCateName?cateName=Sách pháp lý nghiệp vụ`
+        `${process.env.NEXT_PUBLIC_BASE_API}post/findPostByCateName?cateName=Tư liệu ảnh`
       )
       .then((response) => {
         setPosts(response.data.data);
@@ -29,10 +29,7 @@ const Page = () => {
   };
   return (
     <>
-      <HeaderComponent
-        title="SÁCH PHÁP LÝ NGHIỆP VỤ"
-        link=" Sách Pháp Lý Nghiệp Vụ"
-      />
+      <HeaderComponent title="BASICO Law Firm" link="Tư liệu ảnh" />
       <div className="flex flex-rows-2 pt-20 bg-white text-black px-80">
         <div className="grid grid-cols-4 w-[847px]">
           {posts.map((post) => (
