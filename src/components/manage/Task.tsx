@@ -198,9 +198,9 @@ const Tasks: React.FC<TasksProps> = ({
       </Table>
 
       {/* update modal */}
-      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
+      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
             Cập nhật công việc
           </ModalHeader>
           <ModalBody>

@@ -216,9 +216,11 @@ const Contacts: React.FC<ContactsProps> = ({
       </Table>
 
       {/* update modal */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} hideCloseButton>
         <ModalContent style={{ width: "50%", maxWidth: "500px" }}>
-          <ModalHeader className="flex flex-col gap-1 ">Chi tiết</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+            Chi tiết
+          </ModalHeader>
           <ModalBody>
             {selectedContact && (
               <div className="flex flex-col gap-10">
@@ -276,9 +278,9 @@ const Contacts: React.FC<ContactsProps> = ({
       </Modal>
 
       {/* update modal */}
-      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
+      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
             Cập nhật đối tác
           </ModalHeader>
           <ModalBody>

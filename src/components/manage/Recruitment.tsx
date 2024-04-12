@@ -249,11 +249,13 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
       </Table>
 
       {/* detail modal */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} hideCloseButton>
         <ModalContent
           style={{ width: "50%", maxWidth: "500px", height: "70%" }}
         >
-          <ModalHeader className="flex flex-col gap-1">Chi tiết</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+            Chi tiết
+          </ModalHeader>
           <ModalBody
             style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
           >
@@ -349,9 +351,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
       </Modal>
 
       {/* update modal */}
-      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
+      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
             Cập nhật tuyển dụng
           </ModalHeader>
           <ModalBody>

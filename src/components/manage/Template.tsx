@@ -66,9 +66,9 @@ const Template: React.FC<TemplateProps> = ({ templates }) => {
         </div>
       </div>
       {/* update modal */}
-      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
+      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
             Cập nhật gói dịch vụ
           </ModalHeader>
           <ModalBody>
