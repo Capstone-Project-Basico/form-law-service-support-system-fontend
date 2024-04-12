@@ -5,9 +5,15 @@ import { Button, Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
 import Image from "next/image";
 import { profileSidebar } from "@/lib/profileSidebar";
 import Link from "next/link";
-import { ProfileSidebarItem, UserType, WalletType } from "@/constants/types/homeType";
-import { usePathname } from "next/navigation";
+import {
+  ProfileSidebarItem,
+  UserType,
+  WalletType,
+} from "@/constants/types/homeType";
+import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 interface UserLocal {
   data: {
@@ -20,6 +26,8 @@ interface UserLocal {
 const ProfileSidebar = () => {
   const [profileData, setProfileData] = useState<UserType>();
   const [wallet, setWallet] = useState<WalletType>();
+  const router = useRouter();
+
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
@@ -47,7 +55,7 @@ const ProfileSidebar = () => {
           `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
         )
         .then((response) => {
-          setProfileData(response.data.data);
+          setWallet(response.data.data);
         });
     } catch (error) {}
   };
@@ -64,7 +72,17 @@ const ProfileSidebar = () => {
             <Image src="/User-avatar.png" alt="" width={100} height={100} />
             <div>
               <p>Chào mừng bạn,</p>
-              <h2>{profileData?.userName}</h2>
+              <h2 className="font-bold">{profileData?.userName}</h2>
+              <Button
+                className="border bg-[#F2F2F2]"
+                onClick={() => router.push("/profile/wallet")}
+              >
+                <FontAwesomeIcon
+                  icon={faCirclePlus}
+                  className="size-5 text-[#FF0004]"
+                />
+                {wallet?.balance.toLocaleString()} VNĐ
+              </Button>
             </div>
           </div>
         </div>
