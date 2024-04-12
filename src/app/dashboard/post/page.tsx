@@ -38,10 +38,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import authHeader from "@/components/authHeader/AuthHeader";
 import dynamic from "next/dynamic";
 import Posts from "@/components/manage/Post";
-
-const EditorWithNoSSR = dynamic(() => import("@/components/Editor"), {
-  ssr: false,
-});
+import { Editor } from "primereact/editor";
 
 interface UserLocal {
   data: {
@@ -292,8 +289,10 @@ const Post = () => {
                     </Select>
 
                     <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
-                    <EditorWithNoSSR
-                      onChange={(data: string) => setContent(data)}
+                    <Editor
+                      value={content}
+                      onTextChange={(e) => setContent(e.htmlValue || "")} // Ensures that 'text' is never null
+                      style={{ height: "320px" }}
                     />
                   </form>
                 </ModalBody>

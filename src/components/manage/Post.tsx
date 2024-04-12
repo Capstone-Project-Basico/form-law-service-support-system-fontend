@@ -34,9 +34,8 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
-const EditorWithNoSSR = dynamic(() => import("@/components/Editor"), {
-  ssr: false,
-});
+import { Editor } from "primereact/editor";
+
 type PostsProps = {
   posts: PostType[];
   handleDelete: (id: number) => void;
@@ -323,14 +322,15 @@ const Posts: React.FC<PostsProps> = ({
                   ))}
                 </Select>
                 <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
-                <EditorWithNoSSR
-                  onChange={(data: string) =>
+                <Editor
+                  value={selectedPost.content}
+                  onTextChange={(e) =>
                     setSelectedPost({
                       ...selectedPost,
-                      content: data,
+                      content: e.htmlValue || "",
                     })
-                  }
-                  initialData={selectedPost.content}
+                  } // Ensures that 'text' is never null
+                  style={{ height: "320px" }}
                 />
               </form>
             )}
