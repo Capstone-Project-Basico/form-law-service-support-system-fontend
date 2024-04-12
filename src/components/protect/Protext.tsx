@@ -1,6 +1,5 @@
 "use client";
 import dynamic from "next/dynamic";
-const Protext = dynamic(() => import("@/components/protect/Protext"));
 const Navbar = dynamic(() => import("../../components/dashboardNavbar/navbar"));
 import { useEffect } from "react";
 import Sidebar from "../../components/dashboardSidebar/sidebar";
@@ -10,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { UserLocal } from "@/constants/types/homeType";
 import { getPathByURL } from "@/lib/path-link";
 import Link from "next/link";
-import ExampleClientComponent from "../clientComponent";
+
 // export const dynamic = "force-dynamic";
 
 type LayoutProps = {
@@ -18,6 +17,32 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  function getPathnameOrder(pathname: string) {
+    const parts = pathname.split("/").filter(Boolean); // filter out empty strings from the array
+
+    const paths = [];
+    let currentPath = "";
+
+    for (let part of parts) {
+      currentPath += "/" + part;
+      paths.push(currentPath);
+    }
+
+    return paths;
+  }
+
+  // const userString = localStorage.getItem("user");
+  // if (!userString) {
+  //   console.log("No user found");
+  //   // router.push("/");
+  //   return;
+  // }
+
+  // const user = JSON.parse(userString);
+  // const userRole = user?.data.data.roleName;
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
@@ -27,21 +52,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const user: UserLocal | null = getUserFromStorage();
   const userRole = user?.data.data.roleName;
-  if (userRole != "ROLE_ADMIN") return <Protext>{<></>}</Protext>;
 
-  return (
-    <Protext>
-      <div className="flex flex-col">
-        <div className="flex flex-cow">
-          <Navbar />
-        </div>
-        <div className="flex flex-cow">
-          <Sidebar />
-          {children}
-        </div>
-      </div>
-    </Protext>
-  );
+  // Check if the user role is not admin
+
+  useEffect(() => {
+    if (userRole !== "ROLE_ADMIN") {
+      // Redirect non-admin users to the home page or login page
+      router.push("/");
+    }
+  }, [userRole]);
+
+  //   if (userRole !== "ROLE_ADMIN") {
+  //     return <></>;
+  //   }
+
+  return <>{children}</>;
 };
 
 export default Layout;

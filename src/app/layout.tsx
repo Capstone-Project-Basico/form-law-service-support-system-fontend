@@ -19,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="container">
-          <ExampleClientComponent>
-            <main>{children}</main>
-          </ExampleClientComponent>
-        </div>
+        {/* <div className="container"> */}
+        <ExampleClientComponent>
+          {/* <main>{children}</main> */} {children}
+        </ExampleClientComponent>
+        {/* </div> */}
       </body>
     </html>
   );
