@@ -10,26 +10,34 @@ const Wallet = () => {
         Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới
       </p>
       <div className="mt-10 border-black border ">
-        <div className="border ">
-          <Button className="bg-white flex flex-row h-24">
+        <div className="border w-full">
+          <Button
+            className="bg-white flex flex-row items-center justify-between h-24 w-full"
+            disabled
+          >
             <Image src="/wallet/bank.png" alt="" width={50} height={50} />
-            <div className="flex flex-col justify-start items-start ml-3">
+            <div className="flex flex-col justify-start items-start ml-3  w-full">
               <h3 className="text-[18px] font-semibold">
                 Chuyển khoản ngân hàng 24/7
               </h3>
               <p>Chuyển khoản ngân hàng online</p>
             </div>
+            <h1 className="font-bold text-[#FF0004]">Đang bảo trì</h1>
           </Button>
         </div>
-        <div className="border ">
-          <Button className="bg-white flex flex-row h-24">
+        <div className="border w-full">
+          <Button
+            className="bg-white flex flex-row items-center justify-between h-24 w-full"
+            disabled
+          >
             <Image src="/wallet/momo.png" alt="" width={50} height={50} />
-            <div className="flex flex-col justify-start items-start ml-3">
+            <div className="flex flex-col justify-start items-start ml-3 w-full">
               <h3 className="text-[18px] font-semibold">
                 Nạp số dư trực tiếp bằng Momo Payment
               </h3>
               <p>Nạp tiền tự động liên kết với Momo</p>
             </div>
+            <h1 className="font-bold text-[#FF0004]">Đang bảo trì</h1>
           </Button>
         </div>
         <div className="border ">
