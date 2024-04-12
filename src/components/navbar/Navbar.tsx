@@ -95,11 +95,11 @@ const Navbar = () => {
         <NavbarBrand>
           <a href="/">
             <Image
-              className=" !max-w-60"
+              className=" !max-w-60 "
               src="/logoBasico.jpg"
               alt="logo"
-              width={200}
-              height={70}
+              width={300}
+              height={100}
             />
           </a>
         </NavbarBrand>
@@ -125,8 +125,8 @@ const Navbar = () => {
                   <div
                     // href="/practices"
                     className={`link ${
-                      pathname.includes("/practices") ? "text-secondary" : ""
-                    }`}
+                      pathname.includes("/practices") ? "text-[#e74c3c]" : ""
+                    } `}
                   >
                     DỊCH VỤ
                   </div>
