@@ -1,21 +1,13 @@
 'use client';
 
-import { Template } from "@/constants/types/homeType";
-import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Image,
-  Button,
-  Input,
-  CardFooter,
-  Pagination,
-} from "@nextui-org/react";
-import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import { Template } from '@/constants/types/homeType';
+import paths from '@/lib/path-link';
+import { faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Card, CardBody, CardFooter, Image } from '@nextui-org/react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 interface UserLocal {
   data: {
     data: {
@@ -82,11 +74,6 @@ const ManageTemplate = () => {
                     }}
                     className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
                     variant="faded"
-                    onClick={() =>
-                      router.push(
-                        `/profile/manageTemplate/use-template/${template.id}`
-                      )
-                    }
                   >
                     <FontAwesomeIcon icon={faPenToSquare} className="size-4 ml-1" />
                     Dùng mẫu
