@@ -13,14 +13,14 @@ export const postSidebars = [
   },
   {
     title: "Tư liệu ảnh",
-    link: "",
-  },
-  {
-    title: "Tư liệu film ảnh",
-    link: "",
+    link: "/about/photography",
   },
   {
     title: "Tư liệu video",
-    link: "",
+    link: "/about/video",
+  },
+  {
+    title: "Dịch vụ",
+    link: "/about/service",
   },
 ];

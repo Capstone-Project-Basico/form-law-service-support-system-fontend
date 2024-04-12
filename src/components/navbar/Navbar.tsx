@@ -54,8 +54,9 @@ const Navbar = () => {
   //   }
   // };
   const logout = () => {
+    router.push("/login");
     window.localStorage.clear();
-    window.location.reload();
+    // window.location.reload();
   };
 
   const getUserFromStorage = () => {

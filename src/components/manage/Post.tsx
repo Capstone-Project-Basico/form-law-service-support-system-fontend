@@ -34,13 +34,14 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
-const EditorWithNoSSR = dynamic(() => import("@/components/Editor"), {
-  ssr: false,
-});
+import { Editor } from "primereact/editor";
+import { decodeFromBase64 } from "@/utils/base64";
+
 type PostsProps = {
   posts: PostType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleApprove: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
   categories: Category[];
 };
@@ -49,12 +50,12 @@ const Posts: React.FC<PostsProps> = ({
   posts,
   handleDelete,
   restoreDelete,
+  handleApprove,
   handleUpdateSubmit,
   categories,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
@@ -165,14 +166,12 @@ const Posts: React.FC<PostsProps> = ({
                   {post.deleted ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
               </TableCell>
-              {post.deleted === false ? (
+              {/* {post.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-blue-600 text-white"
                     onPress={() => {
                       setSelectedPost(post);
-                      console.log(post);
-
                       onOpenUpdate();
                     }}
                   >
@@ -203,6 +202,80 @@ const Posts: React.FC<PostsProps> = ({
                       debugger;
                       restoreDelete(post.postId);
                     }}
+                  >
+                    Khôi phục
+                  </Button>
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedPost(post);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
+                </TableCell>
+              )} */}
+              {!post.deleted ? (
+                <TableCell className="flex gap-2 items-center justify-center">
+                  {post.processStatus === "CHỜ DUYỆT" ? (
+                    <>
+                      <Button
+                        className="bg-blue-600 text-white"
+                        onClick={() => handleApprove(post.postId)}
+                      >
+                        Chập nhận
+                      </Button>
+                      <Button
+                        className="bg-[#FF0004] text-white"
+                        onClick={() => handleDelete(post.postId)}
+                      >
+                        Từ chối và xóa
+                      </Button>
+                      <Button
+                        className="bg-green-600 text-white"
+                        onClick={() => {
+                          setSelectedPost(post);
+                          onOpen();
+                        }}
+                      >
+                        Chi tiết
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        className="bg-blue-600 text-white"
+                        onPress={() => {
+                          setSelectedPost(post);
+                          onOpenUpdate();
+                        }}
+                      >
+                        Cập nhật
+                      </Button>
+                      <Button
+                        className="bg-[#FF0004] text-white"
+                        onClick={() => handleDelete(post.postId)}
+                      >
+                        Xóa
+                      </Button>
+                      <Button
+                        className="bg-green-600 text-white"
+                        onClick={() => {
+                          setSelectedPost(post);
+                          onOpen();
+                        }}
+                      >
+                        Chi tiết
+                      </Button>
+                    </>
+                  )}
+                </TableCell>
+              ) : (
+                <TableCell className="flex gap-2 items-center justify-center">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    onClick={() => restoreDelete(post.postId)}
                   >
                     Khôi phục
                   </Button>
@@ -255,7 +328,7 @@ const Posts: React.FC<PostsProps> = ({
                   <div
                     className="pl-10 content-div border-2 "
                     dangerouslySetInnerHTML={{
-                      __html: selectedPost.content || "",
+                      __html: decodeFromBase64(selectedPost.content) || "",
                     }}
                   ></div>
                 </div>
@@ -308,7 +381,7 @@ const Posts: React.FC<PostsProps> = ({
                   placeholder="Thể loại"
                   labelPlacement="outside"
                   className="font-bold"
-                  defaultSelectedKeys={[selectedPost.cateId]}
+                  defaultSelectedKeys={[`${selectedPost.cateId}`]}
                   onChange={(e) =>
                     setSelectedPost({
                       ...selectedPost,
@@ -322,15 +395,17 @@ const Posts: React.FC<PostsProps> = ({
                     </SelectItem>
                   ))}
                 </Select>
+
                 <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
-                <EditorWithNoSSR
-                  onChange={(data: string) =>
+                <Editor
+                  value={selectedPost.content}
+                  onTextChange={(e) =>
                     setSelectedPost({
                       ...selectedPost,
-                      content: data,
+                      content: e.htmlValue || "",
                     })
-                  }
-                  initialData={selectedPost.content}
+                  } // Ensures that 'text' is never null
+                  style={{ height: "320px" }}
                 />
               </form>
             )}
