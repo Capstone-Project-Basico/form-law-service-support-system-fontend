@@ -1,6 +1,27 @@
-import HeaderComponent from "@/components/header";
+"use client";
 
-const page = () => {
+import HeaderComponent from "@/components/header";
+import { PartnerType } from "@/constants/types/homeType";
+import axios from "axios";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+const Page = () => {
+  const [partners, setPartners] = useState<PartnerType[]>([]);
+
+  useEffect(() => {
+    getAllPartners();
+  }, []);
+
+  const getAllPartners = () => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`)
+      .then((response) => {
+        setPartners(response.data.data);
+      });
+  };
+
   return (
     <>
       <HeaderComponent
@@ -50,9 +71,24 @@ const page = () => {
             Và rất nhiều khách hàng tiêu biểu khác của chúng tôi:
           </p>
         </div>
+
+        <div className="grid grid-cols-5 justify-center items-center gap-5">
+          {partners.map((partner) => (
+            <div key={partner.partnerId} className="border-1">
+              <Link
+                href={partner.link}
+                className="py-[25px]"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image alt="" src={partner?.avatar} width={200} height={133} />
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
 };
 
-export default page;
+export default Page;
