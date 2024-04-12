@@ -3,7 +3,7 @@ import React from "react";
 
 const ChangePassword = () => {
   return (
-    <div className="w-[950px] bg-white">
+    <div className="w-[950px] h-[600px] bg-white rounded-2xl">
       <div className="ml-10 mt-7">
         <h2 className="text-xl font-bold mb-7">Thay đổi mật khẩu đăng nhập</h2>
         <h2>Email</h2>

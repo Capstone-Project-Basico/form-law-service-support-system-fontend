@@ -22,16 +22,21 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { PostType } from "@/constants/types/homeType";
+import { Category, PostType } from "@/constants/types/homeType";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
-
+const EditorWithNoSSR = dynamic(() => import("@/components/Editor"), {
+  ssr: false,
+});
 type PostsProps = {
   posts: PostType[];
   handleDelete: (id: number) => void;
@@ -47,6 +52,7 @@ const Posts: React.FC<PostsProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
@@ -256,45 +262,52 @@ const Posts: React.FC<PostsProps> = ({
       </Modal>
 
       {/* update modal */}
-      <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            Cập nhật liên hệ
-          </ModalHeader>
-          <ModalBody>
-            {selectedPost && (
-              <form
-                id="post"
-                onSubmit={(e) => {
-                  console.log(e);
-                  e.preventDefault();
-                  handleUpdateSubmit(selectedPost);
-                  onCloseUpdate();
-                }}
+      <Modal isOpen={isOpenUpdate} onOpenChange={onCloseUpdate}>
+        <ModalContent className="w-[1200px] h-[900px] max-w-none">
+          {(onCloseUpdate) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Cập nhật bài viết
+              </ModalHeader>
+
+              <ModalBody
+                style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
               >
-                <Input
-                  className="py-2"
-                  type="text"
-                  label="Tên bài viết"
-                  value={selectedPost.title}
-                  onChange={(e) =>
-                    setSelectedPost({
-                      ...selectedPost,
-                      title: e.target.value,
-                    })
-                  }
-                />
-              </form>
-            )}
-          </ModalBody>
-          <ModalFooter>
-            <Button color="danger" variant="light" onPress={onCloseUpdate}>
-              Đóng
-            </Button>
-            <Button color="primary" type="submit" form="recruitment">
-              Cập nhật
-            </Button>
-          </ModalFooter>
+                {selectedPost && (
+                  <form
+                    id="post"
+                    onSubmit={(e) => {
+                      console.log(e);
+                      e.preventDefault();
+                      handleUpdateSubmit(selectedPost);
+                      onCloseUpdate();
+                    }}
+                  >
+                    <Input
+                      className="font-bold pb-5"
+                      type="text"
+                      label="Tên bài viết"
+                      value={selectedPost.title}
+                      onChange={(e) =>
+                        setSelectedPost({
+                          ...selectedPost,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                  </form>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onCloseUpdate}>
+                  Đóng
+                </Button>
+                <Button color="primary" type="submit" form="post">
+                  Cập nhật
+                </Button>
+              </ModalFooter>
+            </>
+          )}
         </ModalContent>
       </Modal>
     </div>
