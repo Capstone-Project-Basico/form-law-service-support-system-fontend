@@ -36,11 +36,13 @@ const Page = (props: Props) => {
   };
 
   function replaceFieldWithInput(htmlContent: string) {
-    // Regular expression to match the pattern {{fieldName##fieldType}}
-    const regex = /{{([^#]+)##([^}]+)}}/g;
+    let decodedHtml = htmlContent.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
-    // Replace each occurrence with an input tag
-    const result = htmlContent.replace(regex, (match, fieldName, fieldType) => {
+    // Regex to find the pattern <<key**value>>
+    const regex = /<<([^*]+)\*\*([^>]+)>>/g;
+
+    const result = decodedHtml.replace(regex, (match, fieldName, fieldType) => {
+      console.log(fieldType, fieldName);
       // Generate an input tag based on fieldType
       return `<input class="w-[100px] border border-black m-1 p-1" placeholder="${fieldName}" name="${fieldName}" type="${fieldType}" />`;
     });
