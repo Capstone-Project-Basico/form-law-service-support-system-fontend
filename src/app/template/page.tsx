@@ -206,11 +206,11 @@ const Page = () => {
                     src="/bieumau.jpg"
                   />
                   <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
-                    <Button className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
+                    {/* <Button className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
                       <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
                       Xem trước
                     </Button>
-                    <Button
+                    {/* <Button
                       className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
                       variant="faded"
                     >
@@ -219,7 +219,7 @@ const Page = () => {
                         className="size-4 ml-1"
                       />
                       Dùng mẫu
-                    </Button>
+                    </Button> */}
                   </div>
                 </CardBody>
                 <CardFooter className="flex flex-col items-start">
@@ -227,7 +227,7 @@ const Page = () => {
                   <b>{template.message}</b>
                   <Button
                     onClick={() => handleBuy(template.id, template.price)}
-                    className="bg-[#FF0004]"
+                    className="bg-[#FF0004] text-white h-12 rounded-full"
                   >
                     Mua
                   </Button>
