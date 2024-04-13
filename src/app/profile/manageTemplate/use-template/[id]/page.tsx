@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import axiosClient from "@/lib/axiosClient";
-import { Input } from "@nextui-org/react";
-import { useParams } from "next/navigation";
-import React, { useEffect, useRef } from "react";
+import axiosClient from '@/lib/axiosClient';
+import { Input } from '@nextui-org/react';
+import { useParams } from 'next/navigation';
+import React, { useEffect, useRef } from 'react';
 
 type Props = {};
 
@@ -14,22 +14,22 @@ const Page = (props: Props) => {
 
   const getFile = async (id: number) => {
     // fetch file
-    const res = await axiosClient.get("formTemplateVersion/download/" + id, {
-      responseType: "blob",
+    const res = await axiosClient.get('formTemplateVersion/download/' + id, {
+      responseType: 'blob',
     });
     const file = new Blob([res.data]);
 
     const form = new FormData();
-    form.append("file", file);
+    form.append('file', file);
 
     const converterURL = process.env.NEXT_PUBLIC_CONVERTER_API;
     if (!converterURL) {
-      console.error("Converter API is not defined");
-      return "Server error";
+      console.error('Converter API is not defined');
+      return 'Server error';
     }
     const htmlRes = await axiosClient.post(converterURL, form, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
 
@@ -38,7 +38,7 @@ const Page = (props: Props) => {
   };
 
   function replaceFieldWithInput(htmlContent: string) {
-    let decodedHtml = htmlContent.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+    let decodedHtml = htmlContent.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
     // Regex to find the pattern <<key**value>>
     const regex = /<<([^*]+)\*\*([^>]+)>>/g;
@@ -69,17 +69,17 @@ const Page = (props: Props) => {
   };
 
   const postUserForm = async (data: any) => {
-    const res = await axiosClient.post("userForm", data, {
-      responseType: "blob",
+    const res = await axiosClient.post('userForm', data, {
+      responseType: 'blob',
     });
     const file = new Blob([res.data]);
     const url = URL.createObjectURL(file);
 
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     document.body.appendChild(a);
 
-    a.download = data.name + ".docx";
+    a.download = data.name + '.docx';
     a.click();
   };
 
@@ -95,9 +95,7 @@ const Page = (props: Props) => {
 
   return (
     <div className="p-5">
-      <h1 className="text-2xl font-semibold text-left text-white">
-        Use Template
-      </h1>
+      <h1 className="text-2xl font-semibold text-left text-white">Use Template</h1>
       <form onSubmit={handleSubmit} className="bg-white">
         <div className="bg-white basis-3/12 mt-5 border">
           <div className="p-4">
@@ -120,11 +118,7 @@ const Page = (props: Props) => {
                   <button disabled className="bg-primary opacity-20 text-white px-4 py-2 ml-3 rounded-md text-sm font-medium" aria-label="Save">
                     Lưu lại
                   </button> */}
-                  <button
-                    type="submit"
-                    className="bg-primary text-white px-4 py-2 ml-3 rounded-md text-sm font-medium"
-                    aria-label="Download"
-                  >
+                  <button type="submit" className="bg-primary text-white px-4 py-2 ml-3 rounded-md text-sm font-medium" aria-label="Download">
                     Lưu và tải xuống
                   </button>
                 </div>
@@ -135,10 +129,7 @@ const Page = (props: Props) => {
         </div>
         <div className="w-[793px] mx-auto">
           <div className="overflow-y-scroll max-h-[39rem] min-h-[39rem]  border-2">
-            <div
-              className="content-center min-h-[35rem] p-10 border-1 border-black"
-              ref={templateRef}
-            ></div>
+            <div className="content-center min-h-[35rem] p-10 border-1 border-black" ref={templateRef}></div>
           </div>
         </div>
       </form>
