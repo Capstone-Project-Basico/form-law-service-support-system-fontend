@@ -1,8 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
-const Navbar = dynamic(() => import("../../components/dashboardNavbar/navbar"));
+const Navbar = dynamic(() => import("../dashboardNavbar/navbar"));
 import { useEffect } from "react";
-import Sidebar from "../../components/dashboardSidebar/sidebar";
+import Sidebar from "../dashboardSidebar/sidebar";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 import "react-toastify/dist/ReactToastify.css";
 import { usePathname, useRouter } from "next/navigation";

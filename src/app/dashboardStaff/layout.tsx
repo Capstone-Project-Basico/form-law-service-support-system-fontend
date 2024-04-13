@@ -2,12 +2,10 @@
 
 import { useEffect } from "react";
 import Navbar from "../../components/dashboardNavbar/navbar";
-import Sidebar from "../../components/dashboardSidebar/sidebar";
-
+import Sidebar from "../../components/dashboardStaffSidebar/staffSidebar";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { UserLocal } from "@/constants/types/homeType";
-// export const dynamic = "force-dynamic";
 
 type LayoutProps = {
   children: React.ReactNode; // Typing the children prop
