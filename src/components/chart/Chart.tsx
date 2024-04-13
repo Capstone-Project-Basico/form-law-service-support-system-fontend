@@ -41,7 +41,10 @@ export default function BasicDemo() {
   }, []);
 
   return (
-    <div className="card">
+    <div
+      className="card w-full justify-center items-center"
+      style={{ width: "900px", height: "300px" }}
+    >
       <Chart type="bar" data={chartData} options={chartOptions} />
     </div>
   );

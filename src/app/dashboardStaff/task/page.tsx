@@ -1,48 +1,18 @@
 "use client";
 
+import authHeader from "@/components/authHeader/AuthHeader";
+import { TaskType, UserLocal } from "@/constants/types/homeType";
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-  Breadcrumbs,
   BreadcrumbItem,
+  Breadcrumbs,
   Button,
-  Input,
   useDisclosure,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-  MenuItem,
 } from "@nextui-org/react";
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
-import { TaskType } from "@/constants/types/homeType";
-import authHeader from "@/components/authHeader/AuthHeader";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  listAll,
-  list,
-  StorageReference,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { storage } from "@/app/firebase";
-import Tasks from "@/components/manage/Task";
-import { v4 as uuidv4 } from "uuid";
+import StaffTasks from "@/components/staff/StaffTasks";
 
 const Task = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -65,7 +35,15 @@ const Task = () => {
     processStatus,
   };
 
-  const [imageUpload, setImageUpload] = useState<File | null>(null);
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
+  const userId = user?.data.data.userId;
 
   useEffect(() => {
     switch (tabs) {
@@ -85,7 +63,7 @@ const Task = () => {
   const fetchTask = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/getAllTask`,
+        `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/getTaskAssignmentById/${userId}`,
         {
           headers: authHeader(),
         }
@@ -213,85 +191,11 @@ const Task = () => {
             <p className="text-black font-bold text-3xl ">Quản lí công việc</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Công việc</p>
+            <p className="text-[#FF0004] font-bold text-3xl">
+              Công việc của bạn
+            </p>
           </BreadcrumbItem>
         </Breadcrumbs>
-        <div className="flex justify-end">
-          <Button
-            className="flex justify-end w-[100px] bg-[#FF0004] text-white"
-            radius="full"
-            onPress={onOpen}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-            Tạo mới
-          </Button>
-          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <form onSubmit={handleSubmit}>
-                    <ModalHeader className="flex flex-col gap-1">
-                      Thêm đối tác
-                    </ModalHeader>
-                    <ModalBody>
-                      <Input
-                        className="font-bold"
-                        type="text"
-                        label="Tên công việc"
-                        value={taskName}
-                        onChange={(e) => setTaskName(e.target.value)}
-                      />
-                      <Input
-                        type="text"
-                        label="Mô tả"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
-
-                      <Input
-                        type="date"
-                        label="Ngày bắt đầu"
-                        value={
-                          startDate
-                            ? startDate.toISOString().substring(0, 10)
-                            : ""
-                        }
-                        onChange={(e) =>
-                          setStartDate(
-                            e.target.value ? new Date(e.target.value) : null
-                          )
-                        }
-                        className="form-input"
-                      />
-                      {/* Ngày kết thúc */}
-                      <Input
-                        type="date"
-                        label="Ngày kết thúc"
-                        value={
-                          endDate ? endDate.toISOString().substring(0, 10) : ""
-                        }
-                        onChange={(e) =>
-                          setEndDate(
-                            e.target.value ? new Date(e.target.value) : null
-                          )
-                        }
-                        className="form-input"
-                      />
-                    </ModalBody>
-                    <ModalFooter>
-                      <Button color="danger" variant="light" onPress={onClose}>
-                        Đóng
-                      </Button>
-                      <Button color="primary" onPress={onClose} type="submit">
-                        Thêm
-                      </Button>
-                    </ModalFooter>
-                  </form>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
-        </div>
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
@@ -303,7 +207,7 @@ const Task = () => {
             onClick={() => setTabs(1)}
             radius="none"
           >
-            TẤT CẢ
+            ĐANG LÀM
           </Button>
         </div>
 
@@ -316,14 +220,14 @@ const Task = () => {
             radius="none"
             onClick={() => setTabs(2)}
           >
-            ĐÃ XÓA
+            ĐÃ LÀM XONG
           </Button>
         </div>
       </div>
 
       <div>
-        <Tasks
-          tasks={task}
+        <StaffTasks
+          tasks={task ? task : []}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
           handleUpdateSubmit={handleUpdateSubmit}

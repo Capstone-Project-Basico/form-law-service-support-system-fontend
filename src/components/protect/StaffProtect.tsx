@@ -1,14 +1,10 @@
 "use client";
-import dynamic from "next/dynamic";
-const Navbar = dynamic(() => import("../../components/dashboardNavbar/navbar"));
-import { useEffect } from "react";
-import Sidebar from "../../components/dashboardSidebar/sidebar";
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
-import "react-toastify/dist/ReactToastify.css";
-import { usePathname, useRouter } from "next/navigation";
 import { UserLocal } from "@/constants/types/homeType";
-import { getPathByURL } from "@/lib/path-link";
-import Link from "next/link";
+import dynamic from "next/dynamic";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import "react-toastify/dist/ReactToastify.css";
+const Navbar = dynamic(() => import("../dashboardNavbar/navbar"));
 
 // export const dynamic = "force-dynamic";
 
@@ -56,7 +52,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   // Check if the user role is not admin
 
   useEffect(() => {
-    if (userRole !== "ROLE_ADMIN") {
+    if (userRole !== "ROLE_STAFF") {
       // Redirect non-admin users to the home page or login page
       router.push("/");
     }
