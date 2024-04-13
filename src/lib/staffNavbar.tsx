@@ -9,28 +9,28 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export const sideNavItems: SideNavItem[] = [
+export const staffNavItems: SideNavItem[] = [
   {
     title: "Trang chủ",
-    path: "/dashboard",
+    path: "/dashboardStaff",
     icon: <FontAwesomeIcon icon={faHouse} className="w-7 h-7 text-[#FF0004]" />,
   },
   {
     title: "Quản lí thông tin",
-    path: "/dashboard/information",
+    path: "/dashboardStaff/information",
     icon: (
       <FontAwesomeIcon icon={faCircleInfo} className="w-7 h-7 text-[#FF0004]" />
     ),
     subMenu: true,
     subMenuItems: [
-      { title: "Liên hệ", path: "/dashboard/information/contact" },
-      { title: "Tuyển dụng", path: "/dashboard/information/recruitment" },
-      { title: "Đối tác", path: "/dashboard/information/partner" },
+      { title: "Liên hệ", path: "/dashboardStaff/information/contact" },
+      { title: "Tuyển dụng", path: "/dashboardStaff/information/recruitment" },
+      { title: "Đối tác", path: "/dashboardStaff/information/partner" },
     ],
   },
   {
     title: "Quản lí dịch vụ",
-    path: "/dashboard/service",
+    path: "/dashboardStaff/service",
     icon: (
       <FontAwesomeIcon
         icon={faBarsStaggered}
@@ -39,31 +39,31 @@ export const sideNavItems: SideNavItem[] = [
     ),
     subMenu: true,
     subMenuItems: [
-      { title: "Biểu mẫu", path: "/dashboard/service/manageTemplate" },
-      { title: "Gói dịch vụ", path: "/dashboard/service/pack" },
+      { title: "Biểu mẫu", path: "/dashboardStaff/service/manageTemplate" },
+      { title: "Gói dịch vụ", path: "/dashboardStaff/service/pack" },
     ],
   },
 
   {
     title: "Quản lí người dùng",
-    path: "/dashboard/user",
+    path: "/dashboardStaff/user",
     icon: (
       <FontAwesomeIcon icon={faUserGroup} className="w-7 h-7 text-[#FF0004]" />
     ),
     subMenu: true,
     subMenuItems: [
-      { title: "Người dùng", path: "/dashboard/user" },
-      { title: "Luật sư", path: "/dashboard/user/lawyer" },
+      { title: "Người dùng", path: "/dashboardStaff/user" },
+      { title: "Luật sư", path: "/dashboardStaff/user/lawyer" },
     ],
   },
   {
     title: "Quản lí bài viết",
-    path: "/dashboard/post",
+    path: "/dashboardStaff/post",
     icon: <FontAwesomeIcon icon={faFile} className="w-7 h-7 text-[#FF0004]" />,
   },
   {
     title: "Quản lí công việc",
-    path: "/dashboard/task",
+    path: "/dashboardStaff/task",
     icon: (
       <FontAwesomeIcon icon={faListCheck} className="w-7 h-7 text-[#FF0004]" />
     ),

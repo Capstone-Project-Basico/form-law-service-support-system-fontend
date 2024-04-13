@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-const Protext = dynamic(() => import("@/components/protect/Protext"));
+const Protect = dynamic(() => import("@/components/protect/Protect"));
 const Navbar = dynamic(() => import("../../components/dashboardNavbar/navbar"));
 import { useEffect } from "react";
 import Sidebar from "../../components/dashboardSidebar/sidebar";
@@ -27,10 +27,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const user: UserLocal | null = getUserFromStorage();
   const userRole = user?.data.data.roleName;
-  if (userRole != "ROLE_ADMIN") return <Protext>{<></>}</Protext>;
+  if (userRole != "ROLE_ADMIN") return <Protect>{<></>}</Protect>;
 
   return (
-    <Protext>
+    <Protect>
       <div className="flex flex-col">
         <div className="flex flex-cow">
           <Navbar />
@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {children}
         </div>
       </div>
-    </Protext>
+    </Protect>
   );
 };
 
