@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Template } from '@/constants/types/homeType';
-import paths from '@/lib/path-link';
-import { faEye, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Card, CardBody, CardFooter, Image } from '@nextui-org/react';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Template } from "@/constants/types/homeType";
+import paths from "@/lib/path-link";
+import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 interface UserLocal {
   data: {
     data: {
@@ -19,8 +19,8 @@ const ManageTemplate = () => {
   const router = useRouter();
   const [templates, setTemplates] = useState<Template[]>([]);
   const getUserFromStorage = () => {
-    if (typeof window !== 'undefined') {
-      const storedUser = localStorage.getItem('user');
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
       return storedUser ? JSON.parse(storedUser) : null;
     }
   };
@@ -29,19 +29,35 @@ const ManageTemplate = () => {
   const userId = user?.data.data.userId;
 
   const getAllTemplate = async (): Promise<void> => {
-    axios.get(`${process.env.NEXT_PUBLIC_BASE_API}order/getAllCheckOutFormTemplateDetailByUser/${userId}`).then((response) => {
-      const allOrder = response.data.data;
-      allOrder.map((order: any) => {
-        order.cart.map((item: any) => getTemplate(item.itemId));
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_BASE_API}order/getAllCheckOutFormTemplateDetailByUser/${userId}`
+      )
+      .then((response) => {
+        const allOrder = response.data.data;
+        allOrder.map((order: any) => {
+          order.cart.map((item: any) => getTemplate(item.itemId));
+        });
       });
-    });
   };
 
   const getTemplate = async (id: number) => {
-    axios.get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/${id}`).then((res) => {
-      setTemplates((prevTemplates) => [...prevTemplates, res.data.data]);
-      console.log(res.data.data);
-    });
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/${id}`)
+      .then((res) => {
+        setTemplates((prevTemplates) => {
+          // Check if the template is already in the state
+          const isExisting = prevTemplates.some(
+            (template) => template.id === res.data.data.id
+          );
+          if (!isExisting) {
+            return [...prevTemplates, res.data.data];
+          } else {
+            // If the template already exists, return the previous state without adding it again
+            return prevTemplates;
+          }
+        });
+      });
   };
 
   useEffect(() => {
@@ -56,7 +72,14 @@ const ManageTemplate = () => {
           <div key={index} className="">
             <Card shadow="sm" key={index} isPressable className="w-72 h-96">
               <CardBody className="overflow-hidden group relative">
-                <Image shadow="sm" radius="lg" width="100%" alt={template.title} className="w-full object-cover h-[281px]" src="/bieumau.jpg" />
+                <Image
+                  shadow="sm"
+                  radius="lg"
+                  width="100%"
+                  alt={template.title}
+                  className="w-full object-cover h-[281px]"
+                  src="/bieumau.jpg"
+                />
                 <div className=" absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
                   <Button className=" bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
                     <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
@@ -69,7 +92,10 @@ const ManageTemplate = () => {
                     className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
                     variant="faded"
                   >
-                    <FontAwesomeIcon icon={faPenToSquare} className="size-4 ml-1" />
+                    <FontAwesomeIcon
+                      icon={faPenToSquare}
+                      className="size-4 ml-1"
+                    />
                     Dùng mẫu
                   </Button>
                 </div>
