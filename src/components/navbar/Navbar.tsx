@@ -124,7 +124,7 @@ const Navbar = () => {
                 >
                   <div
                     // href="/practices"
-                    className={`link ${
+                    className={` ${
                       pathname.includes("/practices") ? "text-[#e74c3c]" : ""
                     } `}
                   >
@@ -155,18 +155,21 @@ const Navbar = () => {
               radius="none"
             >
               <DropdownTrigger>
-                <div
-                  className={`link ${
-                    pathname === "/researchAndPublications" ? "isActive" : ""
-                  }`}
-                  color="secondary"
-                >
+                <div color="secondary">
                   <Button
                     className={styles.hoverButton}
                     radius="none"
                     onClick={() => router.push("/researchAndPublications")}
                   >
-                    NGHIÊN CỨU SÁNG TẠO
+                    <div
+                      className={` ${
+                        pathname.includes("/researchAndPublications")
+                          ? "text-[#e74c3c]"
+                          : ""
+                      }`}
+                    >
+                      NGHIÊN CỨU SÁNG TẠO
+                    </div>
                   </Button>
                 </div>
               </DropdownTrigger>
@@ -193,16 +196,19 @@ const Navbar = () => {
               radius="none"
             >
               <DropdownTrigger>
-                <div
-                  className={`link ${pathname === "/about" ? "isActive" : ""}`}
-                  color="secondary"
-                >
+                <div color="secondary">
                   <Button
                     className={styles.hoverButton}
                     radius="none"
                     onClick={() => router.push("/about")}
                   >
-                    GIỚI THIỆU
+                    <div
+                      className={`${
+                        pathname === "/about" ? "text-[#e74c3c]" : ""
+                      }`}
+                    >
+                      GIỚI THIỆU
+                    </div>
                   </Button>
                 </div>
               </DropdownTrigger>
@@ -220,16 +226,19 @@ const Navbar = () => {
           {MENU.map((item) => {
             return (
               <NavbarItem key={item.name}>
-                <div
-                  className={`link ${pathname === item.path ? "isActive" : ""}`}
-                  color="secondary"
-                >
+                <div color="secondary">
                   <Button
                     className={styles.hoverButton}
                     radius="none"
                     onClick={() => router.push(item.path)}
                   >
-                    {item.name}
+                    <div
+                      className={`${
+                        pathname === item.path ? "text-[#e74c3c]" : ""
+                      }`}
+                    >
+                      {item.name}
+                    </div>
                   </Button>
                 </div>
               </NavbarItem>
