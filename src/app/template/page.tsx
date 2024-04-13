@@ -142,11 +142,6 @@ const Page = () => {
   };
 
   return (
-    // <div className="columns-3 pb-10 gap-10 ">
-    //   {(templates || []).map((item: Template, index: number) => (
-    //     <CardTemplate key={index} itemDetail={item} />
-    //   ))}
-    // </div>
     <>
       <HeaderComponent title="BIỂU MẪU" link="BIỂU MẪU" />
 
@@ -178,35 +173,35 @@ const Page = () => {
             </div>
           </div>
         </div>
-
-        <div className="grid grid-cols-3 mx-56 gap-10">
-          {templates.map((template, index) => (
-            <div key={index} className="">
-              <Card
-                shadow="sm"
-                key={index}
-                isPressable={false}
-                onPress={() => console.log("item pressed")}
-                className="w-72 h-96"
-              >
-                <CardBody className="group relative">
-                  <Image
-                    shadow="sm"
-                    radius="lg"
-                    width="100%"
-                    alt={template.title}
-                    className="w-full object-cover h-[281px]"
-                    // src={
-                    //   template.fileUrl
-                    //     ? template.fileUrl.startsWith("http")
-                    //       ? template.fileUrl
-                    //       : "/errorImage.png"
-                    //     : "/errorImage.png"
-                    // }
-                    src="/bieumau.jpg"
-                  />
-                  <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
-                    {/* <Button className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
+        {templates && (
+          <div className="grid grid-cols-3 mx-56 gap-10">
+            {templates.map((template, index) => (
+              <div key={index} className="">
+                <Card
+                  shadow="sm"
+                  key={index}
+                  isPressable={false}
+                  onPress={() => console.log("item pressed")}
+                  className="w-72 h-96"
+                >
+                  <CardBody className="group relative overflow-hidden">
+                    <Image
+                      shadow="sm"
+                      radius="lg"
+                      width="100%"
+                      alt={template.title}
+                      className="w-full object-cover h-[281px]"
+                      // src={
+                      //   template.fileUrl
+                      //     ? template.fileUrl.startsWith("http")
+                      //       ? template.fileUrl
+                      //       : "/errorImage.png"
+                      //     : "/errorImage.png"
+                      // }
+                      src="/bieumau.jpg"
+                    />
+                    <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
+                      {/* <Button className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
                       <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
                       Xem trước
                     </Button>
@@ -220,23 +215,25 @@ const Page = () => {
                       />
                       Dùng mẫu
                     </Button> */}
-                  </div>
-                </CardBody>
-                <CardFooter className="flex flex-col items-start">
-                  <p className="text-default-500">{template.price}</p>
-                  <b>{template.message}</b>
-                  <Button
-                    onClick={() => handleBuy(template.id, template.price)}
-                    className="bg-[#FF0004] text-white h-12 rounded-full"
-                  >
-                    Mua
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          ))}
-          <div className="flex w-full justify-center">
-            {/* <Pagination
+                    </div>
+                  </CardBody>
+                  <CardFooter className="flex flex-col items-start">
+                    <p className="text-default-500">
+                      {template.price.toLocaleString()} Đ
+                    </p>
+                    <p className="truncate">{template.message}</p>
+                    <Button
+                      onClick={() => handleBuy(template.id, template.price)}
+                      className="bg-[#FF0004] text-white h-12 rounded-full"
+                    >
+                      Mua
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </div>
+            ))}
+            <div className="flex w-full justify-center">
+              {/* <Pagination
             isCompact
             showControls
             showShadow
@@ -245,8 +242,9 @@ const Page = () => {
             total={pages}
             onChange={(page) => setPage(page)}
           /> */}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
