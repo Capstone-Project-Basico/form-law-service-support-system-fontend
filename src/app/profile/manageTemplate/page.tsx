@@ -45,8 +45,18 @@ const ManageTemplate = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/${id}`)
       .then((res) => {
-        setTemplates((prevTemplates) => [...prevTemplates, res.data.data]);
-        console.log(res.data.data);
+        setTemplates((prevTemplates) => {
+          // Check if the template is already in the state
+          const isExisting = prevTemplates.some(
+            (template) => template.id === res.data.data.id
+          );
+          if (!isExisting) {
+            return [...prevTemplates, res.data.data];
+          } else {
+            // If the template already exists, return the previous state without adding it again
+            return prevTemplates;
+          }
+        });
       });
   };
 
