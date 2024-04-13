@@ -24,6 +24,7 @@ import {
   MenuItem,
   Spinner,
   getKeyValue,
+  Pagination,
 } from '@nextui-org/react';
 import axios from 'axios';
 import React, { FormEvent, Key, useCallback, useEffect, useState } from 'react';
@@ -36,6 +37,7 @@ import Image from 'next/image';
 import Template from '@/components/manage/Template';
 import { useRouter } from 'next/navigation';
 import axiosClient from '@/lib/axiosClient';
+import { ArrowDownTrayIcon } from '@heroicons/react/24/solid';
 
 const Page = () => {
   const router = useRouter();
@@ -90,27 +92,46 @@ const Page = () => {
       key: 'download',
     },
     {
-      title: 'Sử dụng',
-      key: 'use',
+      title: 'Hành động',
+      key: 'action',
     },
   ];
 
   const renderCell = useCallback((item: FormTemplateVersion, columnKey: Key) => {
     switch (columnKey) {
       case 'download':
-        return <a href={process.env.NEXT_PUBLIC_BASE_API + 'formTemplateVersion/download/' + item.id}>Tải xuống</a>;
-      case 'use':
-        return <Link href={`/dashboard/template/use-template/${item.id}`}>Sử dụng</Link>;
+        return (
+          <a href={process.env.NEXT_PUBLIC_BASE_API + 'formTemplateVersion/download/' + item.id}>
+            <ArrowDownTrayIcon className="mx-auto w-4 h-4" />
+          </a>
+        );
       case 'status':
         return item.status === 'STANDARDIZED' ? (
           <span className="text-green-500">Chuẩn hóa</span>
         ) : (
           <span className="text-red-500">Chưa chuẩn hóa</span>
         );
+      case 'message':
+        return <div className="w-full text-left">{getKeyValue(item, columnKey)}</div>;
+      case 'action':
+        if (item.status === 'UNSTANDARDIZED') return <Link href={'/dashboard/service/manageTemplate/standardization/' + item.id}>Chuẩn hóa</Link>;
       default:
         return getKeyValue(item, columnKey);
     }
   }, []);
+
+  //pagination
+  const [page, setPage] = React.useState(1);
+  const rowsPerPage = 8;
+
+  const pages = Math.ceil(formTemplateVersions.length / rowsPerPage);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return formTemplateVersions.slice(start, end);
+  }, [page, formTemplateVersions]);
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -164,16 +185,22 @@ const Page = () => {
           classNames={{
             base: ' max-h-[40rem] ',
             table: ' overflow-scroll',
+            tbody: 'text-center',
           }}
+          bottomContent={
+            <div className="flex w-full justify-center">
+              <Pagination isCompact showControls showShadow color="secondary" page={page} total={pages} onChange={(page) => setPage(page)} />
+            </div>
+          }
         >
           <TableHeader columns={columns} className="text-white">
             {(column) => (
-              <TableColumn className="bg-primary text-white" key={column.key}>
+              <TableColumn className="bg-primary text-white text-center" key={column.key}>
                 {column.title}
               </TableColumn>
             )}
           </TableHeader>
-          <TableBody loadingContent={<Spinner label="Loading..." />} items={formTemplateVersions}>
+          <TableBody loadingContent={<Spinner label="Loading..." />} items={items}>
             {(item) => (
               <TableRow key={item.id}>
                 {(columnKey) => {
