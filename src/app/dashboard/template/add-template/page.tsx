@@ -99,11 +99,11 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
     if (res) {
       if (res.data.status === 'UNSTANDARDIZED') {
         console.log('unstandardized');
-        router.push('/dashboard');
+        router.push('/dashboard/service/manageTemplate');
       }
       if (res.data.status === 'STANDARDIZED') {
         console.log('standardized');
-        router.push('/dashboard/template');
+        router.push('/dashboard/service/manageTemplate');
       }
     }
   }
