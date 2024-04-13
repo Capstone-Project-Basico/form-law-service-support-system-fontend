@@ -348,7 +348,7 @@ const Post = () => {
                       value={content}
                       // onTextChange={(e) => setContent(e.htmlValue || "")}
                       onTextChange={(e) => handleEditorChange(e)}
-                      style={{ height: "320px" }}
+                      style={{ height: "520px" }}
                     />
                   </form>
                 </ModalBody>
