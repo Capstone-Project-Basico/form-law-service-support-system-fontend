@@ -35,7 +35,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import { Editor } from "primereact/editor";
-import { decodeFromBase64 } from "@/utils/base64";
+import { decodeFromBase64, encodeToBase64 } from "@/utils/base64";
 
 type PostsProps = {
   posts: PostType[];
@@ -398,11 +398,11 @@ const Posts: React.FC<PostsProps> = ({
 
                 <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
                 <Editor
-                  value={selectedPost.content}
+                  value={decodeFromBase64(selectedPost.content)}
                   onTextChange={(e) =>
                     setSelectedPost({
                       ...selectedPost,
-                      content: e.htmlValue || "",
+                      content: encodeToBase64(e.htmlValue || ""),
                     })
                   } // Ensures that 'text' is never null
                   style={{ height: "320px" }}
