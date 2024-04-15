@@ -46,6 +46,7 @@ export type PartnerType = {
   name: string;
   avatar: string; // Assuming you have an image URL or similar
   link: string; // This could be a URL
+  processStatus: string;
   delete: boolean;
 };
 
