@@ -36,6 +36,7 @@ type PartnersProps = {
   partners: PartnerType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  handleApprove: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
 };
 
@@ -43,6 +44,7 @@ const Partners: React.FC<PartnersProps> = ({
   partners,
   handleDelete,
   restoreDelete,
+  handleApprove,
   handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -219,27 +221,45 @@ const Partners: React.FC<PartnersProps> = ({
                   {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
               </TableCell>
-              {partner.delete === false ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onPress={() => {
-                      setSelectedPartner(partner);
-                      onOpenUpdate();
-                    }}
-                  >
-                    Cập nhật
-                  </Button>
-
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(partner.partnerId)}
-                  >
-                    Xóa
-                  </Button>
+              {!partner.delete ? (
+                <TableCell className="flex gap-2 items-center justify-center">
+                  {partner.processStatus === "CHỜ DUYỆT" ? (
+                    <>
+                      <Button
+                        className="bg-blue-600 text-white"
+                        onClick={() => handleApprove(partner.partnerId)}
+                      >
+                        Chập nhận
+                      </Button>
+                      <Button
+                        className="bg-[#FF0004] text-white"
+                        onClick={() => handleDelete(partner.partnerId)}
+                      >
+                        Từ chối và xóa
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        className="bg-blue-600 text-white"
+                        onPress={() => {
+                          setSelectedPartner(partner);
+                          onOpenUpdate();
+                        }}
+                      >
+                        Cập nhật
+                      </Button>
+                      <Button
+                        className="bg-[#FF0004] text-white"
+                        onClick={() => handleDelete(partner.partnerId)}
+                      >
+                        Xóa
+                      </Button>
+                    </>
+                  )}
                 </TableCell>
               ) : (
-                <TableCell className="flex items-center justify-center">
+                <TableCell className="flex gap-2 items-center justify-center">
                   <Button
                     className="bg-blue-600 text-white"
                     onClick={() => restoreDelete(partner.partnerId)}

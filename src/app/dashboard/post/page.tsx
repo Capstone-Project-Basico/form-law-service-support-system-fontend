@@ -78,7 +78,6 @@ const Post = () => {
       case 1:
         fetchPosts();
         break;
-
       case 2:
         fetchPendingPosts();
         break;

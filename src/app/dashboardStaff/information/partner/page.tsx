@@ -29,6 +29,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { PartnerType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 import {
   ref,
@@ -84,17 +85,14 @@ const Partner = () => {
     }
   }, [tabs]);
 
-  //get all items
+  //get all
   const fetchPartners = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllApprovePartner`
       );
       setPartners(response.data.data);
-      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   //get all deleted items
