@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import ExampleClientComponent from "./clientComponent";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+// import "primeflex/primeflex.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,9 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         {/* <div className="container"> */}
-        <ExampleClientComponent>
-          {/* <main>{children}</main> */} {children}
-        </ExampleClientComponent>
+        <ExampleClientComponent>{children}</ExampleClientComponent>
         {/* </div> */}
       </body>
     </html>

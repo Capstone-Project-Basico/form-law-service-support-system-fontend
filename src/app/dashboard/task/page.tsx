@@ -27,7 +27,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { TaskType } from "@/constants/types/homeType";
+import { TaskType, UserType } from "@/constants/types/homeType";
 import authHeader from "@/components/authHeader/AuthHeader";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -56,6 +56,7 @@ const Task = () => {
   const [processStatus, setProcessStatus] = useState("");
 
   const [task, setTask] = useState<TaskType[]>([]);
+  const [staffs, setStaffs] = useState<UserType[]>([]);
   const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
   let newTask = {
     taskName,
@@ -79,6 +80,7 @@ const Task = () => {
         fetchTask();
         break;
     }
+    fetchStaff();
   }, [tabs]);
 
   //get all items
@@ -106,6 +108,21 @@ const Task = () => {
         }
       );
       setTask(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //get all staffs
+  const fetchStaff = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllStaffs`,
+        {
+          headers: authHeader(),
+        }
+      );
+      setStaffs(response.data.data);
     } catch (error) {
       console.error(error);
     }
@@ -166,6 +183,8 @@ const Task = () => {
         console.error("Failed to update partner", error);
       });
   };
+
+  const handleTaskAssignSubmit = async () => {};
 
   // restore
   const restoreDelete = async (id: number) => {
@@ -324,9 +343,11 @@ const Task = () => {
       <div>
         <Tasks
           tasks={task}
+          staffs={staffs}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
           handleUpdateSubmit={handleUpdateSubmit}
+          handleTaskAssignSubmit={handleTaskAssignSubmit}
         />
       </div>
     </div>

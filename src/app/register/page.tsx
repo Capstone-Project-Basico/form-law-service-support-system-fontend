@@ -19,7 +19,7 @@ import { ToastContainer, toast } from "react-toastify";
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const [username, setUsername] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -39,7 +39,7 @@ const Page = () => {
       return;
     }
     let dataRegister = {
-      username: username,
+      userName: userName,
       email: email,
       password: password,
     };
@@ -76,7 +76,7 @@ const Page = () => {
                   type="username"
                   label="Họ và Tên"
                   placeholder="Nhập họ và tên"
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => setUserName(e.target.value)}
                   startContent={
                     <FontAwesomeIcon icon={faUser} className="w-5 h-5" />
                   }
