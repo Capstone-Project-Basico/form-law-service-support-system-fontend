@@ -84,9 +84,7 @@ const Pack = () => {
       case 2:
         console.log("dang cho duyet ne");
         break;
-      case 3:
-        // fetchDeletedPartner();
-        break;
+
       default:
         fetchPacks();
         break;
@@ -156,66 +154,6 @@ const Pack = () => {
     return filteredPacks.slice(start, end);
   }, [page, filteredPacks]);
 
-  //delete
-  const handleDelete = async (packageId: string) => {
-    // const isConfirmed = window.confirm(
-    //   "Bạn có chắc muốn xóa đối tác này không?"
-    // );
-    // if (isConfirmed) {
-    //   try {
-    //     axios
-    //       .delete(
-    //         `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${packageId}`
-    //       )
-    //       .then(() => {
-    //         toast.success("Xóa thành công");
-    //         fetchPacks();
-    //       }),
-    //       {
-    //         headers: authHeader(),
-    //       };
-
-    //     // setPartners((prevPartners) =>
-    //     //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-    //     // );
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-    Swal.fire({
-      title: "Bạn có muốn xóa gói này không?",
-      showDenyButton: true,
-      // showCancelButton: true,
-      confirmButtonText: "Có",
-      denyButtonText: `Không`,
-    }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        try {
-          axios
-            .delete(
-              `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${packageId}`
-            )
-            .then(() => {
-              toast.success("Xóa thành công");
-              fetchPacks();
-            }),
-            {
-              headers: authHeader(),
-            };
-
-          // setPartners((prevPartners) =>
-          //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-          // );
-        } catch (error) {
-          console.log(error);
-        }
-      } else if (result.isDenied) {
-        Swal.fire("Bạn đã hủy xóa", "", "error");
-        return;
-      }
-    });
-  };
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <ToastContainer />
@@ -318,18 +256,6 @@ const Pack = () => {
             CHỜ DUYỆT
           </Button>
         </div>
-        <div>
-          <Button
-            className={`bg-white ${
-              tabs === 3 &&
-              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
-            radius="none"
-            onClick={() => setTabs(3)}
-          >
-            ĐÃ XÓA
-          </Button>
-        </div>
       </div>
       <Table
         aria-label="Example static collection table"
@@ -358,9 +284,7 @@ const Pack = () => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Chi tiết
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn>
+
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -371,83 +295,30 @@ const Pack = () => {
               <TableCell>{pack.packageName}</TableCell>
               <TableCell>{pack.price}</TableCell>
               <TableCell>{pack.description}</TableCell>
-              <TableCell>
-                <span style={{ color: pack.deleted ? "red" : "green" }}>
-                  {pack.deleted ? "Không sử dụng" : "Đang hoạt động"}
-                </span>
-              </TableCell>
-              {pack.deleted === false ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onPress={() => {
-                      setSelectedPartner(pack);
-                      onOpenUpdate();
-                    }}
-                  >
-                    Cập nhật
-                  </Button>
 
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(pack.packageId)}
-                  >
-                    Xóa
-                  </Button>
-                </TableCell>
-              ) : (
-                <TableCell className="flex items-center justify-center">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    // onClick={() => restoreDelete(partner.partnerId)}
-                  >
-                    Khôi phục
-                  </Button>
-                </TableCell>
-              )}
+              <TableCell className="flex gap-2 items-center  justify-center ">
+                <Button
+                  className="bg-blue-600 text-white"
+                  onPress={() => {
+                    setSelectedPartner(pack);
+                    onOpenUpdate();
+                  }}
+                >
+                  Cập nhật
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
             Cập nhật gói dịch vụ
           </ModalHeader>
-          <ModalBody>
-            {/* {selectedPartner && (
-              <form onSubmit={handleUpdateSubmit}>
-                <Input
-                  type="text"
-                  label="Name"
-                  value={selectedPartner.name}
-                  onChange={(e) =>
-                    setSelectedPartner({
-                      ...selectedPartner,
-                      name: e.target.value,
-                    })
-                  }
-                />
-                <input
-                  className="py-3"
-                  type="file"
-                  onChange={(e) => uploadUpdateFile(e)}
-                />
-                <Input
-                  type="text"
-                  label="Link"
-                  value={selectedPartner.link}
-                  onChange={(e) =>
-                    setSelectedPartner({
-                      ...selectedPartner,
-                      link: e.target.value,
-                    })
-                  }
-                />
-              </form>
-            )} */}
-          </ModalBody>
+          <ModalBody></ModalBody>
           <ModalFooter>
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng

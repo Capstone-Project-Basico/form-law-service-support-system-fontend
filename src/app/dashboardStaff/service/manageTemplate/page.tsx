@@ -33,7 +33,7 @@ import Link from "next/link";
 import { FormTemplate } from "@/constants/types/FormTemplate";
 import authHeader from "@/components/authHeader/AuthHeader";
 import Image from "next/image";
-import Template from "@/components/manage/Template";
+import Template from "@/components/manageStaff/Template";
 import { useRouter } from "next/navigation";
 import axiosClient from "@/lib/axiosClient";
 

@@ -28,7 +28,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { RecruitmentType } from "@/constants/types/homeType";
-import Recruitments from "@/components/manage/Recruitment";
+import Recruitments from "@/components/manageStaff/Recruitment";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "@/components/authHeader/AuthHeader";
@@ -97,16 +97,14 @@ const Recruitment = () => {
       case 1:
         fetchRecruitment();
         break;
-      case 2:
-        fetchDeletedRecruitment();
-        break;
+
       default:
         fetchRecruitment();
         break;
     }
   }, [tabs]);
 
-  //get all contact
+  //get all Recruitment
   const fetchRecruitment = async () => {
     try {
       const response = await axios.get(
@@ -115,70 +113,6 @@ const Recruitment = () => {
       setRecruitment(response.data.data);
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  //get all deleted items
-  const fetchDeletedRecruitment = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/getAllDeletedRecruitmentForm`
-      );
-      setRecruitment(response.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  //delete
-  const handleDelete = async (id: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa tuyển dụng này không?"
-    );
-    if (isConfirmed) {
-      try {
-        if (!user) {
-          console.log("No user found");
-          return;
-        }
-
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
-            {
-              headers: authHeader(),
-            }
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-            fetchRecruitment();
-          }),
-          {
-            headers: authHeader(),
-          };
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  // restore
-  const restoreDelete = async (id: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm/${id}`,
-          {},
-          {
-            headers: authHeader(),
-          }
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-          fetchDeletedRecruitment();
-        });
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -244,25 +178,11 @@ const Recruitment = () => {
             TẤT CẢ
           </Button>
         </div>
-        <div>
-          <Button
-            className={`bg-white ${
-              tabs === 2 &&
-              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
-            radius="none"
-            onClick={() => setTabs(2)}
-          >
-            ĐÃ XÓA
-          </Button>
-        </div>
       </div>
 
       <div>
         <Recruitments
           recruitments={recruitment}
-          handleDelete={handleDelete}
-          restoreDelete={restoreDelete}
           handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>
