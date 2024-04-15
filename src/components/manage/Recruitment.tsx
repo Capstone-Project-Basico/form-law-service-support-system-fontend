@@ -135,9 +135,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           <TableColumn className="bg-[#FF0004] text-white">
             Giới tính
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          {/* <TableColumn className="bg-[#FF0004] text-white">
             Tình trạng hôn nhân
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className="bg-[#FF0004] text-white">SĐT</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">Email</TableColumn>
           {/* <TableColumn className="bg-[#FF0004] text-white">Vị trí</TableColumn>
@@ -181,7 +181,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               <TableCell>{recruitment.id_number}</TableCell>
               <TableCell>{recruitment.homeTown}</TableCell>
               <TableCell>{recruitment.gender}</TableCell>
-              <TableCell>{recruitment.maritalStatus}</TableCell>
+              {/* <TableCell>{recruitment.maritalStatus}</TableCell> */}
               <TableCell>{recruitment.phoneNum}</TableCell>
               <TableCell>{recruitment.email}</TableCell>
               {/* <TableCell>{recruitment.position}</TableCell>
