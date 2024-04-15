@@ -25,30 +25,43 @@ import {
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { TaskType } from "@/constants/types/homeType";
+import { TaskType, UserType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
+import { Dropdown } from "primereact/dropdown";
+import { Dialog } from "primereact/dialog";
 
 type TasksProps = {
   tasks: TaskType[];
+  staffs: UserType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
+  handleTaskAssignSubmit: (data: any) => void;
 };
 
 const Tasks: React.FC<TasksProps> = ({
   tasks,
+  staffs,
   handleDelete,
   restoreDelete,
   handleUpdateSubmit,
+  handleTaskAssignSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
-
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [visible, setVisible] = useState(false);
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenTaskAssign,
+    onOpen: onOpenTaskAssign,
+    onClose: onCloseTaskAssign,
   } = useDisclosure();
 
   //search
@@ -73,9 +86,32 @@ const Tasks: React.FC<TasksProps> = ({
     return filteredPartners.slice(start, end);
   }, [page, filteredPartners]);
 
+  const selectedCountryTemplate = (option: any, props: any) => {
+    if (option) {
+      return (
+        <div className="flex align-items-center flex-col">
+          <div className="font-semibold">{option.userName}</div>
+          <div>{option.email}</div>
+        </div>
+      );
+    }
+
+    return <span>{props.placeholder}</span>;
+  };
+
+  const countryOptionTemplate = (option: any) => {
+    return (
+      <div className="flex align-items-center flex-col">
+        <div className="font-semibold">{option.userName}</div>
+        <div>{option.email}</div>
+      </div>
+    );
+  };
+
   return (
     <div>
       <ToastContainer />
+
       <div>
         <div className="my-10 flex flex-row">
           <Input
@@ -176,6 +212,17 @@ const Tasks: React.FC<TasksProps> = ({
                     }}
                   >
                     Cập nhật
+                  </Button>
+
+                  <Button
+                    className="bg-green-600 text-white"
+                    // onClick={() => {
+                    //   setSelectedTask(task);
+                    //   onOpenTaskAssign();
+                    // }}
+                    onClick={() => setVisible(true)}
+                  >
+                    Giao việc
                   </Button>
 
                   <Button
@@ -293,6 +340,77 @@ const Tasks: React.FC<TasksProps> = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/* task assign modal */}
+      <Modal
+        isOpen={isOpenTaskAssign}
+        onClose={onCloseTaskAssign}
+        hideCloseButton
+      >
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+            Giao việc cho nhân viên
+          </ModalHeader>
+          <ModalBody>
+            {selectedTask && (
+              <form
+                id="task"
+                onSubmit={(e) => {
+                  console.log(e);
+                  e.preventDefault();
+                  // handleTaskAssignSubmit(selectedTask);
+                  onCloseTaskAssign();
+                }}
+              >
+                <Dropdown
+                  value={selectedStaff}
+                  onChange={(e) => {
+                    console.log("Dropdown change:", e.value);
+                    setSelectedStaff(e.value);
+                  }}
+                  options={staffs}
+                  optionLabel="email"
+                  placeholder="Nhân viên"
+                  filter
+                  className="w-full md:w-14rem"
+                />
+              </form>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onCloseTaskAssign}>
+              Đóng
+            </Button>
+            <Button color="primary" type="submit" form="task">
+              Cập nhật
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Dialog
+        header={<h1 className="bg-[#FF0004] pt-0">Header</h1>}
+        visible={visible}
+        onHide={() => setVisible(false)}
+        modal
+        className="bg-white border w-[400px] h-96 rounded-lg"
+      >
+        <div className="card flex justify-content-center">
+          <Dropdown
+            value={selectedStaff}
+            onChange={(e) => {
+              setSelectedStaff(e.value);
+            }}
+            options={staffs}
+            optionLabel="email"
+            placeholder="Chọn nhân viên"
+            filter
+            valueTemplate={selectedCountryTemplate}
+            itemTemplate={countryOptionTemplate}
+            className="w-96 h-10 md:w-14rem mt-10 border flex justify-center items-center"
+          />
+        </div>
+      </Dialog>
     </div>
   );
 };
