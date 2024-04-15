@@ -28,9 +28,16 @@ const DashboardNavbar = () => {
       </NavbarBrand>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button as={Link} color="primary" href="/profile" variant="flat">
+          <Button
+            className="mr-2"
+            as={Link}
+            color="primary"
+            href="/profile"
+            variant="flat"
+          >
             Profile
           </Button>
+
           <Button
             as={Link}
             color="primary"
