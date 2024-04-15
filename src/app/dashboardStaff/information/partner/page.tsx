@@ -29,7 +29,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { PartnerType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
-import Swal from "sweetalert2";
 
 import {
   ref,
@@ -41,9 +40,10 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { storage } from "@/app/firebase";
-import Partners from "@/components/manage/Partner";
+import Partners from "@/components/manageStaff/Partner";
 import { v4 as uuidv4 } from "uuid";
 import authHeader from "@/components/authHeader/AuthHeader";
+import Swal from "sweetalert2";
 
 const Partner = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -74,10 +74,7 @@ const Partner = () => {
         fetchPartners();
         break;
       case 2:
-        console.log("dang cho duyet ne");
-        break;
-      case 3:
-        fetchDeletedPartner();
+        fetchPendingPartners();
         break;
       default:
         fetchPartners();
@@ -85,21 +82,11 @@ const Partner = () => {
     }
   }, [tabs]);
 
-  //get all
+  //get all items
   const fetchPartners = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllApprovePartner`
-      );
-      setPartners(response.data.data);
-    } catch (error) {}
-  };
-
-  //get all deleted items
-  const fetchDeletedPartner = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllDeletedPartners`
       );
       setPartners(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
@@ -108,32 +95,18 @@ const Partner = () => {
     }
   };
 
-  //delete
-  const handleDelete = async (partnerId: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa đối tác này không?"
-    );
-    if (isConfirmed) {
-      try {
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-            fetchPartners();
-          }),
-          {
-            headers: authHeader(),
-          };
-
-        // setPartners((prevPartners) =>
-        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-        // );
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  //get all pending partners
+  const fetchPendingPartners = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`
+      );
+      const filteredPosts = response.data.data.filter(
+        (parner: PartnerType) =>
+          parner.processStatus === "CHỜ DUYỆT" && parner.delete === false
+      );
+      setPartners(filteredPosts);
+    } catch (error) {}
   };
 
   //update
@@ -156,22 +129,6 @@ const Partner = () => {
       .catch((error) => {
         console.error("Failed to update partner", error);
       });
-  };
-
-  // restore
-  const restoreDelete = async (partnerId: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}partner/restoreDelete/${partnerId}`
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-          fetchDeletedPartner();
-        });
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   //upload file
@@ -219,12 +176,13 @@ const Partner = () => {
       .then((response) => {
         setPartners((prevPartners) => [...prevPartners, response.data.data]);
         toast.success("tạo mới thành công");
-        fetchPartners();
+        fetchPendingPartners();
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -246,12 +204,12 @@ const Partner = () => {
             <FontAwesomeIcon icon={faPlus} />
             Tạo mới
           </Button>
-          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+          <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
             <ModalContent>
               {(onClose) => (
                 <>
                   <form onSubmit={handleSubmit}>
-                    <ModalHeader className="flex flex-col gap-1">
+                    <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
                       Thêm đối tác
                     </ModalHeader>
                     <ModalBody>
@@ -302,32 +260,22 @@ const Partner = () => {
             TẤT CẢ
           </Button>
         </div>
-        <div>
-          <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
-            CHỜ DUYỆT
-          </Button>
-        </div>
+
         <div>
           <Button
             className={`bg-white ${
-              tabs === 3 &&
-              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
+              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
+            onClick={() => setTabs(2)}
             radius="none"
-            onClick={() => setTabs(3)}
           >
-            ĐÃ XÓA
+            CHỜ DUYỆT
           </Button>
         </div>
       </div>
 
       <div>
-        <Partners
-          partners={partners}
-          handleDelete={handleDelete}
-          restoreDelete={restoreDelete}
-          handleUpdateSubmit={handleUpdateSubmit}
-        />
+        <Partners partners={partners} handleUpdateSubmit={handleUpdateSubmit} />
       </div>
     </div>
   );

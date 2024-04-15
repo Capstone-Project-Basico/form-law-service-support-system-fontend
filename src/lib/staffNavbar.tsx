@@ -45,18 +45,6 @@ export const staffNavItems: SideNavItem[] = [
   },
 
   {
-    title: "Quản lí người dùng",
-    path: "/dashboardStaff/user",
-    icon: (
-      <FontAwesomeIcon icon={faUserGroup} className="w-7 h-7 text-[#FF0004]" />
-    ),
-    subMenu: true,
-    subMenuItems: [
-      { title: "Người dùng", path: "/dashboardStaff/user" },
-      { title: "Luật sư", path: "/dashboardStaff/user/lawyer" },
-    ],
-  },
-  {
     title: "Quản lí bài viết",
     path: "/dashboardStaff/post",
     icon: <FontAwesomeIcon icon={faFile} className="w-7 h-7 text-[#FF0004]" />,
