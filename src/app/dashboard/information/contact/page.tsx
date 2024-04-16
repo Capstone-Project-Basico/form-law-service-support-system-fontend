@@ -47,6 +47,7 @@ const Contact = () => {
   const [juridical, setJuridical] = useState("");
   const [status, setStatus] = useState("");
   const [contacts, setContacts] = useState<ContactType[]>([]);
+  const [contactsList, setContactsList] = useState(contacts);
 
   let newContact = {
     fullName,
@@ -86,7 +87,8 @@ const Contact = () => {
       );
       setContacts(
         response.data.data.filter(
-          (contact: ContactType) => contact.status === "TODO"
+          (contact: ContactType) =>
+            contact.status === "TODO" || contact.status === ""
         )
       );
     } catch (error) {
@@ -107,6 +109,34 @@ const Contact = () => {
       );
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  //update status
+  const updateStatus = async (newStatus: string, contactId: number) => {
+    try {
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/updateStatusContact/${contactId}?contactStatus=${newStatus}`,
+        { headers: authHeader() }
+      );
+      // Check if response is successful
+      if (response.status === 200) {
+        // Update the contact's status in the local state to trigger a re-render
+        setContactsList((prevContacts) =>
+          prevContacts.map((contact) =>
+            contact.contactId === contactId
+              ? { ...contact, status: newStatus }
+              : contact
+          )
+        );
+        // You might want to show a toast message here
+        toast.success("Cập nhật tình trạng thành công!");
+        fetchContacts();
+      }
+    } catch (error) {
+      // Handle error
+      // You might want to show a toast message here
+      toast.error("Có lỗi xảy ra khi cập nhật tình trạng.");
     }
   };
 
@@ -247,6 +277,7 @@ const Contact = () => {
             contacts={contacts}
             handleDelete={handleDelete}
             restoreDelete={restoreDelete}
+            updateStatus={updateStatus}
             handleUpdateSubmit={handleUpdateSubmit}
           />
         )}
