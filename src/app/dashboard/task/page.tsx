@@ -43,6 +43,7 @@ import {
 import { storage } from "@/app/firebase";
 import Tasks from "@/components/manage/Task";
 import { v4 as uuidv4 } from "uuid";
+import { headers } from "next/headers";
 
 const Task = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -184,7 +185,21 @@ const Task = () => {
       });
   };
 
-  const handleTaskAssignSubmit = async () => {};
+  const handleTaskAssignSubmit = async (selectedTask: any, staffId: number) => {
+    try {
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/createNewTaskAssignment`,
+          { taskId: selectedTask.id, userId: staffId },
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success("Giao việc thành công");
+        });
+    } catch (error) {
+      toast.success("Giao việc thất bại");
+    }
+  };
 
   // restore
   const restoreDelete = async (id: number) => {
