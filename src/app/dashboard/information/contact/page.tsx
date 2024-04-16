@@ -66,14 +66,17 @@ const Contact = () => {
         fetchContacts();
         break;
       case 2:
-        fetchDeletedContact();
+        fetchDoneContacts();
         break;
-      default:
-        fetchContacts();
+      case 3:
+        fetchDeletedContacts();
         break;
-        ``;
     }
   }, [tabs]);
+
+  useEffect(() => {
+    console.log(contacts);
+  }, [contacts]);
 
   //get all contact
   const fetchContacts = async () => {
@@ -81,14 +84,34 @@ const Contact = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllContact`
       );
-      setContacts(response.data.data);
+      setContacts(
+        response.data.data.filter(
+          (contact: ContactType) => contact.status === "TODO"
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //get done contact
+  const fetchDoneContacts = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllContact`
+      );
+      setContacts(
+        response.data.data.filter(
+          (contact: ContactType) => contact.status === "DONE"
+        )
+      );
     } catch (error) {
       console.error(error);
     }
   };
 
   //get all deleted items
-  const fetchDeletedContact = async () => {
+  const fetchDeletedContacts = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllDeletedContact`
@@ -161,7 +184,7 @@ const Contact = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedContact();
+          fetchDeletedContacts();
         });
     } catch (error) {
       console.log(error);
@@ -190,17 +213,28 @@ const Contact = () => {
             onClick={() => setTabs(1)}
             radius="none"
           >
-            TẤT CẢ
+            Đang làm
           </Button>
         </div>
         <div>
           <Button
             className={`bg-white ${
-              tabs === 2 &&
+              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            onClick={() => setTabs(2)}
+            radius="none"
+          >
+            Đã hoàn thành
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
             radius="none"
-            onClick={() => setTabs(2)}
+            onClick={() => setTabs(3)}
           >
             ĐÃ XÓA
           </Button>
@@ -208,12 +242,14 @@ const Contact = () => {
       </div>
 
       <div>
-        <Contacts
-          contacts={contacts}
-          handleDelete={handleDelete}
-          restoreDelete={restoreDelete}
-          handleUpdateSubmit={handleUpdateSubmit}
-        />
+        {contacts && (
+          <Contacts
+            contacts={contacts}
+            handleDelete={handleDelete}
+            restoreDelete={restoreDelete}
+            handleUpdateSubmit={handleUpdateSubmit}
+          />
+        )}
       </div>
     </div>
   );
