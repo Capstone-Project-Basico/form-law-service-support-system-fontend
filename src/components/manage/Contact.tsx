@@ -34,10 +34,12 @@ import { ToastContainer, toast } from "react-toastify";
 import { status } from "@/lib/status";
 import { headers } from "next/headers";
 import authHeader from "../authHeader/AuthHeader";
+import Contact from "../home/Contact";
 type ContactsProps = {
   contacts: ContactType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  updateStatus: (newStatus: string, id: number) => void;
   handleUpdateSubmit: (data: any) => void;
 };
 
@@ -45,12 +47,14 @@ const Contacts: React.FC<ContactsProps> = ({
   contacts,
   handleDelete,
   restoreDelete,
+  updateStatus,
   handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedContact, setSelectedContact] = useState<ContactType | null>(
     null
   );
+  const [contactsList, setContactsList] = useState(contacts);
   // const [selectedStatus, setSelectedStatus] = useState<string | null>("ALL");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -80,20 +84,6 @@ const Contacts: React.FC<ContactsProps> = ({
 
     return filteredContacts.slice(start, end);
   }, [page, filteredContacts]);
-
-  //update status
-  const updateStatus = (e: any, contactId: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}contact/updateStatusContact/${contactId}?contactStatus=${e}`,
-          { headers: authHeader() }
-        )
-        .then((response) => {
-          console.log(response);
-        });
-    } catch (error) {}
-  };
 
   return (
     <div>
@@ -145,9 +135,9 @@ const Contacts: React.FC<ContactsProps> = ({
           <TableColumn className="bg-[#FF0004] text-white w-[160px]">
             Tình trạng
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white w-[160px]">
+          {/* <TableColumn className="bg-[#FF0004] text-white w-[160px]">
             Tình trạng 2
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className="bg-[#FF0004] text-white">
             Trạng thái
           </TableColumn>
@@ -169,15 +159,32 @@ const Contacts: React.FC<ContactsProps> = ({
                   onChange={(e) =>
                     updateStatus(e.target.value, contact.contactId)
                   }
+                  style={{
+                    backgroundColor:
+                      contact.status === "TODO" || contact.status === ""
+                        ? "#C0C0C0"
+                        : "transparent" || contact.status === "DONE"
+                        ? "#7CFC00"
+                        : "transparent",
+                    color: contact.status === "DONE" ? "#00800" : "initial",
+                  }}
                 >
                   {status.map((stt) => (
-                    <SelectItem key={stt.value} value={stt.value}>
+                    <SelectItem
+                      key={stt.value}
+                      value={stt.value}
+                      style={{
+                        backgroundColor:
+                          stt.value === "DONE" ? "#7CFC00" : undefined,
+                        color: stt.value === "DONE" ? "#00800" : undefined,
+                      }}
+                    >
                       {stt.statusName}
                     </SelectItem>
                   ))}
                 </Select>
               </TableCell>
-              <TableCell>{contact.status}</TableCell>
+              {/* <TableCell>{contact.status}</TableCell> */}
 
               <TableCell>
                 <span style={{ color: contact.delete ? "red" : "green" }}>
