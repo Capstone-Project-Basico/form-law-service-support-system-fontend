@@ -37,7 +37,7 @@ type TasksProps = {
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
-  handleTaskAssignSubmit: (data: any) => void;
+  handleTaskAssignSubmit: (data: any, staffId: number) => void;
 };
 
 const Tasks: React.FC<TasksProps> = ({
@@ -51,7 +51,31 @@ const Tasks: React.FC<TasksProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
+  const [staffId, setStaffId] = useState<number | undefined>();
   const [visible, setVisible] = useState(false);
+  const footerContent = (
+    <div>
+      <Button
+        onClick={() => setVisible(false)}
+        className="bg-white text-[#FF0004] border-[#FF0004] border"
+      >
+        Đóng
+      </Button>
+      <Button
+        onClick={() => {
+          if (staffId !== undefined) {
+            handleTaskAssignSubmit(selectedTask, staffId);
+            setVisible(false);
+          } else {
+            console.error("Staff ID is undefined");
+          }
+        }}
+        className="bg-[#FF0004] text-white"
+      >
+        Xác nhận
+      </Button>
+    </div>
+  );
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
@@ -86,7 +110,7 @@ const Tasks: React.FC<TasksProps> = ({
     return filteredPartners.slice(start, end);
   }, [page, filteredPartners]);
 
-  const selectedCountryTemplate = (option: any, props: any) => {
+  const selectedStaffTemplate = (option: any, props: any) => {
     if (option) {
       return (
         <div className="flex align-items-center flex-col">
@@ -99,7 +123,7 @@ const Tasks: React.FC<TasksProps> = ({
     return <span>{props.placeholder}</span>;
   };
 
-  const countryOptionTemplate = (option: any) => {
+  const staffOptionTemplate = (option: any) => {
     return (
       <div className="flex align-items-center flex-col">
         <div className="font-semibold">{option.userName}</div>
@@ -220,7 +244,10 @@ const Tasks: React.FC<TasksProps> = ({
                     //   setSelectedTask(task);
                     //   onOpenTaskAssign();
                     // }}
-                    onClick={() => setVisible(true)}
+                    onClick={() => {
+                      setSelectedTask(task);
+                      setVisible(true);
+                    }}
                   >
                     Giao việc
                   </Button>
@@ -389,24 +416,26 @@ const Tasks: React.FC<TasksProps> = ({
       </Modal>
 
       <Dialog
-        header={<h1 className="bg-[#FF0004] pt-0">Header</h1>}
+        header={<h1 className="bg-[#FF0004] pt-0">Giao việc</h1>}
         visible={visible}
         onHide={() => setVisible(false)}
         modal
+        footer={footerContent}
         className="bg-white border w-[400px] h-96 rounded-lg"
       >
         <div className="card flex justify-content-center">
           <Dropdown
             value={selectedStaff}
             onChange={(e) => {
+              setStaffId(e.value.userId);
               setSelectedStaff(e.value);
             }}
             options={staffs}
             optionLabel="email"
             placeholder="Chọn nhân viên"
             filter
-            valueTemplate={selectedCountryTemplate}
-            itemTemplate={countryOptionTemplate}
+            valueTemplate={selectedStaffTemplate}
+            itemTemplate={staffOptionTemplate}
             className="w-96 h-10 md:w-14rem mt-10 border flex justify-center items-center"
           />
         </div>
