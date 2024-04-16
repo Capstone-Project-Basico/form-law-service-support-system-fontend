@@ -1,3 +1,5 @@
+"use client";
+
 import axios from "axios";
 import React, { FormEvent, useEffect, useState } from "react";
 import {
@@ -22,12 +24,16 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { ContactType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
-
+import { status } from "@/lib/status";
+import { headers } from "next/headers";
+import authHeader from "../authHeader/AuthHeader";
 type ContactsProps = {
   contacts: ContactType[];
   handleDelete: (id: number) => void;
@@ -45,6 +51,7 @@ const Contacts: React.FC<ContactsProps> = ({
   const [selectedContact, setSelectedContact] = useState<ContactType | null>(
     null
   );
+  // const [selectedStatus, setSelectedStatus] = useState<string | null>("ALL");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
@@ -73,6 +80,20 @@ const Contacts: React.FC<ContactsProps> = ({
 
     return filteredContacts.slice(start, end);
   }, [page, filteredContacts]);
+
+  //update status
+  const updateStatus = (e: any, contactId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}contact/updateStatusContact/${contactId}?contactStatus=${e}`,
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          console.log(response);
+        });
+    } catch (error) {}
+  };
 
   return (
     <div>
@@ -121,23 +142,11 @@ const Contacts: React.FC<ContactsProps> = ({
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">Email</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">SĐT</TableColumn>
-          {/* <TableColumn className="bg-[#FF0004] text-white">
-            Ngành
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Thành phố
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Thời gian kinh doanh
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Damh thu hàng năm
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Pháp lý
-          </TableColumn> */}
-          <TableColumn className="bg-[#FF0004] text-white">
+          <TableColumn className="bg-[#FF0004] text-white w-[160px]">
             Tình trạng
+          </TableColumn>
+          <TableColumn className="bg-[#FF0004] text-white w-[160px]">
+            Tình trạng 2
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
             Trạng thái
@@ -152,11 +161,22 @@ const Contacts: React.FC<ContactsProps> = ({
               <TableCell>{contact.fullName}</TableCell>
               <TableCell>{contact.email}</TableCell>
               <TableCell>{contact.phoneNum}</TableCell>
-              {/* <TableCell>{contact.career}</TableCell>
-              <TableCell>{contact.city}</TableCell>
-              <TableCell>{contact.businessTime}</TableCell>
-              <TableCell>{contact.annualRevenue}</TableCell>
-              <TableCell>{contact.juridical}</TableCell> */}
+              <TableCell>
+                <Select
+                  className="max-w-xs"
+                  // defaultSelectedKeys={contact.status}
+                  selectedKeys={[contact.status]}
+                  onChange={(e) =>
+                    updateStatus(e.target.value, contact.contactId)
+                  }
+                >
+                  {status.map((stt) => (
+                    <SelectItem key={stt.value} value={stt.value}>
+                      {stt.statusName}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </TableCell>
               <TableCell>{contact.status}</TableCell>
 
               <TableCell>

@@ -60,7 +60,7 @@ export type ContactType = {
   businessTime: string;
   annualRevenue: string;
   juridical: String;
-  status: boolean;
+  status: string;
   delete: boolean;
 };
 
