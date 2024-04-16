@@ -43,6 +43,7 @@ import { storage } from "@/app/firebase";
 import Partners from "@/components/manage/Partner";
 import { v4 as uuidv4 } from "uuid";
 import authHeader from "@/components/authHeader/AuthHeader";
+import Swal from "sweetalert2";
 
 const Partner = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -73,7 +74,7 @@ const Partner = () => {
         fetchPartners();
         break;
       case 2:
-        console.log("dang cho duyet ne");
+        fetchPendingPartners();
         break;
       case 3:
         fetchDeletedPartner();
@@ -88,13 +89,27 @@ const Partner = () => {
   const fetchPartners = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllApprovePartner`
       );
       setPartners(response.data.data);
       // setPartners((prevPartners) => [...prevPartners, response.data.data]);
     } catch (error) {
       console.error(error);
     }
+  };
+
+  //get all pending partners
+  const fetchPendingPartners = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`
+      );
+      const filteredPosts = response.data.data.filter(
+        (parner: PartnerType) =>
+          parner.processStatus === "CHỜ DUYỆT" && parner.delete === false
+      );
+      setPartners(filteredPosts);
+    } catch (error) {}
   };
 
   //get all deleted items
@@ -112,30 +127,40 @@ const Partner = () => {
 
   //delete
   const handleDelete = async (partnerId: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa đối tác này không?"
-    );
-    if (isConfirmed) {
-      try {
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-            fetchPartners();
-          }),
-          {
-            headers: authHeader(),
-          };
-
-        // setPartners((prevPartners) =>
-        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-        // );
-      } catch (error) {
-        console.log(error);
+    Swal.fire({
+      title: "Bạn có muốn xóa bài viết này không?",
+      showDenyButton: true,
+      confirmButtonText: "Có",
+      denyButtonText: `Không`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          axios
+            .delete(
+              `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${partnerId}`,
+              {
+                headers: authHeader(),
+              }
+            )
+            .then(() => {
+              toast.success("Xóa thành công");
+              if (tabs === 1) {
+                fetchPartners();
+              } else {
+                fetchPendingPartners();
+              }
+            }),
+            {
+              headers: authHeader(),
+            };
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Bạn đã hủy xóa", "", "error");
+        return;
       }
-    }
+    });
   };
 
   //update
@@ -221,11 +246,32 @@ const Partner = () => {
       .then((response) => {
         setPartners((prevPartners) => [...prevPartners, response.data.data]);
         toast.success("tạo mới thành công");
-        fetchPartners();
+        fetchPendingPartners();
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  // approve
+  const handleApprove = async (partnerId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}partner/approvePartner/${partnerId}`,
+          {},
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Đối tác đã được chấp nhận");
+          fetchPartners();
+          fetchPendingPartners();
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -304,11 +350,19 @@ const Partner = () => {
             TẤT CẢ
           </Button>
         </div>
+
         <div>
-          <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
+          <Button
+            className={`bg-white ${
+              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            onClick={() => setTabs(2)}
+            radius="none"
+          >
             CHỜ DUYỆT
           </Button>
         </div>
+
         <div>
           <Button
             className={`bg-white ${
@@ -328,6 +382,7 @@ const Partner = () => {
           partners={partners}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          handleApprove={handleApprove}
           handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>

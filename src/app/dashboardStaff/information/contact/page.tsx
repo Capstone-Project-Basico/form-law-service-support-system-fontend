@@ -28,7 +28,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { ContactType } from "@/constants/types/homeType";
-import Contacts from "@/components/manage/Contact";
+import Contacts from "@/components/manageStaff/Contact";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "@/components/authHeader/AuthHeader";
@@ -65,9 +65,7 @@ const Contact = () => {
       case 1:
         fetchContacts();
         break;
-      case 2:
-        fetchDeletedContact();
-        break;
+
       default:
         fetchContacts();
         break;
@@ -84,42 +82,6 @@ const Contact = () => {
       setContacts(response.data.data);
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  //get all deleted items
-  const fetchDeletedContact = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllDeletedContact`
-      );
-      setContacts(response.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  //delete
-  const handleDelete = async (contactId: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa liên hệ này không?"
-    );
-    if (isConfirmed) {
-      try {
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-            fetchContacts();
-          }),
-          {
-            headers: authHeader(),
-          };
-      } catch (error) {
-        console.log(error);
-      }
     }
   };
 
@@ -152,22 +114,6 @@ const Contact = () => {
       });
   };
 
-  // restore
-  const restoreDelete = async (contactId: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}contact/restoreContact/${contactId}`
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-          fetchDeletedContact();
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -193,27 +139,10 @@ const Contact = () => {
             TẤT CẢ
           </Button>
         </div>
-        <div>
-          <Button
-            className={`bg-white ${
-              tabs === 2 &&
-              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
-            radius="none"
-            onClick={() => setTabs(2)}
-          >
-            ĐÃ XÓA
-          </Button>
-        </div>
       </div>
 
       <div>
-        <Contacts
-          contacts={contacts}
-          handleDelete={handleDelete}
-          restoreDelete={restoreDelete}
-          handleUpdateSubmit={handleUpdateSubmit}
-        />
+        <Contacts contacts={contacts} handleUpdateSubmit={handleUpdateSubmit} />
       </div>
     </div>
   );

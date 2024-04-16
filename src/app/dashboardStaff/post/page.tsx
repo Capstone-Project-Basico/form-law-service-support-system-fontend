@@ -34,7 +34,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "@/components/authHeader/AuthHeader";
-import Posts from "@/components/manage/Post";
+import Posts from "@/components/manageStaff/Post";
 import { Editor } from "primereact/editor";
 import { encodeToBase64 } from "@/utils/base64";
 import Swal from "sweetalert2";
@@ -81,10 +81,6 @@ const Post = () => {
       case 2:
         fetchPendingPosts();
         break;
-      case 3:
-        fetchDeletedPosts();
-        break;
-
       default:
         fetchPosts();
         break;
@@ -122,18 +118,6 @@ const Post = () => {
     } catch (error) {}
   };
 
-  //get all deleted
-  const fetchDeletedPosts = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/getAllDeletedPosts`
-      );
-      setPost(response.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   //get all categories
   const fetchCategories = async () => {
     try {
@@ -157,85 +141,6 @@ const Post = () => {
         toast.success("Tạo thành công");
         fetchPosts();
       });
-  };
-
-  //delete
-  const handleDelete = async (postId: number) => {
-    Swal.fire({
-      title: "Bạn có muốn xóa bài viết này không?",
-      showDenyButton: true,
-      confirmButtonText: "Có",
-      denyButtonText: `Không`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        try {
-          axios
-            .delete(
-              `${process.env.NEXT_PUBLIC_BASE_API}post/deletePost/${postId}`,
-              {
-                headers: authHeader(),
-              }
-            )
-            .then(() => {
-              toast.success("Xóa thành công");
-              if (tabs === 1) {
-                fetchPosts();
-              } else {
-                fetchPendingPosts();
-              }
-            }),
-            {
-              headers: authHeader(),
-            };
-        } catch (error) {
-          console.log(error);
-        }
-      } else if (result.isDenied) {
-        Swal.fire("Bạn đã hủy xóa", "", "error");
-        return;
-      }
-    });
-  };
-
-  // restore
-  const restoreDelete = async (postId: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}post/restorePost/${postId}`,
-          {},
-          {
-            headers: authHeader(),
-          }
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-          fetchDeletedPosts();
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // approve
-  const handleApprove = async (postId: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}post/approvePost/${postId}`,
-          {},
-          {
-            headers: authHeader(),
-          }
-        )
-        .then((response) => {
-          toast.success("Bài viết đã được chấp nhận");
-          fetchPosts();
-          fetchPendingPosts();
-        });
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   ///update
@@ -396,27 +301,11 @@ const Post = () => {
             CHỜ DUYỆT
           </Button>
         </div>
-
-        <div>
-          <Button
-            className={`bg-white ${
-              tabs === 3 &&
-              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
-            radius="none"
-            onClick={() => setTabs(3)}
-          >
-            ĐÃ XÓA
-          </Button>
-        </div>
       </div>
 
       <div>
         <Posts
           posts={post}
-          handleDelete={handleDelete}
-          restoreDelete={restoreDelete}
-          handleApprove={handleApprove}
           handleUpdateSubmit={handleUpdateSubmit}
           categories={categories}
         />

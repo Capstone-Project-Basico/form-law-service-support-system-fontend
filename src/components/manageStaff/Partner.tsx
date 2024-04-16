@@ -34,17 +34,11 @@ import { ToastContainer, toast } from "react-toastify";
 
 type PartnersProps = {
   partners: PartnerType[];
-  handleDelete: (id: number) => void;
-  restoreDelete: (id: number) => void;
-  handleApprove: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
 };
 
 const Partners: React.FC<PartnersProps> = ({
   partners,
-  handleDelete,
-  restoreDelete,
-  handleApprove,
   handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -186,9 +180,7 @@ const Partners: React.FC<PartnersProps> = ({
           <TableColumn className=" bg-[#FF0004] text-white">
             Liên kết trang web
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn>
+
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -216,58 +208,24 @@ const Partners: React.FC<PartnersProps> = ({
               <TableCell>
                 <Link href={partner.link}>{partner.link}</Link>
               </TableCell>
-              <TableCell>
-                <span style={{ color: partner.delete ? "red" : "green" }}>
-                  {partner.delete ? "Không sử dụng" : "Đang hoạt động"}
-                </span>
+
+              <TableCell className="flex gap-2 items-center justify-center">
+                {partner.processStatus === "CHỜ DUYỆT" ? (
+                  <></>
+                ) : (
+                  <>
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onPress={() => {
+                        setSelectedPartner(partner);
+                        onOpenUpdate();
+                      }}
+                    >
+                      Cập nhật
+                    </Button>
+                  </>
+                )}
               </TableCell>
-              {!partner.delete ? (
-                <TableCell className="flex gap-2 items-center justify-center">
-                  {partner.processStatus === "CHỜ DUYỆT" ? (
-                    <>
-                      <Button
-                        className="bg-blue-600 text-white"
-                        onClick={() => handleApprove(partner.partnerId)}
-                      >
-                        Chập nhận
-                      </Button>
-                      <Button
-                        className="bg-[#FF0004] text-white"
-                        onClick={() => handleDelete(partner.partnerId)}
-                      >
-                        Từ chối và xóa
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        className="bg-blue-600 text-white"
-                        onPress={() => {
-                          setSelectedPartner(partner);
-                          onOpenUpdate();
-                        }}
-                      >
-                        Cập nhật
-                      </Button>
-                      <Button
-                        className="bg-[#FF0004] text-white"
-                        onClick={() => handleDelete(partner.partnerId)}
-                      >
-                        Xóa
-                      </Button>
-                    </>
-                  )}
-                </TableCell>
-              ) : (
-                <TableCell className="flex gap-2 items-center justify-center">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onClick={() => restoreDelete(partner.partnerId)}
-                  >
-                    Khôi phục
-                  </Button>
-                </TableCell>
-              )}
             </TableRow>
           ))}
         </TableBody>

@@ -35,15 +35,11 @@ import authHeader from "../authHeader/AuthHeader";
 
 type RecruitmentsProps = {
   recruitments: RecruitmentType[];
-  handleDelete: (id: number) => void;
-  restoreDelete: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
 };
 
 const Recruitments: React.FC<RecruitmentsProps> = ({
   recruitments,
-  handleDelete,
-  restoreDelete,
   handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -135,9 +131,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           <TableColumn className="bg-[#FF0004] text-white">
             Giới tính
           </TableColumn>
-          {/* <TableColumn className="bg-[#FF0004] text-white">
+          <TableColumn className="bg-[#FF0004] text-white">
             Tình trạng hôn nhân
-          </TableColumn> */}
+          </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">SĐT</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">Email</TableColumn>
           {/* <TableColumn className="bg-[#FF0004] text-white">Vị trí</TableColumn>
@@ -159,9 +155,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           <TableColumn className="bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn>
+
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -181,7 +175,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               <TableCell>{recruitment.id_number}</TableCell>
               <TableCell>{recruitment.homeTown}</TableCell>
               <TableCell>{recruitment.gender}</TableCell>
-              {/* <TableCell>{recruitment.maritalStatus}</TableCell> */}
+              <TableCell>{recruitment.maritalStatus}</TableCell>
               <TableCell>{recruitment.phoneNum}</TableCell>
               <TableCell>{recruitment.email}</TableCell>
               {/* <TableCell>{recruitment.position}</TableCell>
@@ -192,60 +186,27 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               <TableCell>{recruitment.workPlace}</TableCell> */}
               <TableCell>{recruitment.processStatus}</TableCell>
 
-              <TableCell>
-                <span style={{ color: recruitment.deleted ? "red" : "green" }}>
-                  {recruitment.deleted ? "Không sử dụng" : "Đang hoạt động"}
-                </span>
+              <TableCell className="flex gap-2 items-center  justify-center ">
+                <Button
+                  className="bg-blue-600 text-white"
+                  onPress={() => {
+                    setSelectedRecruitment(recruitment);
+                    onOpenUpdate();
+                  }}
+                >
+                  Cập nhật
+                </Button>
+
+                <Button
+                  className="bg-green-600 text-white"
+                  onClick={() => {
+                    setSelectedRecruitment(recruitment);
+                    onOpen();
+                  }}
+                >
+                  Chi tiết
+                </Button>
               </TableCell>
-              {recruitment.deleted === false ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onPress={() => {
-                      setSelectedRecruitment(recruitment);
-                      onOpenUpdate();
-                    }}
-                  >
-                    Cập nhật
-                  </Button>
-
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(recruitment.id)}
-                  >
-                    Xóa
-                  </Button>
-
-                  <Button
-                    className="bg-green-600 text-white"
-                    onClick={() => {
-                      setSelectedRecruitment(recruitment);
-                      onOpen();
-                    }}
-                  >
-                    Chi tiết
-                  </Button>
-                </TableCell>
-              ) : (
-                <TableCell className="flex gap-2 items-center justify-center">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onClick={() => restoreDelete(recruitment.id)}
-                  >
-                    Khôi phục
-                  </Button>
-
-                  <Button
-                    className="bg-green-600 text-white"
-                    onClick={() => {
-                      setSelectedRecruitment(recruitment);
-                      onOpen();
-                    }}
-                  >
-                    Chi tiết
-                  </Button>
-                </TableCell>
-              )}
             </TableRow>
           ))}
         </TableBody>
