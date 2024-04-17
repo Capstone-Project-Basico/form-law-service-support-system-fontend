@@ -154,7 +154,6 @@ const Contacts: React.FC<ContactsProps> = ({
               <TableCell>
                 <Select
                   className="max-w-xs"
-                  // defaultSelectedKeys={contact.status}
                   selectedKeys={[contact.status]}
                   onChange={(e) =>
                     updateStatus(e.target.value, contact.contactId)
