@@ -75,10 +75,6 @@ const Contact = () => {
     }
   }, [tabs]);
 
-  useEffect(() => {
-    console.log(contacts);
-  }, [contacts]);
-
   //get all contact
   const fetchContacts = async () => {
     try {

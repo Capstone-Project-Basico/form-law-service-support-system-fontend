@@ -168,22 +168,24 @@ const Contacts: React.FC<ContactsProps> = ({
                     color: contact.status === "DONE" ? "#00800" : "initial",
                   }}
                 >
-                  {status.map((stt) => (
-                    <SelectItem
-                      key={stt.value}
-                      value={stt.value}
-                      style={{
-                        backgroundColor:
-                          stt.value === "DONE" ? "#7CFC00" : undefined,
-                        color: stt.value === "DONE" ? "#00800" : undefined,
-                      }}
-                    >
-                      {stt.statusName}
-                    </SelectItem>
-                  ))}
+                  {status
+                    // .filter((stt) => stt.value !== contact.status)
+                    .map((stt) => (
+                      <SelectItem
+                        key={stt.value}
+                        value={stt.value}
+                        style={{
+                          backgroundColor:
+                            stt.value === "DONE" ? "#7CFC00" : undefined,
+                          color: stt.value === "DONE" ? "#00800" : undefined,
+                          display: stt.value !== contact.status ? "" : "none",
+                        }}
+                      >
+                        {stt.statusName}
+                      </SelectItem>
+                    ))}
                 </Select>
               </TableCell>
-              {/* <TableCell>{contact.status}</TableCell> */}
 
               <TableCell>
                 <span style={{ color: contact.delete ? "red" : "green" }}>
