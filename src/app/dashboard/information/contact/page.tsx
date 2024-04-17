@@ -122,16 +122,26 @@ const Contact = () => {
       // Check if response is successful
       if (response.status === 200) {
         // Update the contact's status in the local state to trigger a re-render
-        setContactsList((prevContacts) =>
-          prevContacts.map((contact) =>
-            contact.contactId === contactId
-              ? { ...contact, status: newStatus }
-              : contact
-          )
-        );
-        // You might want to show a toast message here
+        // setContactsList((prevContacts) =>
+        //   prevContacts.map((contact) =>
+        //     contact.contactId === contactId
+        //       ? { ...contact, status: newStatus }
+        //       : contact
+        //   )
+        // );
+
         toast.success("Cập nhật tình trạng thành công!");
-        fetchContacts();
+        switch (tabs) {
+          case 1:
+            fetchContacts();
+            break;
+          case 2:
+            fetchDoneContacts();
+            break;
+          case 3:
+            fetchDeletedContacts();
+            break;
+        }
       }
     } catch (error) {
       // Handle error
