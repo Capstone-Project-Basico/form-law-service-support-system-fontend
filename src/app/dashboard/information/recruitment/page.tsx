@@ -98,23 +98,79 @@ const Recruitment = () => {
         fetchRecruitment();
         break;
       case 2:
-        fetchDeletedRecruitment();
+        fetchDoneRecruitments();
         break;
-      default:
-        fetchRecruitment();
+      case 3:
+        fetchDeletedRecruitment();
         break;
     }
   }, [tabs]);
 
-  //get all contact
+  //get all Recruitment
   const fetchRecruitment = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/getAllRecruitmentForm`
       );
-      setRecruitment(response.data.data);
+      setRecruitment(
+        response.data.data.filter(
+          (recruitment: RecruitmentType) =>
+            recruitment.processStatus === "TODO" ||
+            recruitment.processStatus === ""
+        )
+      );
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  //get done Recruitment
+  const fetchDoneRecruitments = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/getAllRecruitmentForm`
+      );
+      setRecruitment(
+        response.data.data.filter(
+          (recruitment: RecruitmentType) => recruitment.processStatus === "DONE"
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateStatus = async (newStatus: string, id: number) => {
+    try {
+      // Construct the URL with query parameters
+      const url = `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/updateStatusRecruitmentForm/${id}?status=${newStatus}`;
+
+      // Prepare the config object for headers
+      const config = {
+        headers: authHeader(),
+      };
+
+      // Make the PUT request with URL and config
+      const response = await axios.put(url, {}, config);
+
+      // Check if response is successful
+      if (response.status === 200) {
+        toast.success("Cập nhật tình trạng thành công!");
+        switch (tabs) {
+          case 1:
+            fetchRecruitment();
+            break;
+          case 2:
+            fetchDoneRecruitments();
+            break;
+          case 3:
+            fetchDeletedRecruitment();
+            break;
+        }
+      }
+    } catch (error) {
+      // Handle error
+      toast.error("Có lỗi xảy ra khi cập nhật tình trạng.");
     }
   };
 
@@ -241,17 +297,28 @@ const Recruitment = () => {
             onClick={() => setTabs(1)}
             radius="none"
           >
-            TẤT CẢ
+            ĐANG LÀM
           </Button>
         </div>
         <div>
           <Button
             className={`bg-white ${
-              tabs === 2 &&
+              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            onClick={() => setTabs(2)}
+            radius="none"
+          >
+            ĐÃ HOÀN THÀNH
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
             radius="none"
-            onClick={() => setTabs(2)}
+            onClick={() => setTabs(3)}
           >
             ĐÃ XÓA
           </Button>
@@ -263,6 +330,7 @@ const Recruitment = () => {
           recruitments={recruitment}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
+          updateStatus={updateStatus}
           handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>
