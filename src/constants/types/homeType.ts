@@ -154,6 +154,18 @@ export type TaskType = {
   status: number;
 };
 
+export type TransactionType = {
+  transactionId: string;
+  description: string;
+  amount: number;
+  createAt: Date;
+  status: string;
+  type: string;
+  walletId: string;
+  email: string;
+  deleted: boolean;
+};
+
 export type CardTemplate = {
   itemDetail?: Template;
 };

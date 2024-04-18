@@ -22,6 +22,8 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -37,7 +39,7 @@ type TasksProps = {
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
-  handleTaskAssignSubmit: (data: any, staffId: number) => void;
+  handleTaskAssignSubmit: (data: any, staffId: number, date: Date) => void;
 };
 
 const Tasks: React.FC<TasksProps> = ({
@@ -53,29 +55,7 @@ const Tasks: React.FC<TasksProps> = ({
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [staffId, setStaffId] = useState<number | undefined>();
   const [visible, setVisible] = useState(false);
-  const footerContent = (
-    <div>
-      <Button
-        onClick={() => setVisible(false)}
-        className="bg-white text-[#FF0004] border-[#FF0004] border"
-      >
-        Đóng
-      </Button>
-      <Button
-        onClick={() => {
-          if (staffId !== undefined) {
-            handleTaskAssignSubmit(selectedTask, staffId);
-            setVisible(false);
-          } else {
-            console.error("Staff ID is undefined");
-          }
-        }}
-        className="bg-[#FF0004] text-white"
-      >
-        Xác nhận
-      </Button>
-    </div>
-  );
+
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
@@ -240,13 +220,9 @@ const Tasks: React.FC<TasksProps> = ({
 
                   <Button
                     className="bg-green-600 text-white"
-                    // onClick={() => {
-                    //   setSelectedTask(task);
-                    //   onOpenTaskAssign();
-                    // }}
                     onClick={() => {
                       setSelectedTask(task);
-                      setVisible(true);
+                      onOpenTaskAssign();
                     }}
                   >
                     Giao việc
@@ -385,22 +361,39 @@ const Tasks: React.FC<TasksProps> = ({
                 onSubmit={(e) => {
                   console.log(e);
                   e.preventDefault();
-                  // handleTaskAssignSubmit(selectedTask);
-                  onCloseTaskAssign();
+                  console.log(e);
+
+                  if (staffId !== undefined && selectedTask.endDate !== null) {
+                    // Ensure staffId is not undefined
+                    handleTaskAssignSubmit(
+                      selectedTask,
+                      staffId,
+                      selectedTask.endDate
+                    );
+                    onCloseTaskAssign();
+                  } else {
+                    toast.error("Please select a staff member."); // Providing user feedback if staffId is undefined
+                  }
                 }}
               >
-                <Dropdown
-                  value={selectedStaff}
-                  onChange={(e) => {
-                    console.log("Dropdown change:", e.value);
-                    setSelectedStaff(e.value);
+                <Autocomplete
+                  isRequired
+                  label="Favorite Animal"
+                  defaultItems={staffs}
+                  placeholder="Chọn nhân viên ở đây"
+                  // defaultSelectedKey="cat"
+                  className="max-w-xs"
+                  onSelectionChange={(e) => {
+                    setStaffId(Number(e));
+                    // console.log(e);
                   }}
-                  options={staffs}
-                  optionLabel="email"
-                  placeholder="Nhân viên"
-                  filter
-                  className="w-full md:w-14rem"
-                />
+                >
+                  {(item) => (
+                    <AutocompleteItem key={item.userId}>
+                      {item.email}
+                    </AutocompleteItem>
+                  )}
+                </Autocomplete>
               </form>
             )}
           </ModalBody>
@@ -414,32 +407,6 @@ const Tasks: React.FC<TasksProps> = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-      <Dialog
-        header={<h1 className="bg-[#FF0004] pt-0">Giao việc</h1>}
-        visible={visible}
-        onHide={() => setVisible(false)}
-        modal
-        footer={footerContent}
-        className="bg-white border w-[400px] h-96 rounded-lg"
-      >
-        <div className="card flex justify-content-center">
-          <Dropdown
-            value={selectedStaff}
-            onChange={(e) => {
-              setStaffId(e.value.userId);
-              setSelectedStaff(e.value);
-            }}
-            options={staffs}
-            optionLabel="email"
-            placeholder="Chọn nhân viên"
-            filter
-            valueTemplate={selectedStaffTemplate}
-            itemTemplate={staffOptionTemplate}
-            className="w-96 h-10 md:w-14rem mt-10 border flex justify-center items-center"
-          />
-        </div>
-      </Dialog>
     </div>
   );
 };
