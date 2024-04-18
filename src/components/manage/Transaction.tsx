@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import {
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
   Pagination,
+  Selection,
   Table,
   TableBody,
   TableCell,
@@ -11,6 +17,7 @@ import {
 } from "@nextui-org/react";
 
 import { TransactionType } from "@/constants/types/homeType";
+import { statusTransaction } from "@/lib/status";
 
 type TransactionProps = {
   transactions: TransactionType[];
@@ -18,33 +25,117 @@ type TransactionProps = {
 
 const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [statusFilter, setStatusFilter] = useState<Selection>("all");
+  const [filterValue, setFilterValue] = useState("");
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
   // Filter tasks based on search term
-  const filteredPartners = transactions.filter((transaction) =>
-    transaction.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  //   const filteredPartners = transactions.filter((transaction) =>
+  //     transaction.email.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+
+  //filter by status
+  const hasSearchFilter = Boolean(filterValue);
+
+  const filteredItems = React.useMemo(() => {
+    let filteredUsers = [...transactions];
+
+    if (hasSearchFilter) {
+      filteredUsers = filteredUsers.filter((user) =>
+        user.email.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+    if (
+      statusFilter !== "all" &&
+      Array.from(statusFilter).length !== statusTransaction.length
+    ) {
+      filteredUsers = filteredUsers.filter((user) =>
+        Array.from(statusFilter).includes(user.status)
+      );
+    }
+
+    return filteredUsers;
+  }, [transactions, filterValue, statusFilter]);
+
+  const onSearchChange = React.useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const onClear = React.useCallback(() => {
+    setFilterValue("");
+    setPage(1);
+  }, []);
 
   //pagination
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 8;
 
-  const pages = Math.ceil(filteredPartners.length / rowsPerPage);
+  const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return filteredPartners.slice(start, end);
-  }, [page, filteredPartners]);
+    return filteredItems.slice(start, end);
+  }, [page, filteredItems]);
+
+  const topContent = React.useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between gap-3 items-end">
+          <Input
+            isClearable
+            className="w-full sm:max-w-[44%]"
+            placeholder="Tìm địa chỉ email"
+            // startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+          <div className="flex gap-3">
+            <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button
+                  //   endContent={<ChevronDownIcon className="text-small" />}
+                  variant="flat"
+                >
+                  Lọc theo tình trạng
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={statusFilter}
+                selectionMode="multiple"
+                onSelectionChange={setStatusFilter}
+              >
+                {statusTransaction.map((status) => (
+                  <DropdownItem key={status.uid} className="capitalize">
+                    {status.name}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        </div>
+      </div>
+    );
+  }, [filterValue, onSearchChange, statusFilter]);
 
   return (
     <div>
       <Table
         aria-label="Example static collection table"
+        topContent={topContent}
+        topContentPlacement="outside"
         bottomContent={
           <div className="flex w-full justify-center">
             <Pagination
@@ -64,23 +155,23 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
       >
         <TableHeader className="">
           <TableColumn className=" bg-[#FF0004] text-white">
-            Tên công việc
+            Tên người thực hiện
           </TableColumn>
           <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
             Mô tả
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
-            Ngày bắt đầu
+            Ngày thực hiện giao dịch
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
-            Trạng thái
+            Loại giao dịch
           </TableColumn>
-          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
+          {/* <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
-          </TableColumn>
+          </TableColumn> */}
         </TableHeader>
         <TableBody>
           {items.map((transaction, index) => (
@@ -88,20 +179,28 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
               <TableCell>{transaction.email}</TableCell>
               <TableCell>{transaction.description}</TableCell>
               <TableCell>
-                {
-                  transaction.createAt
-                    ? new Date(transaction.createAt).toLocaleDateString()
-                    : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
-                }
+                {transaction.createAt
+                  ? new Date(transaction.createAt).toLocaleDateString()
+                  : "N/A"}
               </TableCell>
-              <TableCell>{transaction.status}</TableCell>
               <TableCell>
-                <span style={{ color: transaction.status ? "red" : "green" }}>
-                  {transaction.status ? "Không sử dụng" : "Đang hoạt động"}
-                </span>
+                {transaction.status === "SUCCESS"
+                  ? "Thành công"
+                  : transaction.status === "PENDING"
+                  ? "Đang chờ"
+                  : transaction.status}
               </TableCell>
 
-              {transaction.status === "" ? (
+              <TableCell>
+                {transaction.type === "BUY" ||
+                transaction.type === "BUY_FORM_TEMPLATE"
+                  ? "MUA BIỂU MẪU"
+                  : transaction.type === "BUY_PACKAGE"
+                  ? "MUA GÓI"
+                  : transaction.type}
+              </TableCell>
+
+              {/* {transaction.status === "" ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-blue-600 text-white"
@@ -139,7 +238,7 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
                     Khôi phục
                   </Button>
                 </TableCell>
-              )}
+              )} */}
             </TableRow>
           ))}
         </TableBody>
