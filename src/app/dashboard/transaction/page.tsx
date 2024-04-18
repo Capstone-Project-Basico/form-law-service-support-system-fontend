@@ -29,7 +29,7 @@ const Page = () => {
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-2 mb-10">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
             <p className="text-black font-bold text-3xl ">Quản lí giao dịch</p>
