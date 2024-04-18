@@ -1,0 +1,250 @@
+import React, { useState } from "react";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
+  Pagination,
+  Selection,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@nextui-org/react";
+
+import { TransactionType } from "@/constants/types/homeType";
+import { statusTransaction } from "@/lib/status";
+
+type TransactionProps = {
+  transactions: TransactionType[];
+};
+
+const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<Selection>("all");
+  const [filterValue, setFilterValue] = useState("");
+  //search
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+  // Filter tasks based on search term
+  //   const filteredPartners = transactions.filter((transaction) =>
+  //     transaction.email.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+
+  //filter by status
+  const hasSearchFilter = Boolean(filterValue);
+
+  const filteredItems = React.useMemo(() => {
+    let filteredUsers = [...transactions];
+
+    if (hasSearchFilter) {
+      filteredUsers = filteredUsers.filter((user) =>
+        user.email.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+    if (
+      statusFilter !== "all" &&
+      Array.from(statusFilter).length !== statusTransaction.length
+    ) {
+      filteredUsers = filteredUsers.filter((user) =>
+        Array.from(statusFilter).includes(user.status)
+      );
+    }
+
+    return filteredUsers;
+  }, [transactions, filterValue, statusFilter]);
+
+  const onSearchChange = React.useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const onClear = React.useCallback(() => {
+    setFilterValue("");
+    setPage(1);
+  }, []);
+
+  //pagination
+  const [page, setPage] = React.useState(1);
+  const rowsPerPage = 8;
+
+  const pages = Math.ceil(filteredItems.length / rowsPerPage);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return filteredItems.slice(start, end);
+  }, [page, filteredItems]);
+
+  const topContent = React.useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between gap-3 items-end">
+          <Input
+            isClearable
+            className="w-full sm:max-w-[44%]"
+            placeholder="Tìm địa chỉ email"
+            // startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+          <div className="flex gap-3">
+            <Dropdown>
+              <DropdownTrigger className="hidden sm:flex">
+                <Button
+                  //   endContent={<ChevronDownIcon className="text-small" />}
+                  variant="flat"
+                >
+                  Lọc theo tình trạng
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={statusFilter}
+                selectionMode="multiple"
+                onSelectionChange={setStatusFilter}
+              >
+                {statusTransaction.map((status) => (
+                  <DropdownItem key={status.uid} className="capitalize">
+                    {status.name}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        </div>
+      </div>
+    );
+  }, [filterValue, onSearchChange, statusFilter]);
+
+  return (
+    <div>
+      <Table
+        aria-label="Example static collection table"
+        topContent={topContent}
+        topContentPlacement="outside"
+        bottomContent={
+          <div className="flex w-full justify-center">
+            <Pagination
+              showControls
+              classNames={{
+                wrapper: "gap-0 overflow-visible h-8 ",
+                item: "w-8 h-8 text-small rounded-none bg-transparent",
+                cursor:
+                  "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold",
+              }}
+              page={page}
+              total={pages}
+              onChange={(page) => setPage(page)}
+            />
+          </div>
+        }
+      >
+        <TableHeader className="">
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Tên người thực hiện
+          </TableColumn>
+          <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
+            Mô tả
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Ngày thực hiện giao dịch
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Tình trạng
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Loại giao dịch
+          </TableColumn>
+          {/* <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
+            Tương tác
+          </TableColumn> */}
+        </TableHeader>
+        <TableBody>
+          {items.map((transaction, index) => (
+            <TableRow key={index}>
+              <TableCell>{transaction.email}</TableCell>
+              <TableCell>{transaction.description}</TableCell>
+              <TableCell>
+                {transaction.createAt
+                  ? new Date(transaction.createAt).toLocaleDateString()
+                  : "N/A"}
+              </TableCell>
+              <TableCell>
+                {transaction.status === "SUCCESS"
+                  ? "Thành công"
+                  : transaction.status === "PENDING"
+                  ? "Đang chờ"
+                  : transaction.status}
+              </TableCell>
+
+              <TableCell>
+                {transaction.type === "BUY" ||
+                transaction.type === "BUY_FORM_TEMPLATE"
+                  ? "MUA BIỂU MẪU"
+                  : transaction.type === "BUY_PACKAGE"
+                  ? "MUA GÓI"
+                  : transaction.type}
+              </TableCell>
+
+              {/* {transaction.status === "" ? (
+                <TableCell className="flex gap-2 items-center  justify-center ">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    // onPress={() => {
+                    //   setSelectedTask(task);
+                    //   onOpenUpdate();
+                    // }}
+                  >
+                    Cập nhật
+                  </Button>
+
+                  <Button
+                    className="bg-green-600 text-white"
+                    // onClick={() => {
+                    //   setSelectedTask(task);
+                    //   onOpenTaskAssign();
+                    // }}
+                  >
+                    Giao việc
+                  </Button>
+
+                  <Button
+                    className="bg-[#FF0004] text-white"
+                    // onClick={() => handleDelete(task.id)}
+                  >
+                    Xóa
+                  </Button>
+                </TableCell>
+              ) : (
+                <TableCell className="flex gap-2 items-center justify-center">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    // onClick={() => restoreDelete(task.id)}
+                  >
+                    Khôi phục
+                  </Button>
+                </TableCell>
+              )} */}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
+
+export default Transaction;

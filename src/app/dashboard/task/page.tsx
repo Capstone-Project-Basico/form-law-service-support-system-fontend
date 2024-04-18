@@ -67,8 +67,6 @@ const Task = () => {
     processStatus,
   };
 
-  const [imageUpload, setImageUpload] = useState<File | null>(null);
-
   useEffect(() => {
     switch (tabs) {
       case 1:
@@ -185,12 +183,36 @@ const Task = () => {
       });
   };
 
-  const handleTaskAssignSubmit = async (selectedTask: any, staffId: number) => {
+  const handleTaskAssignSubmit = async (
+    selectedTask: any,
+    staffId: number,
+    endDate: Date
+  ) => {
     try {
+      var timeStamp = endDate;
+      var dateFormat = new Date(timeStamp);
+
+      let dueDate =
+        dateFormat.getFullYear() +
+        "-" +
+        (dateFormat.getMonth() + 1) +
+        "-" +
+        dateFormat.getDate() +
+        " " +
+        dateFormat.getHours() +
+        ":" +
+        dateFormat.getMinutes() +
+        ":" +
+        dateFormat.getSeconds();
+
       axios
         .post(
           `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/createNewTaskAssignment`,
-          { taskId: selectedTask.id, userId: staffId },
+          {
+            taskId: selectedTask.id,
+            userId: staffId,
+            dueDate: dueDate,
+          },
           { headers: authHeader() }
         )
         .then((response) => {

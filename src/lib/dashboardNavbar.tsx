@@ -6,6 +6,7 @@ import {
   faUserGroup,
   faFile,
   faBarsStaggered,
+  faCartShopping,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -66,6 +67,16 @@ export const sideNavItems: SideNavItem[] = [
     path: "/dashboard/task",
     icon: (
       <FontAwesomeIcon icon={faListCheck} className="w-7 h-7 text-[#FF0004]" />
+    ),
+  },
+  {
+    title: "Quản lí giao dịch",
+    path: "/dashboard/transaction",
+    icon: (
+      <FontAwesomeIcon
+        icon={faCartShopping}
+        className="w-7 h-7 text-[#FF0004]"
+      />
     ),
   },
 ];
