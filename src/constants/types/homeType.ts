@@ -151,7 +151,7 @@ export type TaskType = {
   endDate: Date | null;
   email: string;
   processStatus: string;
-  status: string;
+  status: number;
   deleted: boolean;
 };
 
