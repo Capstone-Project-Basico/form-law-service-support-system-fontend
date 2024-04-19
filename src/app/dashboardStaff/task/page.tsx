@@ -1,7 +1,11 @@
 "use client";
 
 import authHeader from "@/components/authHeader/AuthHeader";
-import { TaskType, UserLocal } from "@/constants/types/homeType";
+import {
+  TaskAssignmentType,
+  TaskType,
+  UserLocal,
+} from "@/constants/types/homeType";
 import {
   BreadcrumbItem,
   Breadcrumbs,
@@ -25,8 +29,10 @@ const Task = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [processStatus, setProcessStatus] = useState("");
 
-  const [task, setTask] = useState<TaskType[]>([]);
-  const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
+  const [task, setTask] = useState<TaskAssignmentType[]>([]);
+  const [selectedTask, setSelectedTask] = useState<TaskAssignmentType | null>(
+    null
+  );
   let newTask = {
     taskName,
     description,
@@ -51,7 +57,7 @@ const Task = () => {
         fetchTask();
         break;
       case 2:
-        fetchDeletedTask();
+        fetchDoneTasks();
         break;
       default:
         fetchTask();
@@ -63,27 +69,34 @@ const Task = () => {
   const fetchTask = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/getTaskAssignmentById/${userId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/getTaskAssignmentByUserId/${userId}`,
         {
           headers: authHeader(),
         }
       );
-      setTask(response.data.data);
+      setTask(
+        response.data.data.filter(
+          (task: TaskAssignmentType) => task.status === "CURRENT"
+        )
+      );
     } catch (error) {
       console.error(error);
     }
   };
-
-  //get all deleted items
-  const fetchDeletedTask = async () => {
+  //fetch all done tasks
+  const fetchDoneTasks = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/getAllDeletedTask`,
+        `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/getTaskAssignmentByUserId/${userId}`,
         {
           headers: authHeader(),
         }
       );
-      setTask(response.data.data);
+      setTask(
+        response.data.data.filter(
+          (task: TaskAssignmentType) => task.status === "NOT LONGER AVAILABLE"
+        )
+      );
     } catch (error) {
       console.error(error);
     }
@@ -158,7 +171,7 @@ const Task = () => {
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
-          fetchDeletedTask();
+          // fetchDeletedTask();
         });
     } catch (error) {
       console.log(error);

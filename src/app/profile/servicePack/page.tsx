@@ -43,7 +43,7 @@ const ServicePack = () => {
     } catch (error) {}
   };
   return (
-    <div className="w-[950px]">
+    <div className="w-[1350px] bg-white rounded-2xl">
       <div className="flex flex-col justify-center items-center">
         <h2 className="text-2xl font-semibold">
           Chọn gói nâng cấp dịch vụ

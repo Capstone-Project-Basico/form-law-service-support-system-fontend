@@ -80,7 +80,6 @@ export type RecruitmentType = {
   target: string;
   workPlace: string;
   id_number: string;
-  processStatus: boolean;
   deleted: boolean;
 };
 
@@ -151,7 +150,20 @@ export type TaskType = {
   endDate: Date | null;
   email: string;
   processStatus: string;
-  status: number;
+  status: string;
+  deleted: boolean;
+};
+
+export type TaskAssignmentType = {
+  id: number;
+  taskName: string;
+  email: string;
+  assignDate: Date;
+  dueDate: Date;
+  startDate: Date;
+  endDate: Date;
+  status: string;
+  deleted: boolean;
 };
 
 export type TransactionType = {
