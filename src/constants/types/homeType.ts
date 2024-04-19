@@ -80,6 +80,7 @@ export type RecruitmentType = {
   target: string;
   workPlace: string;
   id_number: string;
+  processStatus: string;
   deleted: boolean;
 };
 
