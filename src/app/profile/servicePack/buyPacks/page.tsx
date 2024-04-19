@@ -108,7 +108,7 @@ const BuyPacks = () => {
   };
 
   return (
-    <div className="w-[950px]">
+    <div className="w-[1350px] bg-white rounded-2xl">
       <ToastContainer />
       <div className="flex flex-col justify-center items-center">
         <h2 className="text-2xl font-semibold">
@@ -124,7 +124,7 @@ const BuyPacks = () => {
           các gói dịch vụ với các đặc quyền theo từng gói
         </p>
       </div>
-      <div className="grid grid-cols-3 justify-center items-center mt-10 gap-20">
+      <div className="grid grid-cols-3 justify-center items-center m-10">
         {servicePacks.map((servicePack) => (
           <div
             key={servicePack.packageId}
@@ -135,7 +135,7 @@ const BuyPacks = () => {
             </h2>
             <p className="text-xl pt-3">{servicePack.description}</p>
             <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
-              {servicePack.price} cho 1 tháng
+              {servicePack.price}Đ
             </h1>
             <Button
               className="text-white bg-[#FF0004] my-5"
@@ -143,7 +143,7 @@ const BuyPacks = () => {
                 handleBuy(servicePack.packageId, servicePack.price)
               }
             >
-              Đăng ký
+              Mua gói
             </Button>
           </div>
         ))}

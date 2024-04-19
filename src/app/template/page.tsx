@@ -174,7 +174,7 @@ const Page = () => {
           </div>
         </div>
         {templates && (
-          <div className="grid grid-cols-3 mx-56 gap-10">
+          <div className="grid grid-cols-4 mx-56 gap-10">
             {templates.map((template, index) => (
               <div key={index} className="">
                 <Card

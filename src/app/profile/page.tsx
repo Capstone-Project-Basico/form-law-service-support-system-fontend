@@ -86,7 +86,7 @@ const Profile = () => {
   return (
     <div>
       {/* right */}
-      <div className="w-[950px] h-full bg-white rounded-2xl">
+      <div className="w-[1350px] h-full bg-white rounded-2xl">
         <h2 className="text-xl font-bold ml-10 pt-10">
           Cài đặt thông tin cá nhân
         </h2>
