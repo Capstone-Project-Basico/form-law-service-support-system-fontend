@@ -169,9 +169,6 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Loại giao dịch
           </TableColumn>
-          {/* <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
-            Tương tác
-          </TableColumn> */}
         </TableHeader>
         <TableBody>
           {items.map((transaction, index) => (
@@ -199,46 +196,6 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
                   ? "MUA GÓI"
                   : transaction.type}
               </TableCell>
-
-              {/* {transaction.status === "" ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    // onPress={() => {
-                    //   setSelectedTask(task);
-                    //   onOpenUpdate();
-                    // }}
-                  >
-                    Cập nhật
-                  </Button>
-
-                  <Button
-                    className="bg-green-600 text-white"
-                    // onClick={() => {
-                    //   setSelectedTask(task);
-                    //   onOpenTaskAssign();
-                    // }}
-                  >
-                    Giao việc
-                  </Button>
-
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    // onClick={() => handleDelete(task.id)}
-                  >
-                    Xóa
-                  </Button>
-                </TableCell>
-              ) : (
-                <TableCell className="flex gap-2 items-center justify-center">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    // onClick={() => restoreDelete(task.id)}
-                  >
-                    Khôi phục
-                  </Button>
-                </TableCell>
-              )} */}
             </TableRow>
           ))}
         </TableBody>
