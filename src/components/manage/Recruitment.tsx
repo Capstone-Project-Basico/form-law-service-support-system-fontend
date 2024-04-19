@@ -22,6 +22,8 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -30,6 +32,7 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/app/firebase";
 import Image from "next/image";
 import Link from "next/link";
+import { status } from "@/lib/status";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
 
@@ -37,6 +40,7 @@ type RecruitmentsProps = {
   recruitments: RecruitmentType[];
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
+  updateStatus: (newStatus: string, id: number) => void;
   handleUpdateSubmit: (data: any) => void;
 };
 
@@ -44,11 +48,13 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
   recruitments,
   handleDelete,
   restoreDelete,
+  updateStatus,
   handleUpdateSubmit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRecruitment, setSelectedRecruitment] =
     useState<RecruitmentType | null>(null);
+  const [recruitmentssList, setRecruitmentssList] = useState(recruitments);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
@@ -126,12 +132,12 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           <TableColumn className="bg-[#FF0004] text-white">
             Ngày sinh
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          {/* <TableColumn className="bg-[#FF0004] text-white">
             CMND,CCCD
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          </TableColumn> */}
+          {/* <TableColumn className="bg-[#FF0004] text-white">
             Quê quán
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className="bg-[#FF0004] text-white">
             Giới tính
           </TableColumn>
@@ -159,9 +165,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           <TableColumn className="bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          {/* <TableColumn className="bg-[#FF0004] text-white">
             Trạng thái
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -178,8 +184,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                 }
               </TableCell>
 
-              <TableCell>{recruitment.id_number}</TableCell>
-              <TableCell>{recruitment.homeTown}</TableCell>
+              {/* <TableCell>{recruitment.id_number}</TableCell> */}
+              {/* <TableCell>{recruitment.homeTown}</TableCell> */}
               <TableCell>{recruitment.gender}</TableCell>
               {/* <TableCell>{recruitment.maritalStatus}</TableCell> */}
               <TableCell>{recruitment.phoneNum}</TableCell>
@@ -190,13 +196,51 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               <TableCell>{recruitment.graduate}</TableCell>
               <TableCell>{recruitment.target}</TableCell>
               <TableCell>{recruitment.workPlace}</TableCell> */}
-              <TableCell>{recruitment.processStatus}</TableCell>
-
               <TableCell>
+                <Select
+                  className="max-w-xs"
+                  selectedKeys={[recruitment.processStatus]}
+                  onChange={(e) => updateStatus(e.target.value, recruitment.id)}
+                  style={{
+                    backgroundColor:
+                      recruitment.processStatus === "TODO" ||
+                      recruitment.processStatus === ""
+                        ? "#C0C0C0"
+                        : "transparent" || recruitment.processStatus === "DONE"
+                        ? "#7CFC00"
+                        : "transparent",
+                    color:
+                      recruitment.processStatus === "DONE"
+                        ? "#00800"
+                        : "initial",
+                  }}
+                >
+                  {status
+                    // .filter((stt) => stt.value !== contact.status)
+                    .map((stt) => (
+                      <SelectItem
+                        key={stt.value}
+                        value={stt.value}
+                        style={{
+                          backgroundColor:
+                            stt.value === "DONE" ? "#7CFC00" : undefined,
+                          color: stt.value === "DONE" ? "#00800" : undefined,
+                          display:
+                            stt.value !== recruitment.processStatus
+                              ? ""
+                              : "none",
+                        }}
+                      >
+                        {stt.statusName}
+                      </SelectItem>
+                    ))}
+                </Select>
+              </TableCell>
+              {/* <TableCell>
                 <span style={{ color: recruitment.deleted ? "red" : "green" }}>
                   {recruitment.deleted ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
-              </TableCell>
+              </TableCell> */}
               {recruitment.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button

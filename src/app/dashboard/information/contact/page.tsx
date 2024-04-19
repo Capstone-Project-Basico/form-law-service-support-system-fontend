@@ -249,7 +249,7 @@ const Contact = () => {
             onClick={() => setTabs(1)}
             radius="none"
           >
-            Đang làm
+            ĐANG LÀM
           </Button>
         </div>
         <div>
@@ -260,7 +260,7 @@ const Contact = () => {
             onClick={() => setTabs(2)}
             radius="none"
           >
-            Đã hoàn thành
+            ĐÃ HOÀN THÀNH
           </Button>
         </div>
         <div>
