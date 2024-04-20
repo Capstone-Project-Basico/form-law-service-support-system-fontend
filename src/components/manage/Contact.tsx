@@ -182,7 +182,9 @@ const Contacts: React.FC<ContactsProps> = ({
               {contact.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-blue-600 text-white"
+                    className={`bg-blue-600 text-white ${
+                      contact.status === "DONE" ? "hidden" : ""
+                    }`}
                     onPress={() => {
                       setSelectedContact(contact);
                       onOpenUpdate();
@@ -192,7 +194,9 @@ const Contacts: React.FC<ContactsProps> = ({
                   </Button>
 
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className={`bg-[#FF0004] text-white ${
+                      contact.status === "DONE" ? "hidden" : ""
+                    }`}
                     onClick={() => handleDelete(contact.contactId)}
                   >
                     Xóa
