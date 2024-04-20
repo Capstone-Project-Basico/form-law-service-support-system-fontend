@@ -3,7 +3,6 @@ const nextConfig = {
   images: {
     domains: ["firebasestorage.googleapis.com"],
     minimumCacheTTL: 60,
-
   },
 };
 
