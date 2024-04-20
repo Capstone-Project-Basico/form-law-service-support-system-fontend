@@ -36,6 +36,7 @@ import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import { Editor } from "primereact/editor";
 import { decodeFromBase64, encodeToBase64 } from "@/utils/base64";
+import { useAsyncList } from "@react-stately/data";
 
 type PostsProps = {
   posts: PostType[];
@@ -57,7 +58,6 @@ const Posts: React.FC<PostsProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
@@ -135,17 +135,10 @@ const Posts: React.FC<PostsProps> = ({
           <TableColumn className=" bg-[#FF0004] text-white">
             Tên bài viết
           </TableColumn>
-          {/* <TableColumn className=" bg-[#FF0004] text-white">
-            Nôi dung
-          </TableColumn> */}
-
           <TableColumn className=" bg-[#FF0004] text-white">
             Người tạo
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">Loại</TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -160,65 +153,8 @@ const Posts: React.FC<PostsProps> = ({
                   <p className="text-[#FF0004]">Bài viết này chưa có tên</p>
                 )}
               </TableCell>
-              {/* <TableCell>{post.content}</TableCell> */}
-
               <TableCell>{post.userName}</TableCell>
               <TableCell>{post.cateName}</TableCell>
-              <TableCell>
-                <span style={{ color: post.deleted ? "red" : "green" }}>
-                  {post.deleted ? "Không sử dụng" : "Đang hoạt động"}
-                </span>
-              </TableCell>
-              {/* {post.deleted === false ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onPress={() => {
-                      setSelectedPost(post);
-                      onOpenUpdate();
-                    }}
-                  >
-                    Cập nhật
-                  </Button>
-
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(post.postId)}
-                  >
-                    Xóa
-                  </Button>
-                  <Button
-                    className="bg-green-600 text-white"
-                    onClick={() => {
-                      setSelectedPost(post);
-                      onOpen();
-                    }}
-                  >
-                    Chi tiết
-                  </Button>
-                </TableCell>
-              ) : (
-                <TableCell className="flex gap-2 items-center justify-center">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onClick={() => {
-                      debugger;
-                      restoreDelete(post.postId);
-                    }}
-                  >
-                    Khôi phục
-                  </Button>
-                  <Button
-                    className="bg-green-600 text-white"
-                    onClick={() => {
-                      setSelectedPost(post);
-                      onOpen();
-                    }}
-                  >
-                    Chi tiết
-                  </Button>
-                </TableCell>
-              )} */}
               {!post.deleted ? (
                 <TableCell className="flex gap-2 items-center justify-center">
                   {post.processStatus === "CHỜ DUYỆT" ? (

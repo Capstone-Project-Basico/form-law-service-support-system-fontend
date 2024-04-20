@@ -33,19 +33,20 @@ const Page = () => {
         subTitle="Bài viết nghiên cứu trên báo chí của BASICO"
         link="Bài Viết Nghiên Cứu Trên Báo Chí"
       />
-      <div className="flex flex-rows-2 pt-20 bg-white text-black px-80">
-        <div className="grid grid-cols-4 w-[847px]">
+      <div className="flex flex-rows-2 pt-20 bg-white text-black px-20">
+        <Side />
+        <div className="grid grid-cols-4 w-[1100px] gap-10">
           {posts.map((post) => (
             <Card
               isPressable
               key={post.postId}
-              className="px-[15px] w-[196px] h-[330px]"
+              className="px-[15px] w-[250px] h-[330px]"
               onClick={() => router.push(`/post/${post.postId}`)}
             >
               <Image
                 alt=""
                 src="/anhnen.jpg"
-                width={181}
+                width={250}
                 height={175}
                 className="mb-2"
               />
@@ -63,7 +64,6 @@ const Page = () => {
             </Card>
           ))}
         </div>
-        <Side />
       </div>
     </>
   );

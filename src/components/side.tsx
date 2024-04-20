@@ -32,7 +32,7 @@ const Side = () => {
   };
 
   return (
-    <div className="px-4 w-[345px]">
+    <div className="px-4 w-[345px] mr-52">
       <div className="flex flex-row border mb-10">
         <input
           type="text"
