@@ -320,7 +320,7 @@ const Recruitment = () => {
             radius="none"
             onClick={() => setTabs(3)}
           >
-            ĐÃ XÓA
+            SPAM
           </Button>
         </div>
       </div>

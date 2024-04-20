@@ -22,13 +22,15 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { UserType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
-
+import { Roles } from "@/lib/roles";
 type UsersProps = {
   users: UserType[];
   handleDelete: (id: number) => void;
@@ -137,7 +139,14 @@ const Users: React.FC<UsersProps> = ({
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.userName}</TableCell>
               <TableCell>{user.phoneNumber}</TableCell>
-              <TableCell>{user.roleName}</TableCell>
+              <TableCell>
+                {Roles.map((role) => (
+                  <div key={role.value}>
+                    {user.roleName === role.value ? role.roleName : ""}
+                  </div>
+                ))}
+              </TableCell>
+
               <TableCell>
                 <span style={{ color: user.status ? "red" : "green" }}>
                   {user.status ? "Không sử dụng" : "Đang hoạt động"}
@@ -195,17 +204,24 @@ const Users: React.FC<UsersProps> = ({
                   onCloseUpdate();
                 }}
               >
-                <Input
-                  type="text"
-                  label="Vai trò"
-                  value={selectedUser.roleName}
+                <Select
+                  label="Chọn vai trò cho người dùng này"
+                  labelPlacement="outside"
+                  className="font-bold"
+                  defaultSelectedKeys={[selectedUser.roleName]}
                   onChange={(e) =>
                     setSelectedUser({
                       ...selectedUser,
                       roleName: e.target.value,
                     })
                   }
-                />
+                >
+                  {Roles.map((role) => (
+                    <SelectItem key={role.value} value={role.value}>
+                      {role.roleName}
+                    </SelectItem>
+                  ))}
+                </Select>
               </form>
             )}
           </ModalBody>

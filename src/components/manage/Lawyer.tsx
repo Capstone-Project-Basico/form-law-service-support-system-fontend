@@ -240,7 +240,7 @@ const Lawyers: React.FC<LawyersProps> = ({
               </TableCell>
 
               {lawyer.status === 0 ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
+                <TableCell className="flex gap-2 items-center justify-center mt-5">
                   <Button
                     className="bg-blue-600 text-white"
                     onPress={() => {
@@ -248,14 +248,14 @@ const Lawyers: React.FC<LawyersProps> = ({
                       onOpenUpdate();
                     }}
                   >
-                    Update
+                    Cập nhật
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(lawyer.userId)}
                   >
-                    Delete
+                    Xóa
                   </Button>
                   <Button
                     className="bg-green-600 text-white"
