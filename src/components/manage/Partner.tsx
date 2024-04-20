@@ -196,7 +196,7 @@ const Partners: React.FC<PartnersProps> = ({
         <TableBody>
           {items.map((partner, index) => (
             <TableRow key={index}>
-              <TableCell>{partner.name}</TableCell>
+              <TableCell className="font-bold">{partner.name}</TableCell>
               <TableCell>
                 {
                   <Image

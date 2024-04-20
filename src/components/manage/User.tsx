@@ -136,7 +136,7 @@ const Users: React.FC<UsersProps> = ({
         <TableBody>
           {items.map((user, index) => (
             <TableRow key={index}>
-              <TableCell>{user.email}</TableCell>
+              <TableCell className="font-bold">{user.email}</TableCell>
               <TableCell>{user.userName}</TableCell>
               <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>
