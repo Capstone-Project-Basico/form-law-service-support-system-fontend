@@ -1,5 +1,5 @@
 export const status = [
-  { value: "TODO", statusName: "Đang làm" },
+  { value: "TODO", statusName: "Cần xử lý" },
   { value: "DONE", statusName: "Hoàn thành" },
 ];
 

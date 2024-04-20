@@ -160,6 +160,9 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
           <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
             Mô tả
           </TableColumn>
+          <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
+            Số tiền
+          </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày thực hiện giao dịch
           </TableColumn>
@@ -175,6 +178,7 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
             <TableRow key={index}>
               <TableCell>{transaction.email}</TableCell>
               <TableCell>{transaction.description}</TableCell>
+              <TableCell>{transaction.amount.toLocaleString()} VND</TableCell>
               <TableCell>
                 {transaction.createAt
                   ? new Date(transaction.createAt).toLocaleDateString()

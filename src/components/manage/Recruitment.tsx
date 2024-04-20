@@ -127,7 +127,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
       >
         <TableHeader>
           <TableColumn className="bg-[#FF0004] text-white">
-            Họ và Tên
+            Họ và tên ứng viên
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">
             Ngày sinh
@@ -244,7 +244,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               {recruitment.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-blue-600 text-white"
+                    className={`bg-blue-600 text-white ${
+                      recruitment.processStatus === "DONE" ? "hidden" : ""
+                    }`}
                     onPress={() => {
                       setSelectedRecruitment(recruitment);
                       onOpenUpdate();
@@ -254,7 +256,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   </Button>
 
                   <Button
-                    className="bg-[#FF0004] text-white"
+                    className={`bg-[#FF0004] text-white ${
+                      recruitment.processStatus === "DONE" ? "hidden" : ""
+                    } `}
                     onClick={() => handleDelete(recruitment.id)}
                   >
                     Xóa
@@ -309,7 +313,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
             {selectedRecruitment && (
               <div className="flex flex-col gap-10">
                 <div className="flex flex-row ">
-                  <p className="w-40">Họ và tên</p>
+                  <p className="w-40">Họ và tên ứng viên</p>
                   <p className="pl-10">{selectedRecruitment.fullName}</p>
                 </div>
 

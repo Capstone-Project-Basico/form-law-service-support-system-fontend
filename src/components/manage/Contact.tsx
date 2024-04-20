@@ -128,18 +128,12 @@ const Contacts: React.FC<ContactsProps> = ({
       >
         <TableHeader>
           <TableColumn className="bg-[#FF0004] text-white">
-            Họ và Tên
+            Tên khách hàng
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">Email</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">SĐT</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white w-[160px]">
             Tình trạng
-          </TableColumn>
-          {/* <TableColumn className="bg-[#FF0004] text-white w-[160px]">
-            Tình trạng 2
-          </TableColumn> */}
-          <TableColumn className="bg-[#FF0004] text-white">
-            Trạng thái
           </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
@@ -168,30 +162,23 @@ const Contacts: React.FC<ContactsProps> = ({
                     color: contact.status === "DONE" ? "#00800" : "initial",
                   }}
                 >
-                  {status
-                    // .filter((stt) => stt.value !== contact.status)
-                    .map((stt) => (
-                      <SelectItem
-                        key={stt.value}
-                        value={stt.value}
-                        style={{
-                          backgroundColor:
-                            stt.value === "DONE" ? "#7CFC00" : undefined,
-                          color: stt.value === "DONE" ? "#00800" : undefined,
-                          display: stt.value !== contact.status ? "" : "none",
-                        }}
-                      >
-                        {stt.statusName}
-                      </SelectItem>
-                    ))}
+                  {status.map((stt) => (
+                    <SelectItem
+                      key={stt.value}
+                      value={stt.value}
+                      style={{
+                        backgroundColor:
+                          stt.value === "DONE" ? "#7CFC00" : undefined,
+                        color: stt.value === "DONE" ? "#00800" : undefined,
+                        display: stt.value !== contact.status ? "" : "none",
+                      }}
+                    >
+                      {stt.statusName}
+                    </SelectItem>
+                  ))}
                 </Select>
               </TableCell>
 
-              <TableCell>
-                <span style={{ color: contact.delete ? "red" : "green" }}>
-                  {contact.delete ? "Không sử dụng" : "Đang hoạt động"}
-                </span>
-              </TableCell>
               {contact.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
