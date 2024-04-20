@@ -210,7 +210,7 @@ const Lawyers: React.FC<LawyersProps> = ({
         <TableBody>
           {items.map((lawyer, index) => (
             <TableRow key={index}>
-              <TableCell>{lawyer.email}</TableCell>
+              <TableCell className="font-bold">{lawyer.email}</TableCell>
               <TableCell>
                 {
                   <Image
@@ -240,32 +240,34 @@ const Lawyers: React.FC<LawyersProps> = ({
               </TableCell>
 
               {lawyer.status === 0 ? (
-                <TableCell className="flex gap-2 items-center justify-center mt-5">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onPress={() => {
-                      setSelectedLawyer(lawyer);
-                      onOpenUpdate();
-                    }}
-                  >
-                    Cập nhật
-                  </Button>
+                <TableCell className="">
+                  <div className="flex gap-3 justify-center">
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onPress={() => {
+                        setSelectedLawyer(lawyer);
+                        onOpenUpdate();
+                      }}
+                    >
+                      Cập nhật
+                    </Button>
 
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(lawyer.userId)}
-                  >
-                    Xóa
-                  </Button>
-                  <Button
-                    className="bg-green-600 text-white"
-                    onClick={() => {
-                      setSelectedLawyer(lawyer);
-                      onOpen();
-                    }}
-                  >
-                    Chi tiết
-                  </Button>
+                    <Button
+                      className="bg-[#FF0004] text-white"
+                      onClick={() => handleDelete(lawyer.userId)}
+                    >
+                      Xóa
+                    </Button>
+                    <Button
+                      className="bg-green-600 text-white"
+                      onClick={() => {
+                        setSelectedLawyer(lawyer);
+                        onOpen();
+                      }}
+                    >
+                      Chi tiết
+                    </Button>
+                  </div>
                 </TableCell>
               ) : (
                 <TableCell className="flex gap-2 items-center justify-center">

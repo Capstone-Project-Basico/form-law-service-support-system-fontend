@@ -142,7 +142,7 @@ const Contacts: React.FC<ContactsProps> = ({
         <TableBody>
           {items.map((contact, index) => (
             <TableRow key={index}>
-              <TableCell>{contact.fullName}</TableCell>
+              <TableCell className="font-bold">{contact.fullName}</TableCell>
               <TableCell>{contact.email}</TableCell>
               <TableCell>{contact.phoneNum}</TableCell>
               <TableCell>
