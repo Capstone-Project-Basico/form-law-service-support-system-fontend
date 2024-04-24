@@ -61,10 +61,11 @@ const Page = () => {
 
       .then((response) => {
         setRecruitment((prevPartners) => [...prevPartners, response.data.data]);
-        toast.success("Gửi thành công");
+        toast.success("Gửi thông tin thành công");
       })
       .catch((error) => {
         console.log(error);
+        toast.success("Gửi thông tin thất bại");
       });
   };
 
@@ -184,6 +185,7 @@ const Page = () => {
     case 3:
       return (
         <div className="flex justify-center items-center min-h-screen">
+          <ToastContainer />
           <form onSubmit={handleSubmit} className="space-y-8  pb-[50px]  ">
             <div>
               <label

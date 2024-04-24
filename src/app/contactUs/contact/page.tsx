@@ -52,10 +52,11 @@ const Page = () => {
 
       .then((response) => {
         setContact((prevContacts) => [...prevContacts, response.data.data]);
-        toast.success("Gửi thành công");
+        toast.success("Gửi thông tin thành công");
       })
       .catch((error) => {
         console.log(error);
+        toast.success("Gửi thông tin thất bại");
       });
   };
   /// Initialize the step state to 1 to represent the first step in the process.
@@ -75,6 +76,7 @@ const Page = () => {
     case 1:
       return (
         <div className="flex flex-col items-center justify-center pb-[100px]">
+          <ToastContainer />
           <div className="">
             <div className="pt-20 pl-64 pb-5">
               <img
@@ -104,6 +106,7 @@ const Page = () => {
     case 2:
       return (
         <div className="flex justify-center items-center min-h-screen">
+          <ToastContainer />
           <form onSubmit={handleSubmit} className="space-y-8  pb-[50px]  ">
             <div>
               <label
