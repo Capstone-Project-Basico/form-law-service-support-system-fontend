@@ -7,7 +7,7 @@ type LayoutProps = {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="bg-custom-bg bg-cover">
-      <div className="flex flex-row justify-center gap-10 pt-20 pb-[137px]">
+      <div className="flex flex-row justify-center gap-10 pt-20 pb-[157px]">
         <ProfileSiderbar />
         {children}
       </div>

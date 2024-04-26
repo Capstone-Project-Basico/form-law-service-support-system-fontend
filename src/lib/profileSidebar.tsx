@@ -12,6 +12,7 @@ import {
   faFileSignature,
   faHeadset,
   faClockRotateLeft,
+  faBasketShopping,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -62,6 +63,16 @@ export const profileSidebar: ProfileSidebarItem[] = [
     icon: (
       <FontAwesomeIcon
         icon={faClockRotateLeft}
+        className="w-7 h-7 text-[#FF0004]"
+      />
+    ),
+  },
+  {
+    title: "Lịch sử mua hàng",
+    path: "/profile/orderHistory",
+    icon: (
+      <FontAwesomeIcon
+        icon={faBasketShopping}
         className="w-7 h-7 text-[#FF0004]"
       />
     ),
