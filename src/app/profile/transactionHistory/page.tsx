@@ -74,7 +74,7 @@ const TransactionHistory = () => {
 
   return (
     <div className="w-[1350px] bg-white rounded-2xl">
-      <h1 className="font-bold p-3 text-3xl">Lịch sử mua hàng của bạn</h1>
+      <h1 className="font-bold p-3 text-3xl">Lịch sử giao dịch của bạn</h1>
       <Table
         aria-label="Example static collection table"
         bottomContent={

@@ -32,6 +32,7 @@ import Contacts from "@/components/manage/Contact";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "@/components/authHeader/AuthHeader";
+import Swal from "sweetalert2";
 
 const Contact = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -160,26 +161,35 @@ const Contact = () => {
 
   //delete
   const handleDelete = async (contactId: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa liên hệ này không?"
-    );
-    if (isConfirmed) {
-      try {
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-            fetchContacts();
-          }),
-          {
-            headers: authHeader(),
-          };
-      } catch (error) {
-        console.log(error);
+    Swal.fire({
+      title: "Bạn có muốn xóa liên hệ này không?",
+      showDenyButton: true,
+      confirmButtonText: "Có",
+      denyButtonText: `Không`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          axios
+            .delete(
+              `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`,
+              {
+                headers: authHeader(),
+              }
+            )
+            .then(() => {
+              toast.success("Xóa liên hệ thành công");
+              fetchContacts();
+            });
+        } catch (error) {
+          toast.error("Xóa liên hệ thất bại");
+
+          console.log(error);
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Bạn đã hủy xóa", "", "error");
+        return;
       }
-    }
+    });
   };
 
   ///update

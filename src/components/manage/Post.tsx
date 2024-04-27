@@ -91,7 +91,6 @@ const Posts: React.FC<PostsProps> = ({
 
   return (
     <div>
-      {/* <ToastContainer /> */}
       <div>
         <div className="my-10 flex flex-row">
           <Input

@@ -32,6 +32,7 @@ import Recruitments from "@/components/manage/Recruitment";
 import { v4 as uuidv4 } from "uuid";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "@/components/authHeader/AuthHeader";
+import Swal from "sweetalert2";
 
 interface UserLocal {
   data: {
@@ -188,34 +189,62 @@ const Recruitment = () => {
 
   //delete
   const handleDelete = async (id: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa tuyển dụng này không?"
-    );
-    if (isConfirmed) {
-      try {
-        if (!user) {
-          console.log("No user found");
-          return;
-        }
+    // const isConfirmed = window.confirm(
+    //   "Bạn có chắc muốn xóa tuyển dụng này không?"
+    // );
+    // if (isConfirmed) {
+    //   try {
+    //     if (!user) {
+    //       console.log("No user found");
+    //       return;
+    //     }
+    //     axios
+    //       .delete(
+    //         `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
+    //         {
+    //           headers: authHeader(),
+    //         }
+    //       )
+    //       .then(() => {
+    //         toast.success("Xóa thành công");
+    //         fetchRecruitment();
+    //       }),
+    //       {
+    //         headers: authHeader(),
+    //       };
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+    Swal.fire({
+      title: "Bạn có muốn xóa thông tin tuyển dụng này không?",
+      showDenyButton: true,
+      confirmButtonText: "Có",
+      denyButtonText: `Không`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          axios
+            .delete(
+              `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
+              {
+                headers: authHeader(),
+              }
+            )
+            .then(() => {
+              toast.success("Xóa thông tin tuyển dụng thành công");
+              fetchRecruitment();
+            });
+        } catch (error) {
+          toast.error("Xóa thông tin tuyển dụng thất bại");
 
-        axios
-          .delete(
-            `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
-            {
-              headers: authHeader(),
-            }
-          )
-          .then(() => {
-            toast.success("Xóa thành công");
-            fetchRecruitment();
-          }),
-          {
-            headers: authHeader(),
-          };
-      } catch (error) {
-        console.log(error);
+          console.log(error);
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Bạn đã hủy xóa", "", "error");
+        return;
       }
-    }
+    });
   };
 
   // restore

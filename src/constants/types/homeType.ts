@@ -179,6 +179,15 @@ export type TransactionType = {
   deleted: boolean;
 };
 
+export type OrderType = {
+  orderId: string;
+  email: string;
+  cart: [];
+  orderStatus: string;
+  dateCreated: Date;
+  transactionId: Date;
+  deleted: boolean;
+};
 export type CardTemplate = {
   itemDetail?: Template;
 };

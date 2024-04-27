@@ -149,13 +149,17 @@ const Post = () => {
 
   //add new post
   const handleSubmit = async () => {
-    axios
+    await axios
       .post(`${process.env.NEXT_PUBLIC_BASE_API}post/createPost`, newPost, {
         headers: authHeader(),
       })
       .then((response) => {
-        toast.success("Tạo thành công");
+        toast.success("Tạo bài viết thành công");
         fetchPosts();
+        onOpenChange();
+      })
+      .catch((error) => {
+        toast.error("Tạo bài viết thất bại");
       });
   };
 
@@ -325,6 +329,7 @@ const Post = () => {
                     <Select
                       // items={categories}
                       label="Chọn loại cho bài viết"
+                      isRequired
                       placeholder="Thể loại"
                       labelPlacement="outside"
                       className="font-bold"
@@ -359,11 +364,11 @@ const Post = () => {
                     color="primary"
                     onPress={() => {
                       handleSubmit();
-                      onClose;
+                      // onClose();
                     }}
                     type="submit"
                   >
-                    Thêm
+                    Thêm bài viết
                   </Button>
                 </ModalFooter>
               </>
