@@ -286,7 +286,7 @@ const Posts: React.FC<PostsProps> = ({
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
-        <ModalContent className="w-[12000px] h-[900px] max-w-none">
+        <ModalContent className="w-[11000px] h-[850px] max-w-none">
           <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
             Cập nhật liên hệ
           </ModalHeader>

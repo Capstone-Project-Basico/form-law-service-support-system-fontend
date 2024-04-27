@@ -175,7 +175,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
         <TableBody>
           {items.map((recruitment, index) => (
             <TableRow key={index}>
-              <TableCell>{recruitment.fullName}</TableCell>
+              <TableCell className="font-bold">
+                {recruitment.fullName}
+              </TableCell>
               <TableCell>
                 {
                   recruitment.dateOfBirth

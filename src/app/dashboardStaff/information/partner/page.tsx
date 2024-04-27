@@ -73,9 +73,7 @@ const Partner = () => {
       case 1:
         fetchPartners();
         break;
-      case 2:
-        fetchPendingPartners();
-        break;
+
       default:
         fetchPartners();
         break;
@@ -93,20 +91,6 @@ const Partner = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  //get all pending partners
-  const fetchPendingPartners = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`
-      );
-      const filteredPosts = response.data.data.filter(
-        (parner: PartnerType) =>
-          parner.processStatus === "CHỜ DUYỆT" && parner.delete === false
-      );
-      setPartners(filteredPosts);
-    } catch (error) {}
   };
 
   //update
@@ -176,7 +160,7 @@ const Partner = () => {
       .then((response) => {
         setPartners((prevPartners) => [...prevPartners, response.data.data]);
         toast.success("tạo mới thành công");
-        fetchPendingPartners();
+        fetchPartners();
       })
       .catch((error) => {
         console.log(error);
@@ -261,7 +245,7 @@ const Partner = () => {
           </Button>
         </div>
 
-        <div>
+        {/* <div>
           <Button
             className={`bg-white ${
               tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
@@ -271,7 +255,7 @@ const Partner = () => {
           >
             CHỜ DUYỆT
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div>

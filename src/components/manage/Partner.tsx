@@ -222,7 +222,7 @@ const Partners: React.FC<PartnersProps> = ({
                 </span>
               </TableCell>
               {!partner.delete ? (
-                <TableCell className="flex gap-2 items-center justify-center">
+                <TableCell className="flex gap-2 items-center justify-center mt-4">
                   {partner.processStatus === "CHỜ DUYỆT" ? (
                     <>
                       <Button
