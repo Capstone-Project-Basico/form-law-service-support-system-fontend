@@ -191,7 +191,7 @@ const Page = () => {
             TẤT CẢ
           </Button>
         </div>
-        <div>
+        {/* <div>
           <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
             CHỜ DUYỆT
           </Button>
@@ -205,9 +205,9 @@ const Page = () => {
             radius="none"
             onClick={() => setTabs(3)}
           >
-            ĐÃ XÓA
+            KHÔNG SỬ DỤNG
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div className="w-full h-[40rem]">

@@ -78,9 +78,9 @@ const Post = () => {
       case 1:
         fetchPosts();
         break;
-      case 2:
-        fetchPendingPosts();
-        break;
+      // case 2:
+      //   fetchPendingPosts();
+      //   break;
       default:
         fetchPosts();
         break;
@@ -104,19 +104,19 @@ const Post = () => {
     } catch (error) {}
   };
 
-  //get all pending posts
-  const fetchPendingPosts = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/getAllPosts`
-      );
-      const filteredPosts = response.data.data.filter(
-        (post: PostType) =>
-          post.processStatus === "CHỜ DUYỆT" && post.deleted === false
-      );
-      setPost(filteredPosts);
-    } catch (error) {}
-  };
+  // //get all pending posts
+  // const fetchPendingPosts = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_BASE_API}post/getAllPosts`
+  //     );
+  //     const filteredPosts = response.data.data.filter(
+  //       (post: PostType) =>
+  //         post.processStatus === "CHỜ DUYỆT" && post.deleted === false
+  //     );
+  //     setPost(filteredPosts);
+  //   } catch (error) {}
+  // };
 
   //get all categories
   const fetchCategories = async () => {
@@ -290,7 +290,7 @@ const Post = () => {
           </Button>
         </div>
 
-        <div>
+        {/* <div>
           <Button
             className={`bg-white ${
               tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
@@ -300,7 +300,7 @@ const Post = () => {
           >
             CHỜ DUYỆT
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div>

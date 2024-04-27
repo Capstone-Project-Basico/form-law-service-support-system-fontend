@@ -372,7 +372,7 @@ const Partner = () => {
             radius="none"
             onClick={() => setTabs(3)}
           >
-            ĐÃ XÓA
+            KHÔNG SỬ DỤNG
           </Button>
         </div>
       </div>
