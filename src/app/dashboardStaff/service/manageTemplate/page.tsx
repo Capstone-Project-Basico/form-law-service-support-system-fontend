@@ -149,7 +149,7 @@ const Page = () => {
             <span className="text-red-500">Chưa chuẩn hóa</span>
           );
         default:
-          return getKeyValue(item, columnKey);
+        // return getKeyValue(item, columnKey);
       }
     },
     []

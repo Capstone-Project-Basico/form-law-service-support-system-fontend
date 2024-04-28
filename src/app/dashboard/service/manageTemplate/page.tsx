@@ -138,7 +138,7 @@ const Page = () => {
               </Link>
             );
         default:
-          return getKeyValue(item, columnKey);
+        // return getKeyValue(item, columnKey);
       }
     },
     []
