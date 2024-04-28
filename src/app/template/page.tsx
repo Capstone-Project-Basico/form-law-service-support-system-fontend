@@ -106,11 +106,9 @@ const Page = () => {
             Swal.fire({
               title: "Bạn có chấp nhận thanh toán",
               showDenyButton: true,
-              // showCancelButton: true,
               confirmButtonText: "Có",
               denyButtonText: `Không`,
             }).then((result) => {
-              /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {
                 try {
                   payForTemplate(orderId);
