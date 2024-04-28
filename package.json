@@ -19,7 +19,7 @@
     "@googlemaps/js-api-loader": "^1.16.6",
     "@heroicons/react": "^2.1.1",
     "@nextui-org/breadcrumbs": "^2.0.4",
-    "@nextui-org/react": "^2.2.10",
+    "@nextui-org/react": "^2.3.6",
     "@types/chart.js": "^2.9.41",
     "axios": "^1.6.7",
     "chart.js": "^4.4.2",
