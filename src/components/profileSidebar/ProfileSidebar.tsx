@@ -26,6 +26,7 @@ interface UserLocal {
 const ProfileSidebar = () => {
   const [profileData, setProfileData] = useState<UserType>();
   const [wallet, setWallet] = useState<WalletType>();
+  const [walletError, setWalletError] = useState<string | null>(null);
   const router = useRouter();
 
   const getUserFromStorage = () => {
@@ -49,21 +50,27 @@ const ProfileSidebar = () => {
   };
 
   const getWallet = () => {
-    try {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
-        )
-        .then((response) => {
-          setWallet(response.data.data);
-        });
-    } catch (error) {}
+    setWalletError(null);
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+      )
+      .then((response) => {
+        setWallet(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching wallet:", error);
+        setWalletError(
+          "Failed to fetch wallet details. Please try again later."
+        );
+      });
   };
 
   useEffect(() => {
     getDataUser();
     getWallet();
   }, []);
+
   return (
     <div className="">
       <div className="flex flex-col w-[387px] gap-2 ">
@@ -81,7 +88,7 @@ const ProfileSidebar = () => {
                   icon={faCirclePlus}
                   className="size-5 text-[#FF0004]"
                 />
-                {wallet?.balance.toLocaleString()} VNĐ
+                {walletError ? 0 : wallet?.balance.toLocaleString()} VNĐ
               </Button>
             </div>
           </div>
