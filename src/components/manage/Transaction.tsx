@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Dropdown,
@@ -14,6 +16,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  DatePicker,
 } from "@nextui-org/react";
 
 import { TransactionType } from "@/constants/types/homeType";
@@ -27,14 +30,17 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<Selection>("all");
   const [filterValue, setFilterValue] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
   //search
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-  // Filter tasks based on search term
-  //   const filteredPartners = transactions.filter((transaction) =>
-  //     transaction.email.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchTerm(event.target.value);
+  // };
+
+  useEffect(() => {
+    console.log("Selected Date has been updated:", selectedDate);
+    // setSelectedDate(e.target.value ? new Date(e.target.value) : null);
+  }, [selectedDate]);
 
   //filter by status
   const hasSearchFilter = Boolean(filterValue);
@@ -56,8 +62,21 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
       );
     }
 
+    if (selectedDate) {
+      filteredUsers = filteredUsers.filter((transaction) => {
+        const transactionDate = new Date(transaction.createAt).setHours(
+          0,
+          0,
+          0,
+          0
+        );
+        const selectedDateTime = selectedDate.setHours(0, 0, 0, 0);
+        return transactionDate === selectedDateTime;
+      });
+    }
+
     return filteredUsers;
-  }, [transactions, filterValue, statusFilter]);
+  }, [transactions, filterValue, statusFilter, selectedDate]);
 
   const onSearchChange = React.useCallback((value?: string) => {
     if (value) {
@@ -99,9 +118,24 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
             onClear={() => onClear()}
             onValueChange={onSearchChange}
           />
-          <div className="flex gap-3">
+
+          <div className="flex gap-3 h-full">
+            <Input
+              type="date"
+              label="Lọc theo ngày"
+              // value={
+              //   selectedDate ? selectedDate.toISOString().substring(0, 10) : ""
+              // }
+              onChange={(e) =>
+                setSelectedDate(
+                  e.target.value ? new Date(e.target.value) : null
+                )
+              }
+              className="w-52"
+            />
+
             <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
+              <DropdownTrigger className="hidden sm:flex h-14">
                 <Button
                   //   endContent={<ChevronDownIcon className="text-small" />}
                   variant="flat"
