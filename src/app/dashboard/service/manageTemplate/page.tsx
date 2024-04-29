@@ -56,7 +56,9 @@ const Page = () => {
     const getData = async () => {
       // Fetch data
       const res = await axiosClient.get('formTemplateVersion');
-      if (res.data.status === true) setFormTemplateVersions(res.data);
+      if (res.data?.status === false) return;
+
+      setFormTemplateVersions(res.data);
     };
     getData();
   }, []);
@@ -106,11 +108,16 @@ const Page = () => {
           </a>
         );
       case 'status':
-        return item.status === 'STANDARDIZED' ? (
-          <span className="text-green-500">Chuẩn hóa</span>
-        ) : (
-          <span className="text-red-500">Chưa chuẩn hóa</span>
-        );
+        switch (item.status) {
+          case 'ACTIVE':
+            return <span className="text-green-500">Hoạt động</span>;
+          case 'INACTIVE':
+            return <span className="text-red-500">Ngưng hoạt động</span>;
+          case 'UNSTANDARDIZED':
+            return <span className="text-red-500">Chưa chuẩn hóa</span>;
+          case 'STANDARDIZED':
+            return <span className="text-green-500">Chuẩn hóa</span>;
+        }
       case 'message':
         return <div className="w-full text-left">{getKeyValue(item, columnKey)}</div>;
       case 'action':
