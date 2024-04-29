@@ -184,7 +184,7 @@ const paths: { [key: string]: Path } = {
   },
   useTemplate: {
     title: 'Sử dụng',
-    path: '/profile/manageTemplate/use-template',
+    path: '/use-template',
     role: [Role.User],
     isPage: true,
   },
