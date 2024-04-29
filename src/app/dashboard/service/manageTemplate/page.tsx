@@ -149,10 +149,9 @@ const Page = () => {
           <Button
             className="flex justify-end w-[100px] bg-[#FF0004] text-white"
             radius="full"
-            onClick={() => router.push('/dashboard/template/add-template')}
+            onClick={() => router.push('/dashboard/service/manageTemplate/add-template')}
           >
             <FontAwesomeIcon icon={faPlus} />
-            Tạo mới
           </Button>
         </div>
       </div>
