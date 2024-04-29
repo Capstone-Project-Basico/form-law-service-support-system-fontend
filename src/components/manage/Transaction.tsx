@@ -16,7 +16,6 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  DatePicker,
 } from "@nextui-org/react";
 
 import { TransactionType } from "@/constants/types/homeType";
