@@ -14,7 +14,7 @@ const Page = () => {
     <div className="flex flex-col justify-center items-center gap-5 my-[199px]">
       <FontAwesomeIcon
         icon={faCircleCheck}
-        className="size-32 text-green-600 mb-10"
+        className="size-32 text-[#FF0004] mb-10"
       />
       <div className="text-5xl font-semibold">Cảm ơn!</div>
       <div className="text-3xl font-semibold">Mua hàng thành công!</div>
