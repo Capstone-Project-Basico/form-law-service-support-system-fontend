@@ -116,7 +116,7 @@ const Page = () => {
       case 'action':
         if (item.status === 'UNSTANDARDIZED') return <Link href={'/dashboard/service/manageTemplate/standardization/' + item.id}>Chuẩn hóa</Link>;
       default:
-        return getKeyValue(item, columnKey);
+        return getKeyValue(item, columnKey.toString());
     }
   }, []);
 
