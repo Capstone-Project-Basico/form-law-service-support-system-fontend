@@ -130,7 +130,7 @@ const Page = () => {
   const payForTemplate = (orderId: string) => {
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetail/${orderId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByWallet/${orderId}`,
         {},
         { headers: authHeader() }
       )
