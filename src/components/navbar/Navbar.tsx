@@ -13,6 +13,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Avatar,
+  Divider,
 } from "@nextui-org/react";
 import { Navbar as MyNavbar } from "@nextui-org/react";
 import { useEffect, useState } from "react";
@@ -22,7 +23,15 @@ import { researchAndPublications, about } from "@/lib/navbarItems";
 import { log } from "console";
 import axios from "axios";
 import { ProfileSidebarItem, UserType } from "@/constants/types/homeType";
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAddressCard,
+  faClockRotateLeft,
+  faFileSignature,
+  faHeadset,
+  faLock,
+  faRightFromBracket,
+  faWallet,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface UserLocal {
@@ -277,49 +286,95 @@ const Navbar = () => {
                   src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
                 />
               </DropdownTrigger>
-              <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownMenu
+                aria-label="Profile Actions"
+                variant="flat"
+                disabledKeys={["hr"]}
+              >
                 <DropdownItem key="profile" className="h-14 gap-2">
                   <h2 className="font-semibold">{userData?.userName}</h2>
                 </DropdownItem>
-                <DropdownItem key="profile" className="bg-[#F2F2F2]">
+                <DropdownItem key="profile" className="bg-[#F2F2F2] h-11">
                   <Link href="/profile" className="text-black">
+                    <FontAwesomeIcon
+                      icon={faAddressCard}
+                      className="w-5 h-5 text-[#FF0004] mr-3"
+                    />
                     Cài đặt thông tin cá nhân
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="changePassword" className="bg-[#F2F2F2]">
+                <DropdownItem
+                  key="changePassword"
+                  className="bg-[#F2F2F2] h-11"
+                >
                   <Link href="/profile/changePassword" className="text-black">
+                    <FontAwesomeIcon
+                      icon={faLock}
+                      className="w-5 h-5 text-[#FF0004] mr-3"
+                    />
                     Đổi mật khẩu
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="wallet" className="bg-[#F2F2F2]">
+                <DropdownItem key="wallet" className="bg-[#F2F2F2] h-11">
                   <Link href="/profile/wallet" className="text-black">
+                    <FontAwesomeIcon
+                      icon={faWallet}
+                      className="w-5 h-5 text-[#FF0004] mr-3"
+                    />
                     Ví của bạn
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="manageTemplate" className="bg-[#F2F2F2]">
+                <DropdownItem key="hr">
+                  <hr />
+                </DropdownItem>
+                <DropdownItem
+                  key="manageTemplate"
+                  className="bg-[#F2F2F2] h-11"
+                >
                   <Link href="/profile/manageTemplate" className="text-black">
+                    <FontAwesomeIcon
+                      icon={faFileSignature}
+                      className="w-5 h-5 text-[#FF0004] mr-3"
+                    />
                     Quản lí biểu mẫu
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="servicePack" className="bg-[#F2F2F2]">
+                <DropdownItem key="servicePack" className="bg-[#F2F2F2] h-11">
                   <Link href="/profile/servicePack" className="text-black">
+                    <FontAwesomeIcon
+                      icon={faHeadset}
+                      className="w-5 h-5 text-[#FF0004] mr-3"
+                    />
                     Gói dịch vụ
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="transactionHistory" className="bg-[#F2F2F2]">
+                <DropdownItem
+                  key="transactionHistory"
+                  className="bg-[#F2F2F2] h-11"
+                >
                   <Link
                     href="/profile/transactionHistory"
                     className="text-black"
                   >
+                    <FontAwesomeIcon
+                      icon={faClockRotateLeft}
+                      className="w-5 h-5 text-[#FF0004] mr-3"
+                    />
                     Lịch sử giao dịch
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="logout" color="danger">
+                <DropdownItem key="hr">
+                  <hr />
+                </DropdownItem>
+                <DropdownItem key="logout" color="danger" className="h-11">
                   <div
                     className="flex flex-row  items-center gap-3"
                     onClick={() => logout()}
                   >
-                    <FontAwesomeIcon icon={faRightFromBracket} />
+                    <FontAwesomeIcon
+                      icon={faRightFromBracket}
+                      className="w-5 h-5 text-[#FF0004]"
+                    />
                     <p>Đăng xuất</p>
                   </div>
                 </DropdownItem>

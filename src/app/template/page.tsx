@@ -38,6 +38,7 @@ interface UserLocal {
 const Page = () => {
   const router = useRouter();
   const [templates, setTemplates] = useState<Template[]>([]);
+  const [wallet, setWallet] = useState<boolean | null>(null);
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -66,8 +67,24 @@ const Page = () => {
       });
   };
 
+  const getWallet = () => {
+    setWallet(null);
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+      )
+      .then((response) => {
+        setWallet(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching wallet:", error);
+        setWallet(false);
+      });
+  };
+
   useEffect(() => {
     getTemplate();
+    getWallet();
   }, []);
 
   const handleBuy = async (formId: number, price: number) => {
@@ -96,31 +113,43 @@ const Page = () => {
           userId,
           cartRequestList: [{ itemId: formId, quantity, price }],
         };
-        axios
-          .post(
-            `${process.env.NEXT_PUBLIC_BASE_API}order/createOrderFormTemplateDetail`,
-            updatedDataOrder
-          )
-          .then((response) => {
-            const orderId = response.data.data;
-            Swal.fire({
-              title: "Bạn có chấp nhận thanh toán",
-              showDenyButton: true,
-              confirmButtonText: "Có",
-              denyButtonText: `Không`,
-            }).then((result) => {
-              if (result.isConfirmed) {
-                try {
-                  payForTemplate(orderId);
-                } catch (error) {
-                  Swal.fire(`${error}`, "", "error");
-                }
-              } else if (result.isDenied) {
-                Swal.fire("Vui lòng thanh toán để sử dụng", "", "info");
-                return;
-              }
-            });
-          });
+        {
+          wallet
+            ? axios
+                .post(
+                  `${process.env.NEXT_PUBLIC_BASE_API}order/createOrderFormTemplateDetail`,
+                  updatedDataOrder
+                )
+                .then((response) => {
+                  const orderId = response.data.data;
+                  Swal.fire({
+                    title: "Bạn có chấp nhận thanh toán",
+                    showDenyButton: true,
+                    confirmButtonText: "Có",
+                    denyButtonText: `Không`,
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      try {
+                        payForTemplate(orderId);
+                      } catch (error) {
+                        Swal.fire(`${error}`, "", "error");
+                      }
+                    } else if (result.isDenied) {
+                      Swal.fire("Vui lòng thanh toán để sử dụng", "", "info");
+                      return;
+                    }
+                  });
+                })
+            : axios
+                .post(
+                  `${process.env.NEXT_PUBLIC_BASE_API}order/createOrderFormTemplateDetail`,
+                  updatedDataOrder
+                )
+                .then((response) => {
+                  const orderId = response.data.data;
+                  payForTemplateByCash(orderId);
+                });
+        }
       }
     } catch (error) {
       console.log(error);
@@ -139,6 +168,17 @@ const Page = () => {
       });
   };
 
+  const payForTemplateByCash = (orderId: string) => {
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByCash/${orderId}`,
+        {},
+        { headers: authHeader() }
+      )
+      .then((res) => {
+        toast.success(`${res.data.data}`);
+      });
+  };
   return (
     <>
       <HeaderComponent title="BIỂU MẪU" link="BIỂU MẪU" />
