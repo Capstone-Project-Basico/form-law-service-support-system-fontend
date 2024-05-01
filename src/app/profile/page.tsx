@@ -91,9 +91,9 @@ const Profile = () => {
         <div className="ml-20">
           <h2 className="text-xl font-bold pt-10">Cài đặt thông tin cá nhân</h2>
           {userProfile ? (
-            <div className="my-7">
+            <div className="my-7 w-[1150px]">
               <h2>Họ và tên</h2>
-              <div className="flex justify-center items-center w-[983px] mb-4">
+              <div className="flex justify-center items-center mb-4">
                 <Input
                   className=""
                   disabled={!isEditing}
@@ -104,7 +104,7 @@ const Profile = () => {
                 />
               </div>
               <h2>Số điện thoại</h2>
-              <div className="flex justify-center items-center w-[983px] mb-4">
+              <div className="flex justify-center items-center mb-4">
                 <Input
                   type="number"
                   disabled={!isEditing}
@@ -114,7 +114,7 @@ const Profile = () => {
                 />
               </div>
               <h2>Email</h2>
-              <div className="flex justify-center items-center w-[983px] mb-4">
+              <div className="flex justify-center items-center mb-4">
                 <Input
                   type="text"
                   disabled
