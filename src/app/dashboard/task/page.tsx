@@ -272,6 +272,7 @@ const Task = () => {
             <p className="text-[#FF0004] font-bold text-3xl">Công việc</p>
           </BreadcrumbItem>
         </Breadcrumbs>
+
         <div className="flex justify-end">
           <Button
             className="flex justify-end w-[100px] bg-[#FF0004] text-white"
@@ -372,7 +373,7 @@ const Task = () => {
             radius="none"
             onClick={() => setTabs(2)}
           >
-            ĐÃ XÓA
+            KHÔNG SỬ DỤNG
           </Button>
         </div>
       </div>

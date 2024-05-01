@@ -180,7 +180,7 @@ const Page = () => {
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
-        <div>
+        {/* <div>
           <Button
             className={`bg-white ${
               tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
@@ -190,7 +190,7 @@ const Page = () => {
           >
             TẤT CẢ
           </Button>
-        </div>
+        </div> */}
         {/* <div>
           <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
             CHỜ DUYỆT

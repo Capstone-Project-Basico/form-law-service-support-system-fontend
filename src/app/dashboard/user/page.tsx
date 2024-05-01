@@ -205,7 +205,7 @@ const User = () => {
             radius="none"
             onClick={() => setTabs(2)}
           >
-            ĐÃ XÓA
+            KHÔNG SỬ DỤNG
           </Button>
         </div>
       </div>

@@ -232,32 +232,6 @@ const Partner = () => {
         </div>
       </div>
 
-      <div className="flex flex-row gap-10 font-bold border-b-1 ">
-        <div>
-          <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
-            onClick={() => setTabs(1)}
-            radius="none"
-          >
-            TẤT CẢ
-          </Button>
-        </div>
-
-        {/* <div>
-          <Button
-            className={`bg-white ${
-              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
-            onClick={() => setTabs(2)}
-            radius="none"
-          >
-            CHỜ DUYỆT
-          </Button>
-        </div> */}
-      </div>
-
       <div>
         <Partners partners={partners} handleUpdateSubmit={handleUpdateSubmit} />
       </div>

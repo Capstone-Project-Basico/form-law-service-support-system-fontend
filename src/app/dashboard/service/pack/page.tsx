@@ -315,7 +315,7 @@ const Pack = () => {
               setTabs(3), setPage(1);
             }}
           >
-            ĐÃ XÓA
+            KHÔNG SỬ DỤNG
           </Button>
         </div>
       </div>

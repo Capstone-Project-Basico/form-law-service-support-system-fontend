@@ -167,6 +167,9 @@ const Tasks: React.FC<TasksProps> = ({
             Mô tả
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
+            Nhận viên được giao
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
             Ngày bắt đầu
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
@@ -178,9 +181,9 @@ const Tasks: React.FC<TasksProps> = ({
           <TableColumn className=" bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
+          {/* <TableColumn className=" bg-[#FF0004] text-white">
             Trạng thái
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -188,8 +191,9 @@ const Tasks: React.FC<TasksProps> = ({
         <TableBody>
           {items.map((task, index) => (
             <TableRow key={index}>
-              <TableCell>{task.taskName}</TableCell>
+              <TableCell className="font-bold">{task.taskName}</TableCell>
               <TableCell>{task.description}</TableCell>
+              <TableCell>{task.email}</TableCell>
               <TableCell>
                 {
                   task.startDate
@@ -205,13 +209,13 @@ const Tasks: React.FC<TasksProps> = ({
                 }
               </TableCell>
               <TableCell>{task.processStatus}</TableCell>
-              <TableCell>
+              {/* <TableCell>
                 <span style={{ color: task.status ? "red" : "green" }}>
                   {task.status ? "Không sử dụng" : "Đang hoạt động"}
                 </span>
-              </TableCell>
+              </TableCell> */}
 
-              {task.status === 0 ? (
+              {task.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-blue-600 text-white"
