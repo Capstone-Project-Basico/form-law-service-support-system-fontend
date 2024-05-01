@@ -34,6 +34,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 type PartnersProps = {
   partners: PartnerType[];
+  tabs: number;
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleApprove: (id: number) => void;
@@ -42,6 +43,7 @@ type PartnersProps = {
 
 const Partners: React.FC<PartnersProps> = ({
   partners,
+  tabs,
   handleDelete,
   restoreDelete,
   handleApprove,
@@ -72,7 +74,11 @@ const Partners: React.FC<PartnersProps> = ({
   );
 
   //pagination
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [tabs]);
+
   const rowsPerPage = 5;
 
   const pages = Math.ceil(filteredPartners.length / rowsPerPage);

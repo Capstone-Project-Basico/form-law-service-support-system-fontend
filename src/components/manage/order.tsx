@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Dropdown,
@@ -21,9 +23,10 @@ import { statusTransaction } from "@/lib/status";
 
 type OrderProps = {
   orders: OrderType[];
+  tabs: number;
 };
 
-const Order: React.FC<OrderProps> = ({ orders }) => {
+const Order: React.FC<OrderProps> = ({ orders, tabs }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   //search
@@ -37,6 +40,9 @@ const Order: React.FC<OrderProps> = ({ orders }) => {
 
   //pagination
   const [page, setPage] = React.useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [tabs]);
   const rowsPerPage = 8;
 
   const pages = Math.ceil(filteredOrders.length / rowsPerPage);

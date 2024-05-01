@@ -39,6 +39,7 @@ import { decodeFromBase64, encodeToBase64 } from "@/utils/base64";
 
 type PostsProps = {
   posts: PostType[];
+  tabs: number;
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleApprove: (id: number) => void;
@@ -48,6 +49,7 @@ type PostsProps = {
 
 const Posts: React.FC<PostsProps> = ({
   posts,
+  tabs,
   handleDelete,
   restoreDelete,
   handleApprove,
@@ -78,6 +80,9 @@ const Posts: React.FC<PostsProps> = ({
 
   //pagination
   const [page, setPage] = React.useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [tabs]);
   const rowsPerPage = 5;
 
   const pages = Math.ceil(filteredPosts.length / rowsPerPage);

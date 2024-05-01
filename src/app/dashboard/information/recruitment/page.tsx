@@ -357,6 +357,7 @@ const Recruitment = () => {
       <div>
         <Recruitments
           recruitments={recruitment}
+          tabs={tabs}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
           updateStatus={updateStatus}

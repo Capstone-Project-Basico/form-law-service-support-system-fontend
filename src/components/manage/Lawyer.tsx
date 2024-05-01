@@ -36,6 +36,7 @@ import authHeader from "../authHeader/AuthHeader";
 
 type LawyersProps = {
   lawyers: LawyerType[];
+  tabs: number;
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
@@ -43,6 +44,7 @@ type LawyersProps = {
 
 const Lawyers: React.FC<LawyersProps> = ({
   lawyers,
+  tabs,
   handleDelete,
   restoreDelete,
   handleUpdateSubmit,
@@ -70,6 +72,9 @@ const Lawyers: React.FC<LawyersProps> = ({
 
   //pagination
   const [page, setPage] = React.useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [tabs]);
   const rowsPerPage = 4;
 
   const pages = Math.ceil(filteredLawyers.length / rowsPerPage);

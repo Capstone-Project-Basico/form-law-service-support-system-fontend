@@ -33,6 +33,7 @@ import authHeader from "../authHeader/AuthHeader";
 import { Roles } from "@/lib/roles";
 type UsersProps = {
   users: UserType[];
+  tabs: number;
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
@@ -40,6 +41,7 @@ type UsersProps = {
 
 const Users: React.FC<UsersProps> = ({
   users,
+  tabs,
   handleDelete,
   restoreDelete,
   handleUpdateSubmit,
@@ -64,6 +66,9 @@ const Users: React.FC<UsersProps> = ({
 
   //pagination
   const [page, setPage] = React.useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [tabs]);
   const rowsPerPage = 8;
 
   const pages = Math.ceil(filteredUsers.length / rowsPerPage);

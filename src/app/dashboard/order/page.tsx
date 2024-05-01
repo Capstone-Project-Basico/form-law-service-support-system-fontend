@@ -79,7 +79,7 @@ const Page = () => {
           </Button>
         </div>
       </div>
-      <Order orders={orders} />
+      <Order orders={orders} tabs={tabs} />
     </div>
   );
 };

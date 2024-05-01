@@ -419,6 +419,7 @@ const Post = () => {
       <div>
         <Posts
           posts={post}
+          tabs={tabs}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
           handleApprove={handleApprove}

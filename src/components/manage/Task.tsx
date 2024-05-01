@@ -36,6 +36,7 @@ import { Dialog } from "primereact/dialog";
 type TasksProps = {
   tasks: TaskType[];
   staffs: UserType[];
+  tabs: number;
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
@@ -45,6 +46,7 @@ type TasksProps = {
 const Tasks: React.FC<TasksProps> = ({
   tasks,
   staffs,
+  tabs,
   handleDelete,
   restoreDelete,
   handleUpdateSubmit,
@@ -79,6 +81,9 @@ const Tasks: React.FC<TasksProps> = ({
 
   //pagination
   const [page, setPage] = React.useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [tabs]);
   const rowsPerPage = 8;
 
   const pages = Math.ceil(filteredPartners.length / rowsPerPage);
