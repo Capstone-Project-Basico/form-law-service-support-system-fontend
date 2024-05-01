@@ -22,6 +22,7 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
+  Spinner,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -63,6 +64,7 @@ const Partners: React.FC<PartnersProps> = ({
   // const [imageUrls, setImageUrls] = useState<string[]>([]);
   // const [imageUrl, setImageUrl] = useState<string>();
   const imagesListRef = ref(storage, "partners/");
+  const [uploading, setUploading] = useState(false);
 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +94,7 @@ const Partners: React.FC<PartnersProps> = ({
 
   //upload update file
   const uploadUpdateFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUploading(true);
     // First, check if the files array is not null and has at least one file
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0]; // Safely access the first file
@@ -114,6 +117,7 @@ const Partners: React.FC<PartnersProps> = ({
         (error) => {
           // Handle unsuccessful uploads
           console.error("Upload failed", error);
+          setUploading(false); // Hide the spinner on error
         },
         () => {
           // Handle successful uploads on complete
@@ -130,7 +134,7 @@ const Partners: React.FC<PartnersProps> = ({
               ...selectedPartner,
               avatar: downloadURL,
             });
-
+            setUploading(false);
             // Optionally: Update the partner's information in the database or state here
             // This might involve calling an API endpoint or updating local state
           });
@@ -312,6 +316,7 @@ const Partners: React.FC<PartnersProps> = ({
                   type="file"
                   onChange={(e) => uploadUpdateFile(e)}
                 />
+                {uploading && <Spinner />}
                 <Input
                   type="text"
                   label="Link"
@@ -330,7 +335,12 @@ const Partners: React.FC<PartnersProps> = ({
             <Button color="danger" variant="light" onPress={onCloseUpdate}>
               Đóng
             </Button>
-            <Button color="primary" type="submit" form="partner">
+            <Button
+              color="primary"
+              type="submit"
+              form="partner"
+              disabled={uploading}
+            >
               Cập nhật
             </Button>
           </ModalFooter>

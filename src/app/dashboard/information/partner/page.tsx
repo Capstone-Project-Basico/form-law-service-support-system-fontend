@@ -21,6 +21,7 @@ import {
   NavbarContent,
   NavbarItem,
   MenuItem,
+  Spinner,
 } from "@nextui-org/react";
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
@@ -67,6 +68,7 @@ const Partner = () => {
   // const [selectedPartner, setSelectedPartner] = useState<PartnerType | null>(
   //   null
   // );
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     switch (tabs) {
@@ -203,6 +205,7 @@ const Partner = () => {
 
   //upload file
   const uploadFile = (e: any) => {
+    setUploading(true);
     setImageUpload(e.target.files[0]);
     let image = e.target.files[0];
 
@@ -223,6 +226,7 @@ const Partner = () => {
       (error) => {
         // Handle unsuccessful uploads here
         console.error(error);
+        setUploading(false); // Hide the spinner on error
       },
       () => {
         // Handle successful uploads on complete
@@ -230,6 +234,7 @@ const Partner = () => {
           console.log("File available at", downloadURL);
           setAvatar(downloadURL);
         });
+        setUploading(false);
       }
     );
   };
@@ -310,11 +315,14 @@ const Partner = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
-                      <input
-                        className="py-3"
-                        type="file"
-                        onChange={(e) => uploadFile(e)}
-                      />
+                      <div>
+                        <input
+                          className="py-3"
+                          type="file"
+                          onChange={(e) => uploadFile(e)}
+                        />
+                        {uploading && <Spinner />}
+                      </div>
                       <Input
                         type="text"
                         label="Link"
@@ -326,7 +334,12 @@ const Partner = () => {
                       <Button color="danger" variant="light" onPress={onClose}>
                         Đóng
                       </Button>
-                      <Button color="primary" onPress={onClose} type="submit">
+                      <Button
+                        color="primary"
+                        onPress={onClose}
+                        type="submit"
+                        disabled={uploading}
+                      >
                         Thêm
                       </Button>
                     </ModalFooter>
