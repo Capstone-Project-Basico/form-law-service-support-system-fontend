@@ -38,6 +38,7 @@ import authHeader from "../authHeader/AuthHeader";
 
 type RecruitmentsProps = {
   recruitments: RecruitmentType[];
+  tabs: number;
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   updateStatus: (newStatus: string, id: number) => void;
@@ -46,6 +47,7 @@ type RecruitmentsProps = {
 
 const Recruitments: React.FC<RecruitmentsProps> = ({
   recruitments,
+  tabs,
   handleDelete,
   restoreDelete,
   updateStatus,
@@ -73,6 +75,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
 
   //pagination
   const [page, setPage] = React.useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [tabs]);
   const rowsPerPage = 8;
 
   const pages = Math.ceil(filteredRecruitments.length / rowsPerPage);

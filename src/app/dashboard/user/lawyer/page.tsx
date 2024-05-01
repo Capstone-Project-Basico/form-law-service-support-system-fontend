@@ -229,6 +229,7 @@ const Lawyer = () => {
       <div>
         <Lawyers
           lawyers={lawyers}
+          tabs={tabs}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
           handleUpdateSubmit={handleUpdateSubmit}

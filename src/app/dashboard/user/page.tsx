@@ -213,6 +213,7 @@ const User = () => {
       <div>
         <Users
           users={users}
+          tabs={tabs}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
           handleUpdateSubmit={handleUpdateSubmit}

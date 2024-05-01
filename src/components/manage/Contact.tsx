@@ -37,6 +37,7 @@ import authHeader from "../authHeader/AuthHeader";
 import Contact from "../home/Contact";
 type ContactsProps = {
   contacts: ContactType[];
+  tabs: number;
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   updateStatus: (newStatus: string, id: number) => void;
@@ -45,6 +46,7 @@ type ContactsProps = {
 
 const Contacts: React.FC<ContactsProps> = ({
   contacts,
+  tabs,
   handleDelete,
   restoreDelete,
   updateStatus,
@@ -74,6 +76,9 @@ const Contacts: React.FC<ContactsProps> = ({
 
   //pagination
   const [page, setPage] = React.useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [tabs]);
   const rowsPerPage = 8;
 
   const pages = Math.ceil(filteredContacts.length / rowsPerPage);

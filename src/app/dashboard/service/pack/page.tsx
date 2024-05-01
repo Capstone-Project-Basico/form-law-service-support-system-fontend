@@ -307,14 +307,22 @@ const Pack = () => {
             className={`bg-white ${
               tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
-            onClick={() => setTabs(1)}
+            onClick={() => {
+              setTabs(1), setPage(1);
+            }}
             radius="none"
           >
             TẤT CẢ
           </Button>
         </div>
         <div>
-          <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
+          <Button
+            className="bg-white"
+            onClick={() => {
+              setTabs(2), setPage(1);
+            }}
+            radius="none"
+          >
             CHỜ DUYỆT
           </Button>
         </div>
@@ -325,7 +333,9 @@ const Pack = () => {
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
             radius="none"
-            onClick={() => setTabs(3)}
+            onClick={() => {
+              setTabs(3), setPage(1);
+            }}
           >
             ĐÃ XÓA
           </Button>

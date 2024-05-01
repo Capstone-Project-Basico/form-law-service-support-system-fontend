@@ -381,6 +381,7 @@ const Task = () => {
         <Tasks
           tasks={task}
           staffs={staffs}
+          tabs={tabs}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
           handleUpdateSubmit={handleUpdateSubmit}

@@ -384,6 +384,7 @@ const Partner = () => {
           restoreDelete={restoreDelete}
           handleApprove={handleApprove}
           handleUpdateSubmit={handleUpdateSubmit}
+          tabs={tabs}
         />
       </div>
     </div>

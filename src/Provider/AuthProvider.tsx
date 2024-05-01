@@ -18,6 +18,7 @@ const AuthProvider = ({ children }: Props) => {
         const userData = localStorage.getItem("userData");
         const user = JSON.parse(userData || "{}");
         if (new Date(user.expiration) < new Date()) {
+          localStorage.clear();
           router.push("/");
         }
       }

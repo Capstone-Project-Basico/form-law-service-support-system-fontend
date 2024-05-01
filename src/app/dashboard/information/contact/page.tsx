@@ -295,6 +295,7 @@ const Contact = () => {
             restoreDelete={restoreDelete}
             updateStatus={updateStatus}
             handleUpdateSubmit={handleUpdateSubmit}
+            tabs={tabs}
           />
         )}
       </div>
