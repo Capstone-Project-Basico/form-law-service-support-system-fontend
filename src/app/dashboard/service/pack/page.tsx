@@ -128,6 +128,7 @@ const Pack = () => {
 
       .then((response) => {
         // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+        fetchPacks();
       })
       .catch((error) => {
         console.log(error);
@@ -158,30 +159,6 @@ const Pack = () => {
 
   //delete
   const handleDelete = async (packageId: string) => {
-    // const isConfirmed = window.confirm(
-    //   "Bạn có chắc muốn xóa đối tác này không?"
-    // );
-    // if (isConfirmed) {
-    //   try {
-    //     axios
-    //       .delete(
-    //         `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${packageId}`
-    //       )
-    //       .then(() => {
-    //         toast.success("Xóa thành công");
-    //         fetchPacks();
-    //       }),
-    //       {
-    //         headers: authHeader(),
-    //       };
-
-    //     // setPartners((prevPartners) =>
-    //     //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-    //     // );
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
     Swal.fire({
       title: "Bạn có muốn xóa gói này không?",
       showDenyButton: true,
@@ -265,6 +242,7 @@ const Pack = () => {
                         }
                         value={price !== undefined ? price.toString() : ""}
                         onChange={(e) => setPrice(Number(e.target.value))}
+                        min="1"
                       />
                       <Input
                         type="text"
