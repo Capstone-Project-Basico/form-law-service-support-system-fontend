@@ -48,6 +48,7 @@ const Users: React.FC<UsersProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+  const filteredRoles = Roles.filter((role) => role.value !== "ROLE_ADMIN");
 
   const {
     isOpen: isOpenUpdate,
@@ -166,15 +167,16 @@ const Users: React.FC<UsersProps> = ({
                       setSelectedUser(user);
                       onOpenUpdate();
                     }}
+                    isDisabled={user.roleName === "ROLE_ADMIN"}
                   >
-                    Update
+                    Cập nhật
                   </Button>
 
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(user.userId)}
                   >
-                    Delete
+                    Xóa
                   </Button>
                 </TableCell>
               ) : (
@@ -221,7 +223,7 @@ const Users: React.FC<UsersProps> = ({
                     })
                   }
                 >
-                  {Roles.map((role) => (
+                  {filteredRoles.map((role) => (
                     <SelectItem key={role.value} value={role.value}>
                       {role.roleName}
                     </SelectItem>
