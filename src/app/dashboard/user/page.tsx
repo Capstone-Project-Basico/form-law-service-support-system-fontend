@@ -179,7 +179,9 @@ const User = () => {
             <p className="text-black font-bold text-3xl ">Quản lí thông tin</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Tuyển dụng</p>
+            <p className="text-[#FF0004] font-bold text-3xl">
+              Tài khoản người dùng
+            </p>
           </BreadcrumbItem>
         </Breadcrumbs>
       </div>

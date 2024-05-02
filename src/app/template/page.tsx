@@ -170,13 +170,15 @@ const Page = () => {
 
   const payForTemplateByCash = (orderId: string) => {
     axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByCash/${orderId}`,
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${orderId}`,
         {},
         { headers: authHeader() }
       )
       .then((res) => {
-        toast.success(`${res.data.data}`);
+        console.log(res.data);
+
+        window.open(res.data.checkoutUrl, "_blank");
       });
   };
   return (

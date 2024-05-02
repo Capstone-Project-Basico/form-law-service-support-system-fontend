@@ -1,14 +1,36 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { Button } from "@nextui-org/react";
 import { faArrowLeft, faHome } from "@fortawesome/free-solid-svg-icons";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import axios from "axios";
+import authHeader from "@/components/authHeader/AuthHeader";
 
 const Page = () => {
   const router = useRouter();
+  const params = useParams<{ id: string }>();
+
+  useEffect(() => {
+    console.log(params.id);
+    transactionSuccess(params.id);
+  });
+
+  const transactionSuccess = (id: string) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}transaction/transactionSuccess/${id}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((res) => {});
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center gap-5 my-[199px]">
