@@ -202,7 +202,7 @@ const Tasks: React.FC<TasksProps> = ({
                 </span>
               </TableCell>
 
-              {task.status === 0 ? (
+              {task.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-blue-600 text-white"

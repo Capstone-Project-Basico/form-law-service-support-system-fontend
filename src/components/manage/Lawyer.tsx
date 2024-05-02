@@ -275,22 +275,24 @@ const Lawyers: React.FC<LawyersProps> = ({
                   </div>
                 </TableCell>
               ) : (
-                <TableCell className="flex gap-2 items-center justify-center">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onClick={() => restoreDelete(lawyer.userId)}
-                  >
-                    Khôi phục
-                  </Button>
-                  <Button
-                    className="bg-green-600 text-white"
-                    onClick={() => {
-                      setSelectedLawyer(lawyer);
-                      onOpen();
-                    }}
-                  >
-                    Chi tiết
-                  </Button>
+                <TableCell className="">
+                  <div className="flex gap-3 justify-center">
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onClick={() => restoreDelete(lawyer.userId)}
+                    >
+                      Khôi phục
+                    </Button>
+                    <Button
+                      className="bg-green-600 text-white"
+                      onClick={() => {
+                        setSelectedLawyer(lawyer);
+                        onOpen();
+                      }}
+                    >
+                      Chi tiết
+                    </Button>
+                  </div>
                 </TableCell>
               )}
             </TableRow>

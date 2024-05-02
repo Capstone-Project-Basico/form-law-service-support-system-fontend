@@ -166,19 +166,7 @@ const Recruitment = () => {
         </Breadcrumbs>
       </div>
 
-      <div className="flex flex-row gap-10 font-bold border-b-1 ">
-        <div>
-          <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
-            onClick={() => setTabs(1)}
-            radius="none"
-          >
-            TẤT CẢ
-          </Button>
-        </div>
-      </div>
+      {/* <div className="flex flex-row gap-10 font-bold border-b-1 "></div> */}
 
       <div>
         <Recruitments

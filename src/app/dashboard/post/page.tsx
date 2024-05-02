@@ -293,88 +293,97 @@ const Post = () => {
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
-      <ToastContainer />
-
       <div className="grid grid-cols-2">
-        <h1 className="text-[#FF0004] font-bold text-3xl">Quản lí bài viết</h1>
-      </div>
-      <div className="flex justify-end">
-        <Button
-          className="flex justify-end w-[100px] bg-[#FF0004] text-white"
-          radius="full"
-          onPress={onOpen}
-        >
-          <FontAwesomeIcon icon={faPlus} />
-          Tạo mới
-        </Button>
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
-          <ModalContent className="w-[9000px] h-[800px] max-w-none">
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
-                  Thêm bài viết mới
-                </ModalHeader>
+        <Breadcrumbs color="danger" size="lg" className="text-3xl">
+          <BreadcrumbItem>
+            <p className="text-black font-bold text-3xl ">Quản lí bài viết</p>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <p className="text-[#FF0004] font-bold text-3xl">Bài viết</p>
+          </BreadcrumbItem>
+        </Breadcrumbs>
 
-                <ModalBody
-                  style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
-                >
-                  <form onSubmit={handleSubmit}>
-                    <Input
-                      className="font-bold pb-5"
-                      type="text"
-                      label="Tên bài viết"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <Select
-                      // items={categories}
-                      label="Chọn loại cho bài viết"
-                      isRequired
-                      placeholder="Thể loại"
-                      labelPlacement="outside"
-                      className="font-bold"
-                      onChange={(event) =>
-                        setCateId(Number(event.target.value))
-                      }
-                    >
-                      {categories.map((category) => (
-                        <SelectItem
-                          key={category.cateId}
-                          value={category.cateId}
-                        >
-                          {category.cateName}
-                        </SelectItem>
-                      ))}
-                    </Select>
+        <div className="flex justify-end">
+          <Button
+            className="flex justify-end w-[100px] bg-[#FF0004] text-white"
+            radius="full"
+            onPress={onOpen}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+            Tạo mới
+          </Button>
+          <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
+            <ModalContent className="w-[9000px] h-[800px] max-w-none">
+              {(onClose) => (
+                <>
+                  <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+                    Thêm bài viết mới
+                  </ModalHeader>
 
-                    <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
-                    <Editor
-                      value={content}
-                      // onTextChange={(e) => setContent(e.htmlValue || "")}
-                      onTextChange={(e) => handleEditorChange(e)}
-                      style={{ height: "400px" }}
-                    />
-                  </form>
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Đóng
-                  </Button>
-                  <Button
-                    color="primary"
-                    onPress={() => {
-                      handleSubmit();
-                      // onClose();
+                  <ModalBody
+                    style={{
+                      maxHeight: "calc(100% - 100px)",
+                      overflowY: "auto",
                     }}
-                    type="submit"
                   >
-                    Thêm bài viết
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
+                    <form onSubmit={handleSubmit}>
+                      <Input
+                        className="font-bold pb-5"
+                        type="text"
+                        label="Tên bài viết"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                      />
+                      <Select
+                        // items={categories}
+                        label="Chọn loại cho bài viết"
+                        isRequired
+                        placeholder="Thể loại"
+                        labelPlacement="outside"
+                        className="font-bold"
+                        onChange={(event) =>
+                          setCateId(Number(event.target.value))
+                        }
+                      >
+                        {categories.map((category) => (
+                          <SelectItem
+                            key={category.cateId}
+                            value={category.cateId}
+                          >
+                            {category.cateName}
+                          </SelectItem>
+                        ))}
+                      </Select>
+
+                      <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
+                      <Editor
+                        value={content}
+                        // onTextChange={(e) => setContent(e.htmlValue || "")}
+                        onTextChange={(e) => handleEditorChange(e)}
+                        style={{ height: "400px" }}
+                      />
+                    </form>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="danger" variant="light" onPress={onClose}>
+                      Đóng
+                    </Button>
+                    <Button
+                      color="primary"
+                      onPress={() => {
+                        handleSubmit();
+                        // onClose();
+                      }}
+                      type="submit"
+                    >
+                      Thêm bài viết
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
+        </div>
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
@@ -411,7 +420,7 @@ const Post = () => {
             radius="none"
             onClick={() => setTabs(3)}
           >
-            ĐÃ XÓA
+            KHÔNG SỬ DỤNG
           </Button>
         </div>
       </div>

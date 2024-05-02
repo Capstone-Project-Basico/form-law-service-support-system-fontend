@@ -221,7 +221,7 @@ const Lawyer = () => {
             radius="none"
             onClick={() => setTabs(2)}
           >
-            SPAM
+            KHÔNG SỦ DỤNG
           </Button>
         </div>
       </div>
