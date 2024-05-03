@@ -147,8 +147,8 @@ export type TaskType = {
   id: number;
   taskName: string;
   description: string;
-  startDate: Date | null; // startDate can be a Date object or null
-  endDate: Date | null;
+  startDate: any; // startDate can be a Date object or null
+  endDate: any;
   email: string;
   processStatus: string;
   status: number;

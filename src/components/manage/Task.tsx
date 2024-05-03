@@ -32,6 +32,7 @@ import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
 import { Dropdown } from "primereact/dropdown";
 import { Dialog } from "primereact/dialog";
+import dateConvert from "../dateConvert";
 
 type TasksProps = {
   tasks: TaskType[];
@@ -117,6 +118,14 @@ const Tasks: React.FC<TasksProps> = ({
     );
   };
 
+  const handleTaskSelect = (task: TaskType) => {
+    const modifiedTask = {
+      ...task,
+      startDate: task.startDate ? dateConvert(new Date(task.startDate)) : null,
+      endDate: task.endDate ? dateConvert(new Date(task.endDate)) : null,
+    };
+    setSelectedTask(modifiedTask);
+  };
   return (
     <div>
       <ToastContainer />
@@ -220,7 +229,7 @@ const Tasks: React.FC<TasksProps> = ({
                   <Button
                     className="bg-blue-600 text-white"
                     onPress={() => {
-                      setSelectedTask(task);
+                      handleTaskSelect(task);
                       onOpenUpdate();
                     }}
                   >
@@ -304,8 +313,8 @@ const Tasks: React.FC<TasksProps> = ({
                   type="date"
                   label="Ngày bắt đầu"
                   value={
-                    selectedTask && selectedTask.startDate instanceof Date
-                      ? selectedTask.startDate.toISOString().substring(0, 10)
+                    selectedTask
+                      ? selectedTask?.startDate?.toString().substring(0, 10)
                       : ""
                   }
                   onChange={
@@ -313,7 +322,7 @@ const Tasks: React.FC<TasksProps> = ({
                       setSelectedTask({
                         ...selectedTask,
                         startDate: e.target.value
-                          ? new Date(e.target.value)
+                          ? dateConvert(new Date(e.target.value))
                           : null,
                       } as TaskType) // Ensure the type is Task when updating state
                   }
@@ -324,8 +333,8 @@ const Tasks: React.FC<TasksProps> = ({
                   type="date"
                   label="Ngày kết thúc"
                   value={
-                    selectedTask && selectedTask.endDate instanceof Date
-                      ? selectedTask.endDate.toISOString().substring(0, 10)
+                    selectedTask
+                      ? selectedTask?.endDate?.toString().substring(0, 10)
                       : ""
                   }
                   onChange={
@@ -333,7 +342,7 @@ const Tasks: React.FC<TasksProps> = ({
                       setSelectedTask({
                         ...selectedTask,
                         endDate: e.target.value
-                          ? new Date(e.target.value)
+                          ? dateConvert(new Date(e.target.value))
                           : null,
                       } as TaskType) // Ensure the type is Task when updating state
                   }

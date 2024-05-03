@@ -21,6 +21,7 @@ import {
   NavbarContent,
   NavbarItem,
   MenuItem,
+  DatePicker,
 } from "@nextui-org/react";
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
@@ -44,16 +45,16 @@ import { storage } from "@/app/firebase";
 import Tasks from "@/components/manage/Task";
 import { v4 as uuidv4 } from "uuid";
 import { headers } from "next/headers";
+import dateConvert from "@/components/dateConvert";
 
 const Task = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
-
   //data
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
   const [processStatus, setProcessStatus] = useState("");
 
   const [task, setTask] = useState<TaskType[]>([]);
@@ -64,7 +65,7 @@ const Task = () => {
     description,
     startDate,
     endDate,
-    processStatus,
+    // processStatus,
   };
 
   useEffect(() => {
@@ -145,10 +146,6 @@ const Task = () => {
           {
             headers: authHeader(),
           };
-
-        // setPartners((prevPartners) =>
-        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-        // );
       } catch (error) {
         console.log(error);
       }
@@ -168,7 +165,7 @@ const Task = () => {
           description: selectedTask.description,
           startDate: selectedTask.startDate,
           endDate: selectedTask.endDate,
-          processStatus: selectedTask.processStatus,
+          // processStatus: selectedTask.processStatus,
         },
         {
           headers: authHeader(),
@@ -179,6 +176,7 @@ const Task = () => {
         fetchTask();
       })
       .catch((error) => {
+        toast.error("Cập nhật thất bại");
         console.error("Failed to update partner", error);
       });
   };
@@ -189,21 +187,7 @@ const Task = () => {
     endDate: Date
   ) => {
     try {
-      var timeStamp = endDate;
-      var dateFormat = new Date(timeStamp);
-
-      let dueDate =
-        dateFormat.getFullYear() +
-        "-" +
-        (dateFormat.getMonth() + 1) +
-        "-" +
-        dateFormat.getDate() +
-        " " +
-        dateFormat.getHours() +
-        ":" +
-        dateFormat.getMinutes() +
-        ":" +
-        dateFormat.getSeconds();
+      let dueDate = dateConvert(endDate);
 
       axios
         .post(
@@ -219,7 +203,7 @@ const Task = () => {
           toast.success("Giao việc thành công");
         });
     } catch (error) {
-      toast.success("Giao việc thất bại");
+      toast.error("Giao việc thất bại");
     }
   };
 
@@ -244,7 +228,7 @@ const Task = () => {
   };
 
   //add a new task
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
 
     axios
@@ -252,12 +236,20 @@ const Task = () => {
         headers: authHeader(),
       })
       .then((response) => {
+        setTaskName("");
+        setDescription("");
+        setStartDate(null);
+        setEndDate(null);
+        setProcessStatus("");
+
         setTask((prevTasks) => [...prevTasks, response.data.data]);
-        toast.success("tạo mới thành công");
+        toast.success("Tạo mới thành công");
+        onClose();
         fetchTask();
       })
       .catch((error) => {
         console.log(error);
+        toast.error("Tạo mới thất bại");
       });
   };
 
@@ -286,9 +278,9 @@ const Task = () => {
             <ModalContent>
               {(onClose) => (
                 <>
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={(e) => handleSubmit(e, onClose)}>
                     <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
-                      Thêm đối tác
+                      Thêm công việc
                     </ModalHeader>
                     <ModalBody>
                       <Input
@@ -306,32 +298,37 @@ const Task = () => {
                       />
 
                       <Input
+                        isRequired
+                        required
                         type="date"
                         label="Ngày bắt đầu"
-                        value={
-                          startDate
-                            ? startDate.toISOString().substring(0, 10)
-                            : ""
-                        }
-                        onChange={(e) =>
-                          setStartDate(
-                            e.target.value ? new Date(e.target.value) : null
-                          )
-                        }
+                        value={startDate ? startDate.substring(0, 10) : ""}
+                        onChange={(e) => {
+                          const dateValue = e.target.value
+                            ? dateConvert(new Date(e.target.value))
+                            : null;
+                          setStartDate(dateValue);
+                          // console.log(e.target.value);
+                          // console.log(dateValue?.substring(0, 10));
+                        }}
                         className="form-input"
                       />
+
                       {/* Ngày kết thúc */}
                       <Input
+                        isRequired
                         type="date"
                         label="Ngày kết thúc"
-                        value={
-                          endDate ? endDate.toISOString().substring(0, 10) : ""
-                        }
-                        onChange={(e) =>
+                        value={endDate ? endDate.substring(0, 10) : ""}
+                        onChange={(e) => {
+                          const dateValue = e.target.value
+                            ? dateConvert(new Date(e.target.value))
+                            : null;
                           setEndDate(
-                            e.target.value ? new Date(e.target.value) : null
-                          )
-                        }
+                            // e.target.value ? new Date(e.target.value) : null
+                            dateValue
+                          );
+                        }}
                         className="form-input"
                       />
                     </ModalBody>
@@ -339,7 +336,7 @@ const Task = () => {
                       <Button color="danger" variant="light" onPress={onClose}>
                         Đóng
                       </Button>
-                      <Button color="primary" onPress={onClose} type="submit">
+                      <Button color="primary" type="submit">
                         Thêm
                       </Button>
                     </ModalFooter>

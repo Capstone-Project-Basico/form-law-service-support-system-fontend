@@ -15,7 +15,7 @@ import axios from "axios";
 const Page = () => {
   //data
   const [fullName, setFullName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const [id_number, setIdNumber] = useState("");
   const [homeTown, setHomeTown] = useState("");
   const [maritalStatus, setMaritalStatus] = useState("");
@@ -215,22 +215,9 @@ const Page = () => {
               <input
                 type="date"
                 value={
-                  selectedRecruitment &&
-                  selectedRecruitment.dateOfBirth instanceof Date
-                    ? selectedRecruitment.dateOfBirth
-                        .toISOString()
-                        .substring(0, 10)
-                    : ""
+                  dateOfBirth ? dateOfBirth.toISOString().substring(0, 10) : ""
                 }
-                onChange={
-                  (e) =>
-                    setSelectedRecruitment({
-                      ...selectedRecruitment,
-                      dateOfBirth: e.target.value
-                        ? new Date(e.target.value)
-                        : null,
-                    } as RecruitmentType) // Ensure the type is Task when updating state
-                }
+                onChange={(e) => setDateOfBirth(new Date(e.target.value))}
                 className="form-input block w-full h-8 py-2 text-base font-normal
            text-gray-700 bg-white bg-clip-padding border border-gray-300  rounded transition 
            ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
