@@ -9,6 +9,11 @@ export type Template = {
   message: string;
 };
 
+export type FormType = {
+  id: number;
+  typeName: string;
+};
+
 export type InputValues = {
   [key: string]: string;
 };

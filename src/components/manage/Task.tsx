@@ -396,7 +396,6 @@ const Tasks: React.FC<TasksProps> = ({
               >
                 <Autocomplete
                   isRequired
-                  label="Favorite Animal"
                   defaultItems={staffs}
                   placeholder="Chọn nhân viên ở đây"
                   // defaultSelectedKey="cat"
