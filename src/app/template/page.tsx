@@ -255,7 +255,7 @@ const Page = () => {
                 <Input
                   isClearable
                   className="w-[660px] sm:max-w-[44%]"
-                  placeholder="Tìm địa chỉ email"
+                  placeholder="Tìm tên biểu mẫu"
                   // startContent={<SearchIcon />}
                   value={filterValue}
                   onClear={() => onClear()}
@@ -286,11 +286,11 @@ const Page = () => {
                       src="/bieumau.jpg"
                     />
                     <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
-                      {/* <Button className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
-                      <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
-                      Xem trước
-                    </Button>
-                    {/* <Button
+                      <Button className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
+                        <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
+                        Xem trước
+                      </Button>
+                      {/* <Button
                       className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
                       variant="faded"
                     >

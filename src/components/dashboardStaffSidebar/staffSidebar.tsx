@@ -11,7 +11,7 @@ import { useState } from "react";
 
 const Sidebar = () => {
   return (
-    <Navbar className="flex items-start bg-[#2B2B2B] text-white w-[350px] h-[795px] pt-10">
+    <Navbar className="flex items-start bg-[#2B2B2B] text-white w-[350px] h-[800px] pt-10">
       <NavbarContent className="flex flex-col gap-8 items-start ">
         <NavbarItem className="text-xl">
           <div className="flex flex-col space-y-2 ">

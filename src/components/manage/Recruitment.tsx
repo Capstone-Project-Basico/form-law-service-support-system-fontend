@@ -137,42 +137,18 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
           <TableColumn className="bg-[#FF0004] text-white">
             Ngày sinh
           </TableColumn>
-          {/* <TableColumn className="bg-[#FF0004] text-white">
-            CMND,CCCD
-          </TableColumn> */}
-          {/* <TableColumn className="bg-[#FF0004] text-white">
-            Quê quán
-          </TableColumn> */}
+
           <TableColumn className="bg-[#FF0004] text-white">
             Giới tính
           </TableColumn>
-          {/* <TableColumn className="bg-[#FF0004] text-white">
-            Tình trạng hôn nhân
-          </TableColumn> */}
+
           <TableColumn className="bg-[#FF0004] text-white">SĐT</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">Email</TableColumn>
-          {/* <TableColumn className="bg-[#FF0004] text-white">Vị trí</TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Kinh nghiệm
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Lĩnh vực
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Tốt nghiệp
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Mục tiêu
-          </TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
-            Nơi làm việc
-          </TableColumn> */}
+
           <TableColumn className="bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
-          {/* <TableColumn className="bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn> */}
+
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -190,19 +166,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                     : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
                 }
               </TableCell>
-
-              {/* <TableCell>{recruitment.id_number}</TableCell> */}
-              {/* <TableCell>{recruitment.homeTown}</TableCell> */}
               <TableCell>{recruitment.gender}</TableCell>
-              {/* <TableCell>{recruitment.maritalStatus}</TableCell> */}
               <TableCell>{recruitment.phoneNum}</TableCell>
               <TableCell>{recruitment.email}</TableCell>
-              {/* <TableCell>{recruitment.position}</TableCell>
-              <TableCell>{recruitment.exp}</TableCell>
-              <TableCell>{recruitment.field}</TableCell>
-              <TableCell>{recruitment.graduate}</TableCell>
-              <TableCell>{recruitment.target}</TableCell>
-              <TableCell>{recruitment.workPlace}</TableCell> */}
               <TableCell>
                 <Select
                   className="max-w-xs"
@@ -243,11 +209,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                     ))}
                 </Select>
               </TableCell>
-              {/* <TableCell>
-                <span style={{ color: recruitment.deleted ? "red" : "green" }}>
-                  {recruitment.deleted ? "Không sử dụng" : "Đang hoạt động"}
-                </span>
-              </TableCell> */}
+
               {recruitment.deleted === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
@@ -358,36 +320,6 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                 <div className="flex flex-row ">
                   <p className="w-40">Email</p>
                   <p className="pl-10">{selectedRecruitment.email}</p>
-                </div>
-
-                <div className="flex flex-row ">
-                  <p className="w-40">Vị trí</p>
-                  <p className="pl-10">{selectedRecruitment.position}</p>
-                </div>
-
-                <div className="flex flex-row ">
-                  <p className="w-40">Kinh nghiệm</p>
-                  <p className="pl-10">{selectedRecruitment.exp}</p>
-                </div>
-
-                <div className="flex flex-row ">
-                  <p className="w-40">Lĩnh vực</p>
-                  <p className="pl-10">{selectedRecruitment.field}</p>
-                </div>
-
-                <div className="flex flex-row ">
-                  <p className="w-40">Tốt nghiệp</p>
-                  <p className="pl-10">{selectedRecruitment.graduate}</p>
-                </div>
-
-                <div className="flex flex-row ">
-                  <p className="w-40">Mục tiêu</p>
-                  <p className="pl-10">{selectedRecruitment.target}</p>
-                </div>
-
-                <div className="flex flex-row ">
-                  <p className="w-40">Chỗ làm việc</p>
-                  <p className="pl-10">{selectedRecruitment.workPlace}</p>
                 </div>
 
                 <div className="flex flex-row ">

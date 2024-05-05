@@ -157,7 +157,7 @@ const Wallet = () => {
                   onChange={(e) => setBalance(e.target.value)}
                 ></Input>
                 <Button
-                  className="bg-[#FF0004] h-14"
+                  className="bg-[#FF0004] h-14 text-white"
                   onClick={() => checkRequest()}
                   disabled={!balance || Number(balance) < 2000}
                 >

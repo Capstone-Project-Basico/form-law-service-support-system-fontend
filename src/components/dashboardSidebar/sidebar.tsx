@@ -17,7 +17,7 @@ import { usePathname } from "next/navigation";
 const Sidebar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   return (
-    <Navbar className="flex items-start bg-[#2B2B2B] text-white w-[350px] h-[795px] pt-10">
+    <Navbar className="flex items-start bg-[#2B2B2B] text-white w-[350px] h-[800px] pt-10">
       <NavbarContent className="flex flex-col gap-8 items-start ">
         <NavbarItem className="text-xl">
           <div className="flex flex-col space-y-2 ">
@@ -46,7 +46,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
         <>
           <div
             onClick={toggleSubMenu}
-            className={` cursor-pointer flex flex-row items-center p-2 rounded-lg w-full justify-between hover:text-[#FF0004] ${
+            className={` cursor-pointer flex flex-row items-center p-2 rounded-lg w-full  justify-between hover:text-[#FF0004] ${
               pathname.includes(item.path) ? "text-[#FF0004]" : ""
             }`}
           >
