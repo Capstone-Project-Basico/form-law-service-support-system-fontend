@@ -8,6 +8,8 @@ import {
   faBarsStaggered,
   faCartShopping,
   faBasketShopping,
+  faSearchPlus,
+  faSliders,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -88,6 +90,13 @@ export const sideNavItems: SideNavItem[] = [
         icon={faBasketShopping}
         className="w-7 h-7 text-[#FF0004]"
       />
+    ),
+  },
+  {
+    title: "Cài đặt hệ thống",
+    path: "/dashboard/",
+    icon: (
+      <FontAwesomeIcon icon={faSliders} className="w-7 h-7 text-[#FF0004]" />
     ),
   },
 ];
