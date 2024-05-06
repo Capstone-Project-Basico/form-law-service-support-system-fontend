@@ -16,7 +16,7 @@ const Page = () => {
 
   const getAllPartners = () => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`)
+      .get(`${process.env.NEXT_PUBLIC_BASE_API}partner/getAllApprovePartner`)
       .then((response) => {
         setPartners(response.data.data);
       });

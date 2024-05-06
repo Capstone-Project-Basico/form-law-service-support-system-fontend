@@ -238,7 +238,7 @@ const Page = () => {
 
   //pagination
   const [page, setPage] = useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = 12;
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -352,8 +352,12 @@ const Page = () => {
           <Pagination
             isCompact
             showControls
-            showShadow
-            color="secondary"
+            classNames={{
+              wrapper: "gap-0 overflow-visible h-8 ",
+              item: "w-8 h-8 text-small rounded-none bg-transparent",
+              cursor:
+                "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold",
+            }}
             page={page}
             total={pages}
             onChange={(page) => setPage(page)}
