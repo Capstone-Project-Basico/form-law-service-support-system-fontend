@@ -293,6 +293,7 @@ const Post = () => {
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
+      ToastCon
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
@@ -385,7 +386,6 @@ const Post = () => {
           </Modal>
         </div>
       </div>
-
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
@@ -424,7 +424,6 @@ const Post = () => {
           </Button>
         </div>
       </div>
-
       <div>
         <Posts
           posts={post}

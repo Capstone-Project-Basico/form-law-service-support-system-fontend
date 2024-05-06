@@ -94,7 +94,7 @@ export const sideNavItems: SideNavItem[] = [
   },
   {
     title: "Cài đặt hệ thống",
-    path: "/dashboard/",
+    path: "/dashboard/setting",
     icon: (
       <FontAwesomeIcon icon={faSliders} className="w-7 h-7 text-[#FF0004]" />
     ),

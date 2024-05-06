@@ -28,7 +28,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { PartnerType } from "@/constants/types/homeType";
+import { PartnerType, UserLocal } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
 
 import {
@@ -57,11 +57,20 @@ const Partner = () => {
   // const [imageRef, setImageRef] = useState<StorageReference | undefined>();
   const [partners, setPartners] = useState<PartnerType[]>([]);
   //const [selectedPartner, setSelectedPartner] = useState<PartnerType | null>(null);
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
 
+  const user: UserLocal | null = getUserFromStorage();
+  const userId = user?.data.data.userId;
   let newPartner = {
     name,
     avatar,
     link,
+    userId,
   };
   const imagesListRef = ref(storage, "partners/");
   const [imageUpload, setImageUpload] = useState<File | null>(null);
@@ -251,7 +260,7 @@ const Partner = () => {
       .then((response) => {
         setPartners((prevPartners) => [...prevPartners, response.data.data]);
         toast.success("tạo mới thành công");
-        fetchPendingPartners();
+        fetchPartners();
       })
       .catch((error) => {
         console.log(error);
