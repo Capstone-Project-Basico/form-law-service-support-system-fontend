@@ -49,7 +49,7 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) =>
-        user.email.toLowerCase().includes(filterValue.toLowerCase())
+        user.email?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (

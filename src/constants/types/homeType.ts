@@ -7,6 +7,7 @@ export type Template = {
   price: number;
   fileUrl: string;
   message: string;
+  formTypeName: string;
 };
 
 export type FormType = {

@@ -41,7 +41,9 @@ const Page = () => {
   const router = useRouter();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [filterValue, setFilterValue] = useState("");
-  const [type, setType] = useState<FormType[]>([]);
+  const [types, setTypes] = useState<FormType[]>([]);
+  const [selectTypeId, setSelectTypeId] = useState<number | undefined>();
+  const [selectTypeName, setSelectTypeName] = useState("");
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -71,9 +73,11 @@ const Page = () => {
 
   const getType = async () => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion`)
+      .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
       .then((response) => {
-        setType(response.data.data);
+        console.log(response);
+
+        setTypes(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -181,16 +185,42 @@ const Page = () => {
   const hasSearchFilter = Boolean(filterValue);
 
   const filteredItems = useMemo(() => {
-    let filteredUsers = [...templates];
+    let filteredTemplates = [...templates];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((temp) =>
+      filteredTemplates = filteredTemplates.filter((temp) =>
         temp.message.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
-    return filteredUsers;
-  }, [templates, hasSearchFilter, filterValue]);
+    if (selectTypeId) {
+      // types.map((type) => {
+      //   if (selectTypeId === type.id) {
+      //     setSelectTypeName(type.typeName);
+      //   } else {
+      //     setSelectTypeName("");
+      //   }
+      // });
+      const selectedType = types.find((type) => type.id === selectTypeId);
+      if (selectedType) {
+        setSelectTypeName(selectedType.typeName);
+      }
+
+      filteredTemplates = filteredTemplates.filter((template) => {
+        template.formTypeName?.includes(selectTypeName);
+        console.log(template.formTypeName);
+      });
+    }
+
+    return filteredTemplates;
+  }, [
+    templates,
+    hasSearchFilter,
+    selectTypeId,
+    filterValue,
+    types,
+    selectTypeName,
+  ]);
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
@@ -232,13 +262,12 @@ const Page = () => {
 
           <div className="ml-auto flex flex-row justify-center items-end">
             <Autocomplete
-              isRequired
-              defaultItems={type}
-              placeholder="Loại biểu mẫu"
+              defaultItems={types}
+              label="Loại biểu mẫu"
               className="max-w-xs mr-3"
-              // onSelectionChange={(e) => {
-              //   setStaffId(Number(e));
-              // }}
+              onSelectionChange={(e) => {
+                setSelectTypeId(Number(e));
+              }}
             >
               {(item) => (
                 <AutocompleteItem key={item.id}>
