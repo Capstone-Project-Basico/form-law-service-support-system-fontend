@@ -74,7 +74,7 @@ const Page = () => {
 
         <div className="grid grid-cols-5 justify-center items-center gap-5">
           {partners.map((partner) => (
-            <div key={partner.partnerId} className="border-1">
+            <div key={partner.partnerId} className="border-1 bg-white">
               <Link
                 href={partner.link}
                 className="py-[25px]"

@@ -1,6 +1,10 @@
 "use client";
 
-import { ProfileSidebarItem, UserType } from "@/constants/types/homeType";
+import {
+  ProfileSidebarItem,
+  UserLocal,
+  UserType,
+} from "@/constants/types/homeType";
 import {
   Button,
   Input,
@@ -15,15 +19,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import authHeader from "@/components/authHeader/AuthHeader";
 import { ToastContainer, toast } from "react-toastify";
-
-//type
-interface UserLocal {
-  data: {
-    data: {
-      userId: string;
-    };
-  };
-}
 
 const Profile = () => {
   const [userProfile, setUserProfile] = useState<UserType>();
@@ -119,7 +114,7 @@ const Profile = () => {
                   type="text"
                   disabled
                   variant="faded"
-                  defaultValue={userProfile?.email ?? "hello?"}
+                  defaultValue={userProfile?.email}
                 />
               </div>
             </div>
