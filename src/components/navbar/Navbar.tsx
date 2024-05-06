@@ -142,8 +142,8 @@ const Navbar = () => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
-                {practices.map((practice) => (
-                  <DropdownItem key="retainerService">
+                {practices.map((practice, key) => (
+                  <DropdownItem key={key} textValue={practice.title}>
                     <Link href={practice.link} className="text-white">
                       {practice.title}
                     </Link>
@@ -183,8 +183,8 @@ const Navbar = () => {
                 </div>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
-                {researchAndPublications.map((research) => (
-                  <DropdownItem key="retainerService">
+                {researchAndPublications.map((research, key) => (
+                  <DropdownItem key={key} textValue={research.title}>
                     <Link href={research.link} className="text-white">
                       {research.title}
                     </Link>
@@ -222,8 +222,8 @@ const Navbar = () => {
                 </div>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
-                {about.map((ab) => (
-                  <DropdownItem key="retainerService">
+                {about.map((ab, key) => (
+                  <DropdownItem key={key} textValue={ab.title}>
                     <Link href={ab.link} className="text-white">
                       {ab.title}
                     </Link>

@@ -19,6 +19,9 @@ import { ToastContainer, toast } from "react-toastify";
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const [isVisibleRepeat, setIsVisibleRepeat] = useState(false);
+  const toggleVisibilityRepeat = () => setIsVisibleRepeat(!isVisibleRepeat);
+
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -96,10 +99,10 @@ const Page = () => {
 
               <div className="flex flex-wrap md:flex-nowrap gap-4 mb-10 w-[662px]">
                 <Input
-                  type="password"
                   label="Password"
                   placeholder="Nhập mật khẩu"
                   onChange={(e) => setPassword(e.target.value)}
+                  type={isVisible ? "text" : "password"}
                   startContent={
                     <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
                   }
@@ -137,9 +140,9 @@ const Page = () => {
                     <button
                       className="focus:outline-none"
                       type="button"
-                      onClick={toggleVisibility}
+                      onClick={toggleVisibilityRepeat}
                     >
-                      {isVisible ? (
+                      {isVisibleRepeat ? (
                         <FontAwesomeIcon
                           icon={faEye}
                           className="text-2xl text-default-400 pointer-events-none"
@@ -152,7 +155,7 @@ const Page = () => {
                       )}
                     </button>
                   }
-                  type={isVisible ? "text" : "password"}
+                  type={isVisibleRepeat ? "text" : "password"}
                 />
               </div>
 
