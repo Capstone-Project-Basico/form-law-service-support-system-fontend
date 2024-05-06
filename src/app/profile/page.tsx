@@ -94,7 +94,7 @@ const Profile = () => {
                   disabled={!isEditing}
                   type="text"
                   variant="bordered"
-                  defaultValue={userProfile?.userName ?? ""}
+                  defaultValue={userProfile?.userName}
                   onChange={(e) => setUserName(e.target.value)}
                 />
               </div>

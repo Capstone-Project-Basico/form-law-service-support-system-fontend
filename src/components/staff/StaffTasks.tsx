@@ -31,27 +31,11 @@ import authHeader from "../authHeader/AuthHeader";
 BreadcrumbItem;
 type TasksProps = {
   tasks: TaskAssignmentType[];
-  handleDelete: (id: number) => void;
-  restoreDelete: (id: number) => void;
-  handleUpdateSubmit: (data: any) => void;
+  completeTask: (id: number) => void;
 };
 
-const StaffTasks: React.FC<TasksProps> = ({
-  tasks = [],
-  handleDelete,
-  restoreDelete,
-  handleUpdateSubmit,
-}) => {
+const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTask, setSelectedTask] = useState<TaskAssignmentType | null>(
-    null
-  );
-
-  const {
-    isOpen: isOpenUpdate,
-    onOpen: onOpenUpdate,
-    onClose: onCloseUpdate,
-  } = useDisclosure();
 
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,14 +153,11 @@ const StaffTasks: React.FC<TasksProps> = ({
                 }
               </TableCell>
 
-              {task.status === "CURRENT" ? (
+              {task.status === "ĐANG THỰC HIỆN" ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-blue-600 text-white"
-                    // onPress={() => {
-                    //   setSelectedTask(task);
-                    //   onOpenUpdate();
-                    // }}
+                    onClick={() => completeTask(task.id)}
                   >
                     Hoàn thành
                   </Button>

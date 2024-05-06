@@ -17,6 +17,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import StaffTasks from "@/components/staff/StaffTasks";
+import Swal from "sweetalert2";
 
 const Task = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -76,7 +77,7 @@ const Task = () => {
       );
       setTask(
         response.data.data.filter(
-          (task: TaskAssignmentType) => task.status === "CURRENT"
+          (task: TaskAssignmentType) => task.status === "ĐANG THỰC HIỆN"
         )
       );
     } catch (error) {
@@ -94,7 +95,7 @@ const Task = () => {
       );
       setTask(
         response.data.data.filter(
-          (task: TaskAssignmentType) => task.status === "NOT LONGER AVAILABLE"
+          (task: TaskAssignmentType) => task.status === "KHÔNG CÒN THỰC HIỆN"
         )
       );
     } catch (error) {
@@ -102,100 +103,37 @@ const Task = () => {
     }
   };
 
-  //delete
-  const handleDelete = async (id: number) => {
-    const isConfirmed = window.confirm(
-      "Bạn có chắc muốn xóa công việc này không?"
-    );
-    if (isConfirmed) {
-      try {
-        axios
-          .delete(`${process.env.NEXT_PUBLIC_BASE_API}task/deleteTask/${id}`, {
-            headers: authHeader(),
-          })
-          .then(() => {
-            toast.success("Xóa thành công");
-            fetchTask();
-          }),
-          {
-            headers: authHeader(),
-          };
-
-        // setPartners((prevPartners) =>
-        //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
-        // );
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  //update
-  const handleUpdateSubmit = async (selectedTask: any) => {
-    //if (!selectedTask) return; // Check if a Task is selected
-
-    // Example: PUT request to update Task details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/updateTask/${selectedTask.id}`,
-        {
-          taskName: selectedTask.taskName,
-          description: selectedTask.description,
-          startDate: selectedTask.startDate,
-          endDate: selectedTask.endDate,
-          processStatus: selectedTask.processStatus,
-        },
-        {
-          headers: authHeader(),
+  // done
+  const completeTask = async (id: number) => {
+    Swal.fire({
+      title: "Bạn đã hoàn thành nhiệm vụ này?",
+      showDenyButton: true,
+      confirmButtonText: "Có",
+      denyButtonText: `Không`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          axios
+            .put(
+              `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/completeTask/${id}`,
+              {},
+              {
+                headers: authHeader(),
+              }
+            )
+            .then((response) => {
+              toast.success("Bạn đã hoàn thành 1 việc");
+              fetchTask();
+            });
+        } catch (error) {
+          console.log(error);
         }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-        fetchTask();
-      })
-      .catch((error) => {
-        console.error("Failed to update partner", error);
-      });
+      } else if (result.isDenied) {
+        Swal.fire("Tiếp tục làm công việc này", "", "error");
+        return;
+      }
+    });
   };
-
-  // restore
-  const restoreDelete = async (id: number) => {
-    try {
-      axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}task/restoreTask/${id}`,
-          {},
-          {
-            headers: authHeader(),
-          }
-        )
-        .then((response) => {
-          toast.success("Khôi phục thành công");
-          // fetchDeletedTask();
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //add a new task
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_API}task/createNewTask`, newTask, {
-        headers: authHeader(),
-      })
-      .then((response) => {
-        setTask((prevTasks) => [...prevTasks, response.data.data]);
-        toast.success("tạo mới thành công");
-        fetchTask();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -239,12 +177,7 @@ const Task = () => {
       </div>
 
       <div>
-        <StaffTasks
-          tasks={task ? task : []}
-          handleDelete={handleDelete}
-          restoreDelete={restoreDelete}
-          handleUpdateSubmit={handleUpdateSubmit}
-        />
+        <StaffTasks tasks={task ? task : []} completeTask={completeTask} />
       </div>
     </div>
   );
