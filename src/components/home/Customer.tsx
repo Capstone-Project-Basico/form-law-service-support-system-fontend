@@ -23,7 +23,7 @@ const Customer = () => {
       .catch((error) => {
         console.log(error);
       });
-  });
+  }, []);
 
   return (
     <div className="grid grid-cols-7 bg-[#F3F3F3] text-black justify-center items-center pt-24 pb-16 pl-80 pr-80">

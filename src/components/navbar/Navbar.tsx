@@ -93,6 +93,7 @@ const Navbar = () => {
 
     getUserById();
   }, [userId]);
+
   return (
     <div className={styles.container}>
       <MyNavbar
@@ -273,7 +274,7 @@ const Navbar = () => {
         {/* login */}
         <NavbarContent justify="end" className="w-[165px] h-5">
           {user ? (
-            <Dropdown placement="bottom-end" className="w-80">
+            <Dropdown placement="bottom-end" className="w-96">
               <DropdownTrigger className="h-14">
                 <Avatar
                   style={{ height: "60px" }}
