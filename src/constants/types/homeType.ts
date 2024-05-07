@@ -8,6 +8,7 @@ export type Template = {
   fileUrl: string;
   message: string;
   formTypeName: string;
+  formTypeId: number;
 };
 
 export type FormType = {

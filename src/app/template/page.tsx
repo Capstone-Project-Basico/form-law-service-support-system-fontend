@@ -5,7 +5,7 @@ import HeaderComponent from "@/components/header";
 // import CardTemplate from "@/sections/CardTemplate";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faPen } from "@fortawesome/free-solid-svg-icons";
 import { GoogleMaps } from "@/components/ui/GoogleMaps";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 import {
@@ -19,6 +19,12 @@ import {
   Pagination,
   Autocomplete,
   AutocompleteItem,
+  useDisclosure,
+  ModalFooter,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
 } from "@nextui-org/react";
 import Link from "next/link";
 import axios from "axios";
@@ -29,6 +35,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "@/components/authHeader/AuthHeader";
+// import userId from "@/components/authHeader/GetUserId";
 
 interface UserLocal {
   data: {
@@ -44,6 +51,8 @@ const Page = () => {
   const [types, setTypes] = useState<FormType[]>([]);
   const [selectTypeId, setSelectTypeId] = useState<number | undefined>();
   const [selectTypeName, setSelectTypeName] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [selectedTemplate, setSelectedTemplate] = useState<Template>();
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -194,33 +203,13 @@ const Page = () => {
     }
 
     if (selectTypeId) {
-      // types.map((type) => {
-      //   if (selectTypeId === type.id) {
-      //     setSelectTypeName(type.typeName);
-      //   } else {
-      //     setSelectTypeName("");
-      //   }
-      // });
-      const selectedType = types.find((type) => type.id === selectTypeId);
-      if (selectedType) {
-        setSelectTypeName(selectedType.typeName);
-      }
-
-      filteredTemplates = filteredTemplates.filter((template) => {
-        template.formTypeName?.includes(selectTypeName);
-        console.log(template.formTypeName);
-      });
+      filteredTemplates = filteredTemplates.filter(
+        (temp) => temp.formTypeId === selectTypeId
+      );
     }
 
     return filteredTemplates;
-  }, [
-    templates,
-    hasSearchFilter,
-    selectTypeId,
-    filterValue,
-    types,
-    selectTypeName,
-  ]);
+  }, [templates, hasSearchFilter, selectTypeId, filterValue]);
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
@@ -283,7 +272,12 @@ const Page = () => {
               <div className="">
                 <Input
                   isClearable
-                  className="w-[660px] sm:max-w-[44%]"
+                  // className="w-[660px] h-14 sm:max-w-[44%]"
+                  classNames={{
+                    base: "w-[660px] sm:max-w-[44%] h-14",
+
+                    inputWrapper: "h-full ",
+                  }}
                   placeholder="Tìm tên biểu mẫu"
                   // startContent={<SearchIcon />}
                   value={filterValue}
@@ -315,7 +309,13 @@ const Page = () => {
                       src="/bieumau.jpg"
                     />
                     <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
-                      <Button className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
+                      <Button
+                        className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
+                        onPress={() => {
+                          setSelectedTemplate(template);
+                          onOpen();
+                        }}
+                      >
                         <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
                         Xem trước
                       </Button>
@@ -363,6 +363,47 @@ const Page = () => {
             onChange={(page) => setPage(page)}
           />
         </div>
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          size="full"
+          className="w-[1100px] h-[800px]"
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalBody className="flex flex-row">
+                  <div className="w-[800px] overflow-auto">
+                    Bieu mau o day ne.................
+                  </div>
+                  <div className="w-[300px] gap-10 flex flex-col justify-start items-center">
+                    <h1 className="flex justify-start font-semibold">
+                      {selectedTemplate?.message
+                        ? selectedTemplate?.message
+                        : "Biểu mẫu này hiện không có tên"}
+                    </h1>
+                    <div className="flex flex-col gap-3">
+                      <Button
+                        className="w-80 bg-[#FF0004] text-white"
+                        onPress={onClose}
+                      >
+                        <FontAwesomeIcon icon={faPen} className="size-4 ml-1" />
+                        Dùng mẫu này
+                      </Button>
+                      <Button
+                        className="w-full"
+                        onPress={onClose}
+                        variant="faded"
+                      >
+                        Đóng lại
+                      </Button>
+                    </div>
+                  </div>
+                </ModalBody>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
       </div>
     </>
   );
