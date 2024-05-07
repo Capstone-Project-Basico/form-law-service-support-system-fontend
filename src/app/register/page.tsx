@@ -38,7 +38,12 @@ const Page = () => {
     }
     // Check if passwords match
     if (password !== repeatPassword) {
-      toast.error("Passwords do not match!");
+      toast.error("Mật khẩu xác nhận phải trùng với mật khẩu mới!");
+      return;
+    }
+
+    if (password.length < 6 || password.length > 25) {
+      toast.error("Mật khẩu mới tối thiểu 6 kí tự và tối đa 25 kí tự!");
       return;
     }
     let dataRegister = {
@@ -64,7 +69,6 @@ const Page = () => {
   return (
     <div className="flex flex-col justify-center items-center pt-16 pb-[90px] bg-custom-bg bg-cover ">
       <ToastContainer />
-
       <div className="bg-white p-20 rounded-2xl">
         <div className="flex flex-col justify-center items-center mt-50">
           <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
