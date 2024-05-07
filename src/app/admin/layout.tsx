@@ -1,9 +1,9 @@
 "use client";
 import dynamic from "next/dynamic";
-const Protect = dynamic(() => import("@/components/protect/Protect"));
+const AdminProtect = dynamic(() => import("@/components/protect/AdminProtect"));
 const Navbar = dynamic(() => import("../../components/dashboardNavbar/navbar"));
 import { useEffect } from "react";
-import Sidebar from "../../components/dashboardSidebar/sidebar";
+import Sidebar from "../../components/adminSidebar/adminSidebar";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 import "react-toastify/dist/ReactToastify.css";
 import { usePathname, useRouter } from "next/navigation";
@@ -27,10 +27,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const user: UserLocal | null = getUserFromStorage();
   const userRole = user?.data.data.roleName;
-  if (userRole != "ROLE_MANAGER") return <Protect>{<></>}</Protect>;
+  if (userRole != "ROLE_ADMIN") return <AdminProtect>{<></>}</AdminProtect>;
 
   return (
-    <Protect>
+    <AdminProtect>
       <div className="flex flex-col">
         <div className="flex flex-cow">
           <Navbar />
@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {children}
         </div>
       </div>
-    </Protect>
+    </AdminProtect>
   );
 };
 

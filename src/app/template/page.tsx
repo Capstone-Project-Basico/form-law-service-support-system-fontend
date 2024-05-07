@@ -3,7 +3,7 @@
 import { Template, FormType } from "@/constants/types/homeType";
 import HeaderComponent from "@/components/header";
 // import CardTemplate from "@/sections/CardTemplate";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { faAngleRight, faPen } from "@fortawesome/free-solid-svg-icons";
 import { GoogleMaps } from "@/components/ui/GoogleMaps";
@@ -35,6 +35,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "@/components/authHeader/AuthHeader";
+import axiosClient from "@/lib/axiosClient";
 // import userId from "@/components/authHeader/GetUserId";
 
 interface UserLocal {
@@ -53,6 +54,7 @@ const Page = () => {
   const [selectTypeName, setSelectTypeName] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedTemplate, setSelectedTemplate] = useState<Template>();
+  const templateRef = useRef<HTMLDivElement>(null);
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -238,6 +240,49 @@ const Page = () => {
     return filteredItems.slice(start, end);
   }, [page, filteredItems]);
 
+  // const getFile = async (id: number) => {
+  //   try {
+  //     const res = await axiosClient.get(`formTemplateVersion/download/${id}`, {
+  //       responseType: "blob",
+  //     });
+  //     const file = new Blob([res.data]);
+
+  //     const form = new FormData();
+  //     form.append("file", file);
+
+  //     const converterURL = process.env.NEXT_PUBLIC_CONVERTER_API;
+  //     if (!converterURL) {
+  //       console.error("Converter API is not defined");
+  //       return "Server error";
+  //     }
+
+  //     const htmlRes = await axiosClient.post(converterURL, form, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+
+  //     return htmlRes.data;
+  //   } catch (error) {
+  //     console.error("Error downloading file:", error);
+  //     if (axios.isAxiosError(error) && error.response) {
+  //       // You can handle based on status code as well here
+  //       console.error("Error details:", error.response.data);
+  //     }
+  //     throw error; // rethrow the error after logging it
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const renderPage = async (): Promise<void> => {
+  //     const html = await getFile(Number(selectedTemplate?.id));
+  //     // // const html = "'Hello, this is a test: {{username##text}}, and this is a number: {{age##number}}.';";
+  //     // const replacedHtml = replaceFieldWithInput(html);
+  //     if (templateRef.current) templateRef.current.innerHTML = html;
+  //   };
+  //   renderPage();
+  // }, []);
+
   return (
     <>
       <HeaderComponent title="BIỂU MẪU" link="BIỂU MẪU" />
@@ -374,13 +419,16 @@ const Page = () => {
               <>
                 <ModalBody className="flex flex-row">
                   <div className="w-[800px] overflow-auto">
-                    Bieu mau o day ne.................
+                    <div
+                      className="content-center min-h-full p-10 border-1 border-black"
+                      ref={templateRef}
+                    ></div>
                   </div>
                   <div className="w-[300px] gap-10 flex flex-col justify-start items-center">
-                    <h1 className="flex justify-start font-semibold">
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
                       {selectedTemplate?.message
                         ? selectedTemplate?.message
-                        : "Biểu mẫu này hiện không có tên"}
+                        : "Biểu mẫu này hiện tại không có tên"}
                     </h1>
                     <div className="flex flex-col gap-3">
                       <Button

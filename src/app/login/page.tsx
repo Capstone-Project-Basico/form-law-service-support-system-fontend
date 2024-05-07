@@ -42,6 +42,10 @@ const Page = () => {
 
         switch (response.data.data.roleName) {
           case "ROLE_ADMIN":
+            router.push("/admin");
+            toast.success("Đăng nhập thành công");
+            break;
+          case "ROLE_MANAGER":
             router.push("/dashboard");
             toast.success("Đăng nhập thành công");
             break;
@@ -53,8 +57,6 @@ const Page = () => {
             router.push("/");
             toast.success("Đăng nhập thành công");
             break;
-          default:
-            router.push("/");
         }
         setTimeout(() => {
           localStorage.clear();
