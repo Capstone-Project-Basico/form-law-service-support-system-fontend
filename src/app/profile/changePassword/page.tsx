@@ -14,8 +14,8 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import authHeader from "@/components/authHeader/AuthHeader";
 import { ToastContainer, toast } from "react-toastify";
@@ -32,11 +32,14 @@ const ChangePassword = () => {
 
   const [userChangePassword, setUserChangePassword] = useState<UserType>();
   const [isEditing, setIsEditing] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const router = useRouter();
+
   let data = {
-    userName: userName,
-    phoneNumber: phoneNumber,
+    oldPassword,
+    newPassword,
   };
 
   const getUserFromStorage = () => {
@@ -66,11 +69,46 @@ const ChangePassword = () => {
     getUserById();
   }, [userId]);
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    // Check if both passwords are entered
+    if (!newPassword || !repeatPassword) {
+      toast.error("Vui lòng điền vào đầy đủ!");
+      return;
+    }
+    // Check if passwords match
+    if (newPassword !== repeatPassword) {
+      toast.error("Mật khẩu xác nhận phải trùng với mật khẩu mới!");
+      return;
+    }
+
+    if (newPassword.length < 6 || newPassword.length > 25) {
+      toast.error("Mật khẩu mới tối thiểu 6 kí tự và tối đa 25 kí tự!");
+      return;
+    }
+
+    // Try to register the user
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/changePassword/${userId}`,
+        data,
+        {
+          headers: authHeader(),
+        }
+      );
+      router.push("/login");
+      toast.success("Bạn đã đổi mật khẩu thành công");
+    } catch (error) {
+      console.error(error);
+      toast.error("Sai mật khẩu hiện tại, mời bạn kiểm tra lại!");
+    }
+  };
   return (
     <div>
       <ToastContainer />
-      <div className="w-[1350px] h-[600px] bg-white rounded-2xl">
-        <div className="ml-10 w-[1150px]">
+      <div className="w-[1350px] h-full bg-white rounded-2xl">
+        <div className="ml-10 w-[1150px] pt-10">
           <h2 className="text-xl font-bold mb-7">
             Thay đổi mật khẩu đăng nhập
           </h2>
@@ -86,102 +124,104 @@ const ChangePassword = () => {
               defaultValue={userChangePassword?.email}
             />
           </div>
+          <form onSubmit={handleSubmit}>
+            <h2>Mật khẩu hiện tại</h2>
+            <div className="flex justify-center items-center mb-4">
+              <Input
+                type={isVisible ? "text" : "password"}
+                variant="bordered"
+                onChange={(e) => setOldPassword(e.target.value)}
+                startContent={
+                  <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
+                }
+                endContent={
+                  <button
+                    className="focus:outline-none"
+                    type="button"
+                    onClick={toggleVisibility}
+                  >
+                    {isVisible ? (
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="text-2xl text-default-400 pointer-events-none"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faEyeSlash}
+                        className="text-2xl text-default-400 pointer-events-none"
+                      />
+                    )}
+                  </button>
+                }
+              />
+            </div>
 
-          <h2>Mật khẩu hiện tại</h2>
-          <div className="flex justify-center items-center mb-4">
-            <Input
-              type={isVisible ? "text" : "password"}
-              variant="bordered"
-              startContent={
-                <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
-              }
-              endContent={
-                <button
-                  className="focus:outline-none"
-                  type="button"
-                  onClick={toggleVisibility}
-                >
-                  {isVisible ? (
-                    <FontAwesomeIcon
-                      icon={faEye}
-                      className="text-2xl text-default-400 pointer-events-none"
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={faEyeSlash}
-                      className="text-2xl text-default-400 pointer-events-none"
-                    />
-                  )}
-                </button>
-              }
-            />
-          </div>
+            <h2>Mật khẩu mới</h2>
+            <div className="flex justify-center items-center mb-4">
+              <Input
+                className=""
+                variant="bordered"
+                onChange={(e) => setNewPassword(e.target.value)}
+                type={isVisibleNew ? "text" : "password"}
+                startContent={
+                  <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
+                }
+                endContent={
+                  <button
+                    className="focus:outline-none"
+                    type="button"
+                    onClick={toggleVisibilityNew}
+                  >
+                    {isVisibleNew ? (
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="text-2xl text-default-400 pointer-events-none"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faEyeSlash}
+                        className="text-2xl text-default-400 pointer-events-none"
+                      />
+                    )}
+                  </button>
+                }
+              />
+            </div>
 
-          <h2>Mật khẩu mới</h2>
-          <div className="flex justify-center items-center mb-4">
-            <Input
-              className=""
-              variant="bordered"
-              type={isVisibleNew ? "text" : "password"}
-              startContent={
-                <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
-              }
-              endContent={
-                <button
-                  className="focus:outline-none"
-                  type="button"
-                  onClick={toggleVisibilityNew}
-                >
-                  {isVisibleNew ? (
-                    <FontAwesomeIcon
-                      icon={faEye}
-                      className="text-2xl text-default-400 pointer-events-none"
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={faEyeSlash}
-                      className="text-2xl text-default-400 pointer-events-none"
-                    />
-                  )}
-                </button>
-              }
-            />
-          </div>
-          <ul style={{ listStyleType: "unset" }} className="ml-5 mb-7">
-            <li>Mật khẩu từ 6 đến 25 kí tự</li>
-            <li>Bao gồm chữ hoa, chữ thường và kí hiệu số</li>
-          </ul>
-
-          <h2>Nhập lại mật khẩu mới</h2>
-          <div className="flex justify-center items-center mb-4">
-            <Input
-              type={isVisibleRepeat ? "text" : "password"}
-              variant="bordered"
-              startContent={
-                <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
-              }
-              endContent={
-                <button
-                  className="focus:outline-none"
-                  type="button"
-                  onClick={toggleVisibilityRepeat}
-                >
-                  {isVisibleRepeat ? (
-                    <FontAwesomeIcon
-                      icon={faEye}
-                      className="text-2xl text-default-400 pointer-events-none"
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon={faEyeSlash}
-                      className="text-2xl text-default-400 pointer-events-none"
-                    />
-                  )}
-                </button>
-              }
-            />
-          </div>
-          <Button className="bg-[#FF0004] text-white mt-7">Lưu</Button>
+            <h2>Nhập lại mật khẩu mới</h2>
+            <div className="flex justify-center items-center mb-4">
+              <Input
+                type={isVisibleRepeat ? "text" : "password"}
+                variant="bordered"
+                onChange={(e) => setRepeatPassword(e.target.value)}
+                startContent={
+                  <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
+                }
+                endContent={
+                  <button
+                    className="focus:outline-none"
+                    type="button"
+                    onClick={toggleVisibilityRepeat}
+                  >
+                    {isVisibleRepeat ? (
+                      <FontAwesomeIcon
+                        icon={faEye}
+                        className="text-2xl text-default-400 pointer-events-none"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faEyeSlash}
+                        className="text-2xl text-default-400 pointer-events-none"
+                      />
+                    )}
+                  </button>
+                }
+              />
+            </div>
+            <Button className="bg-[#FF0004] text-white mt-7" type="submit">
+              Lưu
+            </Button>
+          </form>
         </div>
       </div>
     </div>

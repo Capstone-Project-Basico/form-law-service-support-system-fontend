@@ -290,25 +290,40 @@ const Navbar = () => {
               <DropdownMenu
                 aria-label="Profile Actions"
                 variant="flat"
-                disabledKeys={["hr"]}
+                disabledKeys={["hr", "hr2"]}
               >
-                <DropdownItem key="profile" className="h-14 gap-2">
+                <DropdownItem
+                  key="user"
+                  textValue={userData?.userName}
+                  className="h-14 gap-2"
+                >
                   <h2 className="font-semibold">{userData?.userName}</h2>
                 </DropdownItem>
-                <DropdownItem key="profile" className="bg-[#F2F2F2] h-11">
-                  <Link href="/profile" className="text-black">
+                <DropdownItem
+                  key="profile"
+                  textValue="Cài đặt thông tin cá nhân"
+                  className="bg-[#F2F2F2] "
+                >
+                  <Link
+                    href="/profile"
+                    className="text-black w-full py-3 text-[17px]"
+                  >
                     <FontAwesomeIcon
                       icon={faAddressCard}
                       className="w-5 h-5 text-[#FF0004] mr-3"
                     />
-                    Cài đặt thông tin cá nhân
+                    <p>Cài đặt thông tin cá nhân</p>
                   </Link>
                 </DropdownItem>
                 <DropdownItem
                   key="changePassword"
-                  className="bg-[#F2F2F2] h-11"
+                  textValue="Đổi mật khẩu"
+                  className="bg-[#F2F2F2]"
                 >
-                  <Link href="/profile/changePassword" className="text-black">
+                  <Link
+                    href="/profile/changePassword"
+                    className="text-black w-full py-3 text-[17px]"
+                  >
                     <FontAwesomeIcon
                       icon={faLock}
                       className="w-5 h-5 text-[#FF0004] mr-3"
@@ -316,8 +331,15 @@ const Navbar = () => {
                     Đổi mật khẩu
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="wallet" className="bg-[#F2F2F2] h-11">
-                  <Link href="/profile/wallet" className="text-black">
+                <DropdownItem
+                  key="wallet"
+                  textValue="Ví của bạn"
+                  className="bg-[#F2F2F2]"
+                >
+                  <Link
+                    href="/profile/wallet"
+                    className="text-black w-full py-3 text-[17px]"
+                  >
                     <FontAwesomeIcon
                       icon={faWallet}
                       className="w-5 h-5 text-[#FF0004] mr-3"
@@ -325,14 +347,18 @@ const Navbar = () => {
                     Ví của bạn
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="hr">
+                <DropdownItem key="hr" textValue=" ">
                   <hr />
                 </DropdownItem>
                 <DropdownItem
                   key="manageTemplate"
-                  className="bg-[#F2F2F2] h-11"
+                  textValue="Quản lí biểu mẫu"
+                  className="bg-[#F2F2F2]"
                 >
-                  <Link href="/profile/manageTemplate" className="text-black">
+                  <Link
+                    href="/profile/manageTemplate"
+                    className="text-black w-full py-3 text-[17px]"
+                  >
                     <FontAwesomeIcon
                       icon={faFileSignature}
                       className="w-5 h-5 text-[#FF0004] mr-3"
@@ -340,8 +366,15 @@ const Navbar = () => {
                     Quản lí biểu mẫu
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="servicePack" className="bg-[#F2F2F2] h-11">
-                  <Link href="/profile/servicePack" className="text-black">
+                <DropdownItem
+                  key="servicePack"
+                  textValue="Gói dịch vụ"
+                  className="bg-[#F2F2F2]"
+                >
+                  <Link
+                    href="/profile/servicePack"
+                    className="text-black w-full py-3 text-[17px]"
+                  >
                     <FontAwesomeIcon
                       icon={faHeadset}
                       className="w-5 h-5 text-[#FF0004] mr-3"
@@ -351,11 +384,12 @@ const Navbar = () => {
                 </DropdownItem>
                 <DropdownItem
                   key="transactionHistory"
-                  className="bg-[#F2F2F2] h-11"
+                  textValue="Lịch sử giao dịch"
+                  className="bg-[#F2F2F2]"
                 >
                   <Link
                     href="/profile/transactionHistory"
-                    className="text-black"
+                    className="text-black w-full py-3 text-[17px]"
                   >
                     <FontAwesomeIcon
                       icon={faClockRotateLeft}
@@ -364,10 +398,15 @@ const Navbar = () => {
                     Lịch sử giao dịch
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="hr">
+                <DropdownItem key="hr2" textValue=" ">
                   <hr />
                 </DropdownItem>
-                <DropdownItem key="logout" color="danger" className="h-11">
+                <DropdownItem
+                  key="logout"
+                  textValue="Đăng xuất"
+                  color="danger"
+                  className="h-11"
+                >
                   <div
                     className="flex flex-row  items-center gap-3"
                     onClick={() => logout()}
