@@ -22,7 +22,11 @@ import { practices } from "@/lib/navbarItems";
 import { researchAndPublications, about } from "@/lib/navbarItems";
 import { log } from "console";
 import axios from "axios";
-import { ProfileSidebarItem, UserType } from "@/constants/types/homeType";
+import {
+  ProfileSidebarItem,
+  UserType,
+  WalletType,
+} from "@/constants/types/homeType";
 import {
   faAddressCard,
   faClockRotateLeft,
@@ -55,6 +59,8 @@ const Navbar = () => {
   const [userData, setUserData] = useState<UserType>();
   const pathname = usePathname();
   const router = useRouter();
+  const [walletError, setWalletError] = useState<string | null>(null);
+  const [wallet, setWallet] = useState<WalletType>();
 
   // const getUserFromStorage = () => {
   //   if (typeof window !== "undefined") {
@@ -92,7 +98,25 @@ const Navbar = () => {
     };
 
     getUserById();
+    getWallet();
   }, [userId]);
+
+  const getWallet = () => {
+    setWalletError(null);
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+      )
+      .then((response) => {
+        setWallet(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching wallet:", error);
+        setWalletError(
+          "Failed to fetch wallet details. Please try again later."
+        );
+      });
+  };
 
   return (
     <div className={styles.container}>
@@ -281,10 +305,13 @@ const Navbar = () => {
                   isBordered
                   as="button"
                   className="transition-transform"
-                  color="secondary"
+                  color="primary"
                   name="Jason Hughes"
                   size="lg"
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                  src={
+                    userData?.avatar ??
+                    "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                  }
                 />
               </DropdownTrigger>
               <DropdownMenu
@@ -297,7 +324,30 @@ const Navbar = () => {
                   textValue={userData?.userName}
                   className="h-14 gap-2"
                 >
-                  <h2 className="font-semibold">{userData?.userName}</h2>
+                  <div className="flex items-center">
+                    <Avatar
+                      // style={{ height: "20px" w}}
+                      isBordered
+                      as="button"
+                      className="transition-transform h-10 w-10 ml-1 mr-5"
+                      color="primary"
+                      name="Jason Hughes"
+                      size="lg"
+                      src={
+                        userData?.avatar ??
+                        "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                      }
+                    />
+                    <div className="flex-col">
+                      <h2 className="font-semibold text-[#FF0004]">
+                        {userData?.userName}
+                      </h2>
+                      <h2 className="font-bold">
+                        {walletError ? 0 : wallet?.balance.toLocaleString()}Đ
+                      </h2>
+                      <h2 className="">{userData?.email}</h2>
+                    </div>
+                  </div>
                 </DropdownItem>
                 <DropdownItem
                   key="profile"
