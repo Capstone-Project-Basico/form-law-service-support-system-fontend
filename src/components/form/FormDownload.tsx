@@ -90,7 +90,7 @@ const FormDownload = () => {
               type="text"
               placeholder="type here"
               value={inputValues[item] || ""}
-              onChange={(e) => handleInputChange(e, item)}
+              onChange={(e: any) => handleInputChange(e, item)}
             />
           </div>
         ))}

@@ -87,7 +87,7 @@ const Page = () => {
                 label="Email"
                 placeholder="Nhập email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: any) => setEmail(e.target.value)}
                 startContent={
                   <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5" />
                 }
@@ -98,7 +98,7 @@ const Page = () => {
                 label="Password"
                 placeholder="Mật khẩu"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e: any) => setPassword(e.target.value)}
                 startContent={
                   <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
                 }

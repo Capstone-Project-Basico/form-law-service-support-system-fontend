@@ -299,11 +299,11 @@ const Page = () => {
               defaultItems={types}
               label="Loại biểu mẫu"
               className="max-w-xs mr-3"
-              onSelectionChange={(e) => {
+              onSelectionChange={(e: any) => {
                 setSelectTypeId(Number(e));
               }}
             >
-              {(item) => (
+              {(item: any) => (
                 <AutocompleteItem key={item.id}>
                   {item.typeName}
                 </AutocompleteItem>
@@ -405,7 +405,7 @@ const Page = () => {
             }}
             page={page}
             total={pages}
-            onChange={(page) => setPage(page)}
+            onChange={(page: any) => setPage(page)}
           />
         </div>
         <Modal

@@ -42,7 +42,7 @@ const Page = () => {
                     type="email"
                     label="Email"
                     placeholder="Nhập email"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e: any) => setEmail(e.target.value)}
                   />
                 </div>
 

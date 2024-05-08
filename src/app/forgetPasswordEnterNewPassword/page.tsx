@@ -34,7 +34,7 @@ const Page = () => {
                   type="password"
                   label="Password"
                   placeholder="Nhập mật khẩu"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e: any) => setPassword(e.target.value)}
                   endContent={
                     <button
                       className="focus:outline-none"
@@ -61,7 +61,7 @@ const Page = () => {
                 <Input
                   label="Password"
                   placeholder="Nhạp lại mật khẩu"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e: any) => setPassword(e.target.value)}
                   endContent={
                     <button
                       className="focus:outline-none"

@@ -95,7 +95,7 @@ const Profile = () => {
                   type="text"
                   variant="bordered"
                   defaultValue={userProfile?.userName}
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={(e: any) => setUserName(e.target.value)}
                 />
               </div>
               <h2>Số điện thoại</h2>
@@ -105,7 +105,7 @@ const Profile = () => {
                   disabled={!isEditing}
                   variant="bordered"
                   defaultValue={userProfile?.phoneNumber?.toString() ?? 0}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e: any) => setPhoneNumber(e.target.value)}
                 />
               </div>
               <h2>Email</h2>

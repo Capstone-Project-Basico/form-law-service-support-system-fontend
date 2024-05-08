@@ -233,7 +233,7 @@ const Post = () => {
                         type="text"
                         label="Tên bài viết"
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={(e: any) => setTitle(e.target.value)}
                       />
                       <Select
                         // items={categories}
@@ -241,7 +241,7 @@ const Post = () => {
                         placeholder="Thể loại"
                         labelPlacement="outside"
                         className="font-bold"
-                        onChange={(event) =>
+                        onChange={(event: any) =>
                           setCateId(Number(event.target.value))
                         }
                       >

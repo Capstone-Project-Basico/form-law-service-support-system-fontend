@@ -154,7 +154,7 @@ const Wallet = () => {
                   type="number"
                   label="Nhập số tiền"
                   min={2000}
-                  onChange={(e) => setBalance(e.target.value)}
+                  onChange={(e: any) => setBalance(e.target.value)}
                 ></Input>
                 <Button
                   className="bg-[#FF0004] h-14 text-white"

@@ -189,7 +189,7 @@ const Pack = () => {
                         type="text"
                         label="Tên gói"
                         value={packageName}
-                        onChange={(e) => setPackageName(e.target.value)}
+                        onChange={(e: any) => setPackageName(e.target.value)}
                       />
                       <Input
                         type="number"
@@ -202,20 +202,20 @@ const Pack = () => {
                           </div>
                         }
                         value={price !== undefined ? price.toString() : ""}
-                        onChange={(e) => setPrice(Number(e.target.value))}
+                        onChange={(e: any) => setPrice(Number(e.target.value))}
                       />
                       <Input
                         type="text"
                         label="Chi tiết"
                         value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        onChange={(e: any) => setDescription(e.target.value)}
                       />
                       <Select
                         placeholder="Chọn biểu mẫu"
                         selectionMode="multiple"
                         className=""
                         value={listItem.map((item) => item.itemId)}
-                        onChange={(e) => handleSelectionChange(e)}
+                        onChange={(e: any) => handleSelectionChange(e)}
                       >
                         {templates.map((template) => (
                           <SelectItem key={template.id} value={template.id}>
@@ -254,7 +254,7 @@ const Pack = () => {
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
