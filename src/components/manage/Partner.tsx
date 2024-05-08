@@ -181,7 +181,7 @@ const Partners: React.FC<PartnersProps> = ({
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
@@ -304,7 +304,7 @@ const Partners: React.FC<PartnersProps> = ({
                   type="text"
                   label="Name"
                   value={selectedPartner.name}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedPartner({
                       ...selectedPartner,
                       name: e.target.value,
@@ -321,7 +321,7 @@ const Partners: React.FC<PartnersProps> = ({
                   type="text"
                   label="Link"
                   value={selectedPartner.link}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedPartner({
                       ...selectedPartner,
                       link: e.target.value,

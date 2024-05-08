@@ -163,7 +163,7 @@ const Tasks: React.FC<TasksProps> = ({
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
@@ -289,7 +289,7 @@ const Tasks: React.FC<TasksProps> = ({
                   type="text"
                   label="Tên công việc"
                   value={selectedTask.taskName}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedTask({
                       ...selectedTask,
                       taskName: e.target.value,
@@ -301,7 +301,7 @@ const Tasks: React.FC<TasksProps> = ({
                   type="text"
                   label="Mô tả"
                   value={selectedTask.description}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedTask({
                       ...selectedTask,
                       description: e.target.value,
@@ -318,7 +318,7 @@ const Tasks: React.FC<TasksProps> = ({
                       : ""
                   }
                   onChange={
-                    (e) =>
+                    (e: any) =>
                       setSelectedTask({
                         ...selectedTask,
                         startDate: e.target.value
@@ -338,7 +338,7 @@ const Tasks: React.FC<TasksProps> = ({
                       : ""
                   }
                   onChange={
-                    (e) =>
+                    (e: any) =>
                       setSelectedTask({
                         ...selectedTask,
                         endDate: e.target.value
@@ -400,12 +400,12 @@ const Tasks: React.FC<TasksProps> = ({
                   placeholder="Chọn nhân viên ở đây"
                   // defaultSelectedKey="cat"
                   className="max-w-xs"
-                  onSelectionChange={(e) => {
+                  onSelectionChange={(e: any) => {
                     setStaffId(Number(e));
                     // console.log(e);
                   }}
                 >
-                  {(item) => (
+                  {(item: any) => (
                     <AutocompleteItem key={item.userId}>
                       {item.email}
                     </AutocompleteItem>

@@ -126,7 +126,7 @@ const Contacts: React.FC<ContactsProps> = ({
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
@@ -154,7 +154,7 @@ const Contacts: React.FC<ContactsProps> = ({
                 <Select
                   className="max-w-xs"
                   selectedKeys={[contact.status]}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     updateStatus(e.target.value, contact.contactId)
                   }
                   style={{
@@ -325,7 +325,7 @@ const Contacts: React.FC<ContactsProps> = ({
                   type="text"
                   label="Họ và tên"
                   value={selectedContact.fullName}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedContact({
                       ...selectedContact,
                       fullName: e.target.value,
@@ -338,7 +338,7 @@ const Contacts: React.FC<ContactsProps> = ({
                   type="text"
                   label="Email"
                   value={selectedContact.email}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedContact({
                       ...selectedContact,
                       email: e.target.value,
@@ -350,7 +350,7 @@ const Contacts: React.FC<ContactsProps> = ({
                   type="text"
                   label="Số điện thoại"
                   value={selectedContact.phoneNum}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedContact({
                       ...selectedContact,
                       phoneNum: e.target.value,

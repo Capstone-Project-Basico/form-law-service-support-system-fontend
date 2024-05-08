@@ -125,7 +125,7 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
               // value={
               //   selectedDate ? selectedDate.toISOString().substring(0, 10) : ""
               // }
-              onChange={(e) =>
+              onChange={(e: any) =>
                 setSelectedDate(
                   e.target.value ? new Date(e.target.value) : null
                 )
@@ -181,7 +181,7 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }

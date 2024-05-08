@@ -88,7 +88,7 @@ const Order: React.FC<OrderProps> = ({ orders, tabs }) => {
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
