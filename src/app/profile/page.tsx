@@ -60,7 +60,7 @@ const Profile = () => {
 
   //update user profile
   const handleSubmit = async () => {
-    if (!userProfile) return; // Check if a partner is selected
+    if (!userProfile) return;
 
     axios
       .put(

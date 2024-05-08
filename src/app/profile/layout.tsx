@@ -1,3 +1,5 @@
+"use client";
+
 import ProfileSidebar from "../../components/profileSidebar/ProfileSidebar";
 
 type LayoutProps = {

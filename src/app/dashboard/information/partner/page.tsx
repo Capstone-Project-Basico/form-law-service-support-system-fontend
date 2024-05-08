@@ -72,7 +72,7 @@ const Partner = () => {
     link,
     userId,
   };
-  const imagesListRef = ref(storage, "partners/");
+  const imagesListRef = ref(storage, "avatars/");
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   // const [selectedPartner, setSelectedPartner] = useState<PartnerType | null>(
   //   null

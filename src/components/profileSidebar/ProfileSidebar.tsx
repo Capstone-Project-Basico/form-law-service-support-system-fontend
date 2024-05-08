@@ -1,19 +1,37 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Button, Navbar, NavbarContent, NavbarItem } from "@nextui-org/react";
-import Image from "next/image";
-import { profileSidebar } from "@/lib/profileSidebar";
-import Link from "next/link";
+import { storage } from "@/app/firebase";
 import {
   ProfileSidebarItem,
   UserType,
   WalletType,
 } from "@/constants/types/homeType";
-import { usePathname, useRouter } from "next/navigation";
-import axios from "axios";
+import { profileSidebar } from "@/lib/profileSidebar";
+import { faCamera, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Navbar,
+  NavbarContent,
+  NavbarItem,
+  Spinner,
+  useDisclosure,
+} from "@nextui-org/react";
+import axios from "axios";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { headers } from "next/headers";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+import authHeader from "../authHeader/AuthHeader";
 
 interface UserLocal {
   data: {
@@ -28,6 +46,10 @@ const ProfileSidebar = () => {
   const [wallet, setWallet] = useState<WalletType>();
   const [walletError, setWalletError] = useState<string | null>(null);
   const router = useRouter();
+  const [uploading, setUploading] = useState(false);
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
+  const [avatar, setAvatar] = useState("");
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -69,15 +91,92 @@ const ProfileSidebar = () => {
   useEffect(() => {
     getDataUser();
     getWallet();
-  }, []);
+  }, [avatar]);
 
+  const uploadFile = (e: any) => {
+    setUploading(true);
+    setImageUpload(e.target.files[0]);
+    let image = e.target.files[0];
+
+    if (image == null) return;
+    const storageRef = ref(storage, "/images/" + image.name + uuidv4()); // Create a reference to '/images/imageName'
+
+    const uploadTask = uploadBytesResumable(storageRef, image); // Start the file upload
+
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Handle progress updates here, if you wish
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        // Handle unsuccessful uploads here
+        console.error(error);
+        setUploading(false); // Hide the spinner on error
+      },
+      () => {
+        // Handle successful uploads on complete
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          setAvatar(downloadURL);
+        });
+        setUploading(false);
+      }
+    );
+  };
+
+  const handleUpdateAvatar = () => {
+    if (!profileData) return;
+    axios
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/updateProfile/${userId}`,
+        { avatar: avatar },
+        { headers: authHeader() }
+      )
+      .then((response) => {
+        toast.success("Cập nhật ảnh đại diện thành công");
+        getDataUser();
+      })
+      .catch((error) => {
+        toast.error("Cập nhật ảnh đại diện thất bại!");
+      });
+  };
   return (
     <div className="">
       <div className="flex flex-col w-[387px] gap-2 ">
-        <div className="bg-white rounded-2xl">
+        <div className="bg-white rounded-2xl py-3">
           <div className="flex flex-row">
-            <Image src="/User-avatar.png" alt="" width={100} height={100} />
-            <div>
+            <div className="flex flex-col -space-x-2 overflow-hidden w-[100px] ml-5 relative">
+              <Image
+                key={avatar}
+                src={profileData?.avatar ?? "/User-avatar.png"}
+                alt=""
+                width="0"
+                height="0"
+                sizes="100vw"
+                priority
+                className="rounded-full h-[80px] w-[80px]"
+              />
+
+              <div className="flex justify-end items-end">
+                <Button
+                  isIconOnly
+                  radius="full"
+                  size="sm"
+                  className="absolute bg-[#FF0004]"
+                  onPress={onOpen}
+                >
+                  <FontAwesomeIcon
+                    icon={faCamera}
+                    className="text-white size-4"
+                  />
+                </Button>
+              </div>
+            </div>
+            <div className="ml-3">
               <p>Chào mừng bạn,</p>
               <h2 className="font-bold">{profileData?.userName}</h2>
               <Button
@@ -109,6 +208,39 @@ const ProfileSidebar = () => {
           </div>
         </div>
       </div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalBody>
+                <div>
+                  <input
+                    className="py-3"
+                    type="file"
+                    onChange={(e) => uploadFile(e)}
+                  />
+                  {uploading && <Spinner />}
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Đóng
+                </Button>
+                <Button
+                  color="primary"
+                  disabled={uploading}
+                  onClick={() => {
+                    handleUpdateAvatar();
+                    onClose();
+                  }}
+                >
+                  Cập nhật
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
