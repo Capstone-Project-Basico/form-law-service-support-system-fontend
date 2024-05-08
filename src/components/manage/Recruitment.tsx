@@ -125,7 +125,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
@@ -173,7 +173,9 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                 <Select
                   className="max-w-xs"
                   selectedKeys={[recruitment.processStatus]}
-                  onChange={(e) => updateStatus(e.target.value, recruitment.id)}
+                  onChange={(e: any) =>
+                    updateStatus(e.target.value, recruitment.id)
+                  }
                   style={{
                     backgroundColor:
                       recruitment.processStatus === "TODO" ||
@@ -362,7 +364,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   type="text"
                   label="Họ và tên"
                   value={selectedRecruitment.fullName}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedRecruitment({
                       ...selectedRecruitment,
                       fullName: e.target.value,
@@ -382,7 +384,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                       : ""
                   }
                   onChange={
-                    (e) =>
+                    (e: any) =>
                       setSelectedRecruitment({
                         ...selectedRecruitment,
                         dateOfBirth: e.target.value
@@ -398,7 +400,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   type="text"
                   label="CMND, CCCD hoặc giấy tờ khác tương đương"
                   value={selectedRecruitment.id_number}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedRecruitment({
                       ...selectedRecruitment,
                       id_number: e.target.value,
@@ -411,7 +413,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   type="text"
                   label="Quê quán"
                   value={selectedRecruitment.homeTown}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedRecruitment({
                       ...selectedRecruitment,
                       homeTown: e.target.value,
@@ -424,7 +426,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   type="text"
                   label="Giới tính"
                   value={selectedRecruitment.gender}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedRecruitment({
                       ...selectedRecruitment,
                       gender: e.target.value,
@@ -438,7 +440,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   type="text"
                   label="Tình trạng hôn nhân"
                   value={selectedRecruitment.maritalStatus}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedRecruitment({
                       ...selectedRecruitment,
                       maritalStatus: e.target.value,
@@ -450,7 +452,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   type="text"
                   label="Số điện thoại"
                   value={selectedRecruitment.phoneNum}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedRecruitment({
                       ...selectedRecruitment,
                       phoneNum: e.target.value,
@@ -463,7 +465,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   type="text"
                   label="Email"
                   value={selectedRecruitment.email}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedRecruitment({
                       ...selectedRecruitment,
                       email: e.target.value,

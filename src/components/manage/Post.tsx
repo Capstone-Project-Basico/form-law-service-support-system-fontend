@@ -131,7 +131,7 @@ const Posts: React.FC<PostsProps> = ({
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
@@ -313,7 +313,7 @@ const Posts: React.FC<PostsProps> = ({
                   type="text"
                   label="Tên bài viết"
                   value={selectedPost.title}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedPost({
                       ...selectedPost,
                       title: e.target.value,
@@ -326,7 +326,7 @@ const Posts: React.FC<PostsProps> = ({
                   labelPlacement="outside"
                   className="font-bold"
                   defaultSelectedKeys={[`${selectedPost.cateId}`]}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedPost({
                       ...selectedPost,
                       cateId: e.target.value,

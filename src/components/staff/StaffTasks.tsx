@@ -95,7 +95,7 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
@@ -164,7 +164,7 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                 </TableCell>
               ) : (
                 <TableCell className="flex gap-2 items-center justify-center">
-                  <Button className="bg-[#FF0004] text-white" disabled>
+                  <Button className="bg-green-600 text-white" disabled>
                     Đã hoàn thành
                   </Button>
                 </TableCell>

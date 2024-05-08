@@ -117,7 +117,7 @@ const Users: React.FC<UsersProps> = ({
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
@@ -216,7 +216,7 @@ const Users: React.FC<UsersProps> = ({
                   labelPlacement="outside"
                   className="font-bold"
                   defaultSelectedKeys={[selectedUser.roleName]}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedUser({
                       ...selectedUser,
                       roleName: e.target.value,

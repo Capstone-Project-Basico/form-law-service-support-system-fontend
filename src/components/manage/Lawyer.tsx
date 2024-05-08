@@ -178,7 +178,7 @@ const Lawyers: React.FC<LawyersProps> = ({
               }}
               page={page}
               total={pages}
-              onChange={(page) => setPage(page)}
+              onChange={(page: any) => setPage(page)}
             />
           </div>
         }
@@ -420,7 +420,7 @@ const Lawyers: React.FC<LawyersProps> = ({
                   type="text"
                   label="Email"
                   value={selectedLawyer.email}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedLawyer({
                       ...selectedLawyer,
                       email: e.target.value,
@@ -432,7 +432,7 @@ const Lawyers: React.FC<LawyersProps> = ({
                   type="text"
                   label="Tên luật sư"
                   value={selectedLawyer.userName}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedLawyer({
                       ...selectedLawyer,
                       userName: e.target.value,
@@ -450,7 +450,7 @@ const Lawyers: React.FC<LawyersProps> = ({
                   type="text"
                   label="SĐT"
                   value={selectedLawyer.phoneNumber}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedLawyer({
                       ...selectedLawyer,
                       phoneNumber: e.target.value,
@@ -463,7 +463,7 @@ const Lawyers: React.FC<LawyersProps> = ({
                   type="text"
                   label="Đường dẫn Facebook"
                   value={selectedLawyer.url}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedLawyer({
                       ...selectedLawyer,
                       url: e.target.value,
@@ -474,7 +474,7 @@ const Lawyers: React.FC<LawyersProps> = ({
                   type="text"
                   label="Chức vụ"
                   value={selectedLawyer.position}
-                  onChange={(e) =>
+                  onChange={(e: any) =>
                     setSelectedLawyer({
                       ...selectedLawyer,
                       position: e.target.value,
