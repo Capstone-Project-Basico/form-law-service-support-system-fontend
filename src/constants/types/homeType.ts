@@ -209,6 +209,16 @@ export type PackType = {
   deleted: boolean;
 };
 
+export type ServiceType = {
+  serviceId: number;
+  serviceName: string;
+  serviceDescription: string;
+  price: number;
+  deleted: boolean;
+  itemName: string;
+  itemId: 1;
+};
+
 export interface UserLocal {
   data: {
     data: {

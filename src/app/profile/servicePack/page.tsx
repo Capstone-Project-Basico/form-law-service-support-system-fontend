@@ -1,11 +1,22 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import authHeader from "@/components/authHeader/AuthHeader";
-import { Button } from "@nextui-org/react";
-import { PackType } from "@/constants/types/homeType";
+import {
+  Button,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
+import { PackType, ServiceType, TaskType } from "@/constants/types/homeType";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import dateConvert from "@/components/dateConvert";
 
 interface UserLocal {
   data: {
@@ -15,8 +26,18 @@ interface UserLocal {
   };
 }
 const ServicePack = () => {
-  const [purchasedPacks, setPurchasedPack] = useState<PackType[]>([]);
+  const [purchasedPacks, setPurchasedPack] = useState<ServiceType[]>([]);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [taskName, setTaskName] = useState("");
+  const [description, setDescription] = useState("");
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [task, setTask] = useState<TaskType[]>([]);
 
+  let newTask = {
+    taskName,
+    description,
+    startDate,
+  };
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
@@ -34,13 +55,36 @@ const ServicePack = () => {
   const getAllPurchasedPacks = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}orderPackageTemplate/getAllCheckOutPackageTemplateDetailByUser/${userId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}orderService/getAllCheckOutFormTemplateDetailByUser/${userId}`,
         {
           headers: authHeader(),
         }
       );
       setPurchasedPack(response.data.data);
     } catch (error) {}
+  };
+
+  //send request
+  const handleSubmit = async (e: FormEvent, onClose: () => void) => {
+    e.preventDefault();
+
+    axios
+      .post(`${process.env.NEXT_PUBLIC_BASE_API}task/createNewTask`, newTask, {
+        headers: authHeader(),
+      })
+      .then((response) => {
+        setTaskName("");
+        setDescription("");
+        setStartDate(null);
+
+        setTask((prevTasks) => [...prevTasks, response.data.data]);
+        toast.success("Gửi yêu cầu thành công");
+        onClose();
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Tạo mới thất bại");
+      });
   };
   return (
     <div className="w-[1350px] bg-white rounded-2xl">
@@ -52,34 +96,90 @@ const ServicePack = () => {
             <span className="text-[#ff0000]">CO&nbsp;</span>
           </strong>
         </h2>
-        <p className="text-xl">
-          Để có thể sử dụng một số chức năng đặc biệt, hoặc sử dụng các văn bản
-          và hợp đồng tại Basico các bạn phải đăng ký gói dịch vụ, dưới đây là
-          các gói dịch vụ với các đặc quyền theo từng gói
-        </p>
       </div>
-      <Link href="/profile/servicePack/buyPacks">
-        <h1 className="text-[#FF0004]">Mua gói tại đây</h1>
-      </Link>
+      <div className="flex justify-between">
+        <Link href="/profile/servicePack/buyServicePack">
+          <h1 className="text-[#FF0004]">Mua gói tại đây</h1>
+        </Link>
+        <div className="flex items-center">
+          <p>Số lần gửi yêu cầu còn lại: 5</p>
+          <Button className="bg-[#FF0004]" onClick={onOpen}>
+            Gửi yêu cầu
+          </Button>
+        </div>
+      </div>
       <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5">
         {purchasedPacks.map((servicePack) => (
           <div
-            key={servicePack.packageId}
+            key={servicePack.itemId}
             className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md"
           >
             <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
-              {servicePack.packageName}
+              {servicePack.itemName}
             </h2>
-            <p className="text-xl pt-3">{servicePack.description}</p>
-            <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
+            {/* <p className="text-xl pt-3">{servicePack.description}</p> */}
+            {/* <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
               {servicePack.price.toLocaleString()} VND
-            </h1>
+            </h1> */}
             <Button className="text-white bg-[#FF0004] my-5" disabled>
               Đang sở hữu
             </Button>
           </div>
         ))}
       </div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <form onSubmit={(e) => handleSubmit(e, onClose)}>
+                <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+                  Thêm công việc
+                </ModalHeader>
+                <ModalBody>
+                  <Input
+                    className="font-bold"
+                    type="text"
+                    label="Nội dung cần hỗ trợ"
+                    value={taskName}
+                    onChange={(e) => setTaskName(e.target.value)}
+                  />
+                  <Input
+                    type="text"
+                    label="Mô tả"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+
+                  <Input
+                    isRequired
+                    required
+                    type="date"
+                    label="Ngày luật sư có thể liên hệ"
+                    value={startDate ? startDate.substring(0, 10) : ""}
+                    onChange={(e) => {
+                      const dateValue = e.target.value
+                        ? dateConvert(new Date(e.target.value))
+                        : null;
+                      setStartDate(dateValue);
+                      // console.log(e.target.value);
+                      // console.log(dateValue?.substring(0, 10));
+                    }}
+                    className="form-input"
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Đóng
+                  </Button>
+                  <Button color="primary" type="submit">
+                    Thêm
+                  </Button>
+                </ModalFooter>
+              </form>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

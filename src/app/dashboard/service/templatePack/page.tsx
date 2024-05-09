@@ -202,7 +202,7 @@ const Pack = () => {
             <p className="text-black font-bold text-3xl ">Quản lí dịch vụ</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Gói dịch vụ</p>
+            <p className="text-[#FF0004] font-bold text-3xl">Gói biểu mẫu</p>
           </BreadcrumbItem>
         </Breadcrumbs>
 

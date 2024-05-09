@@ -13,6 +13,7 @@ import {
   faHeadset,
   faClockRotateLeft,
   faBasketShopping,
+  faFolderOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -51,10 +52,17 @@ export const profileSidebar: ProfileSidebarItem[] = [
     ),
   },
   {
-    title: "Gói dịch vụ",
+    title: "Gói dịch vụ tư vấn",
     path: "/profile/servicePack",
     icon: (
       <FontAwesomeIcon icon={faHeadset} className="w-7 h-7 text-[#FF0004]" />
+    ),
+  },
+  {
+    title: "Gói biểu mẫu",
+    path: "/profile/templatePack",
+    icon: (
+      <FontAwesomeIcon icon={faFolderOpen} className="w-7 h-7 text-[#FF0004]" />
     ),
   },
   {

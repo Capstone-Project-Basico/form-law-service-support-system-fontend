@@ -44,7 +44,8 @@ export const sideNavItems: SideNavItem[] = [
     subMenu: true,
     subMenuItems: [
       { title: "Biểu mẫu", path: "/dashboard/service/manageTemplate" },
-      { title: "Gói dịch vụ", path: "/dashboard/service/pack" },
+      { title: "Gói dịch vụ tư vấn", path: "/dashboard/service/servicePack" },
+      { title: "Gói biểu mẫu", path: "/dashboard/service/templatePack" },
     ],
   },
 
