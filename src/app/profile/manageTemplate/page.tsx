@@ -2,12 +2,22 @@
 
 import { Template } from "@/constants/types/homeType";
 import paths from "@/lib/path-link";
-import { faEye, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPen, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Card, CardBody, CardFooter, Image } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Image,
+  Modal,
+  ModalBody,
+  ModalContent,
+  useDisclosure,
+} from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 interface UserLocal {
   data: {
     data: {
@@ -18,6 +28,10 @@ interface UserLocal {
 const ManageTemplate = () => {
   const router = useRouter();
   const [templates, setTemplates] = useState<Template[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template>();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const templateRef = useRef<HTMLDivElement>(null);
+
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
@@ -67,7 +81,7 @@ const ManageTemplate = () => {
   return (
     <div className="w-[1350px] bg-white rounded-2xl">
       <h1 className="text-xl font-bold p-3">Biểu mẫu bạn đang sở hữu</h1>
-      <div className="grid grid-cols-3 gap-10 p-6">
+      <div className="grid grid-cols-4">
         {templates.map((template, index) => (
           <div key={index} className="">
             <Card shadow="sm" key={index} isPressable className="w-72 h-96">
@@ -77,32 +91,36 @@ const ManageTemplate = () => {
                   radius="lg"
                   width="100%"
                   alt={template.title}
-                  className="w-full object-cover h-[281px]"
+                  className="w-full object-cover h-[250px]"
                   src="/bieumau.jpg"
                 />
-                <div className=" absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
-                  {/* <Button className=" bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]">
-                    <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
+              </CardBody>
+              <CardFooter className="flex flex-col items-start">
+                <p className="text-default-500">
+                  {template.price.toLocaleString()} Đ
+                </p>
+                <b className="truncate">{template.message}</b>
+                <div className="flex justify-end items-start w-full gap-2 mt-3">
+                  <Button
+                    className="bg-[#989898] text-white hover:bg-[#FF191D]"
+                    onPress={() => {
+                      setSelectedTemplate(template);
+                      onOpen();
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faEye} className="size-4" />
                     Xem trước
-                  </Button> */}
+                  </Button>
                   <Button
                     onClick={() => {
                       router.push(`${paths.useTemplate.path}/${template.id}`);
                     }}
-                    className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
-                    variant="faded"
+                    className="bg-green-500 text-white "
                   >
-                    <FontAwesomeIcon
-                      icon={faPenToSquare}
-                      className="size-4 ml-1"
-                    />
+                    <FontAwesomeIcon icon={faPenToSquare} className="size-4" />
                     Dùng mẫu
                   </Button>
                 </div>
-              </CardBody>
-              <CardFooter className="flex flex-col items-start">
-                <p className="text-default-500">{template.price}</p>
-                <b>{template.message}</b>
               </CardFooter>
             </Card>
           </div>
@@ -118,6 +136,50 @@ const ManageTemplate = () => {
             onChange={(page) => setPage(page)}
           /> */}
         </div>
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          size="full"
+          className="w-[1100px] h-[800px]"
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalBody className="flex flex-row">
+                  <div className="w-[800px] overflow-auto">
+                    <div
+                      className="content-center min-h-full p-10 border-1 border-black"
+                      ref={templateRef}
+                    ></div>
+                  </div>
+                  <div className="w-[300px] gap-10 flex flex-col justify-start items-center">
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      {selectedTemplate?.message
+                        ? selectedTemplate?.message
+                        : "Biểu mẫu này hiện tại không có tên"}
+                    </h1>
+                    <div className="flex flex-col gap-3">
+                      <Button
+                        className="w-80 bg-[#FF0004] text-white"
+                        onPress={onClose}
+                      >
+                        <FontAwesomeIcon icon={faPen} className="size-4 ml-1" />
+                        Dùng mẫu này
+                      </Button>
+                      <Button
+                        className="w-full"
+                        onPress={onClose}
+                        variant="faded"
+                      >
+                        Đóng lại
+                      </Button>
+                    </div>
+                  </div>
+                </ModalBody>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
       </div>
     </div>
   );

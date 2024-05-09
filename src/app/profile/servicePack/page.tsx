@@ -72,7 +72,7 @@ const ServicePack = () => {
             </h2>
             <p className="text-xl pt-3">{servicePack.description}</p>
             <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
-              {servicePack.price} cho 1 tháng
+              {servicePack.price.toLocaleString()} VND
             </h1>
             <Button className="text-white bg-[#FF0004] my-5" disabled>
               Đang sở hữu
