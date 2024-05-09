@@ -145,7 +145,7 @@ const ProfileSidebar = () => {
       });
   };
   return (
-    <div className="">
+    <div className="h-full">
       <div className="flex flex-col w-[387px] gap-2 ">
         <div className="bg-white rounded-2xl py-3">
           <div className="flex flex-row">
@@ -196,7 +196,7 @@ const ProfileSidebar = () => {
         </div>
         <div>
           <div className="bg-white rounded-2xl ">
-            <Navbar className="flex items-start w-[350px] h-[425px] pt-10 rounded-2xl">
+            <Navbar className="flex items-start w-[350px] h-[455px] pt-10 rounded-2xl">
               <NavbarContent className="flex flex-col gap-8 items-start">
                 <NavbarItem className="text-xl">
                   <div className="flex flex-col space-y-2 ">

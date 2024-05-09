@@ -65,7 +65,6 @@ const Task = () => {
     description,
     startDate,
     endDate,
-    // processStatus,
   };
 
   useEffect(() => {
