@@ -70,7 +70,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center pt-32 pb-[97px] bg-custom-bg bg-cover ">
+    <div className="flex flex-col justify-center items-center pt-32 pb-[160px] bg-custom-bg bg-cover ">
       <ToastContainer />
 
       <div className="bg-white p-20 rounded-2xl">
@@ -79,12 +79,13 @@ const Page = () => {
           <div className="text-3xl">CÔNG TY LUẬT BASICO CHÀO MỪNG BẠN</div>
         </div>
 
-        <div>
+        <div className="w-[762px] mt-10">
           <form onSubmit={handleSubmit}>
-            <div className="flex flex-wrap md:flex-nowrap gap-4 mb-10 w-[662px]">
+            <div className="flex flex-wrap md:flex-nowrap gap-4 mb-10 w-full">
               <Input
                 type="email"
                 label="Email"
+                size="lg"
                 placeholder="Nhập email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -93,9 +94,10 @@ const Page = () => {
                 }
               />
             </div>
-            <div className="flex w-[662px]">
+            <div className="flex w-full">
               <Input
                 label="Password"
+                size="lg"
                 placeholder="Mật khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -126,29 +128,16 @@ const Page = () => {
             </div>
             <div className="flex justify-end font-bold mt-4">
               <a href="/forgetPassword" className="text- hover:text-[#ff0000]">
-                Quên mật khẩu
+                Quên mật khẩu?
               </a>
             </div>
-            <Button
-              type="submit"
-              className="bg-[#F00004] text-white w-full my-4"
-            >
-              Đăng nhập
-            </Button>
-
-            <p className="flex justify-center items-center mb-4">
-              Hoặc đăng nhập bằng
-            </p>
-
-            <div className="flex gap-5 mb-4">
-              <Button className="bg-[#FF0004] text-white w-80">
-                <FontAwesomeIcon icon={faGoogle} />
-                Google
-              </Button>
-
-              <Button className="bg-[#FF0004] text-white w-80">
-                <FontAwesomeIcon icon={faFacebook} className="text-[#4267B2]" />
-                Facebook
+            <div className="flex items-center justify-center">
+              <Button
+                type="submit"
+                size="lg"
+                className="bg-[#F00004] text-white w-96 my-4"
+              >
+                Đăng nhập
               </Button>
             </div>
 

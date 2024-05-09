@@ -5,7 +5,11 @@ import HeaderComponent from "@/components/header";
 // import CardTemplate from "@/sections/CardTemplate";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { faAngleRight, faPen } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleRight,
+  faDollarSign,
+  faPen,
+} from "@fortawesome/free-solid-svg-icons";
 import { GoogleMaps } from "@/components/ui/GoogleMaps";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/breadcrumbs";
 import {
@@ -350,10 +354,10 @@ const Page = () => {
                       radius="lg"
                       width="100%"
                       alt={template.title}
-                      className="w-full object-cover h-[281px]"
+                      className="w-full object-cover h-[250px]"
                       src="/bieumau.jpg"
                     />
-                    <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
+                    {/* <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
                       <Button
                         className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
                         onPress={() => {
@@ -364,29 +368,35 @@ const Page = () => {
                         <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
                         Xem trước
                       </Button>
-                      {/* <Button
-                      className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
-                      variant="faded"
-                    >
-                      <FontAwesomeIcon
-                        icon={faPenToSquare}
-                        className="size-4 ml-1"
-                      />
-                      Dùng mẫu
-                    </Button> */}
-                    </div>
+                    </div> */}
                   </CardBody>
                   <CardFooter className="flex flex-col items-start">
                     <p className="text-default-500">
                       {template.price.toLocaleString()} Đ
                     </p>
-                    <p className="truncate">{template.message}</p>
-                    <Button
-                      onClick={() => handleBuy(template.id, template.price)}
-                      className="bg-[#FF0004] text-white h-12 rounded-full"
-                    >
-                      Mua
-                    </Button>
+                    <b className="truncate">{template.message}</b>
+                    <div className="flex justify-end items-start w-full gap-2 mt-3">
+                      <Button
+                        className="bg-[#989898] text-white hover:bg-[#FF191D]"
+                        onPress={() => {
+                          setSelectedTemplate(template);
+                          onOpen();
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faEye} className="size-4" />
+                        Xem trước
+                      </Button>
+                      <Button
+                        onClick={() => handleBuy(template.id, template.price)}
+                        className="bg-[#FF0004] text-white "
+                      >
+                        <FontAwesomeIcon
+                          icon={faDollarSign}
+                          className="size-4 ml-1"
+                        />
+                        Mua
+                      </Button>
+                    </div>
                   </CardFooter>
                 </Card>
               </div>

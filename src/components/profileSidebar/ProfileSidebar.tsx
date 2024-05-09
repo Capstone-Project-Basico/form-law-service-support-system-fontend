@@ -152,7 +152,9 @@ const ProfileSidebar = () => {
             <div className="flex flex-col -space-x-2 overflow-hidden w-[100px] ml-5 relative">
               <Image
                 key={avatar}
-                src={profileData?.avatar ?? "/User-avatar.png"}
+                src={
+                  profileData?.avatar ? profileData.avatar : "/User-avatar.png"
+                }
                 alt=""
                 width="0"
                 height="0"
@@ -212,6 +214,7 @@ const ProfileSidebar = () => {
         <ModalContent>
           {(onClose) => (
             <>
+              <ModalHeader>Cập nhật ảnh đại diện</ModalHeader>
               <ModalBody>
                 <div>
                   <input

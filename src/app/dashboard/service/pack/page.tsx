@@ -357,7 +357,7 @@ const Pack = () => {
           {items.map((pack, index) => (
             <TableRow key={index}>
               <TableCell>{pack.packageName}</TableCell>
-              <TableCell>{pack.price}</TableCell>
+              <TableCell>{pack.price.toLocaleString()} VND</TableCell>
               <TableCell>{pack.description}</TableCell>
               <TableCell>
                 <span style={{ color: pack.deleted ? "red" : "green" }}>
