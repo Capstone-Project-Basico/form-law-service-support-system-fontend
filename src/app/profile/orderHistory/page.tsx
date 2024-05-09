@@ -108,7 +108,7 @@ const Page = () => {
                 }}
                 page={page}
                 total={pages}
-                onChange={(page) => setPage(page)}
+                onChange={(page: any) => setPage(page)}
               />
             </div>
           }

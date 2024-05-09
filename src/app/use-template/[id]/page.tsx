@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import axiosClient from '@/lib/axiosClient';
-import { Input, input } from '@nextui-org/react';
-import { get } from 'http';
-import { useParams } from 'next/navigation';
-import React, { useEffect, useRef, useState } from 'react';
-import { json } from 'stream/consumers';
+import axiosClient from "@/lib/axiosClient";
+import { Input } from "@nextui-org/react";
+import { get } from "http";
+import { useParams } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
+import { json } from "stream/consumers";
 
 type Props = {};
 
@@ -14,33 +14,33 @@ const Page = (props: Props) => {
 
   const templateRef = useRef<HTMLDivElement>(null);
 
-  const [htmlContent, setHtmlContent] = useState<string>(''); // store html content
+  const [htmlContent, setHtmlContent] = useState<string>(""); // store html content
   const [formFields, setFormFields] = useState<any>([]);
   const [formData, setFormData] = useState<any>({}); // store form data
   const [formName, setFormName] = useState<any>({
-    value: '',
-    error: '',
+    value: "",
+    error: "",
   }); // store form name
-  const [fieldOnSelect, setFieldOnSelect] = useState<string>(''); // store field on select
+  const [fieldOnSelect, setFieldOnSelect] = useState<string>(""); // store field on select
 
   const getFile = async (id: number) => {
     // fetch file
-    const res = await axiosClient.get('formTemplateVersion/download/' + id, {
-      responseType: 'blob',
+    const res = await axiosClient.get("formTemplateVersion/download/" + id, {
+      responseType: "blob",
     });
     const file = new Blob([res.data]);
 
     const form = new FormData();
-    form.append('file', file);
+    form.append("file", file);
 
     const converterURL = process.env.NEXT_PUBLIC_CONVERTER_API;
     if (!converterURL) {
-      console.error('Converter API is not defined');
-      return 'Server error';
+      console.error("Converter API is not defined");
+      return "Server error";
     }
     const htmlRes = await axiosClient.post(converterURL, form, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
 
@@ -49,7 +49,7 @@ const Page = (props: Props) => {
   };
 
   const getFormFields = async (id: number) => {
-    const res = await axiosClient.get('formField/templateVersionId/' + id);
+    const res = await axiosClient.get("formField/templateVersionId/" + id);
     const fields = res.data;
     return fields;
   };
@@ -86,13 +86,15 @@ const Page = (props: Props) => {
           return `<span
             onclick="document.getElementById('${fieldName}').focus()"
             class="${
-              isSelected && 'bg-orange-200'
+              isSelected && "bg-orange-200"
             } select-none text-center text-sm inline-block min-w-[50px] h-6 border border-black p-0.5">${fieldValue}</span>`;
         }
 
         return `<span
           onclick="document.getElementById('${fieldName}').focus()"
-          class="${isSelected && 'bg-orange-200'} select-none text-center text-sm inline-block w-[50px] h-6 border border-black p-0.5">&nbsp;</span>`;
+          class="${
+            isSelected && "bg-orange-200"
+          } select-none text-center text-sm inline-block w-[50px] h-6 border border-black p-0.5">&nbsp;</span>`;
       }
 
       return ` `;
@@ -102,8 +104,8 @@ const Page = (props: Props) => {
   }
 
   const handleSubmit = async () => {
-    if (formName.value === '') {
-      setFormName({ ...formName, error: 'Tên biểu mẫu không được trống' });
+    if (formName.value === "") {
+      setFormName({ ...formName, error: "Tên biểu mẫu không được trống" });
       return;
     }
 
@@ -117,17 +119,17 @@ const Page = (props: Props) => {
   };
 
   const postUserForm = async (data: any) => {
-    const res = await axiosClient.post('userForm', data, {
-      responseType: 'blob',
+    const res = await axiosClient.post("userForm", data, {
+      responseType: "blob",
     });
     const file = new Blob([res.data]);
     const url = URL.createObjectURL(file);
 
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     document.body.appendChild(a);
 
-    a.download = data.name + '.docx';
+    a.download = data.name + ".docx";
     a.click();
   };
 
@@ -138,12 +140,14 @@ const Page = (props: Props) => {
 
   const renderField = (field: any, props?: any) => {
     switch (field.fieldName) {
-      case 'ngày':
+      case "ngày":
         return <Input {...props} type="number" min={1} max={31} step={1} />;
-      case 'tháng':
+      case "tháng":
         return <Input {...props} type="number" min={1} max={12} step={1} />;
-      case 'năm':
-        return <Input {...props} type="number" min={1900} max={2022} step={1} />;
+      case "năm":
+        return (
+          <Input {...props} type="number" min={1900} max={2022} step={1} />
+        );
       default:
         return <Input {...props} />;
     }
@@ -159,29 +163,29 @@ const Page = (props: Props) => {
     const date = new Date();
     const defaultData = fields.reduce((acc: any, field: any) => {
       switch (field.fieldType) {
-        case 'number':
+        case "number":
           acc[field.fieldName] = 0;
           break;
-        case 'date':
+        case "date":
           acc[field.fieldName] = date.toISOString().slice(0, 10);
           break;
         default:
-          acc[field.fieldName] = '';
+          acc[field.fieldName] = "";
           break;
       }
       switch (field.fieldName) {
-        case 'ngày':
+        case "ngày":
           acc[field.fieldName] = date.getDate();
           break;
-        case 'tháng':
+        case "tháng":
           acc[field.fieldName] = date.getMonth() + 1;
           break;
-        case 'năm':
+        case "năm":
           acc[field.fieldName] = date.getFullYear();
           break;
         default:
           if (!acc[field.fieldName]) {
-            acc[field.fieldName] = '';
+            acc[field.fieldName] = "";
           }
           break;
       }
@@ -197,7 +201,7 @@ const Page = (props: Props) => {
       templateVersionId: Number(params.id),
       formData: formData,
     };
-    localStorage.setItem('draft', JSON.stringify(data));
+    localStorage.setItem("draft", JSON.stringify(data));
   };
 
   useEffect(() => {
@@ -224,7 +228,9 @@ const Page = (props: Props) => {
 
   return (
     <div className="p-5 md:mx-20">
-      <h1 className="text-2xl font-semibold text-left text-black">Use Template</h1>
+      <h1 className="text-2xl font-semibold text-left text-black">
+        Use Template
+      </h1>
       <div className="grid grid-cols-12">
         <div className="col-span-3 flex flex-wrap gap-2 mx-12 my-2 mt-32 p-4 border-2 overflow-y-scroll h-[50rem]">
           <h3 className="text-xl font-semibold my-1">Nhập thông tin</h3>
@@ -234,12 +240,12 @@ const Page = (props: Props) => {
               key: field.id,
               label: field.fieldName,
               name: field.fieldName,
-              variant: 'bordered',
+              variant: "bordered",
               type: field.fieldType,
               value: formData[field.fieldName],
               onChange: handleFormDataChange,
               onFocus: () => setFieldOnSelect(field.fieldName),
-              onBlur: () => setFieldOnSelect(''),
+              onBlur: () => setFieldOnSelect(""),
             })
           )}
         </div>
@@ -258,7 +264,9 @@ const Page = (props: Props) => {
                           name="formName"
                           variant="bordered"
                           value={formName.value}
-                          onChange={(e) => setFormName({ value: e.target.value })}
+                          onChange={(e: any) =>
+                            setFormName({ value: e.target.value })
+                          }
                           errorMessage={formName.error}
                         />
                       </div>
@@ -290,7 +298,10 @@ const Page = (props: Props) => {
             </div>
             <div className="w-[825px] m-8 mx-auto p-8 border ">
               <div className="overflow-y-scroll h-[50rem]">
-                <div className="content-center min-h-[35rem] p-10 " ref={templateRef}></div>
+                <div
+                  className="content-center min-h-[35rem] p-10 "
+                  ref={templateRef}
+                ></div>
               </div>
             </div>
           </div>

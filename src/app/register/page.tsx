@@ -83,7 +83,7 @@ const Page = () => {
                   type="username"
                   label="Họ và Tên"
                   placeholder="Nhập họ và tên"
-                  onChange={(e) => setUserName(e.target.value)}
+                  onChange={(e: any) => setUserName(e.target.value)}
                   startContent={
                     <FontAwesomeIcon icon={faUser} className="w-5 h-5" />
                   }
@@ -94,7 +94,7 @@ const Page = () => {
                   type="email"
                   label="Email"
                   placeholder="Nhập email"
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e: any) => setEmail(e.target.value)}
                   startContent={
                     <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5" />
                   }
@@ -105,7 +105,7 @@ const Page = () => {
                 <Input
                   label="Password"
                   placeholder="Nhập mật khẩu"
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e: any) => setPassword(e.target.value)}
                   type={isVisible ? "text" : "password"}
                   startContent={
                     <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
@@ -136,7 +136,7 @@ const Page = () => {
                 <Input
                   label="Repeat Password"
                   placeholder="Nhập lại mật khẩu"
-                  onChange={(e) => setRepeatPassword(e.target.value)}
+                  onChange={(e: any) => setRepeatPassword(e.target.value)}
                   startContent={
                     <FontAwesomeIcon icon={faKey} className="w-5 h-5" />
                   }
