@@ -16,9 +16,6 @@ const Page = () => {
       case 1:
         fetchOrders();
         break;
-      case 2:
-        break;
-
       default:
         fetchOrders();
         break;
@@ -54,30 +51,8 @@ const Page = () => {
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
-        <div>
-          <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
-            onClick={() => setTabs(1)}
-            radius="none"
-          >
-            TẤT CẢ
-          </Button>
-        </div>
-        <div>
-          <Button
-            className={`bg-white ${
-              tabs === 2 &&
-              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
-            radius="none"
-            onClick={() => setTabs(2)}
-            disabled
-          >
-            ĐÃ XÓA
-          </Button>
-        </div>
+        <div></div>
+        <div></div>
       </div>
       <Order orders={orders} tabs={tabs} />
     </div>
