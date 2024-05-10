@@ -25,16 +25,20 @@ import {
 } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import { TaskAssignmentType, TaskType } from "@/constants/types/homeType";
+import {
+  ChildTaskType,
+  TaskAssignmentType,
+  TaskType,
+} from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
 
 type TasksProps = {
-  tasks: TaskAssignmentType[];
+  tasks: ChildTaskType[];
   completeTask: (id: number) => void;
 };
 
-const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
+const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedTaskId, setSelectedTaskId] = useState<Number>();
@@ -111,12 +115,6 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
             Ngày bắt đầu
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
-            Ngày đáo hạn
-          </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
-            Ngày được giao
-          </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
             Ngày kết thúc
           </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
@@ -134,20 +132,7 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                     : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
                 }
               </TableCell>
-              <TableCell>
-                {
-                  task.dueDate
-                    ? new Date(task.dueDate).toLocaleDateString()
-                    : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
-                }
-              </TableCell>
-              <TableCell>
-                {
-                  task.assignDate
-                    ? new Date(task.assignDate).toLocaleDateString()
-                    : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
-                }
-              </TableCell>
+
               <TableCell>
                 {
                   task.endDate
@@ -156,13 +141,13 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                 }
               </TableCell>
 
-              {task.status === "ĐANG THỰC HIỆN" ? (
+              {task.processStatus === "CHƯA PHÂN CÔNG" ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-green-600 text-white"
-                    onClick={() => {
-                      router.push(`task/taskDetail/${task.id}`);
-                    }}
+                    // onClick={() => {
+                    //   router.push(`task/taskDetail/${task.id}`);
+                    // }}
                   >
                     Chi tiết
                   </Button>
@@ -188,4 +173,4 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
   );
 };
 
-export default StaffTasks;
+export default ChildTasks;

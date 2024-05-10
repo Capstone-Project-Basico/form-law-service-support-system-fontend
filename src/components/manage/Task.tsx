@@ -381,7 +381,7 @@ const Tasks: React.FC<TasksProps> = ({
                   e.preventDefault();
                   console.log(e);
 
-                  if (staffId !== undefined && selectedTask.endDate !== null) {
+                  if (staffId !== undefined) {
                     // Ensure staffId is not undefined
                     handleTaskAssignSubmit(
                       selectedTask,
@@ -390,7 +390,7 @@ const Tasks: React.FC<TasksProps> = ({
                     );
                     onCloseTaskAssign();
                   } else {
-                    toast.error("Please select a staff member."); // Providing user feedback if staffId is undefined
+                    toast.error("Vui lòng chọn nhân viên"); // Providing user feedback if staffId is undefined
                   }
                 }}
               >

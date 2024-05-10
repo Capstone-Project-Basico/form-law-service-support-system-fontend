@@ -167,10 +167,24 @@ export type TaskAssignmentType = {
   taskName: string;
   email: string;
   assignDate: Date;
-  dueDate: Date;
+  dueDate: any;
   startDate: Date;
   endDate: Date;
   status: string;
+  deleted: boolean;
+  taskDescription: string;
+};
+
+export type ChildTaskType = {
+  id: number;
+  taskName: string;
+  description: string;
+  startDate: any;
+  endDate: any;
+  createBy: string;
+  supportTo: string;
+  belongToTask: number;
+  processStatus: string;
   deleted: boolean;
 };
 
