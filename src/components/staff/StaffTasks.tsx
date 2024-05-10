@@ -156,6 +156,12 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
               {task.status === "ĐANG THỰC HIỆN" ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
+                    className="bg-green-600 text-white"
+                    // onClick={() => completeTask(task.id)}
+                  >
+                    Chi tiết
+                  </Button>
+                  <Button
                     className="bg-blue-600 text-white"
                     onClick={() => completeTask(task.id)}
                   >

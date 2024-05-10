@@ -53,7 +53,7 @@ const Page = () => {
             router.push("/dashboardStaff");
             toast.success("Đăng nhập thành công");
             break;
-          case "ROLE_USER":
+          case "ROLE_CUSTOMER":
             router.push("/");
             toast.success("Đăng nhập thành công");
             break;

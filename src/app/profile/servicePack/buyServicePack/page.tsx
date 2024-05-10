@@ -137,7 +137,7 @@ const BuyPacks = () => {
           các gói dịch vụ với các đặc quyền theo từng gói
         </p>
       </div>
-      <div className="grid grid-cols-3 justify-center items-center m-10">
+      <div className="grid grid-cols-3 justify-center items-center m-10 gap-5">
         {servicePacks.map((servicePack) => (
           <Card
             key={servicePack.serviceId}
@@ -147,7 +147,9 @@ const BuyPacks = () => {
               {servicePack.serviceName}
             </h2>
             <p className="text-xl pt-3 truncate">
-              {servicePack.serviceDescription}
+              {servicePack.serviceDescription
+                ? servicePack.serviceDescription
+                : "Ấn chi tiết để xem"}
             </p>
             <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
               {servicePack.price.toLocaleString()} VND

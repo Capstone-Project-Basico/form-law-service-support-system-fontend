@@ -59,6 +59,11 @@ const Page = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedTemplate, setSelectedTemplate] = useState<Template>();
   const templateRef = useRef<HTMLDivElement>(null);
+  const {
+    isOpen: isOpenPayment,
+    onOpen: onOpenPayment,
+    onClose: onClosePayment,
+  } = useDisclosure();
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -244,49 +249,6 @@ const Page = () => {
     return filteredItems.slice(start, end);
   }, [page, filteredItems]);
 
-  // const getFile = async (id: number) => {
-  //   try {
-  //     const res = await axiosClient.get(`formTemplateVersion/download/${id}`, {
-  //       responseType: "blob",
-  //     });
-  //     const file = new Blob([res.data]);
-
-  //     const form = new FormData();
-  //     form.append("file", file);
-
-  //     const converterURL = process.env.NEXT_PUBLIC_CONVERTER_API;
-  //     if (!converterURL) {
-  //       console.error("Converter API is not defined");
-  //       return "Server error";
-  //     }
-
-  //     const htmlRes = await axiosClient.post(converterURL, form, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     });
-
-  //     return htmlRes.data;
-  //   } catch (error) {
-  //     console.error("Error downloading file:", error);
-  //     if (axios.isAxiosError(error) && error.response) {
-  //       // You can handle based on status code as well here
-  //       console.error("Error details:", error.response.data);
-  //     }
-  //     throw error; // rethrow the error after logging it
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const renderPage = async (): Promise<void> => {
-  //     const html = await getFile(Number(selectedTemplate?.id));
-  //     // // const html = "'Hello, this is a test: {{username##text}}, and this is a number: {{age##number}}.';";
-  //     // const replacedHtml = replaceFieldWithInput(html);
-  //     if (templateRef.current) templateRef.current.innerHTML = html;
-  //   };
-  //   renderPage();
-  // }, []);
-
   return (
     <>
       <HeaderComponent title="BIỂU MẪU" link="BIỂU MẪU" />
@@ -460,6 +422,23 @@ const Page = () => {
                 </ModalBody>
               </>
             )}
+          </ModalContent>
+        </Modal>
+        {/* update modal */}
+        <Modal isOpen={isOpenPayment} onClose={onClosePayment} hideCloseButton>
+          <ModalContent>
+            <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+              Chọn phương thức thanh toán
+            </ModalHeader>
+            <ModalBody></ModalBody>
+            <ModalFooter>
+              <Button color="danger" variant="light" onPress={onClosePayment}>
+                Đóng
+              </Button>
+              <Button color="primary" type="submit" form="recruitment">
+                Cập nhật
+              </Button>
+            </ModalFooter>
           </ModalContent>
         </Modal>
       </div>

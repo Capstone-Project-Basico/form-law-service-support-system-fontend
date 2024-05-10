@@ -116,8 +116,8 @@ const Partner = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}partner/getAllPartners`
       );
       const filteredPosts = response.data.data.filter(
-        (parner: PartnerType) =>
-          parner.processStatus === "CHỜ DUYỆT" && parner.delete === false
+        (partner: PartnerType) =>
+          partner.processStatus === "CHỜ DUYỆT" && partner.delete === false
       );
       setPartners(filteredPosts);
     } catch (error) {}

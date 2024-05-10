@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
-const Navbar = dynamic(() => import("../dashboardNavbar/navbar"));
 
 // export const dynamic = "force-dynamic";
 
@@ -14,21 +13,6 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
-  const pathname = usePathname();
-
-  function getPathnameOrder(pathname: string) {
-    const parts = pathname.split("/").filter(Boolean); // filter out empty strings from the array
-
-    const paths = [];
-    let currentPath = "";
-
-    for (let part of parts) {
-      currentPath += "/" + part;
-      paths.push(currentPath);
-    }
-
-    return paths;
-  }
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -43,15 +27,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   // Check if the user role is not admin
 
   useEffect(() => {
-    if (userRole !== "ROLE_STAFF") {
-      // Redirect non-admin users to the home page or login page
+    if (!user) {
       router.push("/");
     }
-  }, [userRole]);
-
-  //   if (userRole !== "ROLE_ADMIN") {
-  //     return <></>;
-  //   }
+  }, [user]);
 
   return <>{children}</>;
 };

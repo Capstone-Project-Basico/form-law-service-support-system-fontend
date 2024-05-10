@@ -171,7 +171,7 @@ const Pack = () => {
         try {
           axios
             .delete(
-              `${process.env.NEXT_PUBLIC_BASE_API}partner/deletePartner/${packageId}`
+              `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/delete/${packageId}`
             )
             .then(() => {
               toast.success("Xóa thành công");
