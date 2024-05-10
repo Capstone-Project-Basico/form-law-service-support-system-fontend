@@ -21,6 +21,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Textarea,
   useDisclosure,
 } from "@nextui-org/react";
 import axios from "axios";
@@ -44,14 +45,14 @@ const Pack = () => {
   } = useDisclosure();
 
   //data
-  const [packageName, setPackageName] = useState("");
-  const [price, setPrice] = useState<Number | undefined>();
-  const [description, setDescription] = useState("");
+  const [serviceName, setServiceName] = useState("");
+  const [servicePrice, setServicePrice] = useState<Number | undefined>();
+  const [serviceDescription, setServiceDescription] = useState("");
 
   let newPack = {
-    packageName,
-    price,
-    description,
+    serviceName,
+    servicePrice,
+    serviceDescription,
   };
 
   useEffect(() => {
@@ -77,7 +78,11 @@ const Pack = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}service/getAllService`
       );
-      setServices(response.data.data);
+      const filteredService = response.data.data.filter(
+        (service: ServiceType) => service.deleted === false
+      );
+
+      setServices(filteredService);
     } catch (error) {
       console.error(error);
     }
@@ -95,24 +100,26 @@ const Pack = () => {
   };
 
   //add a new service
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}service/createNewService`,
-        newPack,
-        {
-          headers: authHeader(),
-        }
-      )
-
-      .then((response) => {
-        toast.success("Tạo mới gói tư vấn thành công");
-        fetchServices();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BASE_API}service/createNewService`,
+          newPack,
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Tạo mới gói tư vấn thành công");
+          onClose();
+          fetchServices();
+        });
+    } catch (error) {
+      toast.error("Tạo mới gói thất bại!");
+      console.log(error);
+    }
   };
 
   //search
@@ -151,7 +158,8 @@ const Pack = () => {
         try {
           axios
             .delete(
-              `${process.env.NEXT_PUBLIC_BASE_API}service/deleteService/${packageId}`
+              `${process.env.NEXT_PUBLIC_BASE_API}service/deleteService/${packageId}`,
+              { headers: authHeader() }
             )
             .then(() => {
               toast.success("Xóa thành công");
@@ -169,6 +177,21 @@ const Pack = () => {
       }
     });
   };
+
+  // restore
+  const restoreDelete = async (id: number) => {
+    try {
+      axios
+        .put(`${process.env.NEXT_PUBLIC_BASE_API}service/restoreDelete/${id}`)
+        .then((response) => {
+          toast.success("Khôi phục thành công");
+          fetchDeletedService();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <ToastContainer />
@@ -195,16 +218,17 @@ const Pack = () => {
             <ModalContent>
               {(onClose) => (
                 <>
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={(e) => handleSubmit(e, onClose)}>
                     <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
                       Thêm gói dịch vụ
                     </ModalHeader>
                     <ModalBody>
                       <Input
                         type="text"
+                        isRequired
                         label="Tên gói"
-                        value={packageName}
-                        onChange={(e) => setPackageName(e.target.value)}
+                        value={serviceName}
+                        onChange={(e) => setServiceName(e.target.value)}
                       />
                       <Input
                         type="number"
@@ -216,22 +240,28 @@ const Pack = () => {
                             </span>
                           </div>
                         }
-                        value={price !== undefined ? price.toString() : ""}
-                        onChange={(e) => setPrice(Number(e.target.value))}
+                        value={
+                          servicePrice !== undefined
+                            ? servicePrice.toString()
+                            : ""
+                        }
+                        onChange={(e) =>
+                          setServicePrice(Number(e.target.value))
+                        }
                         min="1"
                       />
-                      <Input
+                      <Textarea
                         type="text"
                         label="Chi tiết"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        value={serviceDescription}
+                        onChange={(e) => setServiceDescription(e.target.value)}
                       />
                     </ModalBody>
                     <ModalFooter>
                       <Button color="danger" variant="light" onPress={onClose}>
                         Đóng
                       </Button>
-                      <Button color="primary" onPress={onClose} type="submit">
+                      <Button color="primary" type="submit">
                         Thêm
                       </Button>
                     </ModalFooter>
@@ -350,7 +380,7 @@ const Pack = () => {
                 <TableCell className="flex items-center justify-center">
                   <Button
                     className="bg-blue-600 text-white"
-                    // onClick={() => restoreDelete(partner.partnerId)}
+                    onClick={() => restoreDelete(pack.serviceId)}
                   >
                     Khôi phục
                   </Button>

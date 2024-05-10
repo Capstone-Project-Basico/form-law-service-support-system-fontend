@@ -31,6 +31,7 @@ import {
   faAddressCard,
   faClockRotateLeft,
   faFileSignature,
+  faFolderOpen,
   faHeadset,
   faLock,
   faRightFromBracket,
@@ -317,7 +318,7 @@ const Navbar = () => {
               <DropdownMenu
                 aria-label="Profile Actions"
                 variant="flat"
-                disabledKeys={["hr", "hr2"]}
+                disabledKeys={["hr", "hr2", "hr3"]}
               >
                 <DropdownItem
                   key="user"
@@ -433,6 +434,25 @@ const Navbar = () => {
                   </Link>
                 </DropdownItem>
                 <DropdownItem
+                  key="templatePack"
+                  textValue="Gói biểu mẫu"
+                  className="bg-[#F2F2F2]"
+                >
+                  <Link
+                    href="/profile/templatePack"
+                    className="text-black w-full py-3 text-[17px]"
+                  >
+                    <FontAwesomeIcon
+                      icon={faFolderOpen}
+                      className="w-5 h-5 text-[#FF0004] mr-3"
+                    />
+                    Gói biểu mẫu
+                  </Link>
+                </DropdownItem>
+                <DropdownItem key="hr2" textValue=" ">
+                  <hr />
+                </DropdownItem>
+                <DropdownItem
                   key="transactionHistory"
                   textValue="Lịch sử giao dịch"
                   className="bg-[#F2F2F2]"
@@ -448,7 +468,7 @@ const Navbar = () => {
                     Lịch sử giao dịch
                   </Link>
                 </DropdownItem>
-                <DropdownItem key="hr2" textValue=" ">
+                <DropdownItem key="hr3" textValue=" ">
                   <hr />
                 </DropdownItem>
                 <DropdownItem

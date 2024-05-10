@@ -31,7 +31,6 @@ const ServicePack = () => {
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState<string | null>(null);
-  const [task, setTask] = useState<TaskType[]>([]);
 
   let newTask = {
     taskName,
@@ -77,13 +76,12 @@ const ServicePack = () => {
         setDescription("");
         setStartDate(null);
 
-        setTask((prevTasks) => [...prevTasks, response.data.data]);
         toast.success("Gửi yêu cầu thành công");
         onClose();
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Tạo mới thất bại");
+        toast.error("Gửi yêu cầu thất bại!");
       });
   };
   return (

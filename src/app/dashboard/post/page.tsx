@@ -293,7 +293,7 @@ const Post = () => {
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
-      ToastCon
+      <ToastContainer />
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>

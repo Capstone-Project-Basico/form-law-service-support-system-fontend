@@ -1,12 +1,10 @@
 "use client";
 
 import { UserLocal } from "@/constants/types/homeType";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import dynamic from "next/dynamic";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../../components/dashboardNavbar/navbar";
 import Sidebar from "../../components/dashboardStaffSidebar/staffSidebar";
-import dynamic from "next/dynamic";
 const StaffProtect = dynamic(() => import("@/components/protect/StaffProtect"));
 
 type LayoutProps = {
@@ -14,8 +12,6 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const router = useRouter();
-
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
