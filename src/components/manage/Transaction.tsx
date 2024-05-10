@@ -31,11 +31,6 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
   const [filterValue, setFilterValue] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  //search
-  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearchTerm(event.target.value);
-  // };
-
   useEffect(() => {
     console.log("Selected Date has been updated:", selectedDate);
     // setSelectedDate(e.target.value ? new Date(e.target.value) : null);
@@ -93,7 +88,7 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
 
   //pagination
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = 10;
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -209,7 +204,7 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
         <TableBody>
           {items.map((transaction, index) => (
             <TableRow key={index}>
-              <TableCell>{transaction.email}</TableCell>
+              <TableCell className="font-bold">{transaction.email}</TableCell>
               <TableCell>{transaction.description}</TableCell>
               <TableCell>{transaction.amount.toLocaleString()} VND</TableCell>
               <TableCell>

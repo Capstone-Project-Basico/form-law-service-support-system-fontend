@@ -176,7 +176,7 @@ const Tasks: React.FC<TasksProps> = ({
             Mô tả
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
-            Nhận viên được giao
+            Nhân viên được giao
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày bắt đầu

@@ -28,53 +28,142 @@ type OrderProps = {
 
 const Order: React.FC<OrderProps> = ({ orders, tabs }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<Selection>("all");
+  const [filterValue, setFilterValue] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  //search
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-  // Filter tasks based on search term
-  const filteredOrders = orders.filter((order) =>
-    order.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    console.log("Selected Date has been updated:", selectedDate);
+    // setSelectedDate(e.target.value ? new Date(e.target.value) : null);
+  }, [selectedDate]);
+
+  //filter by status
+  const hasSearchFilter = Boolean(filterValue);
+
+  const filteredItems = React.useMemo(() => {
+    let filteredUsers = [...orders];
+
+    if (hasSearchFilter) {
+      filteredUsers = filteredUsers.filter((user) =>
+        user.email?.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+    if (
+      statusFilter !== "all" &&
+      Array.from(statusFilter).length !== statusTransaction.length
+    ) {
+      filteredUsers = filteredUsers.filter((user) =>
+        Array.from(statusFilter).includes(user.orderStatus)
+      );
+    }
+
+    if (selectedDate) {
+      filteredUsers = filteredUsers.filter((order) => {
+        const transactionDate = new Date(order.dateCreated).setHours(
+          0,
+          0,
+          0,
+          0
+        );
+        const selectedDateTime = selectedDate.setHours(0, 0, 0, 0);
+        return transactionDate === selectedDateTime;
+      });
+    }
+
+    return filteredUsers;
+  }, [orders, filterValue, statusFilter, selectedDate]);
+
+  const onSearchChange = React.useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const onClear = React.useCallback(() => {
+    setFilterValue("");
+    setPage(1);
+  }, []);
 
   //pagination
   const [page, setPage] = React.useState(1);
-  useEffect(() => {
-    setPage(1);
-  }, [tabs]);
-  const rowsPerPage = 8;
+  const rowsPerPage = 10;
 
-  const pages = Math.ceil(filteredOrders.length / rowsPerPage);
+  const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return filteredOrders.slice(start, end);
-  }, [page, filteredOrders]);
+    return filteredItems.slice(start, end);
+  }, [page, filteredItems]);
+
+  const topContent = React.useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between gap-3 items-end">
+          <Input
+            isClearable
+            className="w-full sm:max-w-[44%]"
+            placeholder="Tìm địa chỉ email"
+            // startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => onClear()}
+            onValueChange={onSearchChange}
+          />
+
+          <div className="flex gap-3 h-full">
+            <Input
+              type="date"
+              label="Lọc theo ngày"
+              // value={
+              //   selectedDate ? selectedDate.toISOString().substring(0, 10) : ""
+              // }
+              onChange={(e: any) =>
+                setSelectedDate(
+                  e.target.value ? new Date(e.target.value) : null
+                )
+              }
+              className="w-52"
+            />
+
+            <Dropdown>
+              <DropdownTrigger className="hidden sm:flex h-14">
+                <Button
+                  //   endContent={<ChevronDownIcon className="text-small" />}
+                  variant="flat"
+                >
+                  Lọc theo tình trạng
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                aria-label="Table Columns"
+                closeOnSelect={false}
+                selectedKeys={statusFilter}
+                selectionMode="multiple"
+                onSelectionChange={setStatusFilter}
+              >
+                {statusTransaction.map((status) => (
+                  <DropdownItem key={status.uid} className="capitalize">
+                    {status.name}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        </div>
+      </div>
+    );
+  }, [filterValue, onSearchChange, statusFilter]);
 
   return (
     <div>
-      <div className="my-10 flex flex-row">
-        <Input
-          classNames={{
-            base: "w-full sm:max-w-[10rem] h-10",
-            mainWrapper: "h-full w-96",
-            input: "text-small",
-            inputWrapper:
-              "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20 ",
-          }}
-          placeholder="Từ khóa tìm kiếm .."
-          size="sm"
-          type="search"
-          radius="none"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      </div>
       <Table
         aria-label="Example static collection table"
+        topContent={topContent}
         topContentPlacement="outside"
         bottomContent={
           <div className="flex w-full justify-center">
@@ -98,19 +187,20 @@ const Order: React.FC<OrderProps> = ({ orders, tabs }) => {
             Tên người thực hiện
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
+            số tiền
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
             Ngày thực hiện giao dịch
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
-          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
-            Tương tác
-          </TableColumn>
         </TableHeader>
         <TableBody>
           {items.map((order, index) => (
             <TableRow key={index}>
-              <TableCell>{order.email}</TableCell>
+              <TableCell className="font-bold">{order.email}</TableCell>
+              <TableCell className="font-bold">{order.price}</TableCell>
               <TableCell>
                 {order.dateCreated
                   ? new Date(order.dateCreated).toLocaleDateString()
@@ -123,45 +213,6 @@ const Order: React.FC<OrderProps> = ({ orders, tabs }) => {
                   ? "Đang chờ"
                   : order.orderStatus}
               </TableCell>
-              {order.deleted === false ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-[#FF0004] text-white "
-                    // onClick={() => handleDelete(contact.contactId)}
-                  >
-                    Xóa
-                  </Button>
-
-                  {/* <Button
-                    className="bg-green-600 text-white"
-                    onClick={() => {
-                      setSelectedContact(contact);
-                      onOpen();
-                    }}
-                  >
-                    Chi tiết
-                  </Button> */}
-                </TableCell>
-              ) : (
-                <TableCell className="flex gap-2 items-center justify-center">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    // onClick={() => restoreDelete(contact.contactId)}
-                  >
-                    Khôi phục
-                  </Button>
-
-                  {/* <Button
-                    className="bg-green-600 text-white"
-                    onClick={() => {
-                      setSelectedContact(contact);
-                      onOpen();
-                    }}
-                  >
-                    Chi tiết
-                  </Button> */}
-                </TableCell>
-              )}
             </TableRow>
           ))}
         </TableBody>

@@ -190,6 +190,7 @@ export type OrderType = {
   orderId: string;
   email: string;
   cart: [];
+  price: number;
   orderStatus: string;
   dateCreated: Date;
   transactionId: Date;
