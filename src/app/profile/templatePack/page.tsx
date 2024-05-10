@@ -58,7 +58,7 @@ const ServicePack = () => {
           các gói dịch vụ với các đặc quyền theo từng gói
         </p>
       </div>
-      <Link href="/profile/servicePack/templatePack">
+      <Link href="/profile/templatePack/buyTemplatePack">
         <h1 className="text-[#FF0004]">Mua gói tại đây</h1>
       </Link>
       <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5">

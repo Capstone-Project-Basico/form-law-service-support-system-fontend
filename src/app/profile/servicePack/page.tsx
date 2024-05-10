@@ -131,7 +131,7 @@ const ServicePack = () => {
             <>
               <form onSubmit={(e) => handleSubmit(e, onClose)}>
                 <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
-                  Thêm công việc
+                  Hộ trợ tư vấn
                 </ModalHeader>
                 <ModalBody>
                   <Input

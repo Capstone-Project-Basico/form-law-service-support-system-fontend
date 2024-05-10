@@ -139,11 +139,8 @@ const Task = () => {
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">Quản lí công việc</p>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">
-              Công việc của bạn
+            <p className="text-[#FF0004] font-bold text-3xl ">
+              Quản lí công việc
             </p>
           </BreadcrumbItem>
         </Breadcrumbs>
