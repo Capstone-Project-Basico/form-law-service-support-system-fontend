@@ -20,7 +20,7 @@ const Page = () => {
   const getAllPosts = () => {
     axios
       .get(
-        `${process.env.NEXT_PUBLIC_BASE_API}post/findPostByCateName?cateName=Bài viết nghiên cứu báo chí`
+        `${process.env.NEXT_PUBLIC_BASE_API}post/findPostByCateName?cateName=Bài viết nghiên cứu trên báo chí`
       )
       .then((response) => {
         setPosts(response.data.data);
@@ -52,14 +52,14 @@ const Page = () => {
               />
               <h1 className="text-xl font-bold mb-2">{post.title}</h1>
               <hr className="mt-6" />
-              <div className="flex flex-row items-center m-0 py-[10px]">
+              {/* <div className="flex flex-row items-center m-0 py-[10px]">
                 <FontAwesomeIcon
                   icon={faCalendarDays}
                   className="size-4 mx-1"
                 />
                 <div className="py-2 text-xs">Tháng Hai 3, 2021</div>
               </div>
-              <FontAwesomeIcon icon={faComment} className="size-4 ml-1" />
+              <FontAwesomeIcon icon={faComment} className="size-4 ml-1" /> */}
               <hr />
             </Card>
           ))}

@@ -96,8 +96,6 @@ const Posts: React.FC<PostsProps> = ({
 
   return (
     <div>
-      <ToastContainer />
-
       <div>
         <div className="my-10 flex flex-row">
           <Input
@@ -151,7 +149,7 @@ const Posts: React.FC<PostsProps> = ({
         <TableBody>
           {items.map((post, index) => (
             <TableRow key={index}>
-              <TableCell>
+              <TableCell className="font-bold">
                 {post.title ? (
                   post.title
                 ) : (
@@ -242,7 +240,7 @@ const Posts: React.FC<PostsProps> = ({
       {/* detail modal */}
       <Modal isOpen={isOpen} onClose={onClose} hideCloseButton>
         <ModalContent
-          style={{ width: "90%", maxWidth: "8000px", height: "90%" }}
+          style={{ width: "80%", maxWidth: "8000px", height: "90%" }}
         >
           <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
             Chi tiết
@@ -292,7 +290,7 @@ const Posts: React.FC<PostsProps> = ({
 
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
-        <ModalContent className="w-[11000px] h-[850px] max-w-none">
+        <ModalContent className="w-[1200px] h-[850px] max-w-none">
           <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
             Cập nhật liên hệ
           </ModalHeader>
@@ -349,7 +347,7 @@ const Posts: React.FC<PostsProps> = ({
                       content: encodeToBase64(e.htmlValue || ""),
                     })
                   } // Ensures that 'text' is never null
-                  style={{ height: "320px" }}
+                  style={{ height: "400px" }}
                 />
               </form>
             )}
