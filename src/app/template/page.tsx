@@ -66,6 +66,7 @@ const Page = () => {
     onClose: onClosePayment,
   } = useDisclosure();
   const [orderId, setOrderId] = useState<string>();
+  const [transactionId, setTransactionId] = useState<string>();
   const [isSelectedQR, setIsSelectedQR] = useState(0);
 
   const getUserFromStorage = () => {
@@ -144,7 +145,8 @@ const Page = () => {
               updatedDataOrder
             )
             .then((response) => {
-              setOrderId(response.data.data);
+              setOrderId(response.data.data.orderId);
+              setTransactionId(response.data.data.transactionId);
               // Swal.fire({
               //   title: "Vui lòng chọn phương thức thanh toán",
               //   showDenyButton: true,
@@ -202,7 +204,7 @@ const Page = () => {
   const payForTemplateByCash = (orderId: any) => {
     axios
       .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${orderId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${transactionId}`,
         {},
         { headers: authHeader() }
       )

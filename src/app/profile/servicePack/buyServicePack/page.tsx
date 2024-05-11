@@ -40,6 +40,7 @@ const BuyPacks = () => {
     onClose: onClosePayment,
   } = useDisclosure();
   const [orderId, setOrderId] = useState<string>();
+  const [transactionId, setTransactionId] = useState<string>();
   const [isSelectedQR, setIsSelectedQR] = useState(0);
 
   //data
@@ -120,7 +121,8 @@ const BuyPacks = () => {
             { headers: authHeader() }
           )
           .then((response) => {
-            setOrderId(response.data.data);
+            setOrderId(response.data.data.orderId);
+            setTransactionId(response.data.data.transactionId);
             onOpenPayment();
           })
           .catch((error) => {
@@ -158,7 +160,7 @@ const BuyPacks = () => {
   const payForServiceByCash = (orderId: any) => {
     axios
       .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${orderId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${transactionId}`,
         {},
         { headers: authHeader() }
       )

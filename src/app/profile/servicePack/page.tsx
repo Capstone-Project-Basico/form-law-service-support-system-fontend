@@ -13,7 +13,12 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { PackType, ServiceType, TaskType } from "@/constants/types/homeType";
+import {
+  ConsultServiceType,
+  PackType,
+  ServiceType,
+  TaskType,
+} from "@/constants/types/homeType";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import dateConvert from "@/components/dateConvert";
@@ -26,16 +31,20 @@ interface UserLocal {
   };
 }
 const ServicePack = () => {
-  const [purchasedPacks, setPurchasedPack] = useState<ServiceType[]>([]);
+  const [purchasedPacks, setPurchasedPack] = useState<ConsultServiceType[]>([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState<string | null>(null);
+  const [createBy, setCreateBy] = useState("");
+  const [packageRequestServiceId, setPackageRequestServiceId] = useState("");
 
   let newTask = {
     taskName,
     description,
     startDate,
+    createBy,
+    packageRequestServiceId,
   };
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -48,25 +57,47 @@ const ServicePack = () => {
   const userId = user?.data.data.userId;
 
   useEffect(() => {
+    getUser();
     getAllPurchasedPacks();
-  }, []);
+  }, [userId]);
 
-  const getAllPurchasedPacks = async () => {
+  const getUser = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}orderService/getAllCheckOutFormTemplateDetailByUser/${userId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`,
         {
           headers: authHeader(),
         }
       );
-      setPurchasedPack(response.data.data);
+      setCreateBy(response.data.data.email);
+    } catch (error) {}
+  };
+
+  const getAllPurchasedPacks = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}orderPackageRequestService/getAllCheckOutPackageRequestServiceDetailByUser/${userId}`,
+        {
+          headers: authHeader(),
+        }
+      );
+      console.log(response.data.data);
+
+      const allOrder = response.data.data;
+      allOrder.map((order: any) => {
+        order.cart.map((item: any) =>
+          setPurchasedPack((purchasedPacks) => [...purchasedPacks, item])
+        );
+      });
+      // allOrder.map((order: any) => {
+      //   setPurchasedPack(order);
+      // });
     } catch (error) {}
   };
 
   //send request
   const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
-
     axios
       .post(
         `${process.env.NEXT_PUBLIC_BASE_API}task-api/createNewTask`,
@@ -111,20 +142,23 @@ const ServicePack = () => {
         </div>
       </div>
       <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5">
-        {purchasedPacks.map((servicePack) => (
+        {purchasedPacks.map((servicePack, key) => (
           <div
-            key={servicePack.itemId}
+            key={key}
             className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md"
           >
             <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
               {servicePack.itemName}
             </h2>
-            {/* <p className="text-xl pt-3">{servicePack.description}</p> */}
-            {/* <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
-              {servicePack.price.toLocaleString()} VND
-            </h1> */}
-            <Button className="text-white bg-[#FF0004] my-5" disabled>
-              Đang sở hữu
+            <p className="text-xl pt-3">
+              Lần gửi còn lại:{servicePack.totalRequest}
+            </p>
+
+            <Button
+              className="text-white bg-[#FF0004] my-5"
+              onClick={() => onOpen()}
+            >
+              Sử dụng
             </Button>
           </div>
         ))}
