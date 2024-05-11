@@ -244,6 +244,8 @@ export type ConsultServiceType = {
   createBy: string;
   totalRequest: number;
   deleted: boolean;
+  itemName?: string;
+  cart: [{}];
 };
 
 export interface UserLocal {
