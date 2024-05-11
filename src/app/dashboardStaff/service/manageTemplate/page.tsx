@@ -47,12 +47,14 @@ import axiosClient from '@/lib/axiosClient';
 import { ArrowDownTrayIcon, EllipsisVerticalIcon, PencilSquareIcon } from '@heroicons/react/24/solid';
 import Loading from '@/components/loading';
 import FileUpload from '@/components/file-upload';
+import { color } from 'framer-motion';
 
 const statusColorMap: any = {
   ACTIVE: 'success',
   INACTIVE: 'danger',
-  UNSTANDARDIZED: 'danger',
+  UNSTANDARDIZED: 'warning',
   STANDARDIZED: 'success',
+  DELETED: 'danger',
 };
 
 const cellValueMap: { [key: string]: string } = {
@@ -60,6 +62,7 @@ const cellValueMap: { [key: string]: string } = {
   INACTIVE: 'Ngưng hoạt động',
   UNSTANDARDIZED: 'Chưa chuẩn hóa',
   STANDARDIZED: 'Chuẩn hóa',
+  DELETED: 'Đã xóa',
 };
 
 const Page = () => {
@@ -70,6 +73,7 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isEdit, setIsEdit] = useState<{ isOpen: boolean; id?: number | null }>({ isOpen: false, id: null });
   const [isUpdate, setIsUpdate] = useState<{ isOpen: boolean; data?: FormTemplate | null }>({ isOpen: false });
+  const [isStatusUpdate, setIsStatusUpdate] = useState<{ isOpen: boolean; data?: FormTemplate | null }>({ isOpen: false });
   const [file, setFile] = useState<File | null>(null);
   const [formType, setFormType] = useState<FormType[]>([]);
 
@@ -153,6 +157,56 @@ const Page = () => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      setIsLoading(true);
+      const res = await axiosClient.delete(`formTemplateVersion/${id}`);
+      if (res.data?.status === false) return;
+      getData();
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    try {
+      setIsLoading(true);
+      const res = await axiosClient.patch(`formTemplateVersion/${isUpdate.data?.formTemplateVersion.id}`, data);
+      if (res.data?.status === false) return;
+      getData();
+      setIsLoading(false);
+      setIsUpdate({ isOpen: false });
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      setIsUpdate({ isOpen: false });
+    }
+  };
+
+  const handleUpdateStatus = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    console.log(data);
+    try {
+      setIsLoading(true);
+      const res = await axiosClient.put(`formTemplateVersion/status/${isStatusUpdate.data?.formTemplateVersion.id}?status=${data.status}`);
+      if (res.data?.status === false) return;
+      getData();
+      setIsLoading(false);
+      setIsStatusUpdate({ isOpen: false });
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      setIsStatusUpdate({ isOpen: false });
+    }
+  };
+
   useEffect(() => {
     // switch (tabs) {
     //   case 1:
@@ -223,13 +277,20 @@ const Page = () => {
             onClick: () => setIsUpdate({ isOpen: true, data: item }),
           },
           {
+            title: 'Update status',
+            onClick: () => setIsStatusUpdate({ isOpen: true, data: item }),
+          },
+          {
             title: 'Delete',
-            onClick: () => {},
+            onClick: () => {
+              handleDelete(item.formTemplateVersion.id);
+            },
+            color: 'danger',
           },
         ];
 
         if (item.formTemplateVersion.status !== 'ACTIVE') {
-          menuItems.push(
+          menuItems.unshift(
             {
               title: 'Chuẩn hóa',
               onClick: () => autoStandardizationTemplate(item.formTemplateVersion.id, 'text'),
@@ -251,7 +312,7 @@ const Page = () => {
               </DropdownTrigger>
               <DropdownMenu>
                 {menuItems.map((item, index) => (
-                  <DropdownItem key={index} onClick={item.onClick}>
+                  <DropdownItem className={item.color && 'bg-red-500'} key={index} onClick={item.onClick}>
                     {item.title}
                   </DropdownItem>
                 ))}
@@ -283,8 +344,6 @@ const Page = () => {
 
   // if (isLoading) return <Loading />;
 
-  console.log();
-
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       {isLoading && <Loading className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50" />}
@@ -308,23 +367,24 @@ const Page = () => {
           </Modal>
         </div>
       )}
-
       {/* update modal */}
-      <form>
+      <form onSubmit={handleUpdate}>
         <Modal isOpen={isUpdate.isOpen} onClose={() => setIsUpdate({ isOpen: false })} hideCloseButton>
           <ModalContent style={{ width: '50%', maxWidth: '500px' }}>
             <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">Chi tiết</ModalHeader>
             <ModalBody>
               <div className="flex flex-col gap-10">
-                <Input label="Tên biểu mẫu" value={isUpdate.data?.title} />
-                <Select label="Loại biểu mẫu" defaultSelectedKeys={[formType[0]?.id]} items={formType}>
+                <Input name="title" label="Tên biểu mẫu" value={isUpdate.data?.title} />
+                <Select name="formTypeName" label="Loại biểu mẫu" defaultSelectedKeys={[formType[0]?.id]} items={formType}>
                   {(formType) => <SelectItem key={formType.id}>{formType.typeName}</SelectItem>}
                 </Select>
-                <Input label="Miểu tả" value={isUpdate.data?.description} />
+                <Input name="description" label="Miểu tả" value={isUpdate.data?.description} />
               </div>
             </ModalBody>
             <ModalFooter>
-              <Button className="button-danger bg-[#FF0004] text-white">Cập nhật</Button>
+              <Button type="submit" className="button-danger bg-[#FF0004] text-white">
+                Cập nhật
+              </Button>
               <Button className="button-danger bg-[#FF0004] text-white" onPress={() => setIsUpdate({ isOpen: false })}>
                 Đóng
               </Button>
@@ -332,6 +392,39 @@ const Page = () => {
           </ModalContent>
         </Modal>
       </form>
+
+      {/* update status modal */}
+      <Modal isOpen={isStatusUpdate.isOpen} onClose={() => setIsStatusUpdate({ isOpen: false })} hideCloseButton>
+        <ModalContent style={{ width: '50%', maxWidth: '500px' }}>
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">Chi tiết</ModalHeader>
+          <ModalBody>
+            <form onSubmit={handleUpdateStatus}>
+              <div className="flex flex-col gap-10">
+                <Select
+                  name="status"
+                  defaultSelectedKeys={isStatusUpdate.data?.formTemplateVersion.status ? [isStatusUpdate.data.formTemplateVersion.status] : undefined}
+                  variant="bordered"
+                  label="Loại biểu mẫu"
+                >
+                  <SelectItem key={'ACTIVE'}>ACTIVE</SelectItem>
+                  <SelectItem key={'INACTIVE'}>INACTIVE</SelectItem>
+                  <SelectItem key={'UNSTANDARDIZED'}>UNSTANDARDIZED</SelectItem>
+                  <SelectItem key={'STANDARDIZED'}>STANDARDIZED</SelectItem>
+                  <SelectItem key={'DELETED'}>DELETED</SelectItem>
+                </Select>
+              </div>
+              <div className="p-6 flex justify-end gap-4">
+                <Button type="submit" className="button-danger bg-[#FF0004] text-white">
+                  Cập nhật
+                </Button>
+                <Button className="button-danger bg-[#FF0004] text-white" onPress={() => setIsStatusUpdate({ isOpen: false })}>
+                  Đóng
+                </Button>
+              </div>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
       <div className=" grid grid-cols-2 pb-5">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
@@ -361,7 +454,7 @@ const Page = () => {
             TẤT CẢ
           </Button>
         </div>
-        <div>
+        {/* <div>
           <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
             CHỜ DUYỆT
           </Button>
@@ -374,7 +467,7 @@ const Page = () => {
           >
             KHÔNG SỬ DỤNG
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <div className="w-full h-[40rem]">
