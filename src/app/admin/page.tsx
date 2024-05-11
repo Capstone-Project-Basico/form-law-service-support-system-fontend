@@ -3,39 +3,75 @@
 import axios from "axios";
 import { Chart } from "primereact/chart";
 import { useEffect, useState } from "react";
+import authHeader from "@/components/authHeader/AuthHeader";
 
 const Page = () => {
   const [users, setUsers] = useState();
   const [templates, setTemplates] = useState();
-
-  useEffect(() => {
-    getAllUsers();
-    getAllTemplates();
+  const [dashboards, setDashboardData] = useState({
+    totalAllTask: 0,
+    totalTemplate: 0,
+    totalUser: 0,
+    totalTransaction: 0,
+    totalTaskNotAssign: 0,
+    totalTaskAssigned: 0,
+    totalTaskDone: 0,
+    totalRevenueOfMonth: 0,
   });
 
-  const getAllUsers = () => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`)
-      .then((response) => {
-        setUsers(response.data.data.length);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  useEffect(() => {
+    //   getAllUsers();
+    //   getAllTemplates();
+    // });
 
-  const getAllTemplates = () => {
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BASE_API}formTemplate/getAllFormTemplates`
-      )
-      .then((response) => {
-        setTemplates(response.data.data.length);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+    const getAllValueOfChart = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_API}dashboard/getAllValueOfChart`,
+          {
+            headers: authHeader(), // Adding headers to your request
+          }
+        );
+
+        if (response.data.status) {
+          setDashboardData(response.data.data);
+        } else {
+          console.error(
+            "Failed to fetch dashboard data:",
+            response.data.message
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      }
+    };
+
+    getAllValueOfChart();
+  }, []);
+
+  // const getAllUsers = () => {
+  //   axios
+  //     .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`)
+  //     .then((response) => {
+  //       setUsers(response.data.data.length);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
+  // const getAllTemplates = () => {
+  //   axios
+  //     .get(
+  //       `${process.env.NEXT_PUBLIC_BASE_API}formTemplate/getAllFormTemplates`
+  //     )
+  //     .then((response) => {
+  //       setTemplates(response.data.data.length);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   // Example data for a Bar Chart
   const barChartData = {
@@ -57,12 +93,17 @@ const Page = () => {
 
   // Example data for a Pie Chart
   const pieChartData = {
-    labels: ["SL1", "SL1", "SL2"],
+    labels: ["Tất cả", "Đã bàn giao", "Chưa bàn giao", "Hoàn thành"],
     datasets: [
       {
-        label: "Revenue",
-        data: [300, 400, 350],
-        backgroundColor: ["#36A2EB", "#FFCE56", "#FF9F40"],
+        label: "Nhiêm vụ",
+        data: [
+          dashboards.totalAllTask,
+          dashboards.totalTaskAssigned,
+          dashboards.totalTaskNotAssign,
+          dashboards.totalTaskDone,
+        ],
+        backgroundColor: ["#36A2EB", "#FFCE56", "#FF9F40", "#a855f7"],
       },
     ],
   };
@@ -82,17 +123,24 @@ const Page = () => {
         <div className="flex w-full h-[150px] justify-around items-center">
           <div className="w-1/4 h-full border border-gray-300 rounded-lg ml-2">
             <p className="text-center mt-2 font-bold text-2xl">Doanh thu</p>
+            <p className="text-center mt-2 font-semibold">
+              {dashboards.totalRevenueOfMonth}
+            </p>
           </div>
           <div className="w-1/4 h-full border border-gray-300 rounded-lg ml-2">
             <p className="text-center mt-2 font-bold text-2xl">Người dùng</p>
             <p className="flex justify-center items-center py-5 font-semibold ">
-              {users}
+              <p className="text-center mt-2 font-semibold">
+                {dashboards.totalUser}
+              </p>
             </p>
           </div>
           <div className="w-1/4 h-full border border-gray-300 rounded-lg ml-2">
             <p className="text-center mt-2 font-bold text-2xl">Biểu mẫu luật</p>
             <p className="flex justify-center items-center py-5 font-semibold ">
-              {templates}
+              <p className="text-center mt-2 font-semibold">
+                {dashboards.totalTemplate}
+              </p>
             </p>
           </div>
           <div className="w-1/4 h-full border border-gray-300 rounded-lg ml-2">

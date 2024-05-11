@@ -1,8 +1,44 @@
-import React from "react";
+"use client";
+
+import axios from "axios";
 import { Chart } from "primereact/chart";
 import AddTemplate from "@/sections/AddTemplate";
+import { useEffect, useState } from "react";
 
 const Page = () => {
+  const [dashboards, setDashboardData] = useState({
+    totalAllTask: 0,
+    totalTemplate: 0,
+    totalUser: 0,
+    totalTransaction: 0,
+    totalTaskNotAssign: 0,
+    totalTaskAssigned: 0,
+    totalTaskDone: 0,
+    totalRevenueOfMonth: 0,
+  });
+
+  useEffect(() => {
+    const getAllValueOfChart = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_API}dashboard/getAllValueOfChart`
+        );
+        if (response.data.status) {
+          setDashboardData(response.data.data);
+        } else {
+          console.error(
+            "Failed to fetch dashboard data:",
+            response.data.message
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      }
+    };
+
+    getAllValueOfChart();
+  }, []);
+
   // Example data for a Bar Chart
   const barChartData = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May"],
@@ -23,12 +59,17 @@ const Page = () => {
 
   // Example data for a Pie Chart
   const pieChartData = {
-    labels: ["SL1", "SL1", "SL2"],
+    labels: ["Tất cả", "Đã bàn giao", "Chưa bàn giao", "Hoàn thành"],
     datasets: [
       {
-        label: "Revenue",
-        data: [300, 400, 350],
-        backgroundColor: ["#36A2EB", "#FFCE56", "#FF9F40"],
+        label: "Nhiêm vụ",
+        data: [
+          dashboards.totalAllTask,
+          dashboards.totalTaskAssigned,
+          dashboards.totalTaskNotAssign,
+          dashboards.totalTaskDone,
+        ],
+        backgroundColor: ["#36A2EB", "#FFCE56", "#FF9F40", "#a855f7"],
       },
     ],
   };
@@ -71,6 +112,7 @@ const Page = () => {
         </div>
 
         <div className="w-2/5 h-full justify-center items-center  border border-gray-300 rounded-lg ml-8 pt-28">
+          {/* <div>Nhiệm vụ</div> */}
           <Chart
             key="pieChart"
             type="pie"
