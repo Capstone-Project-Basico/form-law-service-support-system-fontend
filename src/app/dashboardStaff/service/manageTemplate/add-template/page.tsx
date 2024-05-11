@@ -142,6 +142,7 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
     });
     if (res.status === 200) {
       console.log(res.data);
+      await axiosClient.put(`formTemplateVersion/status/${res.data.id}?status=PENDING`);
       return res;
     }
     return null;
