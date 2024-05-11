@@ -411,11 +411,11 @@ const Page = () => {
                   variant="bordered"
                   label="Loại biểu mẫu"
                 >
-                  <SelectItem key={'ACTIVE'}>ACTIVE</SelectItem>
-                  <SelectItem key={'INACTIVE'}>INACTIVE</SelectItem>
-                  <SelectItem key={'UNSTANDARDIZED'}>UNSTANDARDIZED</SelectItem>
-                  <SelectItem key={'STANDARDIZED'}>STANDARDIZED</SelectItem>
-                  <SelectItem key={'DELETED'}>DELETED</SelectItem>
+                  <SelectItem key={'ACTIVE'}>Hoạt động</SelectItem>
+                  <SelectItem key={'INACTIVE'}>Không hoạt động</SelectItem>
+                  <SelectItem key={'UNSTANDARDIZED'}>Chưa chuẩn hóa</SelectItem>
+                  <SelectItem key={'STANDARDIZED'}>Đã chuẩn hóa</SelectItem>
+                  <SelectItem key={'DELETED'}>Đã xóa</SelectItem>
                 </Select>
               </div>
               <div className="p-6 flex justify-end gap-4">
@@ -445,7 +445,7 @@ const Page = () => {
           <Button
             className="flex justify-end bg-[#FF0004] text-white"
             radius="full"
-            onClick={() => router.push('/dashboardStaff/service/manageTemplate/add-template')}
+            onClick={() => router.push('/dashboard/service/manageTemplate/add-template')}
           >
             Tạo mới
             <FontAwesomeIcon icon={faPlus} />
