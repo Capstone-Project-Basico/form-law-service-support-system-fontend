@@ -203,8 +203,8 @@ export type TransactionType = {
 export type OrderType = {
   orderId: string;
   email: string;
-  cart: [];
-  price: number;
+  cart: [{ price: number; itemName: string }];
+  // price: number;
   orderStatus: string;
   dateCreated: Date;
   transactionId: Date;
@@ -232,6 +232,18 @@ export type ServiceType = {
   deleted: boolean;
   itemName: string;
   itemId: 1;
+};
+
+export type ConsultServiceType = {
+  packageServiceId: string;
+  packageRequestServiceName: string;
+  createDate: any;
+  price: number;
+  description: string;
+  processStatus: string;
+  createBy: string;
+  totalRequest: number;
+  deleted: boolean;
 };
 
 export interface UserLocal {

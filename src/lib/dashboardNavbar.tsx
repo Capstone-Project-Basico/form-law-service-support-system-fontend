@@ -44,7 +44,8 @@ export const sideNavItems: SideNavItem[] = [
     subMenu: true,
     subMenuItems: [
       { title: "Biểu mẫu", path: "/dashboard/service/manageTemplate" },
-      { title: "Gói dịch vụ tư vấn", path: "/dashboard/service/servicePack" },
+      { title: "Gói dịch vụ", path: "/dashboard/service/service" },
+      { title: "Dịch vụ tư vấn", path: "/dashboard/service/consult" },
       { title: "Gói biểu mẫu", path: "/dashboard/service/templatePack" },
     ],
   },
@@ -91,13 +92,6 @@ export const sideNavItems: SideNavItem[] = [
         icon={faBasketShopping}
         className="w-7 h-7 text-[#FF0004]"
       />
-    ),
-  },
-  {
-    title: "Cài đặt hệ thống",
-    path: "/dashboard/setting",
-    icon: (
-      <FontAwesomeIcon icon={faSliders} className="w-7 h-7 text-[#FF0004]" />
     ),
   },
 ];

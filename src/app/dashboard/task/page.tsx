@@ -86,7 +86,7 @@ const Task = () => {
   const fetchTask = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/getAllTask`,
+        `${process.env.NEXT_PUBLIC_BASE_API}task-api/getAllTask`,
         {
           headers: authHeader(),
         }
@@ -101,7 +101,7 @@ const Task = () => {
   const fetchDeletedTask = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/getAllDeletedTask`,
+        `${process.env.NEXT_PUBLIC_BASE_API}task-api/getAllDeletedTask`,
         {
           headers: authHeader(),
         }
@@ -135,9 +135,12 @@ const Task = () => {
     if (isConfirmed) {
       try {
         axios
-          .delete(`${process.env.NEXT_PUBLIC_BASE_API}task/deleteTask/${id}`, {
-            headers: authHeader(),
-          })
+          .delete(
+            `${process.env.NEXT_PUBLIC_BASE_API}task-api/deleteTask/${id}`,
+            {
+              headers: authHeader(),
+            }
+          )
           .then(() => {
             toast.success("Xóa thành công");
             fetchTask();
@@ -158,7 +161,7 @@ const Task = () => {
     // Example: PUT request to update Task details
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}task/updateTask/${selectedTask.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}task-api/updateTask/${selectedTask.id}`,
         {
           taskName: selectedTask.taskName,
           description: selectedTask.description,

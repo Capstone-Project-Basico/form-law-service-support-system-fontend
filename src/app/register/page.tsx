@@ -169,22 +169,6 @@ const Page = () => {
               >
                 Đăng ký
               </Button>
-              <div className="flex justify-center pb-2">Hoặc đăng ký bằng</div>
-
-              <div className="flex gap-5 mb-3">
-                <Button className="bg-[#FF0004] text-white w-80">
-                  <FontAwesomeIcon icon={faGoogle} />
-                  Google
-                </Button>
-
-                <Button className="bg-[#FF0004] text-white w-80">
-                  <FontAwesomeIcon
-                    icon={faFacebook}
-                    className="text-[#4267B2]"
-                  />
-                  Facebook
-                </Button>
-              </div>
               <div className="flex justify-center">
                 Bạn đã có tài khoản?{" "}
                 <strong>

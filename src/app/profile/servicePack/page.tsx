@@ -15,7 +15,7 @@ import {
 } from "@nextui-org/react";
 import { PackType, ServiceType, TaskType } from "@/constants/types/homeType";
 import Link from "next/link";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import dateConvert from "@/components/dateConvert";
 
 interface UserLocal {
@@ -68,24 +68,28 @@ const ServicePack = () => {
     e.preventDefault();
 
     axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_API}task/createNewTask`, newTask, {
-        headers: authHeader(),
-      })
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_API}task-api/createNewTask`,
+        newTask,
+        {
+          headers: authHeader(),
+        }
+      )
       .then((response) => {
+        toast.success("Gửi yêu cầu thành công");
         setTaskName("");
         setDescription("");
         setStartDate(null);
-
-        toast.success("Gửi yêu cầu thành công");
         onClose();
       })
       .catch((error) => {
-        console.log(error);
         toast.error("Gửi yêu cầu thất bại!");
+        console.log(error);
       });
   };
   return (
     <div className="w-[1350px] bg-white rounded-2xl">
+      <ToastContainer />
       <div className="flex flex-col justify-center items-center">
         <h2 className="text-2xl font-semibold">
           Chọn gói nâng cấp dịch vụ
@@ -170,7 +174,7 @@ const ServicePack = () => {
                     Đóng
                   </Button>
                   <Button color="primary" type="submit">
-                    Thêm
+                    Gửi yêu cầu
                   </Button>
                 </ModalFooter>
               </form>

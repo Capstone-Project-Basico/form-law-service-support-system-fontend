@@ -186,9 +186,9 @@ const Order: React.FC<OrderProps> = ({ orders, tabs }) => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Tên người thực hiện
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
+          {/* <TableColumn className=" bg-[#FF0004] text-white">
             số tiền
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày thực hiện giao dịch
           </TableColumn>
@@ -200,7 +200,7 @@ const Order: React.FC<OrderProps> = ({ orders, tabs }) => {
           {items.map((order, index) => (
             <TableRow key={index}>
               <TableCell className="font-bold">{order.email}</TableCell>
-              <TableCell className="font-bold">{order.price}</TableCell>
+              {/* <TableCell className="font-bold">{order.cart.}</TableCell> */}
               <TableCell>
                 {order.dateCreated
                   ? new Date(order.dateCreated).toLocaleDateString()
