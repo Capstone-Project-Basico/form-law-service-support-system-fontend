@@ -67,60 +67,6 @@ const Side = () => {
             <hr />
           </div>
         ))}
-        {/* 
-        <div className="flex flex-row items-center py-3">
-          <FontAwesomeIcon
-            icon={faChevronRight}
-            className="size-3 mx-1 text-[#FF0004]"
-          />
-          <p className="pl-[18px] hover:text-[#FF0004] cursor-pointer">
-            BASICO tuần luật
-          </p>
-        </div>
-        <hr />
-
-        <div className="flex flex-row items-center py-3">
-          <FontAwesomeIcon
-            icon={faChevronRight}
-            className="size-3 mx-1 text-[#FF0004]"
-          />
-          <p className="pl-[18px] text-[#FF0004] cursor-pointer">
-            Sách pháp lý nghiệp vụ
-          </p>
-        </div>
-        <hr />
-
-        <div className="flex flex-row items-center py-3">
-          <FontAwesomeIcon
-            icon={faChevronRight}
-            className="size-3 mx-1 text-[#FF0004]"
-          />
-          <p className="pl-[18px] hover:text-[#FF0004] cursor-pointer">
-            Tư liệu ảnh
-          </p>
-        </div>
-        <hr />
-
-        <div className="flex flex-row items-center py-3">
-          <FontAwesomeIcon
-            icon={faChevronRight}
-            className="size-3 mx-1 text-[#FF0004]"
-          />
-          <p className="pl-[18px] hover:text-[#FF0004] cursor-pointer">
-            Tư liệu film ảnh
-          </p>
-        </div>
-        <hr />
-
-        <div className="flex flex-row items-center py-3">
-          <FontAwesomeIcon
-            icon={faChevronRight}
-            className="size-3 mx-1 text-[#FF0004]"
-          />
-          <p className="pl-[18px] hover:text-[#FF0004] cursor-pointer">
-            Tư liệu video
-          </p>
-        </div> */}
       </div>
 
       {/* calender */}
@@ -133,10 +79,9 @@ const Side = () => {
 
       {/* new post */}
       <div>
-        <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
+        <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-10">
           BÀI VIẾT MỚI
         </div>
-        <div>Chuc mung nam moi</div>
       </div>
     </div>
   );

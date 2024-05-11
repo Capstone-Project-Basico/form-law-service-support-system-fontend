@@ -314,7 +314,7 @@ const Post = () => {
             Tạo mới
           </Button>
           <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
-            <ModalContent className="w-[9000px] h-[800px] max-w-none">
+            <ModalContent className="w-[1200px] h-[800px] max-w-none">
               {(onClose) => (
                 <>
                   <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
