@@ -1,7 +1,11 @@
 "use client";
 
 import authHeader from "@/components/authHeader/AuthHeader";
-import { PackType, ServiceType } from "@/constants/types/homeType";
+import {
+  ConsultServiceType,
+  PackType,
+  ServiceType,
+} from "@/constants/types/homeType";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -32,11 +36,10 @@ import Swal from "sweetalert2";
 const Pack = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
-  const [services, setServices] = useState<ServiceType[]>([]);
+  const [services, setServices] = useState<ConsultServiceType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedService, setSelectedService] = useState<ServiceType | null>(
-    null
-  );
+  const [selectedService, setSelectedService] =
+    useState<ConsultServiceType | null>(null);
 
   const {
     isOpen: isOpenUpdate,
@@ -76,7 +79,7 @@ const Pack = () => {
   const fetchServices = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}service/getAllService`
+        `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/getAllPackageRequestService`
       );
       const filteredService = response.data.data.filter(
         (service: ServiceType) => service.deleted === false
@@ -91,9 +94,12 @@ const Pack = () => {
   const fetchDeletedService = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}service/getAllDeletedService`
+        `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/getAllPackageRequestService`
       );
-      setServices(response.data.data);
+      const filteredService = response.data.data.filter(
+        (service: ServiceType) => service.deleted === true
+      );
+      setServices(filteredService);
     } catch (error) {
       console.error(error);
     }
@@ -128,7 +134,9 @@ const Pack = () => {
   };
   // Filter partners based on search term
   const filteredPacks = services.filter((service) =>
-    service.serviceName.toLowerCase().includes(searchTerm.toLowerCase())
+    service.packageRequestServiceName
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   //pagination
@@ -145,7 +153,7 @@ const Pack = () => {
   }, [page, filteredPacks]);
 
   //delete
-  const handleDelete = async (packageId: number) => {
+  const handleDelete = async (packageId: string) => {
     Swal.fire({
       title: "Bạn có muốn xóa gói này không?",
       showDenyButton: true,
@@ -158,7 +166,7 @@ const Pack = () => {
         try {
           axios
             .delete(
-              `${process.env.NEXT_PUBLIC_BASE_API}service/deleteService/${packageId}`,
+              `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/deletePackageRequestService/${packageId}`,
               { headers: authHeader() }
             )
             .then(() => {
@@ -179,10 +187,12 @@ const Pack = () => {
   };
 
   // restore
-  const restoreDelete = async (id: number) => {
+  const restoreDelete = async (id: string) => {
     try {
       axios
-        .put(`${process.env.NEXT_PUBLIC_BASE_API}service/restoreDelete/${id}`)
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/restorePackageRequestService/${id}`
+        )
         .then((response) => {
           toast.success("Khôi phục thành công");
           fetchDeletedService();
@@ -349,9 +359,9 @@ const Pack = () => {
         <TableBody>
           {items.map((pack, index) => (
             <TableRow key={index}>
-              <TableCell>{pack.serviceName}</TableCell>
+              <TableCell>{pack.packageRequestServiceName}</TableCell>
               <TableCell>{pack.price.toLocaleString()} VND</TableCell>
-              <TableCell>{pack.serviceDescription}</TableCell>
+              <TableCell>{pack.description}</TableCell>
               <TableCell>
                 <span style={{ color: pack.deleted ? "red" : "green" }}>
                   {pack.deleted ? "Không sử dụng" : "Đang hoạt động"}
@@ -371,7 +381,7 @@ const Pack = () => {
 
                   <Button
                     className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(pack.serviceId)}
+                    onClick={() => handleDelete(pack.packageServiceId)}
                   >
                     Xóa
                   </Button>
@@ -380,7 +390,7 @@ const Pack = () => {
                 <TableCell className="flex items-center justify-center">
                   <Button
                     className="bg-blue-600 text-white"
-                    onClick={() => restoreDelete(pack.serviceId)}
+                    onClick={() => restoreDelete(pack.packageServiceId)}
                   >
                     Khôi phục
                   </Button>

@@ -14,17 +14,38 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { PackType, ServiceType, UserLocal } from "@/constants/types/homeType";
+import {
+  ConsultServiceType,
+  PackType,
+  ServiceType,
+  UserLocal,
+} from "@/constants/types/homeType";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
+import { v4 as uuidv4 } from "uuid";
 
 const BuyPacks = () => {
   const router = useRouter();
-  const [servicePacks, setServicePacks] = useState<ServiceType[]>([]);
-  const [selectedPack, setSelectedPack] = useState<ServiceType | undefined>();
+  const [servicePacks, setServicePacks] = useState<ConsultServiceType[]>([]);
+  const [selectedPack, setSelectedPack] = useState<
+    ConsultServiceType | undefined
+  >();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isOpenPayment,
+    onOpen: onOpenPayment,
+    onClose: onClosePayment,
+  } = useDisclosure();
+  const [orderId, setOrderId] = useState<string>();
+  const [isSelectedQR, setIsSelectedQR] = useState(0);
+
+  //data
+  const [quantity, setQuantity] = useState(1);
+  const [emailUser, setEmailUser] = useState("");
+  const itemUUID = uuidv4();
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -37,13 +58,26 @@ const BuyPacks = () => {
   const userId = user?.data.data.userId;
 
   useEffect(() => {
+    getUser();
     getAllPacks();
   }, []);
+
+  const getUser = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`,
+        {
+          headers: authHeader(),
+        }
+      );
+      setEmailUser(response.data.data.email);
+    } catch (error) {}
+  };
 
   const getAllPacks = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}service/getAllService`,
+        `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/getAllPackageRequestService`,
         {
           headers: authHeader(),
         }
@@ -53,7 +87,7 @@ const BuyPacks = () => {
   };
 
   //buy pack
-  const handleBuy = async (packageId: number, price: number) => {
+  const handleBuy = async (id: string, price: number) => {
     try {
       if (!user) {
         Swal.fire({
@@ -77,30 +111,20 @@ const BuyPacks = () => {
         // setItemId(formId);
         const updatedDataOrder = {
           userId,
-          packageId,
+          cartRequestList: [{ quantity, itemUUID: id, price, emailUser }],
         };
         axios
           .post(
-            `${process.env.NEXT_PUBLIC_BASE_API}orderService/createOrderServiceDetail`,
-            updatedDataOrder
+            `${process.env.NEXT_PUBLIC_BASE_API}orderPackageRequestService/createOrderServiceDetail`,
+            updatedDataOrder,
+            { headers: authHeader() }
           )
           .then((response) => {
-            const orderId = response.data.data;
-            Swal.fire({
-              title: "Bạn có chấp nhận thanh toán",
-              showDenyButton: true,
-              // showCancelButton: true,
-              confirmButtonText: "Có",
-              denyButtonText: `Không`,
-            }).then((result) => {
-              /* Read more about isConfirmed, isDenied below */
-              if (result.isConfirmed) {
-                payForTemplate(orderId);
-              } else if (result.isDenied) {
-                Swal.fire("Vui lòng thanh toán để sử dụng", "", "info");
-                return;
-              }
-            });
+            setOrderId(response.data.data);
+            onOpenPayment();
+          })
+          .catch((error) => {
+            toast.error("Yêu cầu mua thất bại");
           });
       }
     } catch (error) {
@@ -108,15 +132,42 @@ const BuyPacks = () => {
     }
   };
 
-  const payForTemplate = (orderId: string) => {
+  const payment = () => {
+    if (isSelectedQR === 1) {
+      payForServiceByCash(orderId);
+    } else if (isSelectedQR === 2) {
+      payForService(orderId);
+    }
+  };
+
+  const payForService = (orderId: any) => {
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}orderPackageTemplate/payOrderPackageTemplateDetail/${orderId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}orderPackageRequestService/payOrderPackageRequestServiceDetailByWallet/${orderId}`,
         {},
         { headers: authHeader() }
       )
       .then((res) => {
         toast.success(`${res.data.data}`);
+      })
+      .catch((err) => {
+        toast.error("Ví của bạn không đủ tiền vui lòng nạp tại ví");
+      });
+  };
+
+  const payForServiceByCash = (orderId: any) => {
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${orderId}`,
+        {},
+        { headers: authHeader() }
+      )
+      .then((res) => {
+        console.log(res.data);
+        window.open(res.data.checkoutUrl, "_blank");
+      })
+      .catch((err) => {
+        toast.error("Lỗi thanh toán, vui lòng kiểm tra lại!");
       });
   };
 
@@ -140,17 +191,12 @@ const BuyPacks = () => {
       <div className="grid grid-cols-3 justify-center items-center m-10 gap-5">
         {servicePacks.map((servicePack) => (
           <Card
-            key={servicePack.serviceId}
+            key={servicePack.packageServiceId}
             className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[320px] rounded-md"
           >
-            <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
-              {servicePack.serviceName}
+            <h2 className="text-[28px] font-semibold text-[#FF0004] p-5">
+              {servicePack.packageRequestServiceName}
             </h2>
-            <p className="text-xl pt-3 truncate">
-              {servicePack.serviceDescription
-                ? servicePack.serviceDescription
-                : "Ấn chi tiết để xem"}
-            </p>
             <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
               {servicePack.price.toLocaleString()} VND
             </h1>
@@ -167,7 +213,7 @@ const BuyPacks = () => {
               <Button
                 className="text-white bg-[#FF0004] my-5"
                 onClick={() =>
-                  handleBuy(servicePack.serviceId, servicePack.price)
+                  handleBuy(servicePack.packageServiceId, servicePack.price)
                 }
               >
                 Mua gói
@@ -192,10 +238,10 @@ const BuyPacks = () => {
               <ModalBody className="flex flex-row">
                 <div className="gap-10 flex flex-col justify-start items-start text-2xl">
                   <div className="flex">
-                    <h1 className="w-72">Tên của gói dịch vụ:</h1>
+                    <h1 className="w-72">Tên dịch vụ tư vấn:</h1>
                     <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {selectedPack?.serviceName
-                        ? selectedPack?.serviceName
+                      {selectedPack?.packageRequestServiceName
+                        ? selectedPack?.packageRequestServiceName
                         : "Biểu mẫu này hiện tại không có tên"}
                     </h1>
                   </div>
@@ -203,7 +249,7 @@ const BuyPacks = () => {
                   <div className="flex">
                     <h1 className="min-w-72">Chi tiết gói:</h1>
                     <h1 className="flex justify-start font-semibold text-[#FF0004] max-h-64 overflow-auto">
-                      {selectedPack?.serviceDescription}
+                      {selectedPack?.description}
                     </h1>
                   </div>
 
@@ -223,7 +269,7 @@ const BuyPacks = () => {
                   className="text-white bg-[#FF0004]"
                   onClick={() =>
                     selectedPack &&
-                    handleBuy(selectedPack.serviceId, selectedPack.price)
+                    handleBuy(selectedPack.packageServiceId, selectedPack.price)
                   }
                 >
                   Mua gói
@@ -231,6 +277,53 @@ const BuyPacks = () => {
               </ModalFooter>
             </>
           )}
+        </ModalContent>
+      </Modal>
+
+      {/* payment */}
+      <Modal
+        isOpen={isOpenPayment}
+        onClose={onClosePayment}
+        hideCloseButton
+        size="3xl"
+      >
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+            Chọn phương thức thanh toán
+          </ModalHeader>
+          <ModalBody>
+            <div className="flex gap-10">
+              <Button
+                variant="faded"
+                className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${
+                  isSelectedQR === 1 ? "border-1 border-[#FF0004]" : ""
+                }`}
+                onClick={() => setIsSelectedQR(1)}
+              >
+                <Image alt="" src="/wallet/vietqr.png" width={50} height={50} />
+                Thanh toán bằng mã QR
+              </Button>
+
+              <Button
+                variant="faded"
+                className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${
+                  isSelectedQR === 2 ? "border-1 border-[#FF0004]" : ""
+                }`}
+                onClick={() => setIsSelectedQR(2)}
+              >
+                <Image alt="" src="/wallet/wallet.png" width={50} height={50} />
+                Thanh toán bằng ví của bạn
+              </Button>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onClosePayment}>
+              Đóng
+            </Button>
+            <Button color="primary" onClick={() => payment()}>
+              thanh toán
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </div>

@@ -29,6 +29,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
+  Checkbox,
 } from "@nextui-org/react";
 import Link from "next/link";
 import axios from "axios";
@@ -64,6 +65,8 @@ const Page = () => {
     onOpen: onOpenPayment,
     onClose: onClosePayment,
   } = useDisclosure();
+  const [orderId, setOrderId] = useState<string>();
+  const [isSelectedQR, setIsSelectedQR] = useState(0);
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -141,30 +144,31 @@ const Page = () => {
               updatedDataOrder
             )
             .then((response) => {
-              const orderId = response.data.data;
-              Swal.fire({
-                title: "Vui lòng chọn phương thức thanh toán",
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: "Ví",
-                denyButtonText: `Trực tiếp bằng QR`,
-                cancelButtonText: "Đóng",
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  try {
-                    payForTemplate(orderId);
-                  } catch (error) {
-                    Swal.fire(`${error}`, "", "error");
-                  }
-                } else if (result.isDenied) {
-                  try {
-                    payForTemplateByCash(orderId);
-                  } catch (error) {
-                    Swal.fire(`${error}`, "", "error");
-                  }
-                  return;
-                }
-              });
+              setOrderId(response.data.data);
+              // Swal.fire({
+              //   title: "Vui lòng chọn phương thức thanh toán",
+              //   showDenyButton: true,
+              //   showCancelButton: true,
+              //   confirmButtonText: "Ví",
+              //   denyButtonText: `Trực tiếp bằng QR`,
+              //   cancelButtonText: "Đóng",
+              // }).then((result) => {
+              //   if (result.isConfirmed) {
+              //     try {
+              //       payForTemplate(orderId);
+              //     } catch (error) {
+              //       Swal.fire(`${error}`, "", "error");
+              //     }
+              //   } else if (result.isDenied) {
+              //     try {
+              //       payForTemplateByCash(orderId);
+              //     } catch (error) {
+              //       Swal.fire(`${error}`, "", "error");
+              //     }
+              //     return;
+              //   }
+              // });
+              onOpenPayment();
             });
         }
       }
@@ -172,8 +176,15 @@ const Page = () => {
       console.log(error);
     }
   };
+  const payment = () => {
+    if (isSelectedQR === 1) {
+      payForTemplateByCash(orderId);
+    } else if (isSelectedQR === 2) {
+      payForTemplate(orderId);
+    }
+  };
 
-  const payForTemplate = (orderId: string) => {
+  const payForTemplate = (orderId: any) => {
     axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByWallet/${orderId}`,
@@ -188,7 +199,7 @@ const Page = () => {
       });
   };
 
-  const payForTemplateByCash = (orderId: string) => {
+  const payForTemplateByCash = (orderId: any) => {
     axios
       .post(
         `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${orderId}`,
@@ -252,12 +263,15 @@ const Page = () => {
   return (
     <>
       <HeaderComponent title="BIỂU MẪU" link="BIỂU MẪU" />
-
       <div className="mx-10 my-20">
         <ToastContainer />
         <div className="flex flex-row border-b-1 mb-10 pb-3 w-full">
           <h1 className="flex text-xl font-extrabold border-l-5 border-[#FF0004] pl-5 items-center h-12">
-            Biểu mẫu
+            Biểu mẫu luật uy tín đến từ
+            <strong>
+              &nbsp;BA<span className="text-[#ff0000]">S</span>I
+              <span className="text-[#ff0000]">CO </span>
+            </strong>
           </h1>
 
           <div className="ml-auto flex flex-row justify-center items-end">
@@ -285,7 +299,7 @@ const Page = () => {
                   isClearable
                   // className="w-[660px] h-14 sm:max-w-[44%]"
                   classNames={{
-                    base: "w-[660px] sm:max-w-[44%] h-14",
+                    base: "w-[288px] h-14",
 
                     inputWrapper: "h-full ",
                   }}
@@ -424,19 +438,58 @@ const Page = () => {
             )}
           </ModalContent>
         </Modal>
-        {/* update modal */}
-        <Modal isOpen={isOpenPayment} onClose={onClosePayment} hideCloseButton>
+        {/* payment modal */}
+        <Modal
+          isOpen={isOpenPayment}
+          onClose={onClosePayment}
+          hideCloseButton
+          size="3xl"
+        >
           <ModalContent>
             <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
               Chọn phương thức thanh toán
             </ModalHeader>
-            <ModalBody></ModalBody>
+            <ModalBody>
+              <div className="flex gap-10">
+                <Button
+                  variant="faded"
+                  className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${
+                    isSelectedQR === 1 ? "border-1 border-[#FF0004]" : ""
+                  }`}
+                  onClick={() => setIsSelectedQR(1)}
+                >
+                  <Image
+                    alt=""
+                    src="/wallet/vietqr.png"
+                    width={50}
+                    height={50}
+                  />
+                  Thanh toán bằng mã QR
+                </Button>
+
+                <Button
+                  variant="faded"
+                  className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${
+                    isSelectedQR === 2 ? "border-1 border-[#FF0004]" : ""
+                  }`}
+                  onClick={() => setIsSelectedQR(2)}
+                >
+                  <Image
+                    alt=""
+                    src="/wallet/wallet.png"
+                    width={50}
+                    height={50}
+                  />
+                  Thanh toán bằng ví của bạn
+                </Button>
+              </div>
+            </ModalBody>
             <ModalFooter>
               <Button color="danger" variant="light" onPress={onClosePayment}>
                 Đóng
               </Button>
-              <Button color="primary" type="submit" form="recruitment">
-                Cập nhật
+              <Button color="primary" onClick={() => payment()}>
+                thanh toán
               </Button>
             </ModalFooter>
           </ModalContent>
