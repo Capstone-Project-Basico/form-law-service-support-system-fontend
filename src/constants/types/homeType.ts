@@ -164,6 +164,7 @@ export type TaskType = {
 
 export type TaskAssignmentType = {
   id: number;
+  taskId: number;
   taskName: string;
   email: string;
   assignDate: Date;
@@ -203,7 +204,14 @@ export type TransactionType = {
 export type OrderType = {
   orderId: string;
   email: string;
-  cart: [{ price: number; itemName: string }];
+  cart: [
+    {
+      price: number;
+      itemName: string;
+      itemUUID: string;
+      totalRequest: number;
+    }
+  ];
   // price: number;
   orderStatus: string;
   dateCreated: Date;
@@ -243,16 +251,17 @@ export type ConsultServiceType = {
   processStatus: string;
   createBy: string;
   totalRequest: number;
+  totalOfRequest: number;
   deleted: boolean;
   itemName?: string;
-  cart: [{}];
 };
 
 export interface UserLocal {
   data: {
     data: {
-      userId: string;
+      userId: number;
       roleName: string;
+      token: string;
     };
   };
 }

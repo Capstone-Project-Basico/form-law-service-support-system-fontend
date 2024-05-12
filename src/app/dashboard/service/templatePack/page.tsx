@@ -401,7 +401,7 @@ const Pack = () => {
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
-            Cập nhật gói dịch vụ
+            Cập nhật gói biểu mẫu
           </ModalHeader>
           <ModalBody>
             {/* {selectedPartner && (

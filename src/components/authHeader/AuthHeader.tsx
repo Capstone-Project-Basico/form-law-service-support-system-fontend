@@ -1,12 +1,6 @@
 "use client";
 
-interface UserLocal {
-  data: {
-    data: {
-      token: string;
-    };
-  };
-}
+import { UserLocal } from "@/constants/types/homeType";
 
 export default function authHeader() {
   const getUserFromStorage = () => {

@@ -33,6 +33,7 @@ import { faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
 import ChildTasks from "@/components/staff/ChildTasks";
 import { useParams } from "next/navigation";
 import dateConvert from "@/components/dateConvert";
+import Link from "next/link";
 
 const TaskDetail = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -198,7 +199,9 @@ const TaskDetail = () => {
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl w-[1000px]">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">Quản lí công việc</p>
+            <Link href="/dashboardStaff/task/">
+              <p className="text-black font-bold text-3xl">Quản lí công việc</p>
+            </Link>
           </BreadcrumbItem>
           <BreadcrumbItem>
             <p className="text-[#FF0004] font-bold text-3xl">
