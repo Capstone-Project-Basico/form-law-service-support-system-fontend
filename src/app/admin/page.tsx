@@ -20,10 +20,6 @@ const Page = () => {
   });
 
   useEffect(() => {
-    //   getAllUsers();
-    //   getAllTemplates();
-    // });
-
     const getAllValueOfChart = async () => {
       try {
         const response = await axios.get(
@@ -49,44 +45,26 @@ const Page = () => {
     getAllValueOfChart();
   }, []);
 
-  // const getAllUsers = () => {
-  //   axios
-  //     .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`)
-  //     .then((response) => {
-  //       setUsers(response.data.data.length);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  // const getAllTemplates = () => {
-  //   axios
-  //     .get(
-  //       `${process.env.NEXT_PUBLIC_BASE_API}formTemplate/getAllFormTemplates`
-  //     )
-  //     .then((response) => {
-  //       setTemplates(response.data.data.length);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  // Example data for a Bar Chart
   const barChartData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
     datasets: [
       {
         label: "Doanh thu nằm 2024",
-        data: [3, 2, 4.5, 3.5, 3],
-        backgroundColor: [
-          "#f59e0b", // Orange
-          "#f97316", // Light Orange
-          "#ec4899", // Pink
-          "#a855f7", // Purple
-          "#ef4444", // Red
-        ],
+        data: dashboards.totalRevenueOfMonth,
+        backgroundColor: "#33CCFF",
       },
     ],
   };
@@ -103,7 +81,7 @@ const Page = () => {
           dashboards.totalTaskNotAssign,
           dashboards.totalTaskDone,
         ],
-        backgroundColor: ["#36A2EB", "#FFCE56", "#FF9F40", "#a855f7"],
+        backgroundColor: ["#36A2EB", "#FFCE56", "#FF0000", "#00FF00"],
       },
     ],
   };
@@ -116,6 +94,14 @@ const Page = () => {
       },
     },
   };
+  const formatNumber = (num: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "decimal",
+      maximumFractionDigits: 0,
+    })
+      .format(num)
+      .replace(/,/g, ".");
+  };
 
   return (
     <div className="w-full">
@@ -123,14 +109,14 @@ const Page = () => {
         <div className="flex w-full h-[150px] justify-around items-center">
           <div className="w-1/4 h-full border border-gray-300 rounded-lg ml-2">
             <p className="text-center mt-2 font-bold text-2xl">Doanh thu</p>
-            <p className="text-center mt-2 font-semibold">
-              {dashboards.totalRevenueOfMonth}
+            <p className="text-center mt-8 text-3xl ">
+              {formatNumber(dashboards.totalRevenueOfMonth)} VNĐ
             </p>
           </div>
           <div className="w-1/4 h-full border border-gray-300 rounded-lg ml-2">
             <p className="text-center mt-2 font-bold text-2xl">Người dùng</p>
             <p className="flex justify-center items-center py-5 font-semibold ">
-              <p className="text-center mt-2 font-semibold">
+              <p className="text-center mt-2  text-3xl">
                 {dashboards.totalUser}
               </p>
             </p>
@@ -138,7 +124,7 @@ const Page = () => {
           <div className="w-1/4 h-full border border-gray-300 rounded-lg ml-2">
             <p className="text-center mt-2 font-bold text-2xl">Biểu mẫu luật</p>
             <p className="flex justify-center items-center py-5 font-semibold ">
-              <p className="text-center mt-2 font-semibold">
+              <p className="text-center mt-2 text-3xl">
                 {dashboards.totalTemplate}
               </p>
             </p>
@@ -159,6 +145,7 @@ const Page = () => {
         </div>
 
         <div className="w-2/5 h-full justify-center items-center  border border-gray-300 rounded-lg ml-8 pt-28">
+          <p className="text-center font-bold mb-8">Bảng thống kê công việc</p>
           <Chart
             key="pieChart"
             type="pie"
