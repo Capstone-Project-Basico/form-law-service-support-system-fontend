@@ -83,7 +83,12 @@ const BuyPacks = () => {
           headers: authHeader(),
         }
       );
-      setServicePacks(response.data.data);
+      setServicePacks(
+        response.data.data.filter(
+          (service: ConsultServiceType) =>
+            service.deleted === false && service.processStatus === "ĐÃ DUYỆT"
+        )
+      );
     } catch (error) {}
   };
 
@@ -136,13 +141,13 @@ const BuyPacks = () => {
 
   const payment = () => {
     if (isSelectedQR === 1) {
-      payForServiceByCash(orderId);
+      payForServiceByCash();
     } else if (isSelectedQR === 2) {
-      payForService(orderId);
+      payForService();
     }
   };
 
-  const payForService = (orderId: any) => {
+  const payForService = () => {
     axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_API}orderPackageRequestService/payOrderPackageRequestServiceDetailByWallet/${orderId}`,
@@ -157,7 +162,7 @@ const BuyPacks = () => {
       });
   };
 
-  const payForServiceByCash = (orderId: any) => {
+  const payForServiceByCash = () => {
     axios
       .post(
         `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${transactionId}`,

@@ -1,10 +1,12 @@
 "use client";
 
 import authHeader from "@/components/authHeader/AuthHeader";
+import User from "@/components/authHeader/User";
 import {
   ConsultServiceType,
   PackType,
   ServiceType,
+  UserLocal,
 } from "@/constants/types/homeType";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -29,6 +31,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import axios from "axios";
+import { headers } from "next/headers";
 import React, { FormEvent, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
@@ -38,33 +41,51 @@ const Pack = () => {
   const [tabs, setTabs] = useState(1);
   const [services, setServices] = useState<ConsultServiceType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedService, setSelectedService] =
-    useState<ConsultServiceType | null>(null);
+  const [selectedRequestService, setSelectedRequestService] =
+    useState<ConsultServiceType | null>();
 
   const {
     isOpen: isOpenUpdate,
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
-
-  //data
-  const [serviceName, setServiceName] = useState("");
-  const [servicePrice, setServicePrice] = useState<Number | undefined>();
-  const [serviceDescription, setServiceDescription] = useState("");
-
-  let newPack = {
-    serviceName,
-    servicePrice,
-    serviceDescription,
+  // const userInfo = User();
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState(0);
+  const [totalOfRequest, setTotalOfRequest] = useState(0);
+  const [createBy, setCreateBy] = useState("");
+  const [description, setDescription] = useState("");
+  let newRequestPack = {
+    name,
+    price,
+    totalOfRequest,
+    createBy,
+    description,
+  };
+  const dataUpdate = {
+    ...selectedRequestService,
+    totalOfRequest: selectedRequestService?.totalRequest,
+  };
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
   };
 
+  const user: UserLocal | null = getUserFromStorage();
+  const userId = user?.data.data.userId;
+
+  // console.log(userInfo?.email);
   useEffect(() => {
+    getUserById();
+
     switch (tabs) {
       case 1:
         fetchServices();
         break;
       case 2:
-        console.log("dang cho duyet ne");
+        fetchPendingServices();
         break;
       case 3:
         fetchDeletedService();
@@ -73,7 +94,24 @@ const Pack = () => {
         fetchServices();
         break;
     }
-  }, [tabs]);
+  }, [tabs, userId]);
+
+  // useEffect(() => {
+  //   getUserById();
+  // });
+  const getUserById = async () => {
+    if (!user) return;
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`)
+      .then((res) => {
+        console.log(res.data.data.email);
+
+        setCreateBy(res.data.data.email);
+      })
+      .catch((error) => {
+        console.log("loi roi " + error);
+      });
+  };
 
   //get all items
   const fetchServices = async () => {
@@ -82,7 +120,24 @@ const Pack = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/getAllPackageRequestService`
       );
       const filteredService = response.data.data.filter(
-        (service: ServiceType) => service.deleted === false
+        (service: ConsultServiceType) =>
+          service.deleted === false && service.processStatus === "ĐÃ DUYỆT"
+      );
+
+      setServices(filteredService);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchPendingServices = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/getAllPackageRequestService`
+      );
+      const filteredService = response.data.data.filter(
+        (service: ConsultServiceType) =>
+          service.deleted === false && service.processStatus === "CHỜ DUYỆT"
       );
 
       setServices(filteredService);
@@ -97,7 +152,7 @@ const Pack = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/getAllPackageRequestService`
       );
       const filteredService = response.data.data.filter(
-        (service: ServiceType) => service.deleted === true
+        (service: ConsultServiceType) => service.deleted === true
       );
       setServices(filteredService);
     } catch (error) {
@@ -111,8 +166,8 @@ const Pack = () => {
     try {
       axios
         .post(
-          `${process.env.NEXT_PUBLIC_BASE_API}service/createNewService`,
-          newPack,
+          `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/createPackageRequestService`,
+          newRequestPack,
           {
             headers: authHeader(),
           }
@@ -121,9 +176,38 @@ const Pack = () => {
           toast.success("Tạo mới gói tư vấn thành công");
           onClose();
           fetchServices();
+        })
+        .catch((error) => {
+          toast.error("Tạo gói thất bại");
         });
     } catch (error) {
       toast.error("Tạo mới gói thất bại!");
+      console.log(error);
+    }
+  };
+
+  //add a new service
+  const handleUpdateSubmit = async (e: FormEvent, onClose: () => void) => {
+    e.preventDefault();
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/updatePackageRequestService/${selectedRequestService?.packageServiceId}`,
+          dataUpdate,
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Cập nhật gói tư vấn thành công");
+          onClose();
+          fetchPendingServices();
+        })
+        .catch((error) => {
+          toast.error("Cập nhật gói thất bại!");
+        });
+    } catch (error) {
+      toast.error("Cập nhật gói thất bại!");
       console.log(error);
     }
   };
@@ -165,17 +249,18 @@ const Pack = () => {
       if (result.isConfirmed) {
         try {
           axios
-            .delete(
+            .patch(
               `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/deletePackageRequestService/${packageId}`,
+              {},
               { headers: authHeader() }
             )
             .then(() => {
               toast.success("Xóa thành công");
-              fetchServices();
-            }),
-            {
-              headers: authHeader(),
-            };
+              fetchPendingServices();
+            })
+            .catch((err) => {
+              toast.error("Xóa thất bại!");
+            });
         } catch (error) {
           console.log(error);
         }
@@ -190,14 +275,55 @@ const Pack = () => {
   const restoreDelete = async (id: string) => {
     try {
       axios
-        .put(
-          `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/restorePackageRequestService/${id}`
+        .patch(
+          `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/restorePackageRequestService/${id}`,
+          {},
+          { headers: authHeader() }
         )
         .then((response) => {
           toast.success("Khôi phục thành công");
           fetchDeletedService();
         });
     } catch (error) {
+      toast.error("Khôi phục thất bại!");
+      console.log(error);
+    }
+  };
+
+  // unApprove
+  const unApprove = async (id: string) => {
+    try {
+      axios
+        .patch(
+          `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/unApprovePackageRequestService/${id}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success("Bạn đã chuyển dịch vụ này sang chờ duyệt");
+          fetchServices();
+        });
+    } catch (error) {
+      toast.error("Chuyển sang chờ duyệt thất bại");
+      console.log(error);
+    }
+  };
+
+  // Approve
+  const approve = async (id: string) => {
+    try {
+      axios
+        .patch(
+          `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/approvePackageRequestService/${id}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success("Duyệt thành công");
+          fetchPendingServices();
+        });
+    } catch (error) {
+      toast.error("Duyệt thật bại, vui lòng kiểm tra lại!");
       console.log(error);
     }
   };
@@ -237,8 +363,9 @@ const Pack = () => {
                         type="text"
                         isRequired
                         label="Tên gói"
-                        value={serviceName}
-                        onChange={(e) => setServiceName(e.target.value)}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                        }}
                       />
                       <Input
                         type="number"
@@ -250,21 +377,31 @@ const Pack = () => {
                             </span>
                           </div>
                         }
-                        value={
-                          servicePrice !== undefined
-                            ? servicePrice.toString()
-                            : ""
+                        // value={newRequestPack.price.toString}
+                        onChange={(e) => setPrice(Number(e.target.value))}
+                        min="1"
+                      />
+                      <Input
+                        type="number"
+                        label="Số lần gửi yêu cầu"
+                        endContent={
+                          <div className="pointer-events-none flex items-center">
+                            <span className="text-default-400 text-small">
+                              Lần
+                            </span>
+                          </div>
                         }
+                        // value={newRequestPack.price.toString}
                         onChange={(e) =>
-                          setServicePrice(Number(e.target.value))
+                          setTotalOfRequest(Number(e.target.value))
                         }
                         min="1"
                       />
                       <Textarea
                         type="text"
                         label="Chi tiết"
-                        value={serviceDescription}
-                        onChange={(e) => setServiceDescription(e.target.value)}
+                        // value={serviceDescription}
+                        onChange={(e) => setDescription(e.target.value)}
                       />
                     </ModalBody>
                     <ModalFooter>
@@ -368,24 +505,43 @@ const Pack = () => {
                 </span>
               </TableCell>
               {pack.deleted === false ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onPress={() => {
-                      setSelectedService(pack);
-                      onOpenUpdate();
-                    }}
-                  >
-                    Cập nhật
-                  </Button>
+                pack.processStatus === "CHỜ DUYỆT" ? (
+                  <TableCell className="flex gap-2 items-center  justify-center">
+                    <Button
+                      className="bg-green-600 text-white"
+                      onClick={() => approve(pack.packageServiceId)}
+                    >
+                      Duyệt
+                    </Button>
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onPress={() => {
+                        setSelectedRequestService(pack);
+                        onOpenUpdate();
+                      }}
+                    >
+                      Cập nhật
+                    </Button>
 
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(pack.packageServiceId)}
-                  >
-                    Xóa
-                  </Button>
-                </TableCell>
+                    <Button
+                      className="bg-[#FF0004] text-white"
+                      onClick={() => handleDelete(pack.packageServiceId)}
+                    >
+                      Xóa
+                    </Button>
+                  </TableCell>
+                ) : (
+                  <TableCell className="flex gap-2 items-center  justify-center ">
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onPress={() => {
+                        unApprove(pack.packageServiceId);
+                      }}
+                    >
+                      Chuyển chờ duyệt
+                    </Button>
+                  </TableCell>
+                )
               ) : (
                 <TableCell className="flex items-center justify-center">
                   <Button
@@ -403,25 +559,83 @@ const Pack = () => {
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
-            Cập nhật gói dịch vụ
-          </ModalHeader>
-          <ModalBody></ModalBody>
-          <ModalFooter>
-            <Button color="danger" variant="light" onPress={onCloseUpdate}>
-              Đóng
-            </Button>
-            <Button
-              color="primary"
-              onPress={() => {
-                // handleUpdateSubmit();
-                onCloseUpdate();
-              }}
-              type="submit"
-            >
-              Cập nhật
-            </Button>
-          </ModalFooter>
+          <form onSubmit={(e) => handleUpdateSubmit(e, onCloseUpdate)}>
+            <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+              Cập nhật gói dịch vụ tư vấn
+            </ModalHeader>
+            <ModalBody>
+              {selectedRequestService && (
+                <>
+                  <Input
+                    type="text"
+                    label="Tên công việc"
+                    value={selectedRequestService.packageRequestServiceName}
+                    onChange={(e: any) =>
+                      setSelectedRequestService({
+                        ...selectedRequestService,
+                        packageRequestServiceName: e.target.value,
+                      })
+                    }
+                  />
+                  <Input
+                    type="number"
+                    label="Giá gói"
+                    endContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-small">
+                          Đồng
+                        </span>
+                      </div>
+                    }
+                    value={selectedRequestService.price.toString()}
+                    onChange={(e: any) =>
+                      setSelectedRequestService({
+                        ...selectedRequestService,
+                        price: e.target.value,
+                      })
+                    }
+                    min="1"
+                  />
+                  <Input
+                    type="number"
+                    label="Số lần gửi yêu cầu"
+                    endContent={
+                      <div className="pointer-events-none flex items-center">
+                        <span className="text-default-400 text-small">Lần</span>
+                      </div>
+                    }
+                    value={selectedRequestService.totalRequest.toString()}
+                    onChange={(e: any) =>
+                      setSelectedRequestService({
+                        ...selectedRequestService,
+                        totalRequest: e.target.value,
+                      })
+                    }
+                    min="1"
+                  />
+                  <Textarea
+                    type="text"
+                    label="Chi tiết"
+                    value={selectedRequestService.description}
+                    onChange={(e: any) =>
+                      setSelectedRequestService({
+                        ...selectedRequestService,
+                        description: e.target.value,
+                      })
+                    }
+                  />
+                </>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" variant="light" onPress={onCloseUpdate}>
+                Đóng
+              </Button>
+              <Button color="primary" type="submit">
+                Cập nhật
+              </Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </div>

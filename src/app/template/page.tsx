@@ -147,46 +147,24 @@ const Page = () => {
             .then((response) => {
               setOrderId(response.data.data.orderId);
               setTransactionId(response.data.data.transactionId);
-              // Swal.fire({
-              //   title: "Vui lòng chọn phương thức thanh toán",
-              //   showDenyButton: true,
-              //   showCancelButton: true,
-              //   confirmButtonText: "Ví",
-              //   denyButtonText: `Trực tiếp bằng QR`,
-              //   cancelButtonText: "Đóng",
-              // }).then((result) => {
-              //   if (result.isConfirmed) {
-              //     try {
-              //       payForTemplate(orderId);
-              //     } catch (error) {
-              //       Swal.fire(`${error}`, "", "error");
-              //     }
-              //   } else if (result.isDenied) {
-              //     try {
-              //       payForTemplateByCash(orderId);
-              //     } catch (error) {
-              //       Swal.fire(`${error}`, "", "error");
-              //     }
-              //     return;
-              //   }
-              // });
               onOpenPayment();
             });
         }
       }
     } catch (error) {
+      toast.error("Yêu cầu mua thất bại");
       console.log(error);
     }
   };
   const payment = () => {
     if (isSelectedQR === 1) {
-      payForTemplateByCash(orderId);
+      payForTemplateByCash();
     } else if (isSelectedQR === 2) {
-      payForTemplate(orderId);
+      payForTemplate();
     }
   };
 
-  const payForTemplate = (orderId: any) => {
+  const payForTemplate = () => {
     axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByWallet/${orderId}`,
@@ -201,7 +179,7 @@ const Page = () => {
       });
   };
 
-  const payForTemplateByCash = (orderId: any) => {
+  const payForTemplateByCash = () => {
     axios
       .post(
         `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${transactionId}`,
@@ -212,6 +190,9 @@ const Page = () => {
         console.log(res.data);
 
         window.open(res.data.checkoutUrl, "_blank");
+      })
+      .catch((err) => {
+        toast.error("Lỗi thanh toán, vui lòng kiểm tra lại!");
       });
   };
 

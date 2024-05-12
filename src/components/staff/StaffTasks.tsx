@@ -161,7 +161,7 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                   <Button
                     className="bg-green-600 text-white"
                     onClick={() => {
-                      router.push(`task/taskDetail/${task.id}`);
+                      router.push(`task/taskDetail/${task.taskId}`);
                     }}
                   >
                     Chi tiết

@@ -25,6 +25,9 @@ const Page = () => {
       )
       .then((response) => {
         setPosts(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
   return (

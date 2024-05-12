@@ -15,6 +15,7 @@ import {
 } from "@nextui-org/react";
 import {
   ConsultServiceType,
+  OrderType,
   PackType,
   ServiceType,
   TaskType,
@@ -31,7 +32,7 @@ interface UserLocal {
   };
 }
 const ServicePack = () => {
-  const [purchasedPacks, setPurchasedPack] = useState<ConsultServiceType[]>([]);
+  const [purchasedPacks, setPurchasedPack] = useState<OrderType[]>([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -82,15 +83,15 @@ const ServicePack = () => {
         }
       );
       console.log(response.data.data);
-
-      const allOrder = response.data.data;
-      allOrder.map((order: any) => {
-        order.cart.map((item: any) =>
-          setPurchasedPack((purchasedPacks) => [...purchasedPacks, item])
-        );
-      });
+      setPurchasedPack(response.data.data);
+      // const allOrder = response.data.data;
       // allOrder.map((order: any) => {
-      //   setPurchasedPack(order);
+      //   order.cart.map((item: any) =>
+      //     setPurchasedPack((purchasedPacks) => [...purchasedPacks, item])
+      //   );
+      // });
+      // allOrder.map((order: any) => {
+      //   setPurchasedPack((purchasedPacks) => [...purchasedPacks, order]);
       // });
     } catch (error) {}
   };
@@ -134,12 +135,6 @@ const ServicePack = () => {
         <Link href="/profile/servicePack/buyServicePack">
           <h1 className="text-[#FF0004]">Mua gói tại đây</h1>
         </Link>
-        <div className="flex items-center">
-          <p>Số lần gửi yêu cầu còn lại: 5</p>
-          <Button className="bg-[#FF0004]" onClick={onOpen}>
-            Gửi yêu cầu
-          </Button>
-        </div>
       </div>
       <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5">
         {purchasedPacks.map((servicePack, key) => (
@@ -148,15 +143,18 @@ const ServicePack = () => {
             className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md"
           >
             <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
-              {servicePack.itemName}
+              {servicePack.cart[0].itemName}
             </h2>
             <p className="text-xl pt-3">
-              Lần gửi còn lại:{servicePack.totalRequest}
+              Lần gửi còn lại:{servicePack.cart[0].totalRequest}
             </p>
 
             <Button
               className="text-white bg-[#FF0004] my-5"
-              onClick={() => onOpen()}
+              onClick={() => {
+                onOpen();
+                setPackageRequestServiceId(servicePack.cart[0].itemUUID);
+              }}
             >
               Sử dụng
             </Button>

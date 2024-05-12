@@ -19,6 +19,9 @@ const Page = () => {
       .get(`${process.env.NEXT_PUBLIC_BASE_API}partner/getAllApprovePartner`)
       .then((response) => {
         setPartners(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
