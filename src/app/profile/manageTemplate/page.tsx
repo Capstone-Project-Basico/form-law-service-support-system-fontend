@@ -1,23 +1,15 @@
-"use client";
+'use client';
 
-import { Template } from "@/constants/types/homeType";
-import paths from "@/lib/path-link";
-import { faEye, faPen, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Image,
-  Modal,
-  ModalBody,
-  ModalContent,
-  useDisclosure,
-} from "@nextui-org/react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import Loading from '@/components/loading';
+import { Template } from '@/constants/types/homeType';
+import axiosClient from '@/lib/axiosClient';
+import paths from '@/lib/path-link';
+import { faEye, faPen, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button, Card, CardBody, CardFooter, Image, Modal, ModalBody, ModalContent, useDisclosure } from '@nextui-org/react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 interface UserLocal {
   data: {
     data: {
@@ -32,9 +24,49 @@ const ManageTemplate = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const templateRef = useRef<HTMLDivElement>(null);
 
+  const getFile = async (id: number) => {
+    // fetch file
+    const res = await axiosClient.get('formTemplateVersion/download/' + id, {
+      responseType: 'blob',
+    });
+    const file = new Blob([res.data]);
+
+    const form = new FormData();
+    form.append('file', file);
+
+    const converterURL = process.env.NEXT_PUBLIC_CONVERTER_API;
+    if (!converterURL) {
+      console.error('Converter API is not defined');
+      return 'Server error';
+    }
+    const htmlRes = await axiosClient.post(converterURL, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    const html = htmlRes.data;
+    return html;
+  };
+
+  function replaceFieldWithValue(htmlContent: string) {
+    // Regex to find the pattern <<key**value>>
+    const regex = /\{\{([^*]+)\*\*([^}]+)\}\}/g;
+
+    const result = htmlContent.replace(regex, (match, fieldName, fieldType) => {
+      if (fieldName) {
+        return `<span>...</span>`;
+      }
+
+      return ` `;
+    });
+
+    return result;
+  }
+
   const getUserFromStorage = () => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
     }
   };
@@ -43,40 +75,43 @@ const ManageTemplate = () => {
   const userId = user?.data.data.userId;
 
   const getAllTemplate = async (): Promise<void> => {
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BASE_API}order/getAllCheckOutFormTemplateDetailByUser/${userId}`
-      )
-      .then((response) => {
-        const allOrder = response.data.data;
-        allOrder.map((order: any) => {
-          order.cart.map((item: any) => getTemplate(item.itemId));
-        });
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_API}order/getAllCheckOutFormTemplateDetailByUser/${userId}`).then((response) => {
+      const allOrder = response.data.data;
+      allOrder.map((order: any) => {
+        order.cart.map((item: any) => getTemplate(item.itemId));
       });
+    });
   };
 
   const getTemplate = async (id: number) => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/${id}`)
-      .then((res) => {
-        setTemplates((prevTemplates) => {
-          // Check if the template is already in the state
-          const isExisting = prevTemplates.some(
-            (template) => template.id === res.data.data.id
-          );
-          if (!isExisting) {
-            return [...prevTemplates, res.data.data];
-          } else {
-            // If the template already exists, return the previous state without adding it again
-            return prevTemplates;
-          }
-        });
+    axios.get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/${id}`).then((res) => {
+      setTemplates((prevTemplates) => {
+        // Check if the template is already in the state
+        const isExisting = prevTemplates.some((template) => template.id === res.data.data.id);
+        if (!isExisting) {
+          return [...prevTemplates, res.data.data];
+        } else {
+          // If the template already exists, return the previous state without adding it again
+          return prevTemplates;
+        }
       });
+    });
   };
 
   useEffect(() => {
     getAllTemplate();
   }, []);
+
+  useEffect(() => {
+    if (selectedTemplate === undefined) return;
+    const htmlContentRes = getFile(selectedTemplate?.id);
+    htmlContentRes.then((res) => {
+      const html = replaceFieldWithValue(res);
+      if (templateRef.current) {
+        templateRef.current.innerHTML = html;
+      }
+    });
+  }, [selectedTemplate, isOpen]);
 
   return (
     <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
@@ -86,19 +121,10 @@ const ManageTemplate = () => {
           <div key={index} className="">
             <Card shadow="sm" key={index} isPressable className="w-72 h-96">
               <CardBody className="overflow-hidden group relative">
-                <Image
-                  shadow="sm"
-                  radius="lg"
-                  width="100%"
-                  alt={template.title}
-                  className="w-full object-cover h-[250px]"
-                  src="/bieumau.jpg"
-                />
+                <Image shadow="sm" radius="lg" width="100%" alt={template.title} className="w-full object-cover h-[250px]" src="/bieumau.jpg" />
               </CardBody>
               <CardFooter className="flex flex-col items-start">
-                <p className="text-default-500">
-                  {template.price.toLocaleString()} Đ
-                </p>
+                <p className="text-default-500">{template.price.toLocaleString()} Đ</p>
                 <b className="truncate">{template.message}</b>
                 <div className="flex justify-end items-start w-full gap-2 mt-3">
                   <Button
@@ -136,41 +162,24 @@ const ManageTemplate = () => {
             onChange={(page) => setPage(page)}
           /> */}
         </div>
-        <Modal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          size="full"
-          className="w-[1100px] h-[800px]"
-        >
+        <Modal hideCloseButton isOpen={isOpen} onOpenChange={onOpenChange} size="full" className="w-[1100px] h-[800px]">
           <ModalContent>
             {(onClose) => (
               <>
-                <ModalBody className="flex flex-row">
-                  <div className="w-[800px] overflow-auto">
-                    <div
-                      className="content-center min-h-full p-10 border-1 border-black"
-                      ref={templateRef}
-                    ></div>
+                <ModalBody className="flex flex-row gap-6 overflow-y-scroll p-6">
+                  <div className="w-[800px]">
+                    <div className="content-center min-h-full p-10 border-1 border-black" ref={templateRef}></div>
                   </div>
                   <div className="w-[300px] gap-10 flex flex-col justify-start items-center">
                     <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {selectedTemplate?.message
-                        ? selectedTemplate?.message
-                        : "Biểu mẫu này hiện tại không có tên"}
+                      {selectedTemplate?.message ? selectedTemplate?.message : 'Biểu mẫu này hiện tại không có tên'}
                     </h1>
                     <div className="flex flex-col gap-3">
-                      <Button
-                        className="w-80 bg-[#FF0004] text-white"
-                        onPress={onClose}
-                      >
+                      <Button className="w-80 bg-[#FF0004] text-white" onPress={onClose}>
                         <FontAwesomeIcon icon={faPen} className="size-4 ml-1" />
                         Dùng mẫu này
                       </Button>
-                      <Button
-                        className="w-full"
-                        onPress={onClose}
-                        variant="faded"
-                      >
+                      <Button className="w-full" onPress={onClose} variant="faded">
                         Đóng lại
                       </Button>
                     </div>
