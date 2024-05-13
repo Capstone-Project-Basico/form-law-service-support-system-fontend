@@ -4,6 +4,11 @@ export const status = [
 ];
 
 export const statusTransaction = [
-  { name: "Thành công", uid: "SUCCESS" },
-  { name: "Đang chờ", uid: "PENDING" },
+  { name: "Thành công", uid: "THÀNH CÔNG" },
+  { name: "Đang chờ", uid: "CHỜ THANH TOÁN" },
+];
+
+export const statusOrder = [
+  { name: "Thành công", uid: "ĐÃ THANH TOÁN" },
+  { name: "Chờ thanh toán", uid: "CHỜ THANH TOÁN" },
 ];
