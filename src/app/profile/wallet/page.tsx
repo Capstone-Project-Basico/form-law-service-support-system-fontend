@@ -88,7 +88,7 @@ const Wallet = () => {
   };
 
   return (
-    <div className="w-[1350px]  bg-white px-10 pt-5 rounded-2xl">
+    <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
       <h2 className="text-xl font-semibold">Nạp tiền vào tài khoản</h2>
       <p className="text-[14px]">
         Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới

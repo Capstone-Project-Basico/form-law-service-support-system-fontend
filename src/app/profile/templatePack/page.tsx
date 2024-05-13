@@ -43,16 +43,16 @@ const ServicePack = () => {
     } catch (error) {}
   };
   return (
-    <div className="w-[1350px] bg-white rounded-2xl">
+    <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
       <div className="flex flex-col justify-center items-center">
-        <h2 className="text-2xl font-semibold">
-          Chọn gói nâng cấp dịch vụ
+        <h2 className="text-3xl font-bold text-gray-900 mb-5">
+          Gói dịch vụ biểu mẫu
           <strong>
             &nbsp;BA<span className="text-[#ff0000]">S</span>I
             <span className="text-[#ff0000]">CO&nbsp;</span>
           </strong>
         </h2>
-        <p className="text-xl">
+        <p className="text-xl text-center text-gray-700 mb-10 mx-auto max-w-[1000px] whitespace-normal">
           Để có thể sử dụng một số chức năng đặc biệt, hoặc sử dụng các văn bản
           và hợp đồng tại Basico các bạn phải đăng ký gói dịch vụ, dưới đây là
           các gói dịch vụ với các đặc quyền theo từng gói

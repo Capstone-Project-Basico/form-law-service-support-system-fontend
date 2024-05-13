@@ -79,7 +79,7 @@ const ManageTemplate = () => {
   }, []);
 
   return (
-    <div className="w-[1350px] bg-white rounded-2xl">
+    <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
       <h1 className="text-xl font-bold p-3">Biểu mẫu bạn đang sở hữu</h1>
       <div className="grid grid-cols-4">
         {templates.map((template, index) => (
