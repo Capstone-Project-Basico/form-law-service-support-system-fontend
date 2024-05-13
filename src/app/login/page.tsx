@@ -72,7 +72,6 @@ const Page = () => {
   return (
     <div className="flex flex-col justify-center items-center pt-32 pb-[160px] bg-custom-bg bg-cover ">
       <ToastContainer />
-
       <div className="bg-white p-20 rounded-2xl">
         <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
           <div className="text-2xl">Làm việc với các luật sư xuất sắc</div>

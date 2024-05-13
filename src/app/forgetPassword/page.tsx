@@ -14,7 +14,7 @@ const Page = () => {
       .then((response) => {
         console.log(response);
         toast.success(
-          "Lấy lại mật khẩu thành công, vui lòng kiểm tra mail của bạn."
+          "Lấy lại mật khẩu thành công, vui lòng kiểm tra email của bạn."
         );
       })
       .catch((error) => {
@@ -25,8 +25,8 @@ const Page = () => {
   return (
     <div>
       <ToastContainer />
-      <div className="flex flex-col justify-center items-center pt-32 pb-[142px] bg-custom-bg bg-cover ">
-        <div className="bg-white p-20">
+      <div className="flex flex-col justify-center items-center p-[190px] bg-custom-bg bg-cover ">
+        <div className="bg-white p-20 rounded-2xl">
           <div className="flex flex-col justify-center items-center mt-51">
             <div className="font-bold text-[17px] border-l-5 border-[#FF0004] pl-5 mb-5">
               <div className="text-3xl">QUÊN MẬT KHẨU</div>
@@ -39,6 +39,7 @@ const Page = () => {
               <form>
                 <div className="flex flex-wrap md:flex-nowrap gap-4 mb-10 w-[662px]">
                   <Input
+                    isClearable
                     type="email"
                     label="Email"
                     placeholder="Nhập email"
