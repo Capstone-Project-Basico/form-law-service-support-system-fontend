@@ -161,6 +161,7 @@ export type TaskType = {
   processStatus: string;
   status: number;
   deleted: boolean;
+  supportTo: string;
 };
 
 export type TaskAssignmentType = {
@@ -234,6 +235,7 @@ export type PackType = {
 };
 
 export type ServiceType = {
+  processStatus: string;
   serviceId: number;
   serviceName: string;
   serviceDescription: string;

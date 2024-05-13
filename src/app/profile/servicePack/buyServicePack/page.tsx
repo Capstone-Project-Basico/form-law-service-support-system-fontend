@@ -205,15 +205,17 @@ const BuyPacks = () => {
             key={servicePack.packageServiceId}
             className="flex flex-col justify-center items-center bg-white shadow-2xl rounded-lg overflow-hidden border border-gray-300 w-[400px] transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl"
           >
-            <h2 className="text-2xl text-center font-bold text-gray-900 py-4 px-5">
-              {servicePack.packageRequestServiceName}
+            <h2 className="text-[28px] font-semibold text-[#FF0004] p-5">
+              {servicePack.packageRequestServiceName.slice(0, 18)}
+
             </h2>
             <h1 className="text-2xl bg-gradient-to-r from-black via-gray-800 to-red-600 text-white w-full flex items-center justify-center py-4">
               {servicePack.price.toLocaleString()} VND
             </h1>
             <CardFooter className="flex justify-evenly items-center w-full px-4 py-3 bg-black">
               <Button
-                className="text-white bg-red-600 rounded-full px-6 py-2 hover:bg-red-800 shadow-md transition-colors duration-300 ease-in-out"
+                className="text-white bg-green-600 my-5"
+
                 onClick={() => {
                   setSelectedPack(servicePack);
                   onOpen();

@@ -44,7 +44,7 @@ const TaskDetail = () => {
   } = useDisclosure();
   const [tabs, setTabs] = useState(1);
   const params = useParams<{ id: string }>();
-  const [taskAssignment, setTaskAssignment] = useState<TaskAssignmentType>();
+  const [mainTask, setMainTask] = useState<TaskType>();
   //data
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -77,7 +77,7 @@ const TaskDetail = () => {
   const userId = user?.data.data.userId;
 
   useEffect(() => {
-    fetchAssignTask();
+    fetchTask();
     switch (tabs) {
       case 1:
         fetchDetailTasks();
@@ -91,15 +91,15 @@ const TaskDetail = () => {
     }
   }, [tabs]);
 
-  const fetchAssignTask = async () => {
+  const fetchTask = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/getTaskAssignmentById/${params.id}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}task-api/getTaskById/${params.id}`,
         {
           headers: authHeader(),
         }
       );
-      setTaskAssignment(response.data.data);
+      setMainTask(response.data.data);
     } catch (error) {
       console.error(error);
     }
@@ -342,8 +342,8 @@ const TaskDetail = () => {
                   <div className="flex">
                     <h1 className="min-w-72">Tên nhiệm vụ:</h1>
                     <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {taskAssignment?.taskName
-                        ? taskAssignment?.taskName
+                      {mainTask?.taskName
+                        ? mainTask?.taskName
                         : "Nhiệm vụ này hiện không có tên"}
                     </h1>
                   </div>
@@ -351,16 +351,16 @@ const TaskDetail = () => {
                   <div className="flex">
                     <h1 className="min-w-72">Chi tiết nhiệm vụ:</h1>
                     <h1 className="flex justify-start font-semibold text-[#FF0004] max-h-64 overflow-auto">
-                      {taskAssignment?.taskDescription}
+                      {mainTask?.description}
                     </h1>
                   </div>
 
-                  <div className="flex">
+                  {/* <div className="flex">
                     <h1 className="min-w-72">Ngày đáo hạn:</h1>
                     <h1 className="flex justify-start font-semibold text-[#FF0004]">
                       {taskAssignment?.dueDate.substring(0, 10)}
                     </h1>
-                  </div>
+                  </div> */}
                 </div>
               </ModalBody>
               <ModalFooter>

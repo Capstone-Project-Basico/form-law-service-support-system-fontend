@@ -1,6 +1,7 @@
 "use client";
 
 import authHeader from "@/components/authHeader/AuthHeader";
+import useUser from "@/components/authHeader/User";
 import { PackType, ServiceType } from "@/constants/types/homeType";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -43,17 +44,24 @@ const Service = () => {
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
-
+  const userInfo = useUser();
   //data
   const [serviceName, setServiceName] = useState("");
   const [servicePrice, setServicePrice] = useState<Number | undefined>();
   const [serviceDescription, setServiceDescription] = useState("");
+  const [createBy, setCreateBy] = useState("");
 
   let newPack = {
     serviceName,
     servicePrice,
     serviceDescription,
+    createBy,
   };
+  useEffect(() => {
+    if (userInfo && userInfo.email) {
+      setCreateBy(userInfo.email);
+    }
+  }, [userInfo]);
 
   useEffect(() => {
     switch (tabs) {
@@ -61,7 +69,7 @@ const Service = () => {
         fetchServices();
         break;
       case 2:
-        console.log("dang cho duyet ne");
+        fetchPendingServices();
         break;
       case 3:
         fetchDeletedService();
@@ -79,7 +87,24 @@ const Service = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}service/getAllService`
       );
       const filteredService = response.data.data.filter(
-        (service: ServiceType) => service.deleted === false
+        (service: ServiceType) =>
+          service.deleted === false && service.processStatus === "ĐÃ DUYỆT"
+      );
+
+      setServices(filteredService);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchPendingServices = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}service/getAllService`
+      );
+      const filteredService = response.data.data.filter(
+        (service: ServiceType) =>
+          service.deleted === false && service.processStatus === "CHỜ DUYỆT"
       );
 
       setServices(filteredService);
@@ -163,7 +188,7 @@ const Service = () => {
             )
             .then(() => {
               toast.success("Xóa thành công");
-              fetchServices();
+              fetchPendingServices();
             }),
             {
               headers: authHeader(),
@@ -182,12 +207,52 @@ const Service = () => {
   const restoreDelete = async (id: number) => {
     try {
       axios
-        .put(`${process.env.NEXT_PUBLIC_BASE_API}service/restoreDelete/${id}`)
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}service/restoreDelete/${id}`,
+          {},
+          { headers: authHeader() }
+        )
         .then((response) => {
           toast.success("Khôi phục thành công");
           fetchDeletedService();
         });
     } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const approve = async (id: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}service/approveService/${id}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success("Duyệt thành công");
+          fetchPendingServices();
+        });
+    } catch (error) {
+      toast.error("Duyệt thất bại!");
+      console.log(error);
+    }
+  };
+
+  const unApprove = async (id: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}service/unApproveService/${id}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success("Chuyển sang chờ duyệt thành công");
+          fetchServices();
+        });
+    } catch (error) {
+      toast.error("Chuyển sang chờ duyệt thất bại!");
       console.log(error);
     }
   };
@@ -358,24 +423,41 @@ const Service = () => {
                 </span>
               </TableCell>
               {pack.deleted === false ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onPress={() => {
-                      setSelectedService(pack);
-                      onOpenUpdate();
-                    }}
-                  >
-                    Cập nhật
-                  </Button>
+                pack.processStatus === "CHỜ DUYỆT" ? (
+                  <TableCell className="flex gap-2 items-center  justify-center ">
+                    <Button
+                      className="bg-green-600 text-white"
+                      onClick={() => approve(pack.serviceId)}
+                    >
+                      Duyệt
+                    </Button>
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onPress={() => {
+                        setSelectedService(pack);
+                        onOpenUpdate();
+                      }}
+                    >
+                      Cập nhật
+                    </Button>
 
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(pack.serviceId)}
-                  >
-                    Xóa
-                  </Button>
-                </TableCell>
+                    <Button
+                      className="bg-[#FF0004] text-white"
+                      onClick={() => handleDelete(pack.serviceId)}
+                    >
+                      Xóa
+                    </Button>
+                  </TableCell>
+                ) : (
+                  <TableCell className="flex gap-2 items-center  justify-center ">
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onClick={() => unApprove(pack.serviceId)}
+                    >
+                      Chuyển sang chờ duyệt
+                    </Button>
+                  </TableCell>
+                )
               ) : (
                 <TableCell className="flex items-center justify-center">
                   <Button

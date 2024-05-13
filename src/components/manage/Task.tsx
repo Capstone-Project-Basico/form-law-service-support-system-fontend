@@ -202,7 +202,7 @@ const Tasks: React.FC<TasksProps> = ({
             <TableRow key={index}>
               <TableCell className="font-bold">{task.taskName}</TableCell>
               <TableCell>{task.description}</TableCell>
-              <TableCell>{task.email}</TableCell>
+              <TableCell>{task.supportTo}</TableCell>
               <TableCell>
                 {
                   task.startDate
