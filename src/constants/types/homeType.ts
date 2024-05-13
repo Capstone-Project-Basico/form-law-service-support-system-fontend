@@ -1,4 +1,4 @@
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 export type Template = {
   title?: string;
@@ -9,6 +9,7 @@ export type Template = {
   message: string;
   formTypeName: string;
   formTypeId: number;
+  status?: string;
 };
 
 export type FormType = {

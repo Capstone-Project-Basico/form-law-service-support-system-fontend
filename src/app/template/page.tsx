@@ -122,10 +122,10 @@ const Page = () => {
 
   const getTemplate = async () => {
     axios.get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion`).then((response) => {
-      const listForm: FormTemplateVersion[] = response.data.data;
+      const listForm: Template[] = response.data.data;
       // only status ACTIVE
       const listFormActive = listForm.filter((form) => form.status === 'ACTIVE');
-      setTemplates(response.data.data);
+      setTemplates(listFormActive);
     });
   };
 
