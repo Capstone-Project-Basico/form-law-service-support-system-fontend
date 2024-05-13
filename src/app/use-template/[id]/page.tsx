@@ -145,33 +145,33 @@ const Page = (props: Props) => {
     }
   };
 
-  const renderField2 = (fields: [any]): React.ReactElement<any, any> => {
-    let processedFields: any[] = [];
-    let skipIds = new Set();
-    fields.forEach((field: any, index: number) => {
-      if (skipIds.has(field.id)) return;
+  // const renderField2 = (fields: [any]): React.ReactElement<any, any> => {
+  //   let processedFields: any[] = [];
+  //   let skipIds = new Set();
+  //   fields.forEach((field: any, index: number) => {
+  //     if (skipIds.has(field.id)) return;
 
-      if (field.fieldType === 'day' && fields[index + 1]?.fieldType === 'month' && fields[index + 2]?.fieldType === 'year') {
-        processedFields.push({
-          fieldName: field.fieldName,
-          fieldType: 'date',
-          key: [field.fieldName, fields[index + 1].fieldName, fields[index + 2].fieldName],
-        });
-        skipIds.add(fields[index + 1].id);
-        skipIds.add(fields[index + 2].id);
-      }
-      fields.forEach((field: any) => {
-        if (!skipIds.has(field.id)) {
-          processedFields.push(field);
-        }
-      });
-    });
-    const result = processedFields.map((field: any) => {
-      if (skipIds.has(field.id)) return;
-      return <Input value={formData[field.fieldName]} />;
-    });
-    return <></>;
-  };
+  //     if (field.fieldType === 'day' && fields[index + 1]?.fieldType === 'month' && fields[index + 2]?.fieldType === 'year') {
+  //       processedFields.push({
+  //         fieldName: field.fieldName,
+  //         fieldType: 'date',
+  //         key: [field.fieldName, fields[index + 1].fieldName, fields[index + 2].fieldName],
+  //       });
+  //       skipIds.add(fields[index + 1].id);
+  //       skipIds.add(fields[index + 2].id);
+  //     }
+  //     fields.forEach((field: any) => {
+  //       if (!skipIds.has(field.id)) {
+  //         processedFields.push(field);
+  //       }
+  //     });
+  //   });
+  //   const result = processedFields.map((field: any) => {
+  //     if (skipIds.has(field.id)) return;
+  //     return <Input value={formData[field.fieldName]} />;
+  //   });
+  //   return <></>;
+  // };
 
   const setDefaultFormData = (fields: any) => {
     // const draft = JSON.parse(localStorage.getItem('draft') || '{}');

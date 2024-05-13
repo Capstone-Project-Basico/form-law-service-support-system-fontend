@@ -183,9 +183,10 @@ const Page = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
+    if (!isUpdate.data?.formTemplateVersion?.id) return;
     try {
       setIsLoading(true);
-      const res = await axiosClient.patch(`formTemplateVersion/${isUpdate.data?.formTemplateVersion.id}`, data);
+      const res = await axiosClient.patch(`formTemplateVersion/${isUpdate.data.formTemplateVersion.id}`, data);
       if (res.data?.status === false) return;
       getData();
       setIsLoading(false);
@@ -201,10 +202,10 @@ const Page = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    console.log(data);
+    if (!isStatusUpdate.data?.formTemplateVersion?.id) return;
     try {
       setIsLoading(true);
-      const res = await axiosClient.put(`formTemplateVersion/status/${isStatusUpdate.data?.formTemplateVersion.id}?status=${data.status}`);
+      const res = await axiosClient.put(`formTemplateVersion/status/${isStatusUpdate.data.formTemplateVersion.id}?status=${data.status}`);
       if (res.data?.status === false) return;
       getData();
       setIsLoading(false);
@@ -261,77 +262,88 @@ const Page = () => {
   ];
 
   const renderCell = useCallback((item: FormTemplate, columnKey: Key) => {
-    switch (columnKey) {
-      case 'id':
-        return <div className="w-full text-center">{item.formTemplateId}</div>;
-      case 'name':
-        return <div className="w-full text-left">{item.title}</div>;
-      case 'download':
-        return (
-          <a href={process.env.NEXT_PUBLIC_BASE_API + 'formTemplateVersion/download/' + item.formTemplateVersion.id}>
-            <ArrowDownTrayIcon className="mx-auto w-4 h-4" />
-          </a>
-        );
-      case 'status':
-        const cellValue = cellValueMap[item.formTemplateVersion.status];
-        return (
-          <Chip className="capitalize" color={statusColorMap[item.formTemplateVersion.status]} size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-      case 'action':
-        const menuItems = [
-          {
-            title: 'Edit',
-            onClick: () => setIsUpdate({ isOpen: true, data: item }),
+    if (!item.formTemplateVersion || !item.formTemplateVersion?.id) return null;
+
+    const { formTemplateVersion } = item;
+
+    const renderId = () => <div className="w-full text-center">{item.formTemplateId}</div>;
+    const renderName = () => <div className="w-full text-left">{item.title}</div>;
+    const renderDownload = () => (
+      <a href={`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/download/${formTemplateVersion.id}`}>
+        <ArrowDownTrayIcon className="mx-auto w-4 h-4" />
+      </a>
+    );
+    const renderStatus = () => (
+      <Chip className="capitalize" color={statusColorMap[formTemplateVersion.status]} size="sm" variant="flat">
+        {cellValueMap[formTemplateVersion.status]}
+      </Chip>
+    );
+    const renderPrice = () => (
+      <div className="text-right">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(formTemplateVersion.price)}</div>
+    );
+
+    const renderAction = () => {
+      const menuItems = [
+        {
+          title: 'Chỉnh sửa',
+          onClick: () => setIsUpdate({ isOpen: true, data: item }),
+        },
+        {
+          title: 'Chuẩn hóa',
+          onClick: () => formTemplateVersion && autoStandardizationTemplate(formTemplateVersion.id, 'text'),
+          notDisplayStatus: ['ACTIVE', 'STANDARDIZED', 'DELETED'],
+        },
+        {
+          title: 'Chỉnh sửa file',
+          onClick: () => setIsEdit({ isOpen: true, id: formTemplateVersion?.id }),
+          notDisplayStatus: ['ACTIVE', 'STANDARDIZED', 'DELETED'],
+        },
+        {
+          title: 'Cập nhật trạng thái',
+          onClick: () => setIsStatusUpdate({ isOpen: true, data: item }),
+        },
+        {
+          title: 'Xóa',
+          onClick: () => {
+            handleDelete(formTemplateVersion.id);
           },
-          // {
-          //   title: 'Delete',
-          //   onClick: () => {
-          //     handleDelete(item.formTemplateVersion.id);
-          //   },
-          //   color: 'danger',
-          // },
-        ];
+          color: 'danger',
+          notDisplayStatus: ['DELETED'],
+        },
+      ];
 
-        if (item.formTemplateVersion.status !== 'ACTIVE') {
-          menuItems.unshift(
-            {
-              title: 'Chuẩn hóa',
-              onClick: () => autoStandardizationTemplate(item.formTemplateVersion.id, 'text'),
-            },
-            {
-              title: 'Edit file',
-              onClick: () => setIsEdit({ isOpen: true, id: item.formTemplateVersion.id }),
-            }
-          );
-        }
+      const filteredMenuItems = menuItems.filter((menu) => menu.notDisplayStatus?.includes(formTemplateVersion?.status ?? '') !== true);
 
-        return (
-          <div className="relative flex justify-end mx-6 items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <EllipsisVerticalIcon className="" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                {menuItems.map((item, index) => (
-                  <DropdownItem className={item.color && 'bg-red-500'} key={index} onClick={item.onClick}>
-                    {item.title}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      case 'price':
-        return (
-          <div className="text-right">
-            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.formTemplateVersion.price)}
-          </div>
-        );
-    }
+      return (
+        <div className="relative flex justify-end mx-6 items-center gap-2">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button isIconOnly size="sm" variant="light">
+                <EllipsisVerticalIcon className="" />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu>
+              {filteredMenuItems.map((menu, index) => (
+                <DropdownItem className={menu.color && 'bg-red-500'} key={index} onClick={menu.onClick}>
+                  {menu.title}
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      );
+    };
+
+    const renderFunctions: { [key: string]: () => JSX.Element } = {
+      id: renderId,
+      name: renderName,
+      download: renderDownload,
+      status: renderStatus,
+      action: renderAction,
+      price: renderPrice,
+    };
+
+    return renderFunctions[String(columnKey)]?.();
   }, []);
 
   //pagination
