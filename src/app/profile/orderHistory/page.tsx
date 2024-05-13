@@ -73,7 +73,7 @@ const Page = () => {
   }, [page, filteredOrders]);
 
   return (
-    <div className="w-[1350px] bg-white rounded-2xl">
+    <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
       <h1 className="font-bold p-3 text-3xl">Lịch sử mua hàng của bạn</h1>
       <div className="m-10">
         <div className="flex flex-row mb-10">
