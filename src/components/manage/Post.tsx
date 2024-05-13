@@ -169,6 +169,15 @@ const Posts: React.FC<PostsProps> = ({
                         Chập nhận
                       </Button>
                       <Button
+                        className="bg-blue-600 text-white"
+                        onPress={() => {
+                          setSelectedPost(post);
+                          onOpenUpdate();
+                        }}
+                      >
+                        Cập nhật
+                      </Button>
+                      <Button
                         className="bg-[#FF0004] text-white"
                         onClick={() => handleDelete(post.postId)}
                       >
@@ -188,18 +197,9 @@ const Posts: React.FC<PostsProps> = ({
                     <>
                       <Button
                         className="bg-blue-600 text-white"
-                        onPress={() => {
-                          setSelectedPost(post);
-                          onOpenUpdate();
-                        }}
+                        // onClick={() => handleDelete(post.postId)}
                       >
-                        Cập nhật
-                      </Button>
-                      <Button
-                        className="bg-[#FF0004] text-white"
-                        onClick={() => handleDelete(post.postId)}
-                      >
-                        Xóa
+                        Chuyển sang chờ duyệt (Chua co api)
                       </Button>
                       <Button
                         className="bg-green-600 text-white"

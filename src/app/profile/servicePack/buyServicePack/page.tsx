@@ -202,14 +202,14 @@ const BuyPacks = () => {
             className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[320px] rounded-md"
           >
             <h2 className="text-[28px] font-semibold text-[#FF0004] p-5">
-              {servicePack.packageRequestServiceName}
+              {servicePack.packageRequestServiceName.slice(0, 18)}
             </h2>
             <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
               {servicePack.price.toLocaleString()} VND
             </h1>
             <CardFooter className="flex justify-end items-end gap-3">
               <Button
-                className="text-white bg-[#FF0004] my-5"
+                className="text-white bg-green-600 my-5"
                 onClick={() => {
                   setSelectedPack(servicePack);
                   onOpen();

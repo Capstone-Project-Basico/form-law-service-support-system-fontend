@@ -83,7 +83,7 @@ const ServicePack = () => {
         }
       );
       console.log(response.data.data);
-      setPurchasedPack(response.data.data);
+      setPurchasedPack(response.data.data || []);
       // const allOrder = response.data.data;
       // allOrder.map((order: any) => {
       //   order.cart.map((item: any) =>
@@ -137,29 +137,34 @@ const ServicePack = () => {
         </Link>
       </div>
       <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5">
-        {purchasedPacks.map((servicePack, key) => (
-          <div
-            key={key}
-            className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md"
-          >
-            <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
-              {servicePack.cart[0].itemName}
-            </h2>
-            <p className="text-xl pt-3">
-              Lần gửi còn lại:{servicePack.cart[0].totalRequest}
-            </p>
+        {purchasedPacks &&
+          purchasedPacks.map(
+            (servicePack, key) =>
+              servicePack.cart &&
+              servicePack.cart.length > 0 && (
+                <div
+                  key={key}
+                  className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[387px] rounded-md"
+                >
+                  <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
+                    {servicePack.cart[0]?.itemName}
+                  </h2>
+                  <p className="text-xl pt-3">
+                    Lần gửi còn lại:{servicePack.cart[0]?.totalRequest}
+                  </p>
 
-            <Button
-              className="text-white bg-[#FF0004] my-5"
-              onClick={() => {
-                onOpen();
-                setPackageRequestServiceId(servicePack.cart[0].itemUUID);
-              }}
-            >
-              Sử dụng
-            </Button>
-          </div>
-        ))}
+                  <Button
+                    className="text-white bg-[#FF0004] my-5"
+                    onClick={() => {
+                      onOpen();
+                      setPackageRequestServiceId(servicePack.cart[0].itemUUID);
+                    }}
+                  >
+                    Sử dụng
+                  </Button>
+                </div>
+              )
+          )}
       </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
         <ModalContent>

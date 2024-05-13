@@ -242,15 +242,6 @@ const Partners: React.FC<PartnersProps> = ({
                         Chập nhận
                       </Button>
                       <Button
-                        className="bg-[#FF0004] text-white"
-                        onClick={() => handleDelete(partner.partnerId)}
-                      >
-                        Từ chối và xóa
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
                         className="bg-blue-600 text-white"
                         onPress={() => {
                           setSelectedPartner(partner);
@@ -263,7 +254,16 @@ const Partners: React.FC<PartnersProps> = ({
                         className="bg-[#FF0004] text-white"
                         onClick={() => handleDelete(partner.partnerId)}
                       >
-                        Xóa
+                        Từ chối và xóa
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        className="bg-[#FF0004] text-white"
+                        // onClick={() => handleDelete(partner.partnerId)}
+                      >
+                        Chuyển về chờ duyệt (chua co api)
                       </Button>
                     </>
                   )}
