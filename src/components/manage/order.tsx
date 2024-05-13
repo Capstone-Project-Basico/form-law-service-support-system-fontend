@@ -19,7 +19,7 @@ import {
 } from "@nextui-org/react";
 
 import { OrderType } from "@/constants/types/homeType";
-import { statusTransaction } from "@/lib/status";
+import { statusOrder, statusTransaction } from "@/lib/status";
 
 type OrderProps = {
   orders: OrderType[];
@@ -146,7 +146,7 @@ const Order: React.FC<OrderProps> = ({ orders, tabs }) => {
                 selectionMode="multiple"
                 onSelectionChange={setStatusFilter}
               >
-                {statusTransaction.map((status) => (
+                {statusOrder.map((status) => (
                   <DropdownItem key={status.uid} className="capitalize">
                     {status.name}
                   </DropdownItem>
