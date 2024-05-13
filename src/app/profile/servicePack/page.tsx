@@ -120,20 +120,28 @@ const ServicePack = () => {
       });
   };
   return (
-    <div className="w-[1350px] bg-white rounded-2xl">
+    <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
       <ToastContainer />
       <div className="flex flex-col justify-center items-center">
-        <h2 className="text-2xl font-semibold">
-          Chọn gói nâng cấp dịch vụ
+        <h2 className="text-3xl font-bold text-gray-900 mb-5">
+          Gói dịch vụ tư vấn
           <strong>
             &nbsp;BA<span className="text-[#ff0000]">S</span>I
             <span className="text-[#ff0000]">CO&nbsp;</span>
           </strong>
         </h2>
+        <p className="text-xl text-center text-gray-700 mb-10 mx-auto max-w-[1000px] whitespace-normal">
+          Cảm ơn bạn đã lựa chọn Basico! Giờ đây, bạn đã có thể tận hưởng các
+          dịch vụ đặc biệt và sự hỗ trợ chuyên nghiệp từ chúng tôi. Nếu cần giải
+          đáp thắc mắc, hãy liên hệ ngay. Chúc bạn có những trải nghiệm tuyệt
+          vời!
+        </p>
       </div>
       <div className="flex justify-between">
         <Link href="/profile/servicePack/buyServicePack">
-          <h1 className="text-[#FF0004]">Mua gói tại đây</h1>
+          <h1 className="text-white bg-red-500 hover:bg-red-700 font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out">
+            Mua gói tại đây
+          </h1>
         </Link>
       </div>
       <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5">

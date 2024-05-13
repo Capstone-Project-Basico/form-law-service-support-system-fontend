@@ -25,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <ProfileProtect>
       <div className="bg-custom-bg bg-cover">
-        <div className="flex flex-row justify-center gap-10 pt-20 pb-[147px]">
+        <div className="flex flex-row justify-center gap-10 pt-20 pb-[93px]">
           <ProfileSidebar />
           {children}
         </div>

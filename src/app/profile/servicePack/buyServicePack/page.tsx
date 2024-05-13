@@ -179,37 +179,43 @@ const BuyPacks = () => {
   };
 
   return (
-    <div className="w-[1350px] bg-white rounded-2xl">
+    <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
       <ToastContainer />
       <div className="flex flex-col justify-center items-center">
-        <h2 className="text-2xl font-semibold">
-          Chọn gói nâng cấp dịch vụ
+        <h2 className="text-3xl font-bold text-gray-900 mb-5">
+          Chọn gói dịch vụ tư vấn
           <strong>
             &nbsp;BA<span className="text-[#ff0000]">S</span>I
             <span className="text-[#ff0000]">CO&nbsp;</span>
           </strong>
         </h2>
-        <p className="text-xl">
-          Để có thể sử dụng một số chức năng đặc biệt, hoặc sử dụng các văn bản
-          và hợp đồng tại Basico các bạn phải đăng ký gói dịch vụ, dưới đây là
-          các gói dịch vụ với các đặc quyền theo từng gói
+        <p className="text-xl text-center text-gray-700 mb-10 mx-auto max-w-[1000px] whitespace-normal">
+          Basico tự hào giới thiệu Gói Dịch Vụ Tư Vấn, được thiết kế để hỗ trợ
+          và giải quyết những thách thức mà bạn gặp phải. Với dịch vụ này, chúng
+          tôi cung cấp lời khuyên chuyên nghiệp và giải pháp cá nhân hoá, giúp
+          bạn xử lý vấn đề một cách hiệu quả. Đăng ký ngay hôm nay để trải
+          nghiệm sự hỗ trợ tận tâm từ Basico và khám phá các gói dịch vụ đặc
+          biệt của chúng tôi.
         </p>
       </div>
-      <div className="grid grid-cols-3 justify-center items-center m-10 gap-5">
+
+      <div className="grid grid-cols-3 justify-center items-center m-10 gap-5 ">
         {servicePacks.map((servicePack) => (
           <Card
             key={servicePack.packageServiceId}
-            className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[320px] rounded-md"
+            className="flex flex-col justify-center items-center bg-white shadow-2xl rounded-lg overflow-hidden border border-gray-300 w-[400px] transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl"
           >
             <h2 className="text-[28px] font-semibold text-[#FF0004] p-5">
               {servicePack.packageRequestServiceName.slice(0, 18)}
+
             </h2>
-            <h1 className="flex text-[28px] bg-[#FF0004] text-white w-full items-center justify-center h-14">
+            <h1 className="text-2xl bg-gradient-to-r from-black via-gray-800 to-red-600 text-white w-full flex items-center justify-center py-4">
               {servicePack.price.toLocaleString()} VND
             </h1>
-            <CardFooter className="flex justify-end items-end gap-3">
+            <CardFooter className="flex justify-evenly items-center w-full px-4 py-3 bg-black">
               <Button
                 className="text-white bg-green-600 my-5"
+
                 onClick={() => {
                   setSelectedPack(servicePack);
                   onOpen();
@@ -218,7 +224,7 @@ const BuyPacks = () => {
                 Chi tiết
               </Button>
               <Button
-                className="text-white bg-[#FF0004] my-5"
+                className="text-white bg-red-600 rounded-full px-6 py-2 hover:bg-red-800 shadow-md transition-colors duration-300 ease-in-out"
                 onClick={() =>
                   handleBuy(servicePack.packageServiceId, servicePack.price)
                 }
@@ -262,7 +268,7 @@ const BuyPacks = () => {
 
                   <div className="flex">
                     <h1 className="w-72">Giá gói:</h1>
-                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                    <h1 className="bg-red-500 text-white text-lg font-medium px-6 py-3 rounded-lg cursor-pointer hover:bg-red-600">
                       {selectedPack?.price.toLocaleString()} VND
                     </h1>
                   </div>

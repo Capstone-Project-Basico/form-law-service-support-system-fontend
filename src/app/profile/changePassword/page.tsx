@@ -107,7 +107,7 @@ const ChangePassword = () => {
   return (
     <div>
       <ToastContainer />
-      <div className="w-[1350px] h-full bg-white rounded-2xl">
+      <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
         <div className="ml-10 w-[1150px] pt-10">
           <h2 className="text-xl font-bold mb-7">
             Thay đổi mật khẩu đăng nhập

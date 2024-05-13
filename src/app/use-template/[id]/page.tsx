@@ -99,6 +99,7 @@ const Page = (props: Props) => {
 
   const handleSubmit = async () => {
     if (formName.value === '') {
+      console.log('error');
       setFormName({ ...formName, error: 'Tên biểu mẫu không được trống' });
       return;
     }
@@ -145,33 +146,33 @@ const Page = (props: Props) => {
     }
   };
 
-  const renderField2 = (fields: [any]): React.ReactElement<any, any> => {
-    let processedFields: any[] = [];
-    let skipIds = new Set();
-    fields.forEach((field: any, index: number) => {
-      if (skipIds.has(field.id)) return;
+  // const renderField2 = (fields: [any]): React.ReactElement<any, any> => {
+  //   let processedFields: any[] = [];
+  //   let skipIds = new Set();
+  //   fields.forEach((field: any, index: number) => {
+  //     if (skipIds.has(field.id)) return;
 
-      if (field.fieldType === 'day' && fields[index + 1]?.fieldType === 'month' && fields[index + 2]?.fieldType === 'year') {
-        processedFields.push({
-          fieldName: field.fieldName,
-          fieldType: 'date',
-          key: [field.fieldName, fields[index + 1].fieldName, fields[index + 2].fieldName],
-        });
-        skipIds.add(fields[index + 1].id);
-        skipIds.add(fields[index + 2].id);
-      }
-      fields.forEach((field: any) => {
-        if (!skipIds.has(field.id)) {
-          processedFields.push(field);
-        }
-      });
-    });
-    const result = processedFields.map((field: any) => {
-      if (skipIds.has(field.id)) return;
-      return <Input value={formData[field.fieldName]} />;
-    });
-    return <></>;
-  };
+  //     if (field.fieldType === 'day' && fields[index + 1]?.fieldType === 'month' && fields[index + 2]?.fieldType === 'year') {
+  //       processedFields.push({
+  //         fieldName: field.fieldName,
+  //         fieldType: 'date',
+  //         key: [field.fieldName, fields[index + 1].fieldName, fields[index + 2].fieldName],
+  //       });
+  //       skipIds.add(fields[index + 1].id);
+  //       skipIds.add(fields[index + 2].id);
+  //     }
+  //     fields.forEach((field: any) => {
+  //       if (!skipIds.has(field.id)) {
+  //         processedFields.push(field);
+  //       }
+  //     });
+  //   });
+  //   const result = processedFields.map((field: any) => {
+  //     if (skipIds.has(field.id)) return;
+  //     return <Input value={formData[field.fieldName]} />;
+  //   });
+  //   return <></>;
+  // };
 
   const setDefaultFormData = (fields: any) => {
     // const draft = JSON.parse(localStorage.getItem('draft') || '{}');
@@ -248,7 +249,7 @@ const Page = (props: Props) => {
 
   return (
     <div className="p-5 md:mx-20">
-      <h1 className="text-2xl font-semibold text-left text-black">Use Template</h1>
+      <h1 className="text-2xl font-semibold text-left text-black">Sữ dụng biểu mẫu</h1>
       <div className="grid grid-cols-12">
         <div className="col-span-3 flex flex-wrap gap-2 mx-12 my-2 mt-32 p-4 border-2 overflow-y-scroll h-[50rem]">
           <h3 className="text-xl font-semibold my-1">Nhập thông tin</h3>
@@ -282,8 +283,9 @@ const Page = (props: Props) => {
                           name="formName"
                           variant="bordered"
                           value={formName.value}
-                          onChange={(e: { target: { value: any } }) => setFormName({ value: e.target.value })}
-                          errorMessage={formName.error}
+                          onChange={(e: { target: { value: any } }) => setFormName({ value: e.target.value, error: '' })}
+                          isInvalid={formName.error !== ''}
+                          errorMessage={'123'}
                         />
                       </div>
                     </div>
