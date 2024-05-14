@@ -52,19 +52,19 @@ export const profileSidebar: ProfileSidebarItem[] = [
     ),
   },
   {
-    title: "Gói dịch vụ tư vấn",
+    title: "Gói dịch vụ",
     path: "/profile/servicePack",
     icon: (
       <FontAwesomeIcon icon={faHeadset} className="w-7 h-7 text-[#FF0004]" />
     ),
   },
-  {
-    title: "Gói biểu mẫu",
-    path: "/profile/templatePack",
-    icon: (
-      <FontAwesomeIcon icon={faFolderOpen} className="w-7 h-7 text-[#FF0004]" />
-    ),
-  },
+  // {
+  //   title: "Gói biểu mẫu",
+  //   path: "/profile/templatePack",
+  //   icon: (
+  //     <FontAwesomeIcon icon={faFolderOpen} className="w-7 h-7 text-[#FF0004]" />
+  //   ),
+  // },
   {
     title: "Lịch sử giao dịch",
     path: "/profile/transactionHistory",

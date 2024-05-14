@@ -25,7 +25,7 @@ import {
   Autocomplete,
   AutocompleteItem,
 } from "@nextui-org/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { TaskType, UserType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
@@ -58,6 +58,7 @@ const Tasks: React.FC<TasksProps> = ({
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [staffId, setStaffId] = useState<number | undefined>();
   const [visible, setVisible] = useState(false);
+  const router = useRouter();
 
   const {
     isOpen: isOpenUpdate,
@@ -176,23 +177,14 @@ const Tasks: React.FC<TasksProps> = ({
             Mô tả
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
-            Nhân viên được giao
-          </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
             Ngày bắt đầu
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày kết thúc
           </TableColumn>
-          {/* <TableColumn className=" bg-[#FF0004] text-white">
-            Người đảm nhiệm
-          </TableColumn> */}
           <TableColumn className=" bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
-          {/* <TableColumn className=" bg-[#FF0004] text-white">
-            Trạng thái
-          </TableColumn> */}
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -202,7 +194,6 @@ const Tasks: React.FC<TasksProps> = ({
             <TableRow key={index}>
               <TableCell className="font-bold">{task.taskName}</TableCell>
               <TableCell>{task.description}</TableCell>
-              <TableCell>{task.supportTo}</TableCell>
               <TableCell>
                 {
                   task.startDate
@@ -218,16 +209,23 @@ const Tasks: React.FC<TasksProps> = ({
                 }
               </TableCell>
               <TableCell>{task.processStatus}</TableCell>
-              {/* <TableCell>
-                <span style={{ color: task.status ? "red" : "green" }}>
-                  {task.status ? "Không sử dụng" : "Đang hoạt động"}
-                </span>
-              </TableCell> */}
 
-              {task.deleted === false ? (
+              {task.deleted === false ? ( task.processStatus === "ĐÃ HOÀN THÀNH" ? 
+              (
+              <TableCell className="flex gap-2 items-center justify-center">
+                <Button
+                    className="bg-blue-600 text-white"
+                    onClick={() => {
+                      router.push(`task/taskDetail/${task.id}`);
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
+              </TableCell>
+              ) : (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-blue-600 text-white"
+                    className="bg-orange-600 text-white"
                     onPress={() => {
                       handleTaskSelect(task);
                       onOpenUpdate();
@@ -245,7 +243,14 @@ const Tasks: React.FC<TasksProps> = ({
                   >
                     Giao việc
                   </Button>
-
+                  <Button
+                    className="bg-blue-600 text-white"
+                    onClick={() => {
+                      router.push(`task/taskDetail/${task.id}`);
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(task.id)}
@@ -253,6 +258,7 @@ const Tasks: React.FC<TasksProps> = ({
                     Xóa
                   </Button>
                 </TableCell>
+              )
               ) : (
                 <TableCell className="flex gap-2 items-center justify-center">
                   <Button

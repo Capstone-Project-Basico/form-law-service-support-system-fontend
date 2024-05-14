@@ -46,6 +46,7 @@ const TaskDetail = () => {
   const [tabs, setTabs] = useState(1);
   const params = useParams<{ id: string }>();
   const [mainTask, setMainTask] = useState<TaskType>();
+  const [assignmentTask, setAssignmentTask] = useState<TaskAssignmentType[]>([]);
   //data
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -79,6 +80,7 @@ const TaskDetail = () => {
 
   useEffect(() => {
     fetchTask();
+    fetchAssignmentTask();
     switch (tabs) {
       case 1:
         fetchDetailTasks();
@@ -106,6 +108,23 @@ const TaskDetail = () => {
     }
   };
 
+  //filter task assignments
+
+  const fetchAssignmentTask = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/getAllTaskAssignment`,
+        {
+          headers: authHeader(),
+        }
+      );
+      setAssignmentTask(response.data.data.filter((task: TaskAssignmentType) => task.taskId === Number(params.id)));
+      console.log(assignmentTask);
+      
+    } catch (error) {
+      console.error(error);
+    }
+  };
   //get all items
   const fetchDetailTasks = async () => {
     try {
@@ -175,32 +194,12 @@ const TaskDetail = () => {
     });
   };
 
-  //add a new child task
-  const handleSubmit = async (e: FormEvent, onClose: () => void) => {
-    e.preventDefault();
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}taskParent/createNewTaskParent`,
-        newChildTask,
-        { headers: authHeader() }
-      )
-      .then((response) => {
-        toast.success("tạo mới thành công");
-        onClose();
-        fetchDetailTasks();
-      })
-      .catch((error) => {
-        toast.error("Tạo mới thất bại");
-        console.log(error);
-      });
-  };
-
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl w-[1000px]">
           <BreadcrumbItem>
-            <Link href="/dashboardStaff/task/">
+            <Link href="/dashboard/task/">
               <p className="text-black font-bold text-3xl">Quản lí công việc</p>
             </Link>
           </BreadcrumbItem>
@@ -219,14 +218,14 @@ const TaskDetail = () => {
             <FontAwesomeIcon icon={faEye} />
             Xem nhiệm vụ chính
           </Button>
-          <Button
+          {/* <Button
             className="flex justify-end w-[100px] bg-[#FF0004] text-white"
             radius="full"
             onPress={onOpen}
           >
             <FontAwesomeIcon icon={faPlus} />
             Tạo mới
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -260,70 +259,6 @@ const TaskDetail = () => {
       <div>
         <ChildTasks tasks={task ? task : []} completeTask={completeTask} />
       </div>
-
-      {/* create new */}
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <form onSubmit={(e) => handleSubmit(e, onClose)}>
-                <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
-                  Thêm nhiệm vụ
-                </ModalHeader>
-                <ModalBody>
-                  <Input
-                    isRequired
-                    className="font-bold"
-                    type="text"
-                    label="Tên nhiệm vụ"
-                    value={taskName}
-                    onChange={(e) => setTaskName(e.target.value)}
-                  />
-                  <Textarea
-                    type="text"
-                    label="Chi tiết"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                  <Input
-                    isRequired
-                    type="date"
-                    label="Ngày bắt đầu"
-                    value={startDate ? startDate.substring(0, 10) : ""}
-                    onChange={(e) => {
-                      const dateValue = e.target.value
-                        ? dateConvert(new Date(e.target.value))
-                        : null;
-                      setStartDate(dateValue);
-                    }}
-                    className="form-input"
-                  />
-                  <Input
-                    type="date"
-                    label="Ngày kết thúc"
-                    value={endDate ? endDate.substring(0, 10) : ""}
-                    onChange={(e) => {
-                      const dateValue = e.target.value
-                        ? dateConvert(new Date(e.target.value))
-                        : null;
-                      setEndDate(dateValue);
-                    }}
-                    className="form-input"
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Đóng
-                  </Button>
-                  <Button color="primary" type="submit">
-                    Thêm
-                  </Button>
-                </ModalFooter>
-              </form>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
 
       {/* view detail  */}
       <Modal
@@ -362,6 +297,13 @@ const TaskDetail = () => {
                       {mainTask?.supportTo}
                     </h1>
                   </div>
+                  <div className="flex">
+                    <h1 className="min-w-72">Người chịu trách nhiệm:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      {assignmentTask && assignmentTask[0]?.email}
+                    </h1>
+                  </div>
+                  
                 </div>
               </ModalBody>
               <ModalFooter>

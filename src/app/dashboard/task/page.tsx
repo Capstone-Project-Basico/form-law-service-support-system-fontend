@@ -73,6 +73,9 @@ const Task = () => {
         fetchTask();
         break;
       case 2:
+        fetchDoneTask();
+          break;
+      case 3:
         fetchDeletedTask();
         break;
       default:
@@ -91,7 +94,21 @@ const Task = () => {
           headers: authHeader(),
         }
       );
-      setTask(response.data.data);
+      setTask(response.data.data.filter((task: TaskType) => task.processStatus !== "ĐÃ HOÀN THÀNH"));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchDoneTask = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}task-api/getAllTask`,
+        {
+          headers: authHeader(),
+        }
+      );
+      setTask(response.data.data.filter((task: TaskType) => task.processStatus === "ĐÃ HOÀN THÀNH"));
     } catch (error) {
       console.error(error);
     }
@@ -351,7 +368,7 @@ const Task = () => {
       </div>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
-        <div>
+
           <Button
             className={`bg-white ${
               tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
@@ -361,20 +378,28 @@ const Task = () => {
           >
             TẤT CẢ
           </Button>
-        </div>
 
-        <div>
           <Button
             className={`bg-white ${
-              tabs === 2 &&
+              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+            }`}
+            onClick={() => setTabs(2)}
+            radius="none"
+          >
+            ĐÃ HOÀN THÀNH
+          </Button>
+
+          <Button
+            className={`bg-white ${
+              tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
             radius="none"
-            onClick={() => setTabs(2)}
+            onClick={() => setTabs(3)}
           >
             KHÔNG SỬ DỤNG
           </Button>
-        </div>
+   
       </div>
 
       <div>

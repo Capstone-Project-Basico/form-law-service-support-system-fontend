@@ -90,8 +90,12 @@ const ProfileSidebar = () => {
 
   useEffect(() => {
     getDataUser();
-    getWallet();
   }, [avatar]);
+
+  useEffect(() => {
+    getWallet();
+  },[]);
+
 
   const uploadFile = (e: any) => {
     setUploading(true);
