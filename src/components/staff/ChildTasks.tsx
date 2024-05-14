@@ -112,19 +112,23 @@ const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
             Tên công việc
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
+            Chi tiết
+          </TableColumn>
+          <TableColumn className=" bg-[#FF0004] text-white">
             Ngày bắt đầu
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày kết thúc
           </TableColumn>
-          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
+          {/* <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
-          </TableColumn>
+          </TableColumn> */}
         </TableHeader>
         <TableBody>
           {items.map((task, index) => (
             <TableRow key={index}>
               <TableCell>{task.taskName}</TableCell>
+              <TableCell>{task.description}</TableCell>
               <TableCell>
                 {
                   task.startDate
@@ -141,7 +145,7 @@ const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                 }
               </TableCell>
 
-              {task.processStatus === "CHƯA PHÂN CÔNG" ? (
+              {/* {task.processStatus === "CHƯA PHÂN CÔNG" ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
                     className="bg-green-600 text-white"
@@ -164,7 +168,7 @@ const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                     Đã hoàn thành
                   </Button>
                 </TableCell>
-              )}
+              )} */}
             </TableRow>
           ))}
         </TableBody>
