@@ -104,7 +104,8 @@ const Navbar = () => {
 
   const getWallet = () => {
     setWalletError(null);
-    axios
+    try {
+      axios
       .get(
         `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
       )
@@ -117,6 +118,11 @@ const Navbar = () => {
           "Failed to fetch wallet details. Please try again later."
         );
       });
+    } catch (error) {
+      console.log(error);
+      
+    }
+
   };
 
   return (
@@ -433,7 +439,7 @@ const Navbar = () => {
                     Gói dịch vụ
                   </Link>
                 </DropdownItem>
-                <DropdownItem
+                {/* <DropdownItem
                   key="templatePack"
                   textValue="Gói biểu mẫu"
                   className="bg-[#F2F2F2]"
@@ -451,7 +457,7 @@ const Navbar = () => {
                 </DropdownItem>
                 <DropdownItem key="hr2" textValue=" ">
                   <hr />
-                </DropdownItem>
+                </DropdownItem> */}
                 <DropdownItem
                   key="transactionHistory"
                   textValue="Lịch sử giao dịch"

@@ -110,9 +110,9 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày bắt đầu
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">
+          {/* <TableColumn className=" bg-[#FF0004] text-white">
             Ngày đáo hạn
-          </TableColumn>
+          </TableColumn> */}
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày được giao
           </TableColumn>
@@ -134,13 +134,13 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                     : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
                 }
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 {
                   task.dueDate
                     ? new Date(task.dueDate).toLocaleDateString()
                     : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
                 }
-              </TableCell>
+              </TableCell> */}
               <TableCell>
                 {
                   task.assignDate

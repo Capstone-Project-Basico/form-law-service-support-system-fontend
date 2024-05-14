@@ -24,7 +24,8 @@ const Wallet = () => {
 
   const getWallet = () => {
     setWalletError(null);
-    axios
+    try {
+      axios
       .get(
         `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
       )
@@ -35,6 +36,11 @@ const Wallet = () => {
       .catch((error) => {
         setWalletError(false);
       });
+    } catch (error) {
+      console.log(error);
+      
+    }
+
   };
 
   useEffect(() => {
