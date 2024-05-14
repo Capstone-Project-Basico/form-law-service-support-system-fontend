@@ -343,7 +343,7 @@ const Page = (props: Props) => {
                             </div>
                             {/* <Input className="m-2 w-40" variant="bordered" label="Tên biểu mẫu" type="text" name="formName" /> */}
                         </div>
-                        <div className="m-8 mx-auto w-[825px] border p-8 ">
+                        <div className="m-8 mx-auto w-[900px] border p-8 ">
                             <div className="h-[50rem] overflow-y-scroll">
                                 <div
                                     className="min-h-[35rem] content-center p-10 "
