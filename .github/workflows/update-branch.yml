@@ -3,6 +3,9 @@ name: update-all-branches
 on:
   schedule:
     - cron: '0 18 * * *'
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -20,10 +23,10 @@ jobs:
           # Set up Git configuration
           git config user.name "Automatic Branch Updater"
           git config user.email "github-actions@github.com"
-          
+
           # Fetch all branches
           git fetch --all
-          
+
           # Get a list of branches, excluding 'main' and any others you don't want to update
           for branch in $(git branch -r | grep -v 'origin/main' | grep -v '<other-exclusions>' | sed 's/origin\///'); do
             echo "Attempting to update branch $branch"
@@ -42,4 +45,3 @@ jobs:
             # Push the updated branch, if merge was successful
             git push origin $branch
           done
-
