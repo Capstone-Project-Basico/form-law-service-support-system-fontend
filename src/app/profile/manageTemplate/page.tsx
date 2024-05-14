@@ -118,7 +118,7 @@ const ManageTemplate = () => {
       <h1 className="text-xl font-bold p-3">Biểu mẫu bạn đang sở hữu</h1>
       <div className="grid grid-cols-4">
         {templates.map((template, index) => (
-          <div key={index} className="">
+          <div key={index} className="p-8">
             <Card shadow="sm" key={index} isPressable className="w-72 h-96">
               <CardBody className="overflow-hidden group relative">
                 <Image shadow="sm" radius="lg" width="100%" alt={template.title} className="w-full object-cover h-[250px]" src="/bieumau.jpg" />
