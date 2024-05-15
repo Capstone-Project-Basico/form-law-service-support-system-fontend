@@ -225,7 +225,7 @@ const Tasks: React.FC<TasksProps> = ({
               ) : (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className="bg-orange-600 text-white"
+                    className="bg-blue-600 text-white"
                     onPress={() => {
                       handleTaskSelect(task);
                       onOpenUpdate();
@@ -235,7 +235,7 @@ const Tasks: React.FC<TasksProps> = ({
                   </Button>
 
                   <Button
-                    className="bg-green-600 text-white"
+                    className="bg-yellow-600 text-white"
                     onClick={() => {
                       setSelectedTask(task);
                       onOpenTaskAssign();
@@ -244,7 +244,7 @@ const Tasks: React.FC<TasksProps> = ({
                     Giao việc
                   </Button>
                   <Button
-                    className="bg-blue-600 text-white"
+                    className="bg-green-600 text-white"
                     onClick={() => {
                       router.push(`task/taskDetail/${task.id}`);
                     }}
