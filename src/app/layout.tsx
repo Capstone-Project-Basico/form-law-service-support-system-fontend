@@ -5,6 +5,7 @@ import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
+import 'primeicons/primeicons.css';
 // import "primeflex/primeflex.css";
 
 const inter = Inter({ subsets: ["latin"] });
