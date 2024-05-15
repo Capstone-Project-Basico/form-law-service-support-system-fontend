@@ -259,7 +259,7 @@ const Page = () => {
 
     if (selectTypeId) {
       filteredTemplates = filteredTemplates.filter(
-        (temp) => temp.formTypeId === selectTypeId
+        (temp) => temp.latestVersion?.formTypeId === selectTypeId
       );
     }
 

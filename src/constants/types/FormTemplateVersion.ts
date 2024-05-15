@@ -24,4 +24,5 @@ type FormTemplateVersion = {
   versionNumber: string;
   formTemplateId: number;
   status: string;
+  formTypeId: number;
 };
