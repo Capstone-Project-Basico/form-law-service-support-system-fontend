@@ -31,7 +31,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
-import ChildTasks from "@/components/staff/ChildTasks";
+import ChildTasks from "@/components/manage/ChildTasks";
 import { useParams } from "next/navigation";
 import dateConvert from "@/components/dateConvert";
 import Link from "next/link";
@@ -209,26 +209,45 @@ const TaskDetail = () => {
             </p>
           </BreadcrumbItem>
         </Breadcrumbs>
-        <div className="flex justify-end gap-3">
-          <Button
-            className="flex justify-end w-[180px] bg-[#FF0004] text-white"
-            radius="full"
-            onPress={onOpenDetail}
-          >
-            <FontAwesomeIcon icon={faEye} />
-            Xem nhiệm vụ chính
-          </Button>
-          {/* <Button
-            className="flex justify-end w-[100px] bg-[#FF0004] text-white"
-            radius="full"
-            onPress={onOpen}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-            Tạo mới
-          </Button> */}
-        </div>
       </div>
+      <Accordion defaultExpandedKeys={["2"]}>
+      <AccordionItem
+        key="2"
+        title={<div className="font-bold bg-gray-300 rounded-md h-full w-96">Nhiệm vụ chính</div>}
+      >
+           <div className="gap-10 flex flex-col justify-start items-start text-2xl">
+                  <div className="flex">
+                    <h1 className="min-w-72">Tên nhiệm vụ:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      {mainTask?.taskName
+                        ? mainTask?.taskName
+                        : "Nhiệm vụ này hiện không có tên"}
+                    </h1>
+                  </div>
 
+                  <div className="flex">
+                    <h1 className="min-w-72">Chi tiết nhiệm vụ:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004] max-h-64 overflow-auto">
+                      {mainTask?.description}
+                    </h1>
+                  </div>
+
+                  <div className="flex">
+                    <h1 className="min-w-72">Người cần hỗ trợ:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      {mainTask?.supportTo}
+                    </h1>
+                  </div>
+                  <div className="flex">
+                    <h1 className="min-w-72">Người chịu trách nhiệm:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      {assignmentTask && assignmentTask[0]?.email}
+                    </h1>
+                  </div>
+                  
+                </div>
+      </AccordionItem>
+      </Accordion>
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
@@ -260,61 +279,6 @@ const TaskDetail = () => {
         <ChildTasks tasks={task ? task : []} completeTask={completeTask} />
       </div>
 
-      {/* view detail  */}
-      <Modal
-        isOpen={isOpenDetail}
-        onClose={onCloseDetail}
-        hideCloseButton
-        size="5xl"
-      >
-        <ModalContent>
-          {(onCloseDetail) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
-                Chi tiết nhiệm vụ chính
-              </ModalHeader>
-              <ModalBody>
-                <div className="gap-10 flex flex-col justify-start items-start text-2xl">
-                  <div className="flex">
-                    <h1 className="min-w-72">Tên nhiệm vụ:</h1>
-                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {mainTask?.taskName
-                        ? mainTask?.taskName
-                        : "Nhiệm vụ này hiện không có tên"}
-                    </h1>
-                  </div>
-
-                  <div className="flex">
-                    <h1 className="min-w-72">Chi tiết nhiệm vụ:</h1>
-                    <h1 className="flex justify-start font-semibold text-[#FF0004] max-h-64 overflow-auto">
-                      {mainTask?.description}
-                    </h1>
-                  </div>
-
-                  <div className="flex">
-                    <h1 className="min-w-72">Người cần hỗ trợ:</h1>
-                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {mainTask?.supportTo}
-                    </h1>
-                  </div>
-                  <div className="flex">
-                    <h1 className="min-w-72">Người chịu trách nhiệm:</h1>
-                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {assignmentTask && assignmentTask[0]?.email}
-                    </h1>
-                  </div>
-                  
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onCloseDetail}>
-                  Đóng
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
     </div>
   );
 };
