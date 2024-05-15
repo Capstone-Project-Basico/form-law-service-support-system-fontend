@@ -328,7 +328,7 @@ const Page = () => {
       </Chip>
     )
     const renderPrice = () => (
-      <div className="mx-auto w-24 text-right">
+      <div className="mx-auto w-20 text-right">
         {new Intl.NumberFormat('vi-VN', {
           style: 'currency',
           currency: 'VND',
@@ -346,7 +346,10 @@ const Page = () => {
           title: 'Chuẩn hóa',
           onClick: () =>
             formTemplateVersion &&
-            autoStandardizationTemplate(formTemplateVersion.id, 'text'),
+            autoStandardizationTemplate(
+              formTemplateVersion.id,
+              'Update_' + item.title
+            ),
           notDisplayStatus: ['ACTIVE', 'STANDARDIZED', 'DELETED'],
         },
         {
@@ -357,14 +360,6 @@ const Page = () => {
               id: formTemplateVersion?.id,
             }),
           notDisplayStatus: ['ACTIVE', 'STANDARDIZED', 'DELETED'],
-        },
-        {
-          title: 'Xóa',
-          onClick: () => {
-            handleDelete(formTemplateVersion.id)
-          },
-          color: 'danger',
-          notDisplayStatus: ['DELETED'],
         },
       ]
 
@@ -384,11 +379,7 @@ const Page = () => {
             </DropdownTrigger>
             <DropdownMenu>
               {filteredMenuItems.map((menu, index) => (
-                <DropdownItem
-                  className={menu.color && 'bg-red-500'}
-                  key={index}
-                  onClick={menu.onClick}
-                >
+                <DropdownItem key={index} onClick={menu.onClick}>
                   {menu.title}
                 </DropdownItem>
               ))}
