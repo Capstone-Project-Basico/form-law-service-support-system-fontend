@@ -1,59 +1,59 @@
-'use client'
-import FileUpload from '@/components/file-upload'
-import Loading from '@/components/loading'
-import { FormTemplate } from '@/constants/types/FormTemplate'
-import { SideNavItem } from '@/constants/types/homeType'
-import axiosClient from '@/lib/axiosClient'
-import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/breadcrumbs'
-import { Button, Input, Textarea } from '@nextui-org/react'
-import { Select, SelectItem } from '@nextui-org/select'
-import { usePathname, useRouter } from 'next/navigation'
-import * as React from 'react'
+'use client';
+import FileUpload from '@/components/file-upload';
+import Loading from '@/components/loading';
+import { FormTemplate } from '@/constants/types/FormTemplate';
+import { SideNavItem } from '@/constants/types/homeType';
+import axiosClient from '@/lib/axiosClient';
+import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/breadcrumbs';
+import { Button, Input, Textarea } from '@nextui-org/react';
+import { Select, SelectItem } from '@nextui-org/select';
+import { usePathname, useRouter } from 'next/navigation';
+import * as React from 'react';
 
 export interface IAddTemplatePageProps {}
 
 export default function AddTemplatePage(props: IAddTemplatePageProps) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const [file, setFile] = React.useState<File | null>(null)
-  const [titleInputError, setTitleInputError] = React.useState<string>('')
-  const [formTypes, setFormTypes] = React.useState<FormType[]>([])
-  const [isLoading, setIsLoading] = React.useState<boolean>(true)
+  const router = useRouter();
+  const pathname = usePathname();
+  const [file, setFile] = React.useState<File | null>(null);
+  const [titleInputError, setTitleInputError] = React.useState<string>('');
+  const [formTypes, setFormTypes] = React.useState<FormType[]>([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     async function fetchformTypes() {
-      setIsLoading(true)
+      setIsLoading(true);
       const res = await axiosClient
         .get('/formType/getAllFormTypes')
-        .catch((err) => console.log(err))
+        .catch((err) => console.log(err));
       if (res && res.status === 200) {
-        setIsLoading(false)
-        setFormTypes(res.data)
+        setIsLoading(false);
+        setFormTypes(res.data);
       }
     }
-    fetchformTypes()
-  }, [])
+    fetchformTypes();
+  }, []);
 
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
   const range = (start: number, stop: number, step: number) =>
     Array.from(
       { length: (stop - start) / step + 1 },
       (_, i) => start + i * step
-    )
-  const listYears = range(currentYear, 1980, -1)
+    );
+  const listYears = range(currentYear, 1980, -1);
 
   function getPathnameOrder(pathname: string) {
-    const parts = pathname.split('/').filter(Boolean) // filter out empty strings from the array
+    const parts = pathname.split('/').filter(Boolean); // filter out empty strings from the array
 
-    const paths = []
-    let currentPath = ''
+    const paths = [];
+    let currentPath = '';
 
     for (let part of parts) {
-      currentPath += '/' + part
-      paths.push(currentPath)
+      currentPath += '/' + part;
+      paths.push(currentPath);
     }
 
-    return paths
+    return paths;
   }
 
   function findSidebarItemByPath(
@@ -62,109 +62,105 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
   ): SideNavItem | undefined {
     for (let item of items) {
       if (item.path === path) {
-        return item
+        return item;
       }
 
       if (item.subMenu && item.subMenuItems) {
         // Add a check for item.subMenuItems
-        const subItem = findSidebarItemByPath(path, item.subMenuItems)
+        const subItem = findSidebarItemByPath(path, item.subMenuItems);
         if (subItem) {
-          return subItem
+          return subItem;
         }
       }
     }
 
-    return undefined
+    return undefined;
   }
 
   //handle form submit
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+    e.preventDefault();
 
-    const formData = new FormData(e.currentTarget)
-    const formValues: { [key: string]: string } = {}
+    const formData = new FormData(e.currentTarget);
+    const formValues: { [key: string]: string } = {};
 
     formData.forEach((value, key) => {
-      formValues[key] = value.toString()
-    })
+      formValues[key] = value.toString();
+    });
 
     // Use the formValues object to access the form data
     const formTemplate: FormTemplate = {
       formTypeId: parseInt(formValues.formTypeId),
       title: formValues.title,
       description: formValues.description,
-    }
-    const formTemplateId = await postFormTemplate(formTemplate)
+    };
+    const formTemplateId = await postFormTemplate(formTemplate);
 
     const formTemplateVersion: FormTemplateVersionReq = {
       message: formValues.description,
       price: parseInt(formValues.price),
       file: file as File,
       formTemplateId,
-    }
-    const res = await postFormTemplateVersion(formTemplateVersion)
+    };
+    const res = await postFormTemplateVersion(formTemplateVersion);
     if (res) {
-      if (res.data.status === 'UNSTANDARDIZED') {
-        console.log('unstandardized')
-        router.push('/dashboard/service/manageTemplate')
-      }
-      if (res.data.status === 'STANDARDIZED') {
-        console.log('standardized')
-        router.push('/dashboard/service/manageTemplate')
-      }
+      router.push('/dashboard/service/manageTemplate');
     }
   }
 
   async function handleOnTitleInputFocusChanged(
     e: React.FocusEvent<Element, Element>
   ) {
-    const value = (e.target as HTMLInputElement).value
+    const value = (e.target as HTMLInputElement).value;
 
     const res = await axiosClient.get(
       `/formTemplate/getFormTemplateByTitle?title=${value}`
-    )
+    );
     if (res.status === 200) {
-      const data = res.data
-      console.log(data)
+      const data = res.data;
+      console.log(data);
       if (data.message !== 'Not found!!!') {
-        setTitleInputError('Tên biểu mẫu đã tồn tại')
+        setTitleInputError('Tên biểu mẫu đã tồn tại');
       } else {
-        setTitleInputError('')
+        setTitleInputError('');
       }
     }
   }
 
   async function postFormTemplate(data: FormTemplate) {
     // const res = await useApi({ method: 'POST', url: '/formTemplate/createFormTemplate', body: data });
-    const res = await axiosClient.post('/formTemplate/createFormTemplate', data)
+    const res = await axiosClient.post(
+      '/formTemplate/createFormTemplate',
+      data
+    );
     if (res.status === 200) {
-      console.log(res.data)
-      return res.data.formTemplateId
+      console.log(res.data);
+      return res.data.formTemplateId;
     }
     // console.log(res);
   }
 
   async function postFormTemplateVersion(data: FormTemplateVersionReq) {
-    const formData = new FormData()
-    formData.append('message', data.message)
-    formData.append('price', data.price.toString())
-    formData.append('file', data.file)
-    formData.append('formTemplateId', data.formTemplateId.toString())
+    const formData = new FormData();
+    formData.append('message', data.message);
+    formData.append('price', data.price.toString());
+    formData.append('file', data.file);
+    formData.append('formTemplateId', data.formTemplateId.toString());
     const res = await axiosClient.post('/formTemplateVersion', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
-    })
+    });
     if (res.status === 200) {
-      console.log(res.data)
+      console.log(res.data);
       await axiosClient.put(
         `formTemplateVersion/status/${res.data.id}?status=PENDING`
-      )
-      return res
+      );
+      return res;
     }
-    return null
+    return null;
   }
 
   if (isLoading) {
-    return <Loading className="h-full pb-20" />
+    return <Loading className="h-full pb-20" />;
   }
 
   return (
@@ -246,5 +242,5 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
         </Button>
       </div>
     </form>
-  )
+  );
 }
