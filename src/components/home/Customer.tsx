@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { Button } from "@nextui-org/react";
-import { faChevronCircleRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { bankImages } from "@/lib/bankImages";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { PartnerType } from "@/constants/types/homeType";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import { Button } from '@nextui-org/react';
+import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { bankImages } from '@/lib/bankImages';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { PartnerType } from '@/constants/types/homeType';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const Customer = () => {
   const [partners, setPartners] = useState<PartnerType[]>([]);
@@ -26,10 +26,10 @@ const Customer = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-7 bg-[#F3F3F3] text-black justify-center items-center pt-24 pb-16 pl-80 pr-80">
+    <div className="grid grid-cols-7 items-center justify-center bg-[#F3F3F3] pb-16 pl-80 pr-80 pt-24 text-black">
       {/* 1 */}
       <div className="col-span-2 flex flex-col">
-        <h1 className="border-l-8 border-[#ff0004] p-5 mb-12 text-2xl font-bold">
+        <h1 className="mb-12 border-l-8 border-[#ff0004] p-5 text-2xl font-bold">
           KHÁCH HÀNG CỦA CHÚNG TÔI
         </h1>
         <p className="text-[16px] italic">
@@ -43,8 +43,8 @@ const Customer = () => {
           phát triển…
         </p>
         <Button
-          className="bg-[#F3F3F3] text-[#FF0004] flex items-center justify-start hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 p-0 text-[16px]"
-          onClick={() => router.push("/about/ourClients")}
+          className="flex items-center justify-start bg-[#F3F3F3] p-0 text-[16px] text-[#FF0004] hover:text-black focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+          onClick={() => router.push('/about/ourClients')}
         >
           <h2>XEM THÊM</h2>
           <FontAwesomeIcon icon={faChevronCircleRight} className="size-4" />
@@ -56,7 +56,7 @@ const Customer = () => {
         {partners.slice(0, 15).map((partner, index) => (
           <div
             key={index}
-            className="w-[141px] h-[144px] relative pt-6 pb-6 bg-white"
+            className="relative h-[144px] w-[141px] bg-white pb-6 pt-6"
           >
             <div>
               <Image

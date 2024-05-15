@@ -104,7 +104,7 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
     };
     const res = await postFormTemplateVersion(formTemplateVersion);
     if (res) {
-      router.push('/dashboard/service/manageTemplate');
+      router.push('/dashboardStaff/service/manageTemplate');
     }
   }
 

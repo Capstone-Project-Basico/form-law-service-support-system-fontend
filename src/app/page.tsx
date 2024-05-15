@@ -1,15 +1,15 @@
-"use client";
-import Image from "next/image";
-import Carousel from "../components/home/Carousel";
-import Divine from "@/components/home/Divine";
-import Contact from "@/components/home/Contact";
-import Customer from "@/components/home/Customer";
-import Service from "@/components/home/Service";
-import Request from "@/components/home/Request";
+'use client';
+import Image from 'next/image';
+import Carousel from '../components/home/Carousel';
+import Divine from '@/components/home/Divine';
+import Contact from '@/components/home/Contact';
+import Customer from '@/components/home/Customer';
+import Service from '@/components/home/Service';
+import Request from '@/components/home/Request';
 
 export default function Home() {
   return (
-    <div className="flex flex-col relative">
+    <div className="relative flex flex-col">
       <Carousel />
 
       <Divine />
