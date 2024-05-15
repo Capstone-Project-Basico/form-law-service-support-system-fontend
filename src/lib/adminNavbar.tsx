@@ -18,7 +18,7 @@ export const adminNavItems: SideNavItem[] = [
   },
   {
     title: "Cài đặt hệ thống",
-    path: "/dashboard/setting",
+    path: "/admin/setting",
     icon: (
       <FontAwesomeIcon icon={faSliders} className="w-7 h-7 text-[#FF0004]" />
     ),

@@ -62,21 +62,6 @@ const Page = () => {
     totalActiveFormTemplate: 0,
     totalDeletedFormTemplate: 0
   },
-  postDashBoardResponse: {
-    totalPost: 0,
-    totalActivePost: 0,
-    totalDeletedPost: 0,
-    totalPendingPost: 0
-  },
-  orderDashBoardResponse: {
-    totalOrder: 0,
-    totalBuyServiceOrder: 0,
-    totalBuyFormTemplateOrder: 0,
-    totalBuyPackageRequestServiceOrder: 0,
-    totalBuyPackageFormTemplateOrder: 0,
-    totalCheckedOutOrder: 0,
-    totalPendingOrder: 0,
-  },
 });
   useEffect(() => {
     const getAllValueOfChart = async () => {
@@ -140,26 +125,6 @@ const Page = () => {
       },
     ],
   };
-
-  const barCharOrder = {
-    labels: [
-      "Biểu mẫu luật",
-      "Gói dịch vụ tư vấn",
-      "Gói dịch vụ biểu mẫu",
-    ],
-    datasets: [
-      {
-        label: "Thống kê mua hàng",
-        data: [
-          dashboards.orderDashBoardResponse.totalBuyFormTemplateOrder,
-          dashboards.orderDashBoardResponse.totalBuyPackageRequestServiceOrder,
-          dashboards.orderDashBoardResponse.totalBuyPackageFormTemplateOrder,
-        ],
-        backgroundColor: ["#36A2EB", "#FFCE56", "#FF0000"],
-      },
-      
-    ],
-  };
   // Options could be shared or individual for each chart type
   const chartOptions = {
     scales: {
@@ -189,7 +154,7 @@ const Page = () => {
   
   // Example data for a Pie Chart Contact
   const pieChartContact = {
-    labels: ["Tất cả", "Đã giải quyết", "Chưa giải quyết","Spam"],
+    labels: ["Tất cả", "Đã giải quyết", "Chưa giải quyết"],
     datasets: [
       {
         label: "Nhiêm vụ",
@@ -197,17 +162,16 @@ const Page = () => {
           dashboards.contactDashBoardResponse.totalContact,
           dashboards.contactDashBoardResponse.totalDoneContact,
           dashboards.contactDashBoardResponse.totalToDoContact,
-          dashboards.contactDashBoardResponse.totalDeletedContact,
          
         ],
-        backgroundColor: ["#36A2EB", "#00FF00", "#FFCE56","#FF0000"],
+        backgroundColor: ["#36A2EB", "#00FF00", "#FFCE56"],
       },
     ],
   };
 
   // Example data for a Pie Chart Recruitement
   const pieChartRecruitement = {
-    labels: ["Tất cả", "Đã giải quyết", "Chưa giải quyết"," Spam"],
+    labels: ["Tất cả", "Đã giải quyết", "Chưa giải quyết"],
     datasets: [
       {
         label: "Nhiêm vụ",
@@ -215,10 +179,9 @@ const Page = () => {
           dashboards.recruitmentDashBoardResponse.totalRecruitment,
           dashboards.recruitmentDashBoardResponse.totalDoneRecruitment,
           dashboards.recruitmentDashBoardResponse.totalToDoRecruitment,
-          dashboards.recruitmentDashBoardResponse.totalDeletedRecruitment,
          
         ],
-        backgroundColor: ["#36A2EB", "#00FF00", "#FFCE56","#FF0000"],
+        backgroundColor: ["#36A2EB", "#00FF00", "#FFCE56"],
       },
     ],
   };
@@ -234,24 +197,6 @@ const Page = () => {
           dashboards.partnerDashboardResponse.totalApprovedPartner,
           dashboards.partnerDashboardResponse.totalPendingPartner,
           dashboards.partnerDashboardResponse.totalDeletedPartner,
-         
-        ],
-        backgroundColor: ["#36A2EB", "#00FF00", "#FFCE56","#FF0000"],
-      },
-    ],
-  };
-
-  // Example data for a Pie Chart post
-  const pieChartPost = {
-    labels: ["Tất cả", "Sử dụng", "Chờ duyệt", "Không sử dụng"],
-    datasets: [
-      {
-        label: "Nhiêm vụ",
-        data: [
-          dashboards.postDashBoardResponse.totalPost,
-          dashboards.postDashBoardResponse.totalActivePost,
-          dashboards.postDashBoardResponse.totalPendingPost,
-          dashboards.postDashBoardResponse.totalDeletedPost,
          
         ],
         backgroundColor: ["#36A2EB", "#00FF00", "#FFCE56","#FF0000"],
@@ -286,8 +231,10 @@ const Page = () => {
             <p className="flex justify-center items-center py-5 font-semibold ">
               <p className="text-center  text-3xl">
                 {dashboards.userDashBoardResponse.totalUser -1 }
-              </p>             
+              </p>
+              
             </p>
+            
             <div className="flex ">
             <p className="w-1/4 text-center ">Quản lý: {dashboards.userDashBoardResponse.totalManager}</p>
             <p className="w-1/4 text-center  ">Nhân viên: {dashboards.userDashBoardResponse.totalStaff}</p>
@@ -300,15 +247,10 @@ const Page = () => {
           <div className="w-1/3 h-full border border-gray-300 rounded-lg ml-2">
             <p className="text-center mt-2 font-bold text-2xl">Biểu mẫu luật</p>
             <p className="flex justify-center items-center py-5 font-semibold ">
-              <p className="text-center text-3xl">
+              <p className="text-center mt-2 text-3xl">
                 {dashboards.formTemplateDashBoardResponse.totalFormTemplate}
               </p>
-              </p>
-              <div className="flex ">
-            <p className="w-1/2 text-center ">Hoạt động: {dashboards.formTemplateDashBoardResponse.totalActiveFormTemplate}</p>
-            <p className=" w-1/2 text-center ">Không sử dụng: {dashboards.formTemplateDashBoardResponse.totalDeletedFormTemplate}</p>
-            </div>
-            
+            </p>
           </div>
           {/* <div className="w-1/4 h-full border border-gray-300 rounded-lg ml-2">
             <p className="text-center mt-2 font-bold text-2xl">Lượt tải</p>
@@ -336,59 +278,7 @@ const Page = () => {
           />
         </div>
       </div>
-      {/* tầng 3 */}
-      <div className="flex w-full h-[610px] justify-around items-center p-8">
-
-      <div className="w-1/3 h-full justify-center items-center  border border-gray-300 rounded-lg ml-8 pt-28">
-          <p className="text-center font-bold mb-8">Bảng thống kê thông tin liên hệ</p>
-          <Chart
-            key="pieChart"
-            type="pie"
-            data={pieChartContact}
-            options={{ maintainAspectRatio: false }}
-          />
-        </div>
-        <div className="w-1/3 h-full justify-center items-center  border border-gray-300 rounded-lg ml-8 pt-28">
-          <p className="text-center font-bold mb-8">Bảng thống kê thông tin tuyển dụng</p>
-          <Chart
-            key="pieChart"
-            type="pie"
-            data={pieChartRecruitement}
-            options={{ maintainAspectRatio: false }}
-          />
-        </div>
-        <div className="w-1/3 h-full justify-center items-center  border border-gray-300 rounded-lg ml-8 pt-28">
-          <p className="text-center font-bold mb-8">Bảng thống kê đối tác</p>
-          <Chart
-            key="pieChart"
-            type="pie"
-            data={pieChartPartner}
-            options={{ maintainAspectRatio: false }}
-          />
-        </div>
-      </div>
-
-       {/* tầng 4 */}
-       <div className="flex w-full h-[610px] justify-around items-center p-8">
-
-<div className="w-2/5 h-full justify-center items-center  border border-gray-300 rounded-lg pt-16 pl-2 pr-2">
-    <p className="text-center font-bold mb-8">Bảng thống kê bài viết</p>
-    <Chart
-      key="pieChart"
-      type="pie"
-      data={pieChartPost}
-      options={{ maintainAspectRatio: false }}
-    />
-  </div>
-  <div className="w-3/5 h-full   border border-gray-300 rounded-lg ml-8 pt-28 ">
-          <Chart
-            key="barChart"
-            type="bar"
-            data={barCharOrder}
-            options={chartOptions}
-          />
-        </div>
-</div>
+    
     </div>
   );
 };
