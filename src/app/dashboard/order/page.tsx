@@ -50,10 +50,7 @@ const Page = () => {
         </Breadcrumbs>
       </div>
 
-      <div className="flex flex-row gap-10 font-bold border-b-1 ">
-        <div></div>
-        <div></div>
-      </div>
+      
       <Order orders={orders} tabs={tabs} />
     </div>
   );
