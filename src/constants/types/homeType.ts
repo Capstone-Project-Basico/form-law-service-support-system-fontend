@@ -212,6 +212,7 @@ export type OrderType = {
       itemName: string;
       itemUUID: string;
       totalRequest: number;
+      orderDetailUUID: string;
     }
   ];
   // price: number;

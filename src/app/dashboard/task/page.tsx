@@ -66,7 +66,7 @@ const Task = () => {
     startDate,
     endDate,
   };
-
+  
   useEffect(() => {
     switch (tabs) {
       case 1:
@@ -219,6 +219,7 @@ const Task = () => {
           { headers: authHeader() }
         )
         .then((response) => {
+          fetchTask()
           toast.success("Giao việc thành công");
         });
     } catch (error) {
