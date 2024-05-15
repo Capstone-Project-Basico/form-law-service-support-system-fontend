@@ -211,14 +211,14 @@ const TaskDetail = () => {
           </BreadcrumbItem>
         </Breadcrumbs>
         <div className="flex justify-end gap-3">
-          <Button
+          {/* <Button
             className="flex justify-end w-[180px] bg-[#FF0004] text-white"
             radius="full"
             onPress={onOpenDetail}
           >
             <FontAwesomeIcon icon={faEye} />
             Xem nhiệm vụ chính
-          </Button>
+          </Button> */}
           <Button
             className="flex justify-end w-[100px] bg-[#FF0004] text-white"
             radius="full"
@@ -229,6 +229,37 @@ const TaskDetail = () => {
           </Button>
         </div>
       </div>
+      <Accordion defaultExpandedKeys={["2"]}>
+      <AccordionItem
+        key="2"
+        title={<div className="font-bold bg-gray-300 rounded-md h-full w-96">Nhiệm vụ chính</div>}
+      >
+              <div className="gap-10 flex flex-col justify-start items-start border-1">
+                  <div className="flex">
+                    <h1 className="min-w-40">Tên nhiệm vụ:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      {mainTask?.taskName
+                        ? mainTask?.taskName
+                        : "Nhiệm vụ này hiện không có tên"}
+                    </h1>
+                  </div>
+
+                  <div className="flex">
+                    <h1 className="min-w-40">Chi tiết nhiệm vụ:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004] max-h-64 overflow-auto">
+                      {mainTask?.description}
+                    </h1>
+                  </div>
+
+                  <div className="flex">
+                    <h1 className="min-w-40">Người cần hỗ trợ:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      {mainTask?.supportTo}
+                    </h1>
+                  </div>
+                </div>
+      </AccordionItem>
+      </Accordion>
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>

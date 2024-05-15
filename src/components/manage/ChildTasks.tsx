@@ -120,9 +120,9 @@ const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày kết thúc
           </TableColumn>
-          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
+          {/* <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
-          </TableColumn>
+          </TableColumn> */}
         </TableHeader>
         <TableBody>
           {items.map((task, index) => (
@@ -145,16 +145,16 @@ const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                 }
               </TableCell>
 
-              {task.processStatus === "CHƯA PHÂN CÔNG" ? (
+              {/* {task.processStatus === "CHƯA PHÂN CÔNG" ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
-                  {/* <Button
+                  <Button
                     className="bg-green-600 text-white"
                     // onClick={() => {
                     //   router.push(`task/taskDetail/${task.id}`);
                     // }}
                   >
                     Chi tiết
-                  </Button> */}
+                  </Button>
                   <Button
                     className="bg-blue-600 text-white"
                     onClick={() => completeTask(task.id)}
@@ -168,7 +168,7 @@ const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                     Đã hoàn thành
                   </Button>
                 </TableCell>
-              )}
+              )} */}
             </TableRow>
           ))}
         </TableBody>

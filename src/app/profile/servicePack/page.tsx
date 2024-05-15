@@ -13,6 +13,7 @@ import {
   ModalFooter,
   ModalHeader,
   Pagination,
+  Textarea,
   useDisclosure,
 } from "@nextui-org/react";
 import {
@@ -42,8 +43,9 @@ const ServicePack = () => {
   const [startDate, setStartDate] = useState<string | null>(null);
   const [supportTo, setSupportTo] = useState("");
   const [createBy, setCreateBy] = useState("");
-  const [packageRequestServiceId, setPackageRequestServiceId] = useState("");
+  const [orderPackageRequestServiceDetailUUID, setOrderPackageRequestServiceDetailUUID] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const todayDate = new Date().toISOString().substring(0, 10);
 
   let newTask = {
     taskName,
@@ -51,8 +53,9 @@ const ServicePack = () => {
     startDate,
     supportTo,
     createBy,
-    packageRequestServiceId,
+    orderPackageRequestServiceDetailUUID,
   };
+  
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
@@ -118,28 +121,6 @@ const ServicePack = () => {
       });
   };
 
-  //search
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-  // Filter post based on search title
-  const filteredPosts = purchasedPacks.filter((pack) =>
-    (pack.cart[0]?.itemName || "").toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  //pagination
-  const [page, setPage] = React.useState(1);
-  const rowsPerPage = 4;
-
-  const pages = Math.ceil(filteredPosts.length / rowsPerPage);
-
-  const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return filteredPosts.slice(start, end);
-  }, [page, filteredPosts]);
-
     //get template packs
     const getAllTemplatePacks = async () => {
       try {
@@ -178,27 +159,10 @@ const ServicePack = () => {
             Mua gói tại đây
           </h1>
         </Link>
-        <div className="">
-          <Input
-            classNames={{
-              base: "w-full h-10",
-              mainWrapper: "h-full w-96",
-              input: "text-small",
-              inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20 ",
-            }}
-            placeholder="Từ khóa tìm kiếm .."
-            size="sm"
-            type="search"
-            radius="none"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        </div>
       </div>
       <div className="grid grid-cols-4 justify-center items-center mt-10 gap-5">
-        {items &&
-          items.map(
+        {purchasedPacks &&
+          purchasedPacks.map(
             (servicePack, key) =>
               servicePack.cart &&
               servicePack.cart.length > 0 && (
@@ -217,7 +181,7 @@ const ServicePack = () => {
                     className="text-white bg-[#FF0004] my-5"
                     onClick={() => {
                       onOpen();
-                      setPackageRequestServiceId(servicePack.cart[0].itemUUID);
+                      setOrderPackageRequestServiceDetailUUID(servicePack.cart[0].orderDetailUUID);
                     }}
                   >
                     Sử dụng
@@ -226,20 +190,6 @@ const ServicePack = () => {
               )
           )}
       </div>
-      <div className="flex w-full justify-center items-center mt-10">
-          <Pagination
-            isCompact
-            showControls
-            classNames={{
-              wrapper: 'gap-0 overflow-visible h-8 ',
-              item: 'w-8 h-8 text-small rounded-none bg-transparent',
-              cursor: 'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
-            }}
-            page={page}
-            total={pages}
-            onChange={(page: any) => setPage(page)}
-          />
-        </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
         <ModalContent>
           {(onClose) => (
@@ -256,7 +206,7 @@ const ServicePack = () => {
                     value={taskName}
                     onChange={(e) => setTaskName(e.target.value)}
                   />
-                  <Input
+                  <Textarea
                     type="text"
                     label="Mô tả"
                     value={description}
@@ -274,9 +224,8 @@ const ServicePack = () => {
                         ? dateConvert(new Date(e.target.value))
                         : null;
                       setStartDate(dateValue);
-                      // console.log(e.target.value);
-                      // console.log(dateValue?.substring(0, 10));
                     }}
+                    min={todayDate}
                     className="form-input"
                   />
                 </ModalBody>
@@ -293,17 +242,9 @@ const ServicePack = () => {
           )}
         </ModalContent>
       </Modal>
-      <Divider className="my-4"/>
 
       {/* template pack */}
-      <div className="flex flex-col justify-center items-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-5">
-          Gói dịch vụ biểu mẫu
-          <strong>
-            &nbsp;BA<span className="text-[#ff0000]">S</span>I
-            <span className="text-[#ff0000]">CO&nbsp;</span>
-          </strong>
-        </h2>
+      <div className="flex flex-col justify-center items-center mt-32">
         <p className="text-xl text-center text-gray-700 mb-10 mx-auto max-w-[1000px] whitespace-normal">
           Để có thể sử dụng một số chức năng đặc biệt, hoặc sử dụng các văn bản
           và hợp đồng tại Basico các bạn phải đăng ký gói dịch vụ, dưới đây là
