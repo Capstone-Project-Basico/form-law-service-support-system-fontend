@@ -4,7 +4,8 @@ import axios from "axios";
 import { Chart } from "primereact/chart";
 import { useEffect, useState } from "react";
 import authHeader from "@/components/authHeader/AuthHeader";
-
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 const Page = () => {
   const [dashboards, setDashboardData] = useState({
     revenueDashBoardResponse: {
@@ -78,6 +79,7 @@ const Page = () => {
     totalPendingOrder: 0,
   },
 });
+
   useEffect(() => {
     const getAllValueOfChart = async () => {
       try {
@@ -103,7 +105,41 @@ const Page = () => {
 
     getAllValueOfChart();
   }, []);
-
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet([
+      { title: "Tổng doanh thu", value: dashboards.revenueDashBoardResponse.totalRevenueOfYear },
+      { title: "Tổng số người dùng", value: dashboards.userDashBoardResponse.totalUser },
+      { title: "-Quản lý", value: dashboards.userDashBoardResponse.totalManager },
+      { title: "-Nhân viên", value: dashboards.userDashBoardResponse.totalStaff },
+      { title: "-Luật sư", value: dashboards.userDashBoardResponse.totalLawyer },
+      { title: "-Khách hàng", value: dashboards.userDashBoardResponse.totalCustomer },
+      { title: "Tổng số biểu mẫu luật", value: dashboards.formTemplateDashBoardResponse.totalFormTemplate },
+      { title: "-Biểu mẫu luật đang hoạt động,", value: dashboards.formTemplateDashBoardResponse.totalActiveFormTemplate },
+      { title: "-Biểu mẫu luật ngừng hoạt động,", value: dashboards.formTemplateDashBoardResponse.totalDeletedFormTemplate },
+      { title: "Tổng số biểu mẫu luật", value: dashboards.formTemplateDashBoardResponse.totalFormTemplate },
+      { title: "Tổng số doanh thu trong 1 năm", value: dashboards.revenueDashBoardResponse.totalRevenueOfYear },
+      { title: "Tổng số doanh thu trong 1 tháng", value: dashboards.revenueDashBoardResponse.totalRevenueOfCurrentMonth },
+      { title: "-Tổng số doanh thu tháng 1", value: dashboards.revenueDashBoardResponse.totalRevenueOfJanuary },
+      { title: "-Tổng số doanh thu tháng 2", value: dashboards.revenueDashBoardResponse.totalRevenueOfFeb },
+      { title: "-Tổng số doanh thu tháng 3", value: dashboards.revenueDashBoardResponse.totalRevenueOfMarch },
+      { title: "-Tổng số doanh thu tháng 4", value: dashboards.revenueDashBoardResponse.totalRevenueOfApril },
+      { title: "-Tổng số doanh thu tháng 5", value: dashboards.revenueDashBoardResponse.totalRevenueOfMay },
+      { title: "-Tổng số doanh thu tháng 6", value: dashboards.revenueDashBoardResponse.totalRevenueOfJune },
+      { title: "-Tổng số doanh thu tháng 7", value: dashboards.revenueDashBoardResponse.totalRevenueOfJuly },
+      { title: "-Tổng số doanh thu tháng 8", value: dashboards.revenueDashBoardResponse.totalRevenueOfAugust },
+      { title: "-Tổng số doanh thu tháng 9", value: dashboards.revenueDashBoardResponse.totalRevenueOfSeptember },
+      { title: "-Tổng số doanh thu tháng 10", value: dashboards.revenueDashBoardResponse.totalRevenueOfOctober },
+      { title: "-Tổng số doanh thu tháng 11", value: dashboards.revenueDashBoardResponse.totalRevenueOfNovember },
+      { title: "-Tổng số doanh thu tháng 12", value: dashboards.revenueDashBoardResponse.totalRevenueOfDecember },
+      { title: "Tổng số mua biểu mẫu luật ", value: dashboards.orderDashBoardResponse.totalBuyFormTemplateOrder },
+      { title: "Tổng số mua gói dịch vụ tư vấn ", value: dashboards.orderDashBoardResponse.totalBuyPackageRequestServiceOrder },
+      { title: "Tổng số mua gói dịch vụ biểu mẫu ", value: dashboards.orderDashBoardResponse.totalBuyPackageFormTemplateOrder },
+    ]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "DashboardData");
+    const exportFileName = "DashboardData.xlsx";
+    XLSX.writeFile(wb, exportFileName);
+  };
   const barChartData = {
     labels: [
       "Jan",
@@ -240,7 +276,7 @@ const Page = () => {
       },
     ],
   };
-
+  
   // Example data for a Pie Chart post
   const pieChartPost = {
     labels: ["Tất cả", "Sử dụng", "Chờ duyệt", "Không sử dụng"],
@@ -268,10 +304,15 @@ const Page = () => {
       .format(num)
       .replace(/,/g, ".");
   };
-
+  
   return (
     // tầng 1
     <div className="w-full">
+      <div className="px-5 pt-5">
+       <button className="mb-3 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={exportToExcel}>
+        Xuất Excel
+      </button>
+      </div>
       <div className="py-5">
         <div className="flex w-full h-[150px] justify-around items-center">
           <div className="w-1/3 h-full border border-gray-300 rounded-lg ml-2">
