@@ -1,61 +1,54 @@
-import axios from "axios";
-import React, { FormEvent, useEffect, useState } from "react";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-  Breadcrumbs,
-  BreadcrumbItem,
-  Button,
-  Input,
-  useDisclosure,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-  MenuItem,
-  Pagination,
-} from "@nextui-org/react";
-import { usePathname, useRouter } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
-import {
-  ChildTaskType,
-  TaskAssignmentType,
-  TaskType,
-} from "@/constants/types/homeType";
-import { ToastContainer, toast } from "react-toastify";
-import authHeader from "../authHeader/AuthHeader";
+'use client'
 
-type TasksProps = {
-  tasks: ChildTaskType[];
-  completeTask: (id: number) => void;
-};
+import authHeader from '@/components/authHeader/AuthHeader';
+import useUser from '@/components/authHeader/User';
+import { TaskType } from '@/constants/types/homeType';
+import { Button, Input, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react'
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
 
-const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
+const Page = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [selectedTaskId, setSelectedTaskId] = useState<Number>();
-
+  const [tasks, setTasks] = useState<TaskType[]>([])
   const router = useRouter();
+  const userInfo = useUser();
+  const [email, setEmail] = useState("")
+
+  useEffect(() => {
+    if (userInfo && userInfo.email) {
+      setEmail(userInfo.email);
+    }
+    getTask();
+  }, [userInfo])
+
+  const getTask = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}task-api/getAllTask`,
+        {
+          headers: authHeader(),
+        }
+      );
+      setTasks(response.data.data.filter((task: TaskType) => task.supportTo === email));
+      console.log(tasks);
+
+    } catch (error) { }
+  };
+
+
   //search
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
   // Filter tasks based on search term
-  const filteredTasks = tasks.filter((task) =>
+  const filteredTasks = tasks.filter((task: TaskType) =>
     (task.taskName || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   //pagination
   const [page, setPage] = React.useState(1);
-  const rowsPerPage = 8;
+  const rowsPerPage = 5;
 
   const pages = Math.ceil(filteredTasks.length / rowsPerPage);
 
@@ -67,10 +60,12 @@ const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
   }, [page, filteredTasks]);
 
   return (
-    <div>
-      <ToastContainer />
+    <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
       <div>
-        <div className="my-10 flex flex-row">
+        <h2 className="text-3xl font-bold text-gray-900 flex justify-center">
+          Danh sách yêu cầu hỗ trợ
+        </h2>
+        <div className="my-3 flex flex-row">
           <Input
             classNames={{
               base: "w-full sm:max-w-[10rem] h-10",
@@ -118,7 +113,7 @@ const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
             Ngày bắt đầu
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
-            Ngày kết thúc
+            Tiến trình
           </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
@@ -138,43 +133,24 @@ const ChildTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
               </TableCell>
 
               <TableCell>
-                {
-                  task.endDate
-                    ? new Date(task.endDate).toLocaleDateString()
-                    : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
-                }
+                {task.processStatus}
               </TableCell>
 
-              {task.processStatus === "CHƯA PHÂN CÔNG" ? (
-                <TableCell className="flex gap-2 items-center justify-center">
-                  {/* <Button
-                    className="bg-green-600 text-white"
-                    // onClick={() => {
-                    //   router.push(`task/taskDetail/${task.id}`);
-                    // }}
-                  >
-                    Chi tiết
-                  </Button> */}
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onClick={() => completeTask(task.id)}
-                  >
-                    Hoàn thành
-                  </Button>
-                </TableCell>
-              ) : (
-                <TableCell className="flex gap-2 items-center justify-center">
-                  <Button className="bg-green-600 text-white" disabled>
-                    Đã hoàn thành
-                  </Button>
-                </TableCell>
-              )}
+              <TableCell className="flex gap-2 items-center justify-center">
+                <Button
+                  className="bg-blue-600 text-white"
+                  onClick={() => router.push(`requestHistory/taskDetail/${task.id}`)}
+                >
+                  Chi tiết
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </div>
-  );
-};
 
-export default ChildTasks;
+    </div >
+  )
+}
+
+export default Page

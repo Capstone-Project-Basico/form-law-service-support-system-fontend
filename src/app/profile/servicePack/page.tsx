@@ -55,7 +55,7 @@ const ServicePack = () => {
     createBy,
     orderPackageRequestServiceDetailUUID,
   };
-  
+
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
@@ -82,7 +82,7 @@ const ServicePack = () => {
       );
       setSupportTo(response.data.data.email);
       setCreateBy(response.data.data.email);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const getAllPurchasedPacks = async () => {
@@ -94,7 +94,7 @@ const ServicePack = () => {
         }
       );
       setPurchasedPack(response.data.data || []);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   //send request
@@ -121,19 +121,19 @@ const ServicePack = () => {
       });
   };
 
-    //get template packs
-    const getAllTemplatePacks = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_API}orderPackageTemplate/getAllCheckOutPackageTemplateDetailByUser/${userId}`,
-          {
-            headers: authHeader(),
-          }
-        );
-        console.log(response.data.data);
-        setTemplatePack(response.data.data);
-      } catch (error) {}
-    };
+  //get template packs
+  const getAllTemplatePacks = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}orderPackageTemplate/getAllCheckOutPackageTemplateDetailByUser/${userId}`,
+        {
+          headers: authHeader(),
+        }
+      );
+      console.log(response.data.data);
+      setTemplatePack(response.data.data);
+    } catch (error) { }
+  };
 
   return (
     <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
@@ -159,6 +159,11 @@ const ServicePack = () => {
             Mua gói tại đây
           </h1>
         </Link>
+        <Link href="/profile/servicePack/requestHistory">
+          <h1 className="text-white bg-red-500 hover:bg-red-700 font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out">
+            Lịch sử gửi yêu cầu
+          </h1>
+        </Link>
       </div>
       <div className="grid grid-cols-4 justify-center items-center mt-10 gap-5">
         {purchasedPacks &&
@@ -171,7 +176,7 @@ const ServicePack = () => {
                   className="flex flex-col justify-center items-center bg-white border border-[#FF0004] radius w-[320px] rounded-md"
                 >
                   <h2 className="text-[28px] font-semibold text-[#FF0004] pt-5">
-                    {servicePack.cart[0]?.itemName.slice(0,20)}
+                    {servicePack.cart[0]?.itemName.slice(0, 20)}
                   </h2>
                   <p className="text-xl pt-3">
                     Lần gửi còn lại:{servicePack.cart[0]?.totalRequest}
@@ -252,11 +257,11 @@ const ServicePack = () => {
         </p>
       </div>
       <div className="flex justify-between">
-      <Link href="/profile/servicePack/buyTemplatePack">
-      <h1 className="text-white bg-red-500 hover:bg-red-700 font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out">
+        <Link href="/profile/servicePack/buyTemplatePack">
+          <h1 className="text-white bg-red-500 hover:bg-red-700 font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out">
             Mua gói biểu mẫu tại đây
           </h1>
-      </Link>
+        </Link>
       </div>
       <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5">
         {templatePacks && templatePacks.map((servicePack) => (
