@@ -1,20 +1,23 @@
 'use client';
 
 import { Button, Input } from '@nextui-org/react';
-import { useState, ChangeEvent, FormEvent, use, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import Link from 'next/link';
-import { ToastContainer, toast } from 'react-toastify';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Page = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FetchUser />
+    </Suspense>
+  );
+};
+
+const FetchUser = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const user = searchParams.get('user');
-  const [isVisible, setIsVisible] = useState(false);
-  const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,9 +43,8 @@ const Page = () => {
   useEffect(() => {
     if (!user) {
       toast.error('Không tìm thấy email');
-      router.push('/login');
     }
-  }, []);
+  }, [user]);
 
   return (
     <div className="flex flex-col items-center justify-center bg-[#f3f3f3] pb-[97px] pt-32">
