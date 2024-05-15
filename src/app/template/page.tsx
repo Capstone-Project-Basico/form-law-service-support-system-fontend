@@ -166,6 +166,7 @@ const Page = () => {
           title: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
           showDenyButton: true,
           confirmButtonText: 'Có',
+          confirmButtonColor: '#00BB00',
           denyButtonText: `Không`,
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
@@ -394,7 +395,7 @@ const Page = () => {
                     <p className="text-default-500">
                       {template.latestVersion?.price?.toLocaleString()} Đ
                     </p>
-                    <b className="w-52 truncate">{template.title}</b>
+                    <b className="w-52 truncate h-10">{template.title}</b>
                     <div className="mt-3 flex w-full items-start justify-end gap-2">
                       <Button
                         className="bg-[#989898] text-white hover:bg-[#FF191D]"
