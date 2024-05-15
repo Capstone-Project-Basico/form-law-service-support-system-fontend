@@ -5,7 +5,11 @@ import HeaderComponent from '@/components/header';
 // import CardTemplate from "@/sections/CardTemplate";
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { faAngleRight, faDollarSign, faPen } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleRight,
+  faDollarSign,
+  faPen,
+} from '@fortawesome/free-solid-svg-icons';
 import { GoogleMaps } from '@/components/ui/GoogleMaps';
 import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/breadcrumbs';
 import {
@@ -49,15 +53,19 @@ interface UserLocal {
 }
 const Page = () => {
   const router = useRouter();
-  const [templates, setTemplates] = useState<Template[]>([]);
+  const [templates, setTemplates] = useState<FormTemplate[]>([]);
   const [filterValue, setFilterValue] = useState('');
   const [types, setTypes] = useState<FormType[]>([]);
   const [selectTypeId, setSelectTypeId] = useState<number | undefined>();
   const [selectTypeName, setSelectTypeName] = useState('');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [selectedTemplate, setSelectedTemplate] = useState<Template>();
+  const [selectedTemplate, setSelectedTemplate] = useState<FormTemplate>();
   const templateRef = useRef<HTMLDivElement>(null);
-  const { isOpen: isOpenPayment, onOpen: onOpenPayment, onClose: onClosePayment } = useDisclosure();
+  const {
+    isOpen: isOpenPayment,
+    onOpen: onOpenPayment,
+    onClose: onClosePayment,
+  } = useDisclosure();
   const [orderId, setOrderId] = useState<string>();
   const [transactionId, setTransactionId] = useState<string>();
   const [isSelectedQR, setIsSelectedQR] = useState(0);
@@ -121,12 +129,16 @@ const Page = () => {
   }
 
   const getTemplate = async () => {
-    axios.get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion`).then((response) => {
-      const listForm: Template[] = response.data.data;
-      // only status ACTIVE
-      const listFormActive = listForm.filter((form) => form.status === 'ACTIVE');
-      setTemplates(listFormActive);
-    });
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplate`)
+      .then((response) => {
+        const listForm: FormTemplate[] = response.data.data;
+        // only status ACTIVE
+        const listFormActive = listForm.filter(
+          (form) => form.latestVersion?.status === 'ACTIVE'
+        );
+        setTemplates(listFormActive);
+      });
   };
 
   const getType = async () => {
@@ -167,17 +179,26 @@ const Page = () => {
         });
         return;
       } else {
+        if (formId === -1 || price === -1) {
+          toast.error('Yêu cầu mua thất bại');
+          return;
+        }
         // setItemId(formId);
         const updatedDataOrder = {
           userId,
           cartRequestList: [{ itemId: formId, quantity, price }],
         };
         {
-          axios.post(`${process.env.NEXT_PUBLIC_BASE_API}order/createOrderFormTemplateDetail`, updatedDataOrder).then((response) => {
-            setOrderId(response.data.data.orderId);
-            setTransactionId(response.data.data.transactionId);
-            onOpenPayment();
-          });
+          axios
+            .post(
+              `${process.env.NEXT_PUBLIC_BASE_API}order/createOrderFormTemplateDetail`,
+              updatedDataOrder
+            )
+            .then((response) => {
+              setOrderId(response.data.data.orderId);
+              setTransactionId(response.data.data.transactionId);
+              onOpenPayment();
+            });
         }
       }
     } catch (error) {
@@ -195,7 +216,11 @@ const Page = () => {
 
   const payForTemplate = () => {
     axios
-      .put(`${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByWallet/${orderId}`, {}, { headers: authHeader() })
+      .put(
+        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByWallet/${orderId}`,
+        {},
+        { headers: authHeader() }
+      )
       .then((res) => {
         toast.success('Thanh toán thành công');
       })
@@ -206,7 +231,11 @@ const Page = () => {
 
   const payForTemplateByCash = () => {
     axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${transactionId}`, {}, { headers: authHeader() })
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${transactionId}`,
+        {},
+        { headers: authHeader() }
+      )
       .then((res) => {
         console.log(res.data);
 
@@ -223,11 +252,15 @@ const Page = () => {
     let filteredTemplates = [...templates];
 
     if (hasSearchFilter) {
-      filteredTemplates = filteredTemplates.filter((temp) => temp.message.toLowerCase().includes(filterValue.toLowerCase()));
+      filteredTemplates = filteredTemplates.filter((temp) =>
+        temp.title.toLowerCase().includes(filterValue.toLowerCase())
+      );
     }
 
     if (selectTypeId) {
-      filteredTemplates = filteredTemplates.filter((temp) => temp.formTypeId === selectTypeId);
+      filteredTemplates = filteredTemplates.filter(
+        (temp) => temp.formTypeId === selectTypeId
+      );
     }
 
     return filteredTemplates;
@@ -261,8 +294,8 @@ const Page = () => {
   }, [page, filteredItems]);
 
   useEffect(() => {
-    if (selectedTemplate === undefined) return;
-    const htmlContentRes = getFile(selectedTemplate?.id);
+    if (selectedTemplate?.latestVersion === undefined) return;
+    const htmlContentRes = getFile(selectedTemplate.latestVersion?.id);
     htmlContentRes.then((res) => {
       const html = replaceFieldWithValue(res);
       if (templateRef.current) {
@@ -276,28 +309,35 @@ const Page = () => {
       <HeaderComponent title="BIỂU MẪU" link="BIỂU MẪU" />
       <div className="mx-10 my-20">
         <ToastContainer />
-        <div className="flex flex-row border-b-1 mb-10 pb-3 w-full">
-          <h1 className="flex text-xl font-extrabold border-l-5 border-[#FF0004] pl-5 items-center h-12">
+        <div className="mb-10 flex w-full flex-row border-b-1 pb-3">
+          <h1 className="flex h-12 items-center border-l-5 border-[#FF0004] pl-5 text-xl font-extrabold">
             Biểu mẫu luật uy tín đến từ
             <strong>
-              &nbsp;BA<span className="text-[#ff0000]">S</span>I<span className="text-[#ff0000]">CO </span>
+              &nbsp;BA<span className="text-[#ff0000]">S</span>I
+              <span className="text-[#ff0000]">CO </span>
             </strong>
           </h1>
 
-          <div className="ml-auto flex flex-row justify-center items-end">
+          <div className="ml-auto flex flex-row items-end justify-center">
             <Autocomplete
               defaultItems={types}
               label="Loại biểu mẫu"
-              className="max-w-xs mr-3"
+              className="mr-3 max-w-xs"
               onSelectionChange={(e: any) => {
                 setSelectTypeId(Number(e));
               }}
             >
-              {(item: any) => <AutocompleteItem key={item.id}>{item.typeName}</AutocompleteItem>}
+              {(item: any) => (
+                <AutocompleteItem key={item.id}>
+                  {item.typeName}
+                </AutocompleteItem>
+              )}
             </Autocomplete>
 
-            <div className="flex flex-col justify-end items-start w-72">
-              <div className="text-[#FF0004] border-b-1 mb-3 w-72">Tìm kiếm</div>
+            <div className="flex w-72 flex-col items-start justify-end">
+              <div className="mb-3 w-72 border-b-1 text-[#FF0004]">
+                Tìm kiếm
+              </div>
               <div className="">
                 <Input
                   isClearable
@@ -318,12 +358,25 @@ const Page = () => {
           </div>
         </div>
         {items && (
-          <div className="grid grid-cols-4 mx-56 gap-10">
+          <div className="mx-56 grid grid-cols-4 gap-10">
             {items.map((template, index) => (
               <div key={index} className="">
-                <Card shadow="sm" key={index} isPressable={false} onPress={() => console.log('item pressed')} className="w-72 h-96">
+                <Card
+                  shadow="sm"
+                  key={index}
+                  isPressable={false}
+                  onPress={() => console.log('item pressed')}
+                  className="h-96 w-72"
+                >
                   <CardBody className="group relative overflow-hidden">
-                    <Image shadow="sm" radius="lg" width="100%" alt={template.title} className="w-full object-cover h-[250px]" src="/bieumau.jpg" />
+                    <Image
+                      shadow="sm"
+                      radius="lg"
+                      width="100%"
+                      alt={template.title}
+                      className="h-[250px] w-full object-cover"
+                      src="/bieumau.jpg"
+                    />
                     {/* <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
                       <Button
                         className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
@@ -338,9 +391,11 @@ const Page = () => {
                     </div> */}
                   </CardBody>
                   <CardFooter className="flex flex-col items-start">
-                    <p className="text-default-500">{template.price.toLocaleString()} Đ</p>
-                    <b className="truncate">{template.message}</b>
-                    <div className="flex justify-end items-start w-full gap-2 mt-3">
+                    <p className="text-default-500">
+                      {template.latestVersion?.price?.toLocaleString()} Đ
+                    </p>
+                    <b className="w-52 truncate">{template.title}</b>
+                    <div className="mt-3 flex w-full items-start justify-end gap-2">
                       <Button
                         className="bg-[#989898] text-white hover:bg-[#FF191D]"
                         onPress={() => {
@@ -351,8 +406,19 @@ const Page = () => {
                         <FontAwesomeIcon icon={faEye} className="size-4" />
                         Xem trước
                       </Button>
-                      <Button onClick={() => handleBuy(template.id, template.price)} className="bg-[#FF0004] text-white ">
-                        <FontAwesomeIcon icon={faDollarSign} className="size-4 ml-1" />
+                      <Button
+                        onClick={() =>
+                          handleBuy(
+                            template.latestVersion?.id ?? -1,
+                            template.latestVersion?.price ?? -1
+                          )
+                        }
+                        className="bg-[#FF0004] text-white "
+                      >
+                        <FontAwesomeIcon
+                          icon={faDollarSign}
+                          className="ml-1 size-4"
+                        />
                         Mua
                       </Button>
                     </div>
@@ -362,38 +428,63 @@ const Page = () => {
             ))}
           </div>
         )}
-        <div className="flex w-full justify-center items-center mt-10">
+        <div className="mt-10 flex w-full items-center justify-center">
           <Pagination
             isCompact
             showControls
             classNames={{
               wrapper: 'gap-0 overflow-visible h-8 ',
               item: 'w-8 h-8 text-small rounded-none bg-transparent',
-              cursor: 'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
+              cursor:
+                'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
             }}
             page={page}
             total={pages}
             onChange={(page: any) => setPage(page)}
           />
         </div>
-        <Modal hideCloseButton isOpen={isOpen} onOpenChange={onOpenChange} size="full" className="w-[1100px] h-[800px]">
+        <Modal
+          hideCloseButton
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          size="full"
+          className="h-[800px] w-[1100px]"
+        >
           <ModalContent>
             {(onClose) => (
               <>
                 <ModalBody className="flex flex-row gap-6 overflow-y-scroll p-6">
                   <div className="w-[800px]">
-                    <div className="content-center min-h-full p-10 border-1 border-black" ref={templateRef}></div>
+                    <div
+                      className="min-h-full content-center border-1 border-black p-10"
+                      ref={templateRef}
+                    ></div>
                   </div>
-                  <div className="w-[300px] gap-10 flex flex-col justify-start items-center">
+                  <div className="flex w-[300px] flex-col items-center justify-start gap-10">
                     <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {selectedTemplate?.message ? selectedTemplate?.message : 'Biểu mẫu này hiện tại không có tên'}
+                      {selectedTemplate?.title
+                        ? selectedTemplate?.title
+                        : 'Biểu mẫu này hiện tại không có tên'}
                     </h1>
                     <div className="flex flex-col gap-3">
-                      <Button className="w-80 bg-[#FF0004] text-white" onPress={onClose}>
-                        <FontAwesomeIcon icon={faPen} className="size-4 ml-1" />
-                        Dùng mẫu này
+                      <Button
+                        className="w-80 bg-[#FF0004] text-white"
+                        onPress={() => {
+                          handleBuy(
+                            selectedTemplate?.latestVersion?.id ?? -1,
+                            selectedTemplate?.latestVersion?.price ?? -1
+                          );
+                          onClose();
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faPen} className="ml-1 size-4" />
+                        Mua mẫu này
                       </Button>
-                      <Button className="w-full" onPress={onClose} variant="faded">
+                      <Button
+                        className="w-full"
+                        onPress={onClose}
+                        variant="faded"
+                      >
                         Đóng lại
                       </Button>
                     </div>
@@ -404,30 +495,47 @@ const Page = () => {
           </ModalContent>
         </Modal>
         {/* payment modal */}
-        <Modal isOpen={isOpenPayment} onClose={onClosePayment} hideCloseButton size="3xl">
+        <Modal
+          isOpen={isOpenPayment}
+          onClose={onClosePayment}
+          hideCloseButton
+          size="3xl"
+        >
           <ModalContent>
-            <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">Chọn phương thức thanh toán</ModalHeader>
+            <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
+              Chọn phương thức thanh toán
+            </ModalHeader>
             <ModalBody>
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
                     isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
                   }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
-                  <Image alt="" src="/wallet/vietqr.png" width={50} height={50} />
+                  <Image
+                    alt=""
+                    src="/wallet/vietqr.png"
+                    width={50}
+                    height={50}
+                  />
                   Thanh toán bằng mã QR
                 </Button>
 
                 <Button
                   variant="faded"
-                  className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
                     isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
                   }`}
                   onClick={() => setIsSelectedQR(2)}
                 >
-                  <Image alt="" src="/wallet/wallet.png" width={50} height={50} />
+                  <Image
+                    alt=""
+                    src="/wallet/wallet.png"
+                    width={50}
+                    height={50}
+                  />
                   Thanh toán bằng ví của bạn
                 </Button>
               </div>

@@ -1,6 +1,6 @@
 export type FormTemplate = {
   formTemplateId?: number;
-  formTemplateVersion?: FormTemplateVersion;
+  latestVersion?: FormTemplateVersion;
   formTypeId: number;
   title: string;
   description: string;

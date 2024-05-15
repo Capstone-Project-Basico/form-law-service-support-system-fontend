@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import AddTemplate from '@/sections/AddTemplate'
+import AddTemplate from '@/sections/AddTemplate';
 import {
   Table,
   TableHeader,
@@ -32,25 +32,25 @@ import {
   Chip,
   Select,
   SelectItem,
-} from '@nextui-org/react'
-import axios from 'axios'
-import React, { FormEvent, Key, useCallback, useEffect, useState } from 'react'
-import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Link from 'next/link'
-import { FormTemplate } from '@/constants/types/FormTemplate'
-import authHeader from '@/components/authHeader/AuthHeader'
-import Image from 'next/image'
-import Template from '@/components/manage/Template'
-import { useRouter } from 'next/navigation'
-import axiosClient from '@/lib/axiosClient'
+} from '@nextui-org/react';
+import axios from 'axios';
+import React, { FormEvent, Key, useCallback, useEffect, useState } from 'react';
+import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
+import { FormTemplate } from '@/constants/types/FormTemplate';
+import authHeader from '@/components/authHeader/AuthHeader';
+import Image from 'next/image';
+import Template from '@/components/manage/Template';
+import { useRouter } from 'next/navigation';
+import axiosClient from '@/lib/axiosClient';
 import {
   ArrowDownTrayIcon,
   EllipsisVerticalIcon,
   PencilSquareIcon,
-} from '@heroicons/react/24/solid'
-import Loading from '@/components/loading'
-import FileUpload from '@/components/file-upload'
+} from '@heroicons/react/24/solid';
+import Loading from '@/components/loading';
+import FileUpload from '@/components/file-upload';
 
 const statusColorMap: any = {
   ACTIVE: 'success',
@@ -59,7 +59,7 @@ const statusColorMap: any = {
   STANDARDIZED: 'success',
   DELETED: 'danger',
   PENDING: 'warning',
-}
+};
 
 const cellValueMap: { [key: string]: string } = {
   ACTIVE: 'Hoạt động',
@@ -68,7 +68,7 @@ const cellValueMap: { [key: string]: string } = {
   STANDARDIZED: 'Chuẩn hóa',
   DELETED: 'Đã xóa',
   PENDING: 'Chờ duyệt',
-}
+};
 
 const columns = [
   {
@@ -99,108 +99,86 @@ const columns = [
     title: 'Hành động',
     key: 'action',
   },
-]
+];
 
 const Page = () => {
-  const router = useRouter()
-  const [tabs, setTabs] = useState(1)
-  const [formTemplate, setFormTemplate] = useState<FormTemplate[]>([])
+  const router = useRouter();
+  const [tabs, setTabs] = useState(1);
+  const [formTemplate, setFormTemplate] = useState<FormTemplate[]>([]);
   const [formTemplateVersions, setFormTemplateVersions] = useState<
     FormTemplateVersion[]
-  >([])
-  const [isLoading, setIsLoading] = useState(false)
+  >([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [isEdit, setIsEdit] = useState<{ isOpen: boolean; id?: number | null }>(
     { isOpen: false, id: null }
-  )
+  );
   const [isUpdate, setIsUpdate] = useState<{
-    isOpen: boolean
-    data?: FormTemplate | null
-  }>({ isOpen: false })
+    isOpen: boolean;
+    data?: FormTemplate | null;
+  }>({ isOpen: false });
   const [isStatusUpdate, setIsStatusUpdate] = useState<{
-    isOpen: boolean
-    data?: FormTemplate | null
-  }>({ isOpen: false })
-  const [file, setFile] = useState<File | null>(null)
-  const [formType, setFormType] = useState<FormType[]>([])
+    isOpen: boolean;
+    data?: FormTemplate | null;
+  }>({ isOpen: false });
+  const [file, setFile] = useState<File | null>(null);
+  const [formType, setFormType] = useState<FormType[]>([]);
 
   const getData = async () => {
     //form type
-    const formTypeRes = await axiosClient.get('formType/getAllFormTypes')
-    if (formTypeRes.data?.status === false) return
-    setFormType(formTypeRes.data)
+    const formTypeRes = await axiosClient.get('formType/getAllFormTypes');
+    if (formTypeRes.data?.status === false) return;
+    setFormType(formTypeRes.data);
 
     // Fetch data
-    const formTemplateRes = await axiosClient.get(
-      'formTemplate/getAllFormTemplates'
-    )
-    if (formTemplateRes.data?.status === false) return
-    const promises = formTemplateRes.data.map(async (item: FormTemplate) => {
-      try {
-        const formTemplateVersionRes = await axiosClient.get(
-          `/formTemplateVersion/last/formTemplate/${item.formTemplateId}`
-        )
-        if (!formTemplateVersionRes.data?.id) return
-        const formTemplateVersion = formTemplateVersionRes.data
+    const formTemplateRes = await axiosClient.get('formTemplate');
+    if (formTemplateRes.data?.status === false) return;
 
-        // if status DELETED remove
-        // if (formTemplateVersion.status === 'DELETED') return null;
+    const formTemplatesWithVersions: FormTemplate[] = formTemplateRes.data;
 
-        // Add the formTemplateVersion to the formTemplate
-        return { ...item, formTemplateVersion }
-      } catch (error: any) {
-        if (error.response.status === 400) {
-          // remove item from formTemplate
-          return null
-        }
-      }
-    })
-
-    const formTemplatesWithVersions = (await Promise.all(promises)).filter(
-      Boolean
-    )
+    if (!formTemplatesWithVersions) return;
 
     // Sort the data
     formTemplatesWithVersions.sort(
-      (a, b) => b.formTemplateId - a.formTemplateId
-    )
-    setFormTemplate(formTemplatesWithVersions)
+      (a, b) => (b.formTemplateId || 0) - (a.formTemplateId || 0)
+    );
+    setFormTemplate(formTemplatesWithVersions);
     // Now you can use formTemplatesWithVersions
-  }
+  };
 
   const autoStandardizationTemplate = async (id: number, fileName: string) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const res = await axiosClient.post(
         `formTemplateVersion/${id}/autoStandardization`,
         null,
         { responseType: 'blob' }
-      )
+      );
 
-      const file = new Blob([res.data])
-      const url = URL.createObjectURL(file)
+      const file = new Blob([res.data]);
+      const url = URL.createObjectURL(file);
 
-      const a = document.createElement('a')
-      a.href = url
-      document.body.appendChild(a)
+      const a = document.createElement('a');
+      a.href = url;
+      document.body.appendChild(a);
 
-      a.download = fileName + '.docx'
-      a.click()
-      setIsLoading(false)
+      a.download = fileName + '.docx';
+      a.click();
+      setIsLoading(false);
     } catch (error) {
-      console.log(error)
-      setIsLoading(false)
+      console.log(error);
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleFileUpload = async () => {
-    if (!file) return
-    if (!isEdit.id) return
+    if (!file) return;
+    if (!isEdit.id) return;
 
-    const formData = new FormData()
-    formData.append('file', file)
+    const formData = new FormData();
+    formData.append('file', file);
 
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const res = await axiosClient.patch(
         `formTemplateVersion/${isEdit.id}`,
         formData,
@@ -209,74 +187,74 @@ const Page = () => {
             'Content-Type': 'multipart/form-data',
           },
         }
-      )
+      );
 
-      if (res.data?.status === false) return
-      getData()
-      setIsLoading(false)
-      setIsEdit({ isOpen: false })
-      setFile(null)
+      if (res.data?.status === false) return;
+      getData();
+      setIsLoading(false);
+      setIsEdit({ isOpen: false });
+      setFile(null);
     } catch (error) {
-      console.log(error)
-      setIsLoading(false)
-      setIsEdit({ isOpen: false })
+      console.log(error);
+      setIsLoading(false);
+      setIsEdit({ isOpen: false });
     }
-  }
+  };
 
   const handleDelete = async (id: number) => {
     try {
-      setIsLoading(true)
-      const res = await axiosClient.delete(`formTemplateVersion/${id}`)
-      if (res.data?.status === false) return
-      getData()
-      setIsLoading(false)
+      setIsLoading(true);
+      const res = await axiosClient.delete(`formTemplateVersion/${id}`);
+      if (res.data?.status === false) return;
+      getData();
+      setIsLoading(false);
     } catch (error) {
-      console.log(error)
-      setIsLoading(false)
+      console.log(error);
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const data = Object.fromEntries(formData.entries())
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const res = await axiosClient.patch(
-        `formTemplateVersion/${isUpdate.data?.formTemplateVersion?.id}`,
+        `formTemplateVersion/${isUpdate.data?.latestVersion?.id}`,
         data
-      )
-      if (res.data?.status === false) return
-      getData()
-      setIsLoading(false)
-      setIsUpdate({ isOpen: false })
+      );
+      if (res.data?.status === false) return;
+      getData();
+      setIsLoading(false);
+      setIsUpdate({ isOpen: false });
     } catch (error) {
-      console.log(error)
-      setIsLoading(false)
-      setIsUpdate({ isOpen: false })
+      console.log(error);
+      setIsLoading(false);
+      setIsUpdate({ isOpen: false });
     }
-  }
+  };
 
   const handleUpdateStatus = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const data = Object.fromEntries(formData.entries())
-    if (!isStatusUpdate.data?.formTemplateVersion?.id) return
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    if (!isStatusUpdate.data?.latestVersion?.id) return;
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const res = await axiosClient.put(
-        `formTemplateVersion/status/${isStatusUpdate.data?.formTemplateVersion.id ?? ''}?status=${data.status}`
-      )
-      if (res.data?.status === false) return
-      getData()
-      setIsLoading(false)
-      setIsStatusUpdate({ isOpen: false })
+        `formTemplateVersion/status/${isStatusUpdate.data?.latestVersion.id ?? ''}?status=${data.status}`
+      );
+      if (res.data?.status === false) return;
+      getData();
+      setIsLoading(false);
+      setIsStatusUpdate({ isOpen: false });
     } catch (error) {
-      console.log(error)
-      setIsLoading(false)
-      setIsStatusUpdate({ isOpen: false })
+      console.log(error);
+      setIsLoading(false);
+      setIsStatusUpdate({ isOpen: false });
     }
-  }
+  };
 
   useEffect(() => {
     // switch (tabs) {
@@ -288,45 +266,45 @@ const Page = () => {
     //     fetchTemplates();
     // }
 
-    getData()
-  }, [])
+    getData();
+  }, []);
 
   const renderCell = useCallback((item: FormTemplate, columnKey: Key) => {
-    if (!item.formTemplateVersion || !item.formTemplateVersion.id) return null
+    if (!item.latestVersion || !item.latestVersion.id) return null;
 
-    const { formTemplateVersion } = item
+    const { latestVersion } = item;
 
     const renderId = () => (
       <div className="w-full text-center">{item.formTemplateId}</div>
-    )
+    );
     const renderName = () => (
       <div className="w-full text-center">{item.title}</div>
-    )
+    );
     const renderDownload = () => (
       <a
-        href={`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/download/${formTemplateVersion.id}`}
+        href={`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/download/${latestVersion.id}`}
       >
         <ArrowDownTrayIcon className="mx-auto h-4 w-4" />
       </a>
-    )
+    );
     const renderStatus = () => (
       <Chip
         className="capitalize"
-        color={statusColorMap[formTemplateVersion.status]}
+        color={statusColorMap[latestVersion.status]}
         size="sm"
         variant="flat"
       >
-        {cellValueMap[formTemplateVersion.status]}
+        {cellValueMap[latestVersion.status]}
       </Chip>
-    )
+    );
     const renderPrice = () => (
       <div className="mx-auto w-20 text-right">
         {new Intl.NumberFormat('vi-VN', {
           style: 'currency',
           currency: 'VND',
-        }).format(formTemplateVersion.price)}
+        }).format(latestVersion.price)}
       </div>
-    )
+    );
 
     const renderAction = () => {
       const menuItems = [
@@ -337,17 +315,16 @@ const Page = () => {
         {
           title: 'Chuẩn hóa',
           onClick: () =>
-            formTemplateVersion &&
+            latestVersion &&
             autoStandardizationTemplate(
-              formTemplateVersion.id,
+              latestVersion.id,
               'STANDARDIZED_' + item.title
             ),
           notDisplayStatus: ['ACTIVE', 'STANDARDIZED', 'DELETED'],
         },
         {
           title: 'Chỉnh sửa file',
-          onClick: () =>
-            setIsEdit({ isOpen: true, id: formTemplateVersion?.id }),
+          onClick: () => setIsEdit({ isOpen: true, id: latestVersion?.id }),
           notDisplayStatus: ['ACTIVE', 'STANDARDIZED', 'DELETED'],
         },
         {
@@ -357,20 +334,19 @@ const Page = () => {
         {
           title: 'Xóa',
           onClick: () => {
-            if (item.formTemplateVersion) {
-              handleDelete(item.formTemplateVersion.id)
+            if (item.latestVersion) {
+              handleDelete(item.latestVersion.id);
             }
           },
           color: 'danger',
           notDisplayStatus: ['DELETED'],
         },
-      ]
+      ];
 
       const filteredMenuItems = menuItems.filter(
         (menu) =>
-          menu.notDisplayStatus?.includes(formTemplateVersion?.status ?? '') !==
-          true
-      )
+          menu.notDisplayStatus?.includes(latestVersion?.status ?? '') !== true
+      );
 
       return (
         <div className="relative mx-6 flex items-center justify-end gap-2">
@@ -393,8 +369,8 @@ const Page = () => {
             </DropdownMenu>
           </Dropdown>
         </div>
-      )
-    }
+      );
+    };
 
     const renderFunctions: { [key: string]: () => JSX.Element } = {
       id: renderId,
@@ -403,23 +379,23 @@ const Page = () => {
       status: renderStatus,
       action: renderAction,
       price: renderPrice,
-    }
+    };
 
-    return renderFunctions[String(columnKey)]?.()
-  }, [])
+    return renderFunctions[String(columnKey)]?.();
+  }, []);
 
   //pagination
-  const [page, setPage] = React.useState(1)
-  const rowsPerPage = 8
+  const [page, setPage] = React.useState(1);
+  const rowsPerPage = 8;
 
-  const pages = Math.ceil(formTemplate.length / rowsPerPage)
+  const pages = Math.ceil(formTemplate.length / rowsPerPage);
 
   const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage
-    const end = start + rowsPerPage
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
 
-    return formTemplate.slice(start, end)
-  }, [page, formTemplate])
+    return formTemplate.slice(start, end);
+  }, [page, formTemplate]);
 
   // if (isLoading) return <Loading />;
 
@@ -531,8 +507,8 @@ const Page = () => {
                 <Select
                   name="status"
                   defaultSelectedKeys={
-                    isStatusUpdate.data?.formTemplateVersion?.status
-                      ? [isStatusUpdate.data.formTemplateVersion.status]
+                    isStatusUpdate.data?.latestVersion?.status
+                      ? [isStatusUpdate.data.latestVersion.status]
                       : undefined
                   }
                   variant="bordered"
@@ -658,7 +634,7 @@ const Page = () => {
             {(item) => (
               <TableRow key={item.formTemplateId}>
                 {(columnKey) => {
-                  return <TableCell>{renderCell(item, columnKey)}</TableCell>
+                  return <TableCell>{renderCell(item, columnKey)}</TableCell>;
                 }}
               </TableRow>
             )}
@@ -666,7 +642,7 @@ const Page = () => {
         </Table>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
