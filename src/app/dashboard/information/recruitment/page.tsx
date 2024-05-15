@@ -147,7 +147,8 @@ const Recruitment = () => {
       const url = `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/updateStatusRecruitmentForm/${id}?status=${newStatus}`;
 
       // Prepare the config object for headers
-      const config = {};
+      const config = { headers: authHeader(), // Include authentication headers
+    };
 
       // Make the PUT request with URL and config
       const response = await axios.put(url, {}, config);
