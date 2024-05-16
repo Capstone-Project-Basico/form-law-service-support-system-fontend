@@ -120,7 +120,7 @@ const Partner = () => {
           partner.processStatus === "CHỜ DUYỆT" && partner.delete === false
       );
       setPartners(filteredPosts);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   //get all deleted items
@@ -161,9 +161,9 @@ const Partner = () => {
                 fetchPendingPartners();
               }
             }),
-            {
-              headers: authHeader(),
-            };
+          {
+            headers: authHeader(),
+          };
         } catch (error) {
           console.log(error);
         }
@@ -287,6 +287,26 @@ const Partner = () => {
       console.log(error);
     }
   };
+
+  // unApprove
+  const unApprove = async (id: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}partner/unApprovePartner/${id}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success("Bạn đã chuyển gói biểu mẫu này sang chờ duyệt");
+          fetchPartners();
+        });
+    } catch (error) {
+      toast.error("Chuyển sang chờ duyệt thất bại");
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -363,9 +383,8 @@ const Partner = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -375,9 +394,8 @@ const Partner = () => {
 
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(2)}
             radius="none"
           >
@@ -387,10 +405,9 @@ const Partner = () => {
 
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 3 &&
+            className={`bg-white ${tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(3)}
           >
@@ -402,6 +419,7 @@ const Partner = () => {
       <div>
         <Partners
           partners={partners}
+          unApprove={unApprove}
           handleDelete={handleDelete}
           restoreDelete={restoreDelete}
           handleApprove={handleApprove}

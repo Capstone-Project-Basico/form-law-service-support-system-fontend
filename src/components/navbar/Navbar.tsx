@@ -18,7 +18,7 @@ import {
 import { Navbar as MyNavbar } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { practices } from "@/lib/navbarItems";
+import { practices, template } from "@/lib/navbarItems";
 import { researchAndPublications, about } from "@/lib/navbarItems";
 import { log } from "console";
 import axios from "axios";
@@ -48,7 +48,7 @@ interface UserLocal {
 }
 const MENU = [
   { name: "LUẬT SƯ CỦA BASICO", path: "/basicoLawyers" },
-  { name: "BIỂU MẪU", path: "/template" },
+  // { name: "BIỂU MẪU", path: "/template" },
   { name: "LIÊN HỆ", path: "/contactUs" },
   { name: "TUYỂN DỤNG", path: "/Recruitment" },
 ];
@@ -57,6 +57,7 @@ const Navbar = () => {
   const [serviceDropdownVisible, setServiceDropdownVisible] = useState(false);
   const [researchDropdownVisible, setResearchDropdownVisible] = useState(false);
   const [aboutDropdownVisible, setAboutDropdownVisible] = useState(false);
+  const [templateDropdownVisible, setTemplateDropdownVisible] = useState(false);
   const [userData, setUserData] = useState<UserType>();
   const pathname = usePathname();
   const router = useRouter();
@@ -106,21 +107,21 @@ const Navbar = () => {
     setWalletError(null);
     try {
       axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
-      )
-      .then((response) => {
-        setWallet(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching wallet:", error);
-        setWalletError(
-          "Failed to fetch wallet details. Please try again later."
-        );
-      });
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+        )
+        .then((response) => {
+          setWallet(response.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching wallet:", error);
+          setWalletError(
+            "Failed to fetch wallet details. Please try again later."
+          );
+        });
     } catch (error) {
       console.log(error);
-      
+
     }
 
   };
@@ -165,9 +166,8 @@ const Navbar = () => {
                 >
                   <div
                     // href="/practices"
-                    className={` ${
-                      pathname.includes("/practices") ? "text-[#e74c3c]" : ""
-                    } `}
+                    className={` ${pathname.includes("/practices") ? "text-[#e74c3c]" : ""
+                      } `}
                   >
                     DỊCH VỤ
                   </div>
@@ -203,11 +203,10 @@ const Navbar = () => {
                     onClick={() => router.push("/researchAndPublications")}
                   >
                     <div
-                      className={` ${
-                        pathname.includes("/researchAndPublications")
-                          ? "text-[#e74c3c]"
-                          : ""
-                      }`}
+                      className={` ${pathname.includes("/researchAndPublications")
+                        ? "text-[#e74c3c]"
+                        : ""
+                        }`}
                     >
                       NGHIÊN CỨU SÁNG TẠO
                     </div>
@@ -244,9 +243,8 @@ const Navbar = () => {
                     onClick={() => router.push("/about")}
                   >
                     <div
-                      className={`${
-                        pathname === "/about" ? "text-[#e74c3c]" : ""
-                      }`}
+                      className={`${pathname === "/about" ? "text-[#e74c3c]" : ""
+                        }`}
                     >
                       GIỚI THIỆU
                     </div>
@@ -255,6 +253,44 @@ const Navbar = () => {
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions" className="bg-black">
                 {about.map((ab, key) => (
+                  <DropdownItem key={key} textValue={ab.title}>
+                    <Link href={ab.link} className="text-white">
+                      {ab.title}
+                    </Link>
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+          </NavbarItem>
+
+          {/* Goi dich vu */}
+          <NavbarItem
+            onMouseEnter={() => setTemplateDropdownVisible(true)}
+            onMouseLeave={() => setTemplateDropdownVisible(false)}
+          >
+            <Dropdown
+              isOpen={templateDropdownVisible}
+              className="bg-black"
+              radius="none"
+            >
+              <DropdownTrigger>
+                <div color="secondary">
+                  <Button
+                    className={styles.hoverButton}
+                    radius="none"
+                    onClick={() => router.push("/template")}
+                  >
+                    <div
+                      className={`${pathname === "/template" ? "text-[#e74c3c]" : ""
+                        }`}
+                    >
+                      BIỂU MẪU
+                    </div>
+                  </Button>
+                </div>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions" className="bg-black">
+                {template.map((ab, key) => (
                   <DropdownItem key={key} textValue={ab.title}>
                     <Link href={ab.link} className="text-white">
                       {ab.title}
@@ -274,9 +310,8 @@ const Navbar = () => {
                     onClick={() => router.push(item.path)}
                   >
                     <div
-                      className={`${
-                        pathname === item.path ? "text-[#e74c3c]" : ""
-                      }`}
+                      className={`${pathname === item.path ? "text-[#e74c3c]" : ""
+                        }`}
                     >
                       {item.name}
                     </div>
@@ -285,21 +320,6 @@ const Navbar = () => {
               </NavbarItem>
             );
           })}
-
-          {/* <NavbarItem>
-            <a href="/contactUs">
-              <Button className="red-hover-button bg-white" radius="none">
-                LIÊN HỆ
-              </Button>
-            </a>
-          </NavbarItem>
-          <NavbarItem>
-            <a href="/Recruitment">
-              <Button className="red-hover-button bg-white" radius="none">
-                TUYỂN DỤNG
-              </Button>
-            </a>
-          </NavbarItem> */}
         </NavbarContent>
 
         {/* login */}
@@ -532,9 +552,8 @@ const MenuItem = ({ item }: { item: ProfileSidebarItem }) => {
     <div>
       <Link
         href={item.path}
-        className={`flex flex-row space-x-4 items-center p-2 rounded-lg hover:text-[#FF0004] ${
-          item.path === pathname ? "text-[#FF0004]" : ""
-        }`}
+        className={`flex flex-row space-x-4 items-center p-2 rounded-lg hover:text-[#FF0004] ${item.path === pathname ? "text-[#FF0004]" : ""
+          }`}
       >
         {item.icon}
         <span className="font-semibold text-xl flex">{item.title}</span>
