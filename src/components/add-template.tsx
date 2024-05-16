@@ -17,6 +17,17 @@ import { ToastContainer, toast } from 'react-toastify';
 
 type Props = {};
 
+const validatePrice = (value: string) => {
+  if (value === '') {
+    return 'Giá không được để trống';
+  }
+  // value < 100 > 1000000
+  if (parseInt(value) < 100 || parseInt(value) > 1000000) {
+    return 'Giá phải từ 100 đến 1,000,000';
+  }
+  return '';
+};
+
 const AddTemplate = (props: Props) => {
   const router = useRouter();
   const [file, setFile] = React.useState<File | null>(null);
@@ -69,6 +80,7 @@ const AddTemplate = (props: Props) => {
       const res = await postFormTemplateVersion(formTemplateVersion);
       if (res) {
         if (res.status === 200) {
+          toast.success('Tạo mới biểu mẫu thành công');
           const user = getUserFromStorage();
           if (user) {
             if (user.roleName === 'ROLE_MANAGER')
@@ -189,7 +201,13 @@ const AddTemplate = (props: Props) => {
                   </SelectItem>
                 ))}
             </Select>
-            <Input name="price" variant="bordered" label="Giá" type="text" />
+            <Input
+              name="price"
+              variant="bordered"
+              label="Giá"
+              type="number"
+              validate={validatePrice}
+            />
           </div>
         </div>
         <div className="h-auto basis-5/12 rounded-md border-1 border-gray-400 bg-white p-5 ">
@@ -209,7 +227,13 @@ const AddTemplate = (props: Props) => {
         />
       </div>
       <div className="mt-9 grid w-full grid-cols-2 gap-2">
-        <Button variant="bordered" className="bg-white ">
+        <Button
+          onClick={() => {
+            router.back();
+          }}
+          variant="bordered"
+          className="bg-white "
+        >
           Quay lại
         </Button>
         <Button type="submit" className="bg-red-500 text-white">
