@@ -51,6 +51,8 @@ import {
 } from '@heroicons/react/24/solid';
 import Loading from '@/components/loading';
 import FileUpload from '@/components/file-upload';
+import { ToastContainer } from 'react-toastify';
+import ManagerTemplatePage from '@/components/manage-template';
 
 const statusColorMap: any = {
   ACTIVE: 'success',
@@ -155,11 +157,9 @@ const Page = () => {
   const autoStandardizationTemplate = async (id: number, fileName: string) => {
     try {
       setIsLoading(true);
-      const res = await axiosClient.post(
-        `latestVersion/${id}/autoStandardization`,
-        null,
-        { responseType: 'blob' }
-      );
+      const res = await axiosClient.post(`${id}/autoStandardization`, null, {
+        responseType: 'blob',
+      });
 
       const file = new Blob([res.data]);
       const url = URL.createObjectURL(file);
@@ -327,7 +327,7 @@ const Page = () => {
     );
     const renderDownload = () => (
       <a
-        href={`${process.env.NEXT_PUBLIC_BASE_API}latestVersion/download/${latestVersion.id}`}
+        href={`${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion/download/${latestVersion.id}`}
       >
         <ArrowDownTrayIcon className="mx-auto h-4 w-4" />
       </a>
@@ -428,236 +428,7 @@ const Page = () => {
     return formTemplate.slice(start, end);
   }, [page, formTemplate]);
 
-  // if (isLoading) return <Loading />;
-
-  return (
-    <div className="ml-5 mr-5 mt-5 w-full">
-      {isLoading && (
-        <Loading className="fixed left-0 top-0 z-50 h-full w-full bg-white bg-opacity-50" />
-      )}
-      {isEdit.isOpen && (
-        <div className="fixed left-0 top-0 z-50 h-full w-full bg-white bg-opacity-50">
-          <Modal
-            isOpen={isEdit.isOpen}
-            onClose={() => setIsEdit({ isOpen: true })}
-            hideCloseButton
-          >
-            <ModalContent style={{ width: '50%', maxWidth: '500px' }}>
-              <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
-                Cập nhật file
-              </ModalHeader>
-              <ModalBody>
-                <FileUpload file={file} setFile={setFile} className="" />
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  onClick={() => handleFileUpload()}
-                  className="button-danger bg-[#FF0004] text-white"
-                >
-                  Cập nhật
-                </Button>
-                <Button
-                  className="button-danger bg-[#FF0004] text-white"
-                  onPress={() => setIsEdit({ isOpen: false })}
-                >
-                  Đóng
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </div>
-      )}
-      {/* update modal */}
-      <form onSubmit={handleUpdate}>
-        <Modal
-          isOpen={isUpdate.isOpen}
-          onClose={() => setIsUpdate({ isOpen: false })}
-          hideCloseButton
-        >
-          <ModalContent style={{ width: '50%', maxWidth: '500px' }}>
-            <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
-              Chi tiết
-            </ModalHeader>
-            <ModalBody>
-              <div className="flex flex-col gap-10">
-                <Input
-                  name="title"
-                  label="Tên biểu mẫu"
-                  value={isUpdate.data?.title}
-                />
-                <Select
-                  name="formTypeName"
-                  label="Loại biểu mẫu"
-                  defaultSelectedKeys={[formType[0]?.id]}
-                  items={formType}
-                >
-                  {(formType) => (
-                    <SelectItem key={formType.id}>
-                      {formType.typeName}
-                    </SelectItem>
-                  )}
-                </Select>
-                <Input
-                  name="description"
-                  label="Miểu tả"
-                  value={isUpdate.data?.description}
-                />
-              </div>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                type="submit"
-                className="button-danger bg-[#FF0004] text-white"
-              >
-                Cập nhật
-              </Button>
-              <Button
-                className="button-danger bg-[#FF0004] text-white"
-                onPress={() => setIsUpdate({ isOpen: false })}
-              >
-                Đóng
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </form>
-
-      {/* update status modal */}
-      {/* <Modal isOpen={isStatusUpdate.isOpen} onClose={() => setIsStatusUpdate({ isOpen: false })} hideCloseButton>
-        <ModalContent style={{ width: '50%', maxWidth: '500px' }}>
-          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">Chi tiết</ModalHeader>
-          <ModalBody>
-            <form onSubmit={handleUpdateStatus}>
-              <div className="flex flex-col gap-10">
-                <Select
-                  name="status"
-                  defaultSelectedKeys={isStatusUpdate.data?.latestVersion.status ? [isStatusUpdate.data.latestVersion.status] : undefined}
-                  variant="bordered"
-                  label="Loại biểu mẫu"
-                >
-                  <SelectItem key={'ACTIVE'}>ACTIVE</SelectItem>
-                  <SelectItem key={'INACTIVE'}>INACTIVE</SelectItem>
-                  <SelectItem key={'UNSTANDARDIZED'}>UNSTANDARDIZED</SelectItem>
-                  <SelectItem key={'STANDARDIZED'}>STANDARDIZED</SelectItem>
-                  <SelectItem key={'DELETED'}>DELETED</SelectItem>
-                </Select>
-              </div>
-              <div className="p-6 flex justify-end gap-4">
-                <Button type="submit" className="button-danger bg-[#FF0004] text-white">
-                  Cập nhật
-                </Button>
-                <Button className="button-danger bg-[#FF0004] text-white" onPress={() => setIsStatusUpdate({ isOpen: false })}>
-                  Đóng
-                </Button>
-              </div>
-            </form>
-          </ModalBody>
-        </ModalContent>
-      </Modal> */}
-
-      <div className=" grid grid-cols-2 pb-5">
-        <Breadcrumbs color="danger" size="lg" className="text-3xl">
-          <BreadcrumbItem>
-            <p className="text-3xl font-bold text-black ">Quản lí thông tin</p>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <p className="text-3xl font-bold text-[#FF0004]">Biểu mẫu</p>
-          </BreadcrumbItem>
-        </Breadcrumbs>
-
-        <div className="flex justify-end">
-          <Button
-            className="flex justify-end bg-[#FF0004] text-white"
-            radius="full"
-            onClick={() =>
-              router.push('/dashboardStaff/service/manageTemplate/add-template')
-            }
-          >
-            Tạo mới
-            <FontAwesomeIcon icon={faPlus} />
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-row gap-10 border-b-1 font-bold">
-        <div>
-          <Button
-            className={`bg-white ${tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'}`}
-            onClick={() => setTabs(1)}
-            radius="none"
-          >
-            TẤT CẢ
-          </Button>
-        </div>
-        {/* <div>
-          <Button className="bg-white" onClick={() => setTabs(2)} radius="none">
-            CHỜ DUYỆT
-          </Button>
-        </div>
-        <div>
-          <Button
-            className={`bg-white ${tabs === 3 && 'text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]'}`}
-            radius="none"
-            onClick={() => setTabs(3)}
-          >
-            KHÔNG SỬ DỤNG
-          </Button>
-        </div> */}
-      </div>
-
-      <div className="h-[40rem] w-full">
-        <Table
-          isHeaderSticky
-          classNames={{
-            base: ' max-h-[40rem] ',
-            table: ' overflow-scroll',
-            tbody: 'text-center',
-          }}
-          bottomContent={
-            pages > 1 && (
-              <div className="flex w-full justify-center">
-                <Pagination
-                  showControls
-                  classNames={{
-                    wrapper: 'gap-0 overflow-visible h-8 ',
-                    item: 'w-8 h-8 text-small rounded-none bg-transparent',
-                    cursor:
-                      'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
-                  }}
-                  page={page}
-                  total={pages}
-                  onChange={(page) => setPage(page)}
-                />
-              </div>
-            )
-          }
-        >
-          <TableHeader columns={columns} className="text-white">
-            {(column) => (
-              <TableColumn
-                className="bg-primary text-center text-white"
-                key={column.key}
-              >
-                {column.title}
-              </TableColumn>
-            )}
-          </TableHeader>
-          <TableBody
-            loadingContent={<Spinner label="Loading..." />}
-            items={items}
-          >
-            {(item) => (
-              <TableRow key={item.formTemplateId}>
-                {(columnKey) => {
-                  return <TableCell>{renderCell(item, columnKey)}</TableCell>;
-                }}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
-  );
+  return <ManagerTemplatePage />;
 };
 
 export default Page;
