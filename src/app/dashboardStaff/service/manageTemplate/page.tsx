@@ -103,14 +103,51 @@ const Page = () => {
     const formTemplateRes = await axiosClient.get('formTemplate');
     if (formTemplateRes.data?.status === false) return;
 
-    const formTemplatesWithVersions: FormTemplate[] = formTemplateRes.data;
+    let formTemplatesWithVersions: FormTemplate[] = formTemplateRes.data;
 
     if (!formTemplatesWithVersions) return;
 
-    // Sort the data
-    formTemplatesWithVersions.sort(
-      (a, b) => (b.formTemplateId || 0) - (a.formTemplateId || 0)
+    //remove form template without version
+    formTemplatesWithVersions = formTemplatesWithVersions.filter(
+      (formTemplate) => formTemplate.latestVersion
     );
+
+    formTemplatesWithVersions.sort((a, b) => {
+      //check undefined
+      if (!a.latestVersion || !b.latestVersion) {
+        return 0;
+      }
+      if (!a.formTemplateId || !b.formTemplateId) {
+        return 0;
+      }
+
+      if (a.latestVersion.status === b.latestVersion.status) {
+        // If 'status' is equal, sort by 'id'
+        return a.formTemplateId - b.formTemplateId;
+      }
+      // Otherwise, sort by 'status' (assuming 'status' is a string)
+      // if status = active -> sort to the top
+      if (a.latestVersion.status === 'ACTIVE') return -1;
+      if (b.latestVersion.status === 'ACTIVE') return 1;
+      // if status = deleted -> sort to the bottom
+      if (a.latestVersion.status === 'DELETED') return 1;
+      if (b.latestVersion.status === 'DELETED') return -1;
+      // if status = pending -> sort to the top
+      if (a.latestVersion.status === 'PENDING') return -1;
+      if (b.latestVersion.status === 'PENDING') return 1;
+      // if status = inactive -> sort to the bottom
+      if (a.latestVersion.status === 'INACTIVE') return 1;
+      if (b.latestVersion.status === 'INACTIVE') return -1;
+      // if status = unstandardized -> sort to the bottom
+      if (a.latestVersion.status === 'UNSTANDARDIZED') return 1;
+      if (b.latestVersion.status === 'UNSTANDARDIZED') return -1;
+      // if status = standardized -> sort to the top
+      if (a.latestVersion.status === 'STANDARDIZED') return -1;
+      if (b.latestVersion.status === 'STANDARDIZED') return 1;
+
+      return 0;
+    });
+
     setFormTemplate(formTemplatesWithVersions);
     // Now you can use formTemplatesWithVersions
   };
