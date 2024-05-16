@@ -22,6 +22,7 @@ import {
   NavbarItem,
   MenuItem,
   DatePicker,
+  Textarea,
 } from "@nextui-org/react";
 import axios from "axios";
 import { FormEvent, useEffect, useState } from "react";
@@ -46,6 +47,7 @@ import Tasks from "@/components/manage/Task";
 import { v4 as uuidv4 } from "uuid";
 import { headers } from "next/headers";
 import dateConvert from "@/components/dateConvert";
+import useUser from "@/components/authHeader/User";
 
 const Task = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -55,18 +57,27 @@ const Task = () => {
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
-  const [processStatus, setProcessStatus] = useState("");
+  const [createBy, setCreateBy] = useState("");
+  const todayDate = new Date().toISOString().substring(0, 10);
 
   const [task, setTask] = useState<TaskType[]>([]);
   const [staffs, setStaffs] = useState<UserType[]>([]);
   const [selectedTask, setSelectedTask] = useState<TaskType | null>(null);
+
   let newTask = {
     taskName,
     description,
     startDate,
     endDate,
+    createBy
   };
-  
+  const userInfo = useUser();
+  useEffect(() => {
+    if (userInfo && userInfo.email) {
+      setCreateBy(userInfo.email);
+    }
+  }, [userInfo]);
+
   useEffect(() => {
     switch (tabs) {
       case 1:
@@ -74,7 +85,7 @@ const Task = () => {
         break;
       case 2:
         fetchDoneTask();
-          break;
+        break;
       case 3:
         fetchDeletedTask();
         break;
@@ -162,9 +173,9 @@ const Task = () => {
             toast.success("Xóa thành công");
             fetchTask();
           }),
-          {
-            headers: authHeader(),
-          };
+        {
+          headers: authHeader(),
+        };
       } catch (error) {
         console.log(error);
       }
@@ -173,9 +184,16 @@ const Task = () => {
 
   //update
   const handleUpdateSubmit = async (selectedTask: any) => {
-    //if (!selectedTask) return; // Check if a Task is selected
+    if (startDate && endDate) {
+      let start = new Date(startDate);
+      let end = new Date(endDate);
 
-    // Example: PUT request to update Task details
+      // Make sure start date is before end date
+      if (start >= end) {
+        toast.error('Ngày kết thúc phải sau ngày bắt đầu!');
+        return;
+      }
+    }
     axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_API}task-api/updateTask/${selectedTask.id}`,
@@ -250,9 +268,18 @@ const Task = () => {
   //add a new task
   const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
+    if (startDate && endDate) {
+      let start = new Date(startDate);
+      let end = new Date(endDate);
 
+      // Make sure start date is before end date
+      if (start >= end) {
+        toast.error('Ngày kết thúc phải sau ngày bắt đầu!');
+        return;
+      }
+    }
     axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_API}task/createNewTask`, newTask, {
+      .post(`${process.env.NEXT_PUBLIC_BASE_API}task-api/createNewTask`, newTask, {
         headers: authHeader(),
       })
       .then((response) => {
@@ -260,7 +287,6 @@ const Task = () => {
         setDescription("");
         setStartDate(null);
         setEndDate(null);
-        setProcessStatus("");
 
         setTask((prevTasks) => [...prevTasks, response.data.data]);
         toast.success("Tạo mới thành công");
@@ -304,13 +330,14 @@ const Task = () => {
                     </ModalHeader>
                     <ModalBody>
                       <Input
+                        isRequired
                         className="font-bold"
                         type="text"
                         label="Tên công việc"
                         value={taskName}
                         onChange={(e) => setTaskName(e.target.value)}
                       />
-                      <Input
+                      <Textarea
                         type="text"
                         label="Mô tả"
                         value={description}
@@ -331,6 +358,7 @@ const Task = () => {
                           // console.log(e.target.value);
                           // console.log(dateValue?.substring(0, 10));
                         }}
+                        min={todayDate}
                         className="form-input"
                       />
 
@@ -349,6 +377,7 @@ const Task = () => {
                             dateValue
                           );
                         }}
+                        min={todayDate}
                         className="form-input"
                       />
                     </ModalBody>
@@ -370,37 +399,34 @@ const Task = () => {
 
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
 
-          <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+        <Button
+          className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
-            onClick={() => setTabs(1)}
-            radius="none"
-          >
-            TẤT CẢ
-          </Button>
+          onClick={() => setTabs(1)}
+          radius="none"
+        >
+          TẤT CẢ
+        </Button>
 
-          <Button
-            className={`bg-white ${
-              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+        <Button
+          className={`bg-white ${tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
-            onClick={() => setTabs(2)}
-            radius="none"
-          >
-            ĐÃ HOÀN THÀNH
-          </Button>
+          onClick={() => setTabs(2)}
+          radius="none"
+        >
+          ĐÃ HOÀN THÀNH
+        </Button>
 
-          <Button
-            className={`bg-white ${
-              tabs === 3 &&
-              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
+        <Button
+          className={`bg-white ${tabs === 3 &&
+            "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
             }`}
-            radius="none"
-            onClick={() => setTabs(3)}
-          >
-            KHÔNG SỬ DỤNG
-          </Button>
-   
+          radius="none"
+          onClick={() => setTabs(3)}
+        >
+          KHÔNG SỬ DỤNG
+        </Button>
+
       </div>
 
       <div>
