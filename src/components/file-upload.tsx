@@ -5,7 +5,11 @@ export interface IFileUploadProps extends React.HTMLAttributes<HTMLDivElement> {
   setFile: (file: File | null) => void;
 }
 
-export default function FileUpload({ file, setFile, ...props }: IFileUploadProps) {
+export default function FileUpload({
+  file,
+  setFile,
+  ...props
+}: IFileUploadProps) {
   // handleFileChange function
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
@@ -19,15 +23,42 @@ export default function FileUpload({ file, setFile, ...props }: IFileUploadProps
     setFile(null);
   }
 
+  // handleFileDrop function
+  function handleFileDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    const files = event.dataTransfer.files;
+    if (files && files.length > 0) {
+      setFile(files[0]);
+    }
+  }
+
+  // handleFileDragOver function
+  function handleFileDragOver(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+  }
+
   if (file) {
     return (
-      <div {...props} className={props?.className + ' ' + 'h-auto rounded-md border my-auto bg-[#F5F7FB] py-4 px-2'}>
+      <div
+        {...props}
+        className={
+          props?.className +
+          ' ' +
+          'my-auto h-auto rounded-md border bg-[#F5F7FB] px-2 py-4'
+        }
+      >
         <div className="flex items-center justify-between">
           <span className="truncate pr-3 text-base font-medium text-[#07074D]">
             <div>{file.name}</div>
           </span>
           <button onClick={handleRemoveFile} className="text-[#07074D]">
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 fill-rule="evenodd"
                 clip-rule="evenodd"
@@ -51,10 +82,15 @@ export default function FileUpload({ file, setFile, ...props }: IFileUploadProps
   }
 
   return (
-    <div {...props} className={props?.className + ' ' + ''}>
+    <div
+      {...props}
+      onDrop={handleFileDrop}
+      onDragOver={handleFileDragOver}
+      className={props?.className + ' ' + ''}
+    >
       <label
         htmlFor="dropzone-file"
-        className="mx-auto my-auto cursor-pointer flex w-full max-w-lg flex-col items-center border-y-2 border-dashed border-gray-400 bg-white p-6 text-center"
+        className="mx-auto my-auto flex w-full max-w-lg cursor-pointer flex-col items-center border-y-2 border-dashed border-gray-400 bg-white p-6 text-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -71,11 +107,21 @@ export default function FileUpload({ file, setFile, ...props }: IFileUploadProps
           />
         </svg>
 
-        <h2 className="mt-4 text-xl font-medium text-gray-700 tracking-wide">Payment File</h2>
+        <h2 className="mt-4 text-xl font-medium tracking-wide text-gray-700">
+          Payment File
+        </h2>
 
-        <p className="mt-2 text-gray-500 tracking-wide">Upload or darg & drop your file. </p>
+        <p className="mt-2 tracking-wide text-gray-500">
+          Upload or darg & drop your file.{' '}
+        </p>
 
-        <input id="dropzone-file" type="file" accept=".docx" className="hidden" onChange={handleFileChange} />
+        <input
+          id="dropzone-file"
+          type="file"
+          accept=".docx"
+          className="hidden"
+          onChange={handleFileChange}
+        />
       </label>
     </div>
   );
