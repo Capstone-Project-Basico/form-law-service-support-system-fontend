@@ -59,7 +59,7 @@ const BuyTemplatePack = () => {
         }
       );
       setServicePacks(response.data.data);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   //buy pack
@@ -161,7 +161,6 @@ const BuyTemplatePack = () => {
 
   return (
     <div className="rounded-xl bg-white p-5 ">
-      <ToastContainer />
       <div className="flex flex-col items-center justify-center">
         <h2 className="mb-5 text-3xl font-bold text-gray-900">
           Gói dịch vụ biểu mẫu
@@ -283,9 +282,8 @@ const BuyTemplatePack = () => {
             <div className="flex gap-10">
               <Button
                 variant="faded"
-                className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                  isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                }`}
+                className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                 onClick={() => setIsSelectedQR(1)}
               >
                 <Image alt="" src="/wallet/vietqr.png" width={50} height={50} />
@@ -294,9 +292,8 @@ const BuyTemplatePack = () => {
 
               <Button
                 variant="faded"
-                className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                  isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                }`}
+                className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                 onClick={() => setIsSelectedQR(2)}
               >
                 <Image alt="" src="/wallet/wallet.png" width={50} height={50} />
