@@ -87,12 +87,19 @@ const Page = () => {
     userId,
     cartRequestList: [{ itemId, quantity, price }],
   });
+  const [checkoutForm, setCheckoutForm] = useState<CheckoutForm[]>();
 
   const getFile = async (id: number) => {
     // fetch file
-    const res = await axiosClient.get('formTemplateVersion/download/' + id, {
-      responseType: 'blob',
-    });
+    const res = await axiosClient
+      .get('formTemplateVersion/download/' + id, {
+        responseType: 'blob',
+      })
+      .catch((error) => {
+        toast.error('Không thể tải file');
+        return;
+      });
+    if (!res) return;
     const file = new Blob([res.data]);
 
     const form = new FormData();
@@ -141,6 +148,27 @@ const Page = () => {
       });
   };
 
+  const getAllCheckOutForm = async () => {
+    const res = await axiosClient.get(
+      `order/getAllCheckOutFormTemplateDetailByUser/${userId}`
+    );
+    const allOrder = res.data;
+    setCheckoutForm(allOrder);
+  };
+
+  const getQuantity = (itemId: number) => {
+    if (!checkoutForm) return 0;
+    let quantity = 0;
+    checkoutForm.map((order) => {
+      order.cart.map((item) => {
+        if (item.itemId === itemId) {
+          quantity += item.quantity;
+        }
+      });
+    });
+    return quantity;
+  };
+
   const getType = async () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
@@ -153,11 +181,6 @@ const Page = () => {
         console.log(error);
       });
   };
-
-  useEffect(() => {
-    getTemplate();
-    getType();
-  }, []);
 
   const handleBuy = async (formId: number, price: number) => {
     try {
@@ -295,9 +318,17 @@ const Page = () => {
   }, [page, filteredItems]);
 
   useEffect(() => {
+    getTemplate();
+    getType();
+    getAllCheckOutForm();
+  }, []);
+
+  useEffect(() => {
     if (selectedTemplate?.latestVersion === undefined) return;
+    if (!isOpen) return;
     const htmlContentRes = getFile(selectedTemplate.latestVersion?.id);
     htmlContentRes.then((res) => {
+      if (!res) return;
       const html = replaceFieldWithValue(res);
       if (templateRef.current) {
         templateRef.current.innerHTML = html;
@@ -363,13 +394,13 @@ const Page = () => {
             {items.map((template, index) => (
               <div key={index} className="">
                 <Card
-                  shadow="sm"
+                  shadow="md"
                   key={index}
                   isPressable={false}
                   onPress={() => console.log('item pressed')}
                   className="h-96 w-72"
                 >
-                  <CardBody className="group relative overflow-hidden">
+                  <CardBody className="group relative overflow-hidden p-0">
                     <Image
                       shadow="sm"
                       radius="lg"
@@ -378,24 +409,12 @@ const Page = () => {
                       className="h-[250px] w-full object-cover"
                       src="/bieumau.jpg"
                     />
-                    {/* <div className="absolute z-10 bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
-                      <Button
-                        className="bg-[#989898] text-white p-2 m-1 hover:bg-[#FF191D]"
-                        onPress={() => {
-                          setSelectedTemplate(template);
-                          onOpen();
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faEye} className="size-4 ml-1" />
-                        Xem trước
-                      </Button>
-                    </div> */}
                   </CardBody>
-                  <CardFooter className="flex flex-col items-start">
+                  <CardFooter className="flex flex-col items-start pt-4">
                     <p className="text-default-500">
                       {template.latestVersion?.price?.toLocaleString()} Đ
                     </p>
-                    <b className="w-52 truncate h-10">{template.title}</b>
+                    <b className="h-10 w-52 truncate">{template.title}</b>
                     <div className="mt-3 flex w-full items-start justify-end gap-2">
                       <Button
                         className="bg-[#989898] text-white hover:bg-[#FF191D]"
@@ -452,47 +471,73 @@ const Page = () => {
           className="h-[800px] w-[1100px]"
         >
           <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalBody className="flex flex-row gap-6 overflow-y-scroll p-6">
-                  <div className="w-[800px]">
-                    <div
-                      className="min-h-full content-center border-1 border-black p-10"
-                      ref={templateRef}
-                    ></div>
-                  </div>
-                  <div className="flex w-[300px] flex-col items-center justify-start gap-10">
-                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {selectedTemplate?.title
-                        ? selectedTemplate?.title
-                        : 'Biểu mẫu này hiện tại không có tên'}
-                    </h1>
-                    <div className="flex flex-col gap-3">
-                      <Button
-                        className="w-80 bg-[#FF0004] text-white"
-                        onPress={() => {
-                          handleBuy(
-                            selectedTemplate?.latestVersion?.id ?? -1,
-                            selectedTemplate?.latestVersion?.price ?? -1
-                          );
-                          onClose();
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faPen} className="ml-1 size-4" />
-                        Mua mẫu này
-                      </Button>
-                      <Button
-                        className="w-full"
-                        onPress={onClose}
-                        variant="faded"
-                      >
-                        Đóng lại
-                      </Button>
+            {(onClose) => {
+              let quantity = 0;
+              if (selectedTemplate?.latestVersion?.id)
+                quantity = getQuantity(selectedTemplate?.latestVersion?.id);
+
+              return (
+                <>
+                  <ModalBody className="flex flex-row gap-6 p-6">
+                    <div className="h-[755px] w-[800px] overflow-y-scroll border-1 border-black p-10">
+                      <div
+                        className="min-h-full content-center  "
+                        ref={templateRef}
+                      ></div>
                     </div>
-                  </div>
-                </ModalBody>
-              </>
-            )}
+                    <div className="flex w-[300px] flex-col items-center justify-start gap-10">
+                      <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                        {selectedTemplate?.title
+                          ? selectedTemplate?.title
+                          : 'Biểu mẫu này hiện tại không có tên'}
+                      </h1>
+                      {/* description */}
+                      <h3>
+                        <span className="font-semibold">Mô tả:</span>{' '}
+                        {selectedTemplate?.description
+                          ? selectedTemplate?.description
+                          : 'Biểu mẫu này hiện tại không có mô tả'}
+                      </h3>
+                      {/* quantity */}
+                      <h3>
+                        {quantity !== 0 && (
+                          <>
+                            <span className="font-semibold">Số lượng:</span>{' '}
+                            {quantity}
+                          </>
+                        )}
+                      </h3>
+
+                      <div className="flex flex-col gap-3">
+                        <Button
+                          className="w-80 bg-[#FF0004] text-white"
+                          onPress={() => {
+                            handleBuy(
+                              selectedTemplate?.latestVersion?.id ?? -1,
+                              selectedTemplate?.latestVersion?.price ?? -1
+                            );
+                            onClose();
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faPen}
+                            className="ml-1 size-4"
+                          />
+                          Mua mẫu này
+                        </Button>
+                        <Button
+                          className="w-full"
+                          onPress={onClose}
+                          variant="faded"
+                        >
+                          Đóng lại
+                        </Button>
+                      </div>
+                    </div>
+                  </ModalBody>
+                </>
+              );
+            }}
           </ModalContent>
         </Modal>
         {/* payment modal */}
