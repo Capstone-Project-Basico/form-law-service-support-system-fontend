@@ -7,6 +7,7 @@ import axiosClient from '@/lib/axiosClient';
 import paths from '@/lib/path-link';
 import { faEye, faPen, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ToastContainer, toast } from 'react-toastify';
 import {
   Button,
   Card,
@@ -37,28 +38,31 @@ const ManageTemplate = () => {
   const templateRef = useRef<HTMLDivElement>(null);
 
   const getFile = async (id: number) => {
-    // fetch file
-    const res = await axiosClient.get('formTemplateVersion/download/' + id, {
-      responseType: 'blob',
-    });
-    const file = new Blob([res.data]);
+    try {
+      const res = await axiosClient.get('formTemplateVersion/download/' + id, {
+        responseType: 'blob',
+      });
+      const file = new Blob([res.data]);
 
-    const form = new FormData();
-    form.append('file', file);
+      const form = new FormData();
+      form.append('file', file);
 
-    const converterURL = process.env.NEXT_PUBLIC_CONVERTER_API;
-    if (!converterURL) {
-      console.error('Converter API is not defined');
-      return 'Server error';
+      const converterURL = process.env.NEXT_PUBLIC_CONVERTER_API;
+      if (!converterURL) {
+        console.error('Converter API is not defined');
+        return 'Server error';
+      }
+      const htmlRes = await axiosClient.post(converterURL, form, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const html = htmlRes.data;
+      return html;
+    } catch (error) {
+      toast.error('Lỗi khi lấy dữ liệu');
     }
-    const htmlRes = await axiosClient.post(converterURL, form, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    const html = htmlRes.data;
-    return html;
   };
 
   function replaceFieldWithValue(htmlContent: string) {
@@ -106,9 +110,8 @@ const ManageTemplate = () => {
         if (isBought) return template;
       });
       setTemplates(templates);
-
-      console.log(templates);
     } catch (error) {
+      toast.error('Lỗi khi lấy dữ liệu');
       console.error(error);
     }
   };
@@ -142,11 +145,13 @@ const ManageTemplate = () => {
   useEffect(() => {
     if (
       selectedTemplate === undefined ||
-      selectedTemplate.latestVersion?.id === undefined // Check if id is undefined
+      selectedTemplate.latestVersion?.id === undefined || // Check if id is undefined
+      isOpen === false // Check if modal is open
     )
       return;
     const htmlContentRes = getFile(selectedTemplate.latestVersion?.id);
     htmlContentRes.then((res) => {
+      if (!res) return;
       const html = replaceFieldWithValue(res);
       if (templateRef.current) {
         templateRef.current.innerHTML = html;
@@ -156,6 +161,7 @@ const ManageTemplate = () => {
 
   return (
     <div className="w-[1350px] rounded-xl bg-white p-5 shadow-lg">
+      <ToastContainer />
       <h1 className="p-3 text-xl font-bold">Biểu mẫu bạn đang sở hữu</h1>
       <div className="grid grid-cols-4">
         {templates.map((template, index) => {
