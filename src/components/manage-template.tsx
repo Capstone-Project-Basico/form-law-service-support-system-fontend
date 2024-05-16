@@ -137,53 +137,60 @@ const ManagerTemplatePage = (props: Props) => {
   };
 
   const getData = async () => {
-    //form type
-    const formTypeRes = await axiosClient.get('formType/getAllFormTypes');
-    if (formTypeRes.data?.status === false) return;
-    setFormType(formTypeRes.data);
+    try {
+      //form type
+      const formTypeRes = await axiosClient.get('formType/getAllFormTypes');
+      if (formTypeRes.data?.status === false) return;
+      setFormType(formTypeRes.data);
 
-    // Fetch data
-    const formTemplateRes = await axiosClient.get('formTemplate');
-    if (formTemplateRes.data?.status === false) return;
+      // Fetch data
+      const formTemplateRes = await axiosClient.get('formTemplate');
+      if (formTemplateRes.data?.status === false) return;
 
-    let formTemplatesWithVersions: FormTemplate[] = formTemplateRes.data;
+      let formTemplatesWithVersions: FormTemplate[] = formTemplateRes.data;
 
-    if (!formTemplatesWithVersions) return;
+      if (!formTemplatesWithVersions) return;
 
-    //remove form template without version
-    formTemplatesWithVersions = formTemplatesWithVersions.filter(
-      (formTemplate) => formTemplate.latestVersion
-    );
-
-    const user = getUserFromStorage();
-    if (!user) return;
-
-    //if user role is staff remove deleted form template
-    if (user.roleName === 'ROLE_STAFF') {
+      //remove form template without version
       formTemplatesWithVersions = formTemplatesWithVersions.filter(
-        (formTemplate) => formTemplate.latestVersion?.status !== 'DELETED'
+        (formTemplate) => formTemplate.latestVersion
       );
+
+      const user = getUserFromStorage();
+      if (!user) return;
+
+      //if user role is staff remove deleted form template
+      if (user.roleName === 'ROLE_STAFF') {
+        formTemplatesWithVersions = formTemplatesWithVersions.filter(
+          (formTemplate) => formTemplate.latestVersion?.status !== 'DELETED'
+        );
+      }
+
+      formTemplatesWithVersions.sort((a, b) => {
+        //check undefined
+        if (!a.latestVersion || !b.latestVersion) {
+          return 0;
+        }
+        if (!a.formTemplateId || !b.formTemplateId) {
+          return 0;
+        }
+        // If 'status' is equal, sort by 'id'
+        return b.formTemplateId - a.formTemplateId;
+      });
+
+      setFormTemplate(formTemplatesWithVersions);
+      // Now you can use formTemplatesWithVersions
+    } catch (error) {
+      toast.error('Lỗi mạng');
     }
-
-    formTemplatesWithVersions.sort((a, b) => {
-      //check undefined
-      if (!a.latestVersion || !b.latestVersion) {
-        return 0;
-      }
-      if (!a.formTemplateId || !b.formTemplateId) {
-        return 0;
-      }
-      // If 'status' is equal, sort by 'id'
-      return b.formTemplateId - a.formTemplateId;
-    });
-
-    setFormTemplate(formTemplatesWithVersions);
-    // Now you can use formTemplatesWithVersions
   };
 
   const autoStandardizationTemplate = async (id: number, fileName: string) => {
     try {
-      setIsLoading(true);
+      const toastId = toast.loading('Đang chuẩn hóa biểu mẫu', {
+        autoClose: false,
+        bodyClassName: 'text-lg',
+      });
       const res = await axiosClient.post(
         `formTemplateVersion/${id}/autoStandardization`,
         null,
@@ -199,10 +206,14 @@ const ManagerTemplatePage = (props: Props) => {
 
       a.download = fileName + '.docx';
       a.click();
-      setIsLoading(false);
+      toast.update(toastId, {
+        render: 'Chuẩn hóa biểu mẫu thành công',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      });
     } catch (error) {
       console.log(error);
-      setIsLoading(false);
     }
   };
 
