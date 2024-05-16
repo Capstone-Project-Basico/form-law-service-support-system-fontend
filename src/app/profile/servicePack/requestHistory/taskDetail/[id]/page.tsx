@@ -60,14 +60,14 @@ const TaskDetail = () => {
   };
 
   const events: TimelineEvent[] = [
-    { status: 'Đã nhận được', date: '15/10/2020 10:30', icon: 'pi pi-pencil', color: '#9C27B0', image: '/Bat-tay.jpg' },
+    { status: 'Đã nhận được', icon: 'pi pi-pencil', color: '#FF0004', image: '/Bat-tay.jpg' },
   ];
   if (task && task.processStatus === "ĐÃ PHÂN CÔNG") {
-    events.push({ status: 'Đang xử lí', date: '15/10/2020 14:00', icon: 'pi pi-cog', color: '#673AB7', image: '/inProcess.png' });
+    events.push({ status: 'Đang xử lí', icon: 'pi pi-cog', color: '#673AB7', image: '/inProcess.png' });
   }
   if (task && task.processStatus === "ĐÃ HOÀN THÀNH") {
-    events.push({ status: 'Đang xử lí', date: '15/10/2020 14:00', icon: 'pi pi-cog', color: '#673AB7', image: '/inProcess.png' });
-    events.push({ status: 'Đã hoàn thành', date: '15/10/2020 16:15', icon: 'pi pi-check', color: '#FF9800', image: '/done.jpg' });
+    events.push({ status: 'Đang xử lí', icon: 'pi pi-cog', color: '#673AB7', image: '/inProcess.png' });
+    events.push({ status: 'Đã hoàn thành', icon: 'pi pi-check', color: '#FF9800', image: '/done.jpg' });
   }
 
   const customizedMarker = (item: TimelineEvent) => {
@@ -80,7 +80,7 @@ const TaskDetail = () => {
 
   const customizedContent = (item: TimelineEvent) => {
     return (
-      <Card title={item.status} subTitle={item.date} className="p-3">
+      <Card title={item.status} subTitle={<div className="font-bold">{task?.taskName}</div>} className="p-3">
         {item.image && <Image src={item.image} alt={item.image} width={200} height={200} className="shadow-1" />}
         <p>{task?.description}</p>
       </Card>
