@@ -601,9 +601,16 @@ const ManagerTemplatePage = (props: Props) => {
           <Button
             className="flex justify-end bg-[#FF0004] text-white"
             radius="full"
-            onClick={() =>
-              router.push('/dashboard/service/manageTemplate/add-template')
-            }
+            onClick={() => {
+              const user = getUserFromStorage();
+              if (!user) return;
+              if (user.roleName === 'ROLE_MANAGER')
+                router.push('/dashboard/service/manageTemplate/add-template');
+              if (user.roleName === 'ROLE_STAFF')
+                router.push(
+                  '/dashboardStaff/service/manageTemplate/add-template'
+                );
+            }}
           >
             Tạo mới
             <FontAwesomeIcon icon={faPlus} />
