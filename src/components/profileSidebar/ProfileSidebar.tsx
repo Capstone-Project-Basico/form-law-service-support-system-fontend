@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { storage } from "@/app/firebase";
+import { storage } from '@/app/firebase';
 import {
   ProfileSidebarItem,
   UserType,
   WalletType,
-} from "@/constants/types/homeType";
-import { profileSidebar } from "@/lib/profileSidebar";
-import { faCamera, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+} from '@/constants/types/homeType';
+import { profileSidebar } from '@/lib/profileSidebar';
+import { faCamera, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
   Modal,
@@ -21,17 +21,17 @@ import {
   NavbarItem,
   Spinner,
   useDisclosure,
-} from "@nextui-org/react";
-import axios from "axios";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { headers } from "next/headers";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { v4 as uuidv4 } from "uuid";
-import authHeader from "../authHeader/AuthHeader";
+} from '@nextui-org/react';
+import axios from 'axios';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { headers } from 'next/headers';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
+import authHeader from '../authHeader/AuthHeader';
 
 interface UserLocal {
   data: {
@@ -48,12 +48,12 @@ const ProfileSidebar = () => {
   const router = useRouter();
   const [uploading, setUploading] = useState(false);
   const [imageUpload, setImageUpload] = useState<File | null>(null);
-  const [avatar, setAvatar] = useState("");
+  const [avatar, setAvatar] = useState('');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const getUserFromStorage = () => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
     }
   };
@@ -81,9 +81,9 @@ const ProfileSidebar = () => {
         setWallet(response.data.data);
       })
       .catch((error) => {
-        console.error("Error fetching wallet:", error);
+        console.error('Error fetching wallet:', error);
         setWalletError(
-          "Failed to fetch wallet details. Please try again later."
+          'Failed to fetch wallet details. Please try again later.'
         );
       });
   };
@@ -94,8 +94,7 @@ const ProfileSidebar = () => {
 
   useEffect(() => {
     getWallet();
-  },[]);
-
+  }, []);
 
   const uploadFile = (e: any) => {
     setUploading(true);
@@ -103,18 +102,18 @@ const ProfileSidebar = () => {
     let image = e.target.files[0];
 
     if (image == null) return;
-    const storageRef = ref(storage, "/images/" + image.name + uuidv4()); // Create a reference to '/images/imageName'
+    const storageRef = ref(storage, '/images/' + image.name + uuidv4()); // Create a reference to '/images/imageName'
 
     const uploadTask = uploadBytesResumable(storageRef, image); // Start the file upload
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(
-      "state_changed",
+      'state_changed',
       (snapshot) => {
         // Handle progress updates here, if you wish
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
+        console.log('Upload is ' + progress + '% done');
       },
       (error) => {
         // Handle unsuccessful uploads here
@@ -124,7 +123,7 @@ const ProfileSidebar = () => {
       () => {
         // Handle successful uploads on complete
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
+          console.log('File available at', downloadURL);
           setAvatar(downloadURL);
         });
         setUploading(false);
@@ -141,33 +140,33 @@ const ProfileSidebar = () => {
         { headers: authHeader() }
       )
       .then((response) => {
-        toast.success("Cập nhật ảnh đại diện thành công");
+        toast.success('Cập nhật ảnh đại diện thành công');
         getDataUser();
       })
       .catch((error) => {
-        toast.error("Cập nhật ảnh đại diện thất bại!");
+        toast.error('Cập nhật ảnh đại diện thất bại!');
       });
   };
   return (
     <div className="h-full">
-      <div className="flex flex-col w-[387px] gap-2 ">
-        <div className="bg-white rounded-2xl py-3">
+      <div className="flex w-[387px] flex-col gap-2 ">
+        <div className="rounded-2xl bg-white py-3">
           <div className="flex flex-row">
-            <div className="flex flex-col -space-x-2 overflow-hidden w-[100px] ml-5 relative">
+            <div className="relative ml-5 flex w-[100px] flex-col -space-x-2 overflow-hidden">
               <Image
                 key={avatar}
                 src={
-                  profileData?.avatar ? profileData.avatar : "/User-avatar.png"
+                  profileData?.avatar ? profileData.avatar : '/User-avatar.png'
                 }
                 alt=""
                 width="0"
                 height="0"
                 sizes="100vw"
                 priority
-                className="rounded-full h-[80px] w-[80px]"
+                className="h-[80px] w-[80px] rounded-full"
               />
 
-              <div className="flex justify-end items-end">
+              <div className="flex items-end justify-end">
                 <Button
                   isIconOnly
                   radius="full"
@@ -177,7 +176,7 @@ const ProfileSidebar = () => {
                 >
                   <FontAwesomeIcon
                     icon={faCamera}
-                    className="text-white size-4"
+                    className="size-4 text-white"
                   />
                 </Button>
               </div>
@@ -187,7 +186,7 @@ const ProfileSidebar = () => {
               <h2 className="font-bold">{profileData?.userName}</h2>
               <Button
                 className="border bg-[#F2F2F2]"
-                onClick={() => router.push("/profile/wallet")}
+                onClick={() => router.push('/profile/wallet')}
               >
                 <FontAwesomeIcon
                   icon={faCirclePlus}
@@ -199,9 +198,9 @@ const ProfileSidebar = () => {
           </div>
         </div>
         <div>
-          <div className="bg-white rounded-2xl ">
-            <Navbar className="flex items-start w-[350px] h-[455px] pt-10 rounded-2xl">
-              <NavbarContent className="flex flex-col gap-8 items-start">
+          <div className="rounded-2xl bg-white ">
+            <Navbar className="flex h-[455px] w-[350px] items-start rounded-2xl pt-10">
+              <NavbarContent className="flex flex-col items-start gap-8">
                 <NavbarItem className="text-xl">
                   <div className="flex flex-col space-y-2 ">
                     {profileSidebar.map((item, idx) => {
@@ -258,15 +257,15 @@ const MenuItem = ({ item }: { item: ProfileSidebarItem }) => {
   const pathname = usePathname();
 
   return (
-    <div>
+    <div className="py-2">
       <Link
         href={item.path}
-        className={`flex flex-row space-x-4 items-center p-2 rounded-lg hover:text-[#FF0004] ${
-          item.path === pathname ? "text-[#FF0004]" : ""
+        className={`flex flex-row items-center space-x-4 rounded-lg p-2 hover:text-[#FF0004] ${
+          item.path === pathname ? 'text-[#FF0004]' : ''
         }`}
       >
         {item.icon}
-        <span className="font-semibold text-xl flex">{item.title}</span>
+        <span className="flex text-xl font-semibold">{item.title}</span>
       </Link>
     </div>
   );
