@@ -85,7 +85,7 @@ const ServicePack = () => {
       );
       setSupportTo(response.data.data.email);
       setCreateBy(response.data.data.email);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const getAllPurchasedPacks = async () => {
@@ -96,8 +96,13 @@ const ServicePack = () => {
           headers: authHeader(),
         }
       );
-      setPurchasedPack(response.data.data || []);
-    } catch (error) {}
+      // setPurchasedPack(response.data.data.filter((pack: OrderType) => pack.cart[0].totalRequest > 0) || []);
+      const filteredPacks = response.data.data.filter(
+        (pack: OrderType) => pack.cart?.[0]?.totalRequest > 0
+      );
+      console.log(filteredPacks); // Debugging: Log the filtered data
+      setPurchasedPack(filteredPacks || []);
+    } catch (error) { }
   };
 
   //send request
@@ -135,7 +140,7 @@ const ServicePack = () => {
       );
       console.log(response.data.data);
       setTemplatePack(response.data.data);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   return (
@@ -210,6 +215,7 @@ const ServicePack = () => {
                 </ModalHeader>
                 <ModalBody>
                   <Input
+                    isRequired
                     className="font-bold"
                     type="text"
                     label="Nội dung cần hỗ trợ"
