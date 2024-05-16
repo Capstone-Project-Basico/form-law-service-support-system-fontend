@@ -1,47 +1,36 @@
 'use client';
 
-import { Template, FormType } from '@/constants/types/homeType';
 import HeaderComponent from '@/components/header';
+import { FormType } from '@/constants/types/homeType';
 // import CardTemplate from "@/sections/CardTemplate";
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import authHeader from '@/components/authHeader/AuthHeader';
+import { FormTemplate } from '@/constants/types/FormTemplate';
+import axiosClient from '@/lib/axiosClient';
+import { faDollarSign, faEye, faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faAngleRight,
-  faDollarSign,
-  faPen,
-} from '@fortawesome/free-solid-svg-icons';
-import { GoogleMaps } from '@/components/ui/GoogleMaps';
-import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/breadcrumbs';
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Image,
-  Button,
-  Input,
-  CardFooter,
-  Pagination,
   Autocomplete,
   AutocompleteItem,
-  useDisclosure,
-  ModalFooter,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Image,
+  Input,
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
-  Checkbox,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Pagination,
+  useDisclosure,
 } from '@nextui-org/react';
-import Link from 'next/link';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
-import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
-import authHeader from '@/components/authHeader/AuthHeader';
-import axiosClient from '@/lib/axiosClient';
-import { FormTemplate } from '@/constants/types/FormTemplate';
+import Swal from 'sweetalert2';
 // import userId from "@/components/authHeader/GetUserId";
 
 interface UserLocal {
@@ -149,6 +138,7 @@ const Page = () => {
   };
 
   const getAllCheckOutForm = async () => {
+    if (!userId) return;
     const res = await axiosClient.get(
       `order/getAllCheckOutFormTemplateDetailByUser/${userId}`
     );

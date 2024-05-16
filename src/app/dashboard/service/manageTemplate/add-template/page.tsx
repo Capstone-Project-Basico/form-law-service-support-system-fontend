@@ -128,7 +128,6 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
     );
     if (res.status === 200) {
       const data = res.data;
-      console.log(data);
       if (data.message !== 'Not found!!!') {
         setTitleInputError('Tên biểu mẫu đã tồn tại');
       } else {
