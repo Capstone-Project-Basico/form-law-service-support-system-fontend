@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import authHeader from "@/components/authHeader/AuthHeader";
-import User from "@/components/authHeader/User";
+import authHeader from '@/components/authHeader/AuthHeader';
+import User from '@/components/authHeader/User';
 import {
   ConsultServiceType,
   PackType,
   ServiceType,
   UserLocal,
-} from "@/constants/types/homeType";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+} from '@/constants/types/homeType';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   BreadcrumbItem,
   Breadcrumbs,
@@ -29,18 +29,18 @@ import {
   TableRow,
   Textarea,
   useDisclosure,
-} from "@nextui-org/react";
-import axios from "axios";
-import { headers } from "next/headers";
-import React, { FormEvent, useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import Swal from "sweetalert2";
+} from '@nextui-org/react';
+import axios from 'axios';
+import { headers } from 'next/headers';
+import React, { FormEvent, useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 const Pack = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
   const [services, setServices] = useState<ConsultServiceType[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedRequestService, setSelectedRequestService] =
     useState<ConsultServiceType | null>();
 
@@ -50,11 +50,12 @@ const Pack = () => {
     onClose: onCloseUpdate,
   } = useDisclosure();
   // const userInfo = User();
-  const [packageRequestServiceName, setPackageRequestServiceName] = useState("");
+  const [packageRequestServiceName, setPackageRequestServiceName] =
+    useState('');
   const [price, setPrice] = useState(0);
   const [totalOfRequest, setTotalOfRequest] = useState(0);
-  const [createBy, setCreateBy] = useState("");
-  const [description, setDescription] = useState("");
+  const [createBy, setCreateBy] = useState('');
+  const [description, setDescription] = useState('');
   let newRequestPack = {
     packageRequestServiceName,
     price,
@@ -67,8 +68,8 @@ const Pack = () => {
     totalOfRequest: selectedRequestService?.totalRequest,
   };
   const getUserFromStorage = () => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
     }
   };
@@ -109,7 +110,7 @@ const Pack = () => {
         setCreateBy(res.data.data.email);
       })
       .catch((error) => {
-        console.log("loi roi " + error);
+        console.log('loi roi ' + error);
       });
   };
 
@@ -121,7 +122,7 @@ const Pack = () => {
       );
       const filteredService = response.data.data.filter(
         (service: ConsultServiceType) =>
-          service.deleted === false && service.processStatus === "ĐÃ DUYỆT"
+          service.deleted === false && service.processStatus === 'ĐÃ DUYỆT'
       );
 
       setServices(filteredService);
@@ -137,7 +138,7 @@ const Pack = () => {
       );
       const filteredService = response.data.data.filter(
         (service: ConsultServiceType) =>
-          service.deleted === false && service.processStatus === "CHỜ DUYỆT"
+          service.deleted === false && service.processStatus === 'CHỜ DUYỆT'
       );
 
       setServices(filteredService);
@@ -173,15 +174,15 @@ const Pack = () => {
           }
         )
         .then((response) => {
-          toast.success("Tạo mới gói tư vấn thành công");
+          toast.success('Tạo mới gói tư vấn thành công');
           onClose();
           fetchServices();
         })
         .catch((error) => {
-          toast.error("Tạo gói thất bại");
+          toast.error('Tạo gói thất bại');
         });
     } catch (error) {
-      toast.error("Tạo mới gói thất bại!");
+      toast.error('Tạo mới gói thất bại!');
       console.log(error);
     }
   };
@@ -199,15 +200,15 @@ const Pack = () => {
           }
         )
         .then((response) => {
-          toast.success("Cập nhật gói tư vấn thành công");
+          toast.success('Cập nhật gói tư vấn thành công');
           onClose();
           fetchPendingServices();
         })
         .catch((error) => {
-          toast.error("Cập nhật gói thất bại!");
+          toast.error('Cập nhật gói thất bại!');
         });
     } catch (error) {
-      toast.error("Cập nhật gói thất bại!");
+      toast.error('Cập nhật gói thất bại!');
       console.log(error);
     }
   };
@@ -239,10 +240,10 @@ const Pack = () => {
   //delete
   const handleDelete = async (packageId: string) => {
     Swal.fire({
-      title: "Bạn có muốn xóa gói này không?",
+      title: 'Bạn có muốn xóa gói này không?',
       showDenyButton: true,
       // showCancelButton: true,
-      confirmButtonText: "Có",
+      confirmButtonText: 'Có',
       denyButtonText: `Không`,
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
@@ -255,17 +256,17 @@ const Pack = () => {
               { headers: authHeader() }
             )
             .then(() => {
-              toast.success("Xóa thành công");
+              toast.success('Xóa thành công');
               fetchPendingServices();
             })
             .catch((err) => {
-              toast.error("Xóa thất bại!");
+              toast.error('Xóa thất bại!');
             });
         } catch (error) {
           console.log(error);
         }
       } else if (result.isDenied) {
-        Swal.fire("Bạn đã hủy xóa", "", "error");
+        Swal.fire('Bạn đã hủy xóa', '', 'error');
         return;
       }
     });
@@ -281,11 +282,11 @@ const Pack = () => {
           { headers: authHeader() }
         )
         .then((response) => {
-          toast.success("Khôi phục thành công");
+          toast.success('Khôi phục thành công');
           fetchDeletedService();
         });
     } catch (error) {
-      toast.error("Khôi phục thất bại!");
+      toast.error('Khôi phục thất bại!');
       console.log(error);
     }
   };
@@ -300,11 +301,11 @@ const Pack = () => {
           { headers: authHeader() }
         )
         .then((response) => {
-          toast.success("Bạn đã chuyển dịch vụ này sang chờ duyệt");
+          toast.success('Bạn đã chuyển dịch vụ này sang chờ duyệt');
           fetchServices();
         });
     } catch (error) {
-      toast.error("Chuyển sang chờ duyệt thất bại");
+      toast.error('Chuyển sang chờ duyệt thất bại');
       console.log(error);
     }
   };
@@ -319,31 +320,31 @@ const Pack = () => {
           { headers: authHeader() }
         )
         .then((response) => {
-          toast.success("Duyệt thành công");
+          toast.success('Duyệt thành công');
           fetchPendingServices();
         });
     } catch (error) {
-      toast.error("Duyệt thật bại, vui lòng kiểm tra lại!");
+      toast.error('Duyệt thật bại, vui lòng kiểm tra lại!');
       console.log(error);
     }
   };
 
   return (
-    <div className="w-full mt-5 ml-5 mr-5">
+    <div className="ml-5 mr-5 mt-5 w-full">
       <ToastContainer />
       <div className="grid grid-cols-2 border-b-2 pb-5">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">Quản lí dịch vụ</p>
+            <p className="text-3xl font-bold text-black ">Quản lí dịch vụ</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Gói dịch vụ</p>
+            <p className="text-3xl font-bold text-[#FF0004]">Gói dịch vụ</p>
           </BreadcrumbItem>
         </Breadcrumbs>
 
         <div className="flex justify-end">
           <Button
-            className="flex justify-end w-[100px] bg-[#FF0004] text-white"
+            className="flex w-[100px] justify-end bg-[#FF0004] text-white"
             radius="full"
             onPress={onOpen}
           >
@@ -355,7 +356,7 @@ const Pack = () => {
               {(onClose) => (
                 <>
                   <form onSubmit={(e) => handleSubmit(e, onClose)}>
-                    <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+                    <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
                       Thêm gói dịch vụ
                     </ModalHeader>
                     <ModalBody>
@@ -372,7 +373,7 @@ const Pack = () => {
                         label="Giá gói"
                         endContent={
                           <div className="pointer-events-none flex items-center">
-                            <span className="text-default-400 text-small">
+                            <span className="text-small text-default-400">
                               Đồng
                             </span>
                           </div>
@@ -386,7 +387,7 @@ const Pack = () => {
                         label="Số lần gửi yêu cầu"
                         endContent={
                           <div className="pointer-events-none flex items-center">
-                            <span className="text-default-400 text-small">
+                            <span className="text-small text-default-400">
                               Lần
                             </span>
                           </div>
@@ -419,11 +420,12 @@ const Pack = () => {
           </Modal>
         </div>
       </div>
-      <div className="flex flex-row gap-10 font-bold border-b-1 my-5">
+      <div className="my-5 flex flex-row gap-10 border-b-1 font-bold">
         <div>
           <Button
-            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            className={`bg-white ${
+              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+            }`}
             onClick={() => {
               setTabs(1), setPage(1);
             }}
@@ -445,9 +447,10 @@ const Pack = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${tabs === 3 &&
-              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            className={`bg-white ${
+              tabs === 3 &&
+              'border-b-2 border-[#FF0004] border-b-[#FF0004] text-[#FF0004]'
+            }`}
             radius="none"
             onClick={() => {
               setTabs(3), setPage(1);
@@ -464,10 +467,10 @@ const Pack = () => {
             <Pagination
               showControls
               classNames={{
-                wrapper: "gap-0 overflow-visible h-8 ",
-                item: "w-8 h-8 text-small rounded-none bg-transparent",
+                wrapper: 'gap-0 overflow-visible h-8 ',
+                item: 'w-8 h-8 text-small rounded-none bg-transparent',
                 cursor:
-                  "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold",
+                  'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
               }}
               page={page}
               total={pages}
@@ -480,14 +483,16 @@ const Pack = () => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Tên gói
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">Giá</TableColumn>
+          <TableColumn className=" w-[200px] bg-[#FF0004] text-white">
+            Giá
+          </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Chi tiết
           </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Trạng thái
           </TableColumn>
-          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
+          <TableColumn className="flex items-center justify-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
         </TableHeader>
@@ -495,16 +500,18 @@ const Pack = () => {
           {items.map((pack, index) => (
             <TableRow key={index}>
               <TableCell>{pack.packageRequestServiceName}</TableCell>
-              <TableCell>{pack.price.toLocaleString()} VND</TableCell>
+              <TableCell className=" w-[200px]">
+                {pack.price.toLocaleString()} VND
+              </TableCell>
               <TableCell>{pack.description}</TableCell>
-              <TableCell>
-                <span style={{ color: pack.deleted ? "red" : "green" }}>
-                  {pack.deleted ? "Không sử dụng" : "Đang hoạt động"}
+              <TableCell className="w-[150px] ">
+                <span style={{ color: pack.deleted ? 'red' : 'green' }}>
+                  {pack.deleted ? 'Không sử dụng' : 'Đang hoạt động'}
                 </span>
               </TableCell>
               {pack.deleted === false ? (
-                pack.processStatus === "CHỜ DUYỆT" ? (
-                  <TableCell className="flex gap-2 items-center  justify-center">
+                pack.processStatus === 'CHỜ DUYỆT' ? (
+                  <TableCell className="flex items-center justify-center  gap-2">
                     <Button
                       className="bg-green-600 text-white"
                       onClick={() => approve(pack.packageServiceId)}
@@ -529,7 +536,7 @@ const Pack = () => {
                     </Button>
                   </TableCell>
                 ) : (
-                  <TableCell className="flex gap-2 items-center  justify-center ">
+                  <TableCell className="flex items-center justify-center  gap-2 ">
                     <Button
                       className="bg-blue-600 text-white"
                       onPress={() => {
@@ -558,7 +565,7 @@ const Pack = () => {
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent>
           <form onSubmit={(e) => handleUpdateSubmit(e, onCloseUpdate)}>
-            <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+            <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
               Cập nhật gói dịch vụ tư vấn
             </ModalHeader>
             <ModalBody>
@@ -580,7 +587,7 @@ const Pack = () => {
                     label="Giá gói"
                     endContent={
                       <div className="pointer-events-none flex items-center">
-                        <span className="text-default-400 text-small">
+                        <span className="text-small text-default-400">
                           Đồng
                         </span>
                       </div>
@@ -599,7 +606,7 @@ const Pack = () => {
                     label="Số lần gửi yêu cầu"
                     endContent={
                       <div className="pointer-events-none flex items-center">
-                        <span className="text-default-400 text-small">Lần</span>
+                        <span className="text-small text-default-400">Lần</span>
                       </div>
                     }
                     value={selectedRequestService.totalRequest.toString()}

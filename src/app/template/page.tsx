@@ -468,7 +468,7 @@ const Page = () => {
 
               return (
                 <>
-                  <ModalBody className="flex flex-row gap-6 p-6">
+                  <ModalBody className="flex flex-row gap-6 rounded-2xl p-6">
                     <div className="h-[755px] w-[800px] overflow-y-scroll border-1 border-black p-10">
                       <div
                         className="min-h-full content-center  "
@@ -476,7 +476,7 @@ const Page = () => {
                       ></div>
                     </div>
                     <div className="flex w-[300px] flex-col items-center justify-start gap-10">
-                      <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      <h1 className="flex justify-start text-2xl font-semibold">
                         {selectedTemplate?.title
                           ? selectedTemplate?.title
                           : 'Biểu mẫu này hiện tại không có tên'}
