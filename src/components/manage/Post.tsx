@@ -40,6 +40,7 @@ import { decodeFromBase64, encodeToBase64 } from "@/utils/base64";
 type PostsProps = {
   posts: PostType[];
   tabs: number;
+  unApprove: (id: number) => void;
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleApprove: (id: number) => void;
@@ -50,6 +51,7 @@ type PostsProps = {
 const Posts: React.FC<PostsProps> = ({
   posts,
   tabs,
+  unApprove,
   handleDelete,
   restoreDelete,
   handleApprove,
@@ -169,7 +171,7 @@ const Posts: React.FC<PostsProps> = ({
                         Chập nhận
                       </Button>
                       <Button
-                        className="bg-blue-600 text-white"
+                        className="bg-orange-600 text-white"
                         onPress={() => {
                           setSelectedPost(post);
                           onOpenUpdate();
@@ -197,9 +199,9 @@ const Posts: React.FC<PostsProps> = ({
                     <>
                       <Button
                         className="bg-blue-600 text-white"
-                        // onClick={() => handleDelete(post.postId)}
+                        onClick={() => unApprove(post.postId)}
                       >
-                        Chuyển sang chờ duyệt (Chua co api)
+                        Chuyển sang chờ duyệt
                       </Button>
                       <Button
                         className="bg-green-600 text-white"

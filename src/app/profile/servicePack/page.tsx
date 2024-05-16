@@ -154,7 +154,7 @@ const ServicePack = () => {
         </p>
       </div>
       <div className="flex justify-between">
-        <Link href="/profile/servicePack/buyServicePack">
+        <Link href="/servicePack">
           <h1 className="text-white bg-red-500 hover:bg-red-700 font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out">
             Mua gói tại đây
           </h1>
@@ -250,18 +250,18 @@ const ServicePack = () => {
 
       {/* template pack */}
       <div className="flex flex-col justify-center items-center mt-32">
+        <h2 className="text-3xl font-bold text-gray-900 mb-5">
+          Gói nâng cấp biểu mẫu
+          <strong>
+            &nbsp;BA<span className="text-[#ff0000]">S</span>I
+            <span className="text-[#ff0000]">CO&nbsp;</span>
+          </strong>
+        </h2>
         <p className="text-xl text-center text-gray-700 mb-10 mx-auto max-w-[1000px] whitespace-normal">
           Để có thể sử dụng một số chức năng đặc biệt, hoặc sử dụng các văn bản
           và hợp đồng tại Basico các bạn phải đăng ký gói dịch vụ, dưới đây là
           các gói dịch vụ với các đặc quyền theo từng gói
         </p>
-      </div>
-      <div className="flex justify-between">
-        <Link href="/profile/servicePack/buyTemplatePack">
-          <h1 className="text-white bg-red-500 hover:bg-red-700 font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out">
-            Mua gói biểu mẫu tại đây
-          </h1>
-        </Link>
       </div>
       <div className="grid grid-cols-3 justify-center items-center mt-10 gap-5">
         {templatePacks && templatePacks.map((servicePack) => (

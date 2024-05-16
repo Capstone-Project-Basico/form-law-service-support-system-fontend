@@ -32,11 +32,13 @@ import { storage } from "@/app/firebase";
 import Image from "next/image";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
+import authHeader from "../authHeader/AuthHeader";
 
 type PartnersProps = {
   partners: PartnerType[];
   tabs: number;
   handleDelete: (id: number) => void;
+  unApprove: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleApprove: (id: number) => void;
   handleUpdateSubmit: (data: any) => void;
@@ -44,6 +46,7 @@ type PartnersProps = {
 
 const Partners: React.FC<PartnersProps> = ({
   partners,
+  unApprove,
   tabs,
   handleDelete,
   restoreDelete,
@@ -145,6 +148,8 @@ const Partners: React.FC<PartnersProps> = ({
     }
   };
 
+
+
   return (
     <div>
       <ToastContainer />
@@ -242,7 +247,7 @@ const Partners: React.FC<PartnersProps> = ({
                         Chập nhận
                       </Button>
                       <Button
-                        className="bg-blue-600 text-white"
+                        className="bg-orange-600 text-white"
                         onPress={() => {
                           setSelectedPartner(partner);
                           onOpenUpdate();
@@ -260,10 +265,10 @@ const Partners: React.FC<PartnersProps> = ({
                   ) : (
                     <>
                       <Button
-                        className="bg-[#FF0004] text-white"
-                        // onClick={() => handleDelete(partner.partnerId)}
+                        className="bg-blue-600 text-white"
+                        onClick={() => unApprove(partner.partnerId)}
                       >
-                        Chuyển về chờ duyệt (chua co api)
+                        Chuyển về chờ duyệt
                       </Button>
                     </>
                   )}
