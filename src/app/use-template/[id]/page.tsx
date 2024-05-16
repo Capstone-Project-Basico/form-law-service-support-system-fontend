@@ -2,8 +2,10 @@
 
 import axiosClient from '@/lib/axiosClient';
 import { DatePicker, Input, input } from '@nextui-org/react';
+import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 type Props = {};
 
@@ -114,18 +116,40 @@ const Page = (props: Props) => {
   };
 
   const postUserForm = async (data: any) => {
-    const res = await axiosClient.post('userForm', data, {
-      responseType: 'blob',
-    });
-    const file = new Blob([res.data]);
-    const url = URL.createObjectURL(file);
+    try {
+      const res = await axiosClient.post('userForm', data, {
+        responseType: 'blob',
+      });
+      const file = new Blob([res.data]);
+      const url = URL.createObjectURL(file);
 
-    const a = document.createElement('a');
-    a.href = url;
-    document.body.appendChild(a);
+      const a = document.createElement('a');
+      a.href = url;
+      document.body.appendChild(a);
 
-    a.download = data.name + '.docx';
-    a.click();
+      a.download = data.name + '.docx';
+      a.click();
+    } catch (error: any) {
+      if (error.response) {
+        const contentType = error.response.headers['content-type'];
+        if (contentType && contentType.includes('application/json')) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            const jsonResponse = JSON.parse(event.target?.result as string);
+            if (
+              jsonResponse.status === false &&
+              jsonResponse.message === 'User has not bought this form template'
+            ) {
+              toast.error('Bạn chưa mua biểu mẫu này');
+            }
+            console.log(jsonResponse);
+          };
+          reader.readAsText(error.response.data);
+        } else {
+          console.log(error.response.data);
+        }
+      }
+    }
   };
 
   const handleFormDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -251,6 +275,7 @@ const Page = (props: Props) => {
 
   return (
     <div className="p-5 md:mx-20">
+      <ToastContainer />
       <h1 className="text-left text-2xl font-semibold text-black">
         Sữ dụng biểu mẫu
       </h1>
