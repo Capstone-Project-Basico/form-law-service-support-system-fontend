@@ -1,7 +1,10 @@
 'use client';
 import FileUpload from '@/components/file-upload';
 import Loading from '@/components/loading';
-import { FormTemplate } from '@/constants/types/FormTemplate';
+import {
+  FormTemplate,
+  FormTemplateRequest,
+} from '@/constants/types/FormTemplate';
 import { SideNavItem } from '@/constants/types/homeType';
 import axiosClient from '@/lib/axiosClient';
 import { BreadcrumbItem, Breadcrumbs } from '@nextui-org/breadcrumbs';
@@ -9,6 +12,7 @@ import { Button, Input, Textarea } from '@nextui-org/react';
 import { Select, SelectItem } from '@nextui-org/select';
 import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 export interface IAddTemplatePageProps {}
 
@@ -23,7 +27,9 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
   React.useEffect(() => {
     async function fetchformTypes() {
       setIsLoading(true);
-      const res = await axiosClient.get('/formType/getAllFormTypes').catch((err) => console.log(err));
+      const res = await axiosClient
+        .get('/formType/getAllFormTypes')
+        .catch((err) => console.log(err));
       if (res && res.status === 200) {
         setIsLoading(false);
         setFormTypes(res.data);
@@ -33,7 +39,11 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
   }, []);
 
   const currentYear = new Date().getFullYear();
-  const range = (start: number, stop: number, step: number) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
+  const range = (start: number, stop: number, step: number) =>
+    Array.from(
+      { length: (stop - start) / step + 1 },
+      (_, i) => start + i * step
+    );
   const listYears = range(currentYear, 1980, -1);
 
   function getPathnameOrder(pathname: string) {
@@ -50,7 +60,10 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
     return paths;
   }
 
-  function findSidebarItemByPath(path: string, items: SideNavItem[]): SideNavItem | undefined {
+  function findSidebarItemByPath(
+    path: string,
+    items: SideNavItem[]
+  ): SideNavItem | undefined {
     for (let item of items) {
       if (item.path === path) {
         return item;
@@ -79,8 +92,14 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
       formValues[key] = value.toString();
     });
 
+    // check if value is empty
+    if (Object.values(formValues).some((value) => value === '')) {
+      toast.warn('Vui lòng điền đầy đủ thông tin');
+      return;
+    }
+
     // Use the formValues object to access the form data
-    const formTemplate: FormTemplate = {
+    const formTemplate: FormTemplateRequest = {
       formTypeId: parseInt(formValues.formTypeId),
       title: formValues.title,
       description: formValues.description,
@@ -95,17 +114,18 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
     };
     const res = await postFormTemplateVersion(formTemplateVersion);
     if (res) {
-     
-      
-        router.push('/dashboard/service/manageTemplate');
-      
+      router.push('/dashboard/service/manageTemplate');
     }
   }
 
-  async function handleOnTitleInputFocusChanged(e: React.FocusEvent<Element, Element>) {
+  async function handleOnTitleInputFocusChanged(
+    e: React.FocusEvent<Element, Element>
+  ) {
     const value = (e.target as HTMLInputElement).value;
 
-    const res = await axiosClient.get(`/formTemplate/getFormTemplateByTitle?title=${value}`);
+    const res = await axiosClient.get(
+      `/formTemplate/getFormTemplateByTitle?title=${value}`
+    );
     if (res.status === 200) {
       const data = res.data;
       console.log(data);
@@ -117,9 +137,12 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
     }
   }
 
-  async function postFormTemplate(data: FormTemplate) {
+  async function postFormTemplate(data: FormTemplateRequest) {
     // const res = await useApi({ method: 'POST', url: '/formTemplate/createFormTemplate', body: data });
-    const res = await axiosClient.post('/formTemplate/createFormTemplate', data);
+    const res = await axiosClient.post(
+      '/formTemplate/createFormTemplate',
+      data
+    );
     if (res.status === 200) {
       console.log(res.data);
       return res.data.formTemplateId;
@@ -148,23 +171,26 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full mt-4 p-4">
+    <form onSubmit={handleSubmit} className="mt-4 w-full p-4">
+      <ToastContainer />
       <div className="py-4">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">Quản lí dịch vụ</p>
+            <p className="text-3xl font-bold text-black ">Quản lí dịch vụ</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl">Biểu mẫu</p>
+            <p className="text-3xl font-bold text-black">Biểu mẫu</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Tạo mới</p>
+            <p className="text-3xl font-bold text-[#FF0004]">Tạo mới</p>
           </BreadcrumbItem>
         </Breadcrumbs>
       </div>
       <div className="flex w-full gap-4 py-4">
-        <div className="basis-7/12  m-auto bg-white p-5 rounded-md border-1 border-gray-400 ">
-          <h4 className="my-auto text-base font-semibold mb-9">Thông tin biểu mẫu</h4>
+        <div className="m-auto  basis-7/12 rounded-md border-1 border-gray-400 bg-white p-5 ">
+          <h4 className="my-auto mb-9 text-base font-semibold">
+            Thông tin biểu mẫu
+          </h4>
           <div className="grid grid-rows-3 gap-2">
             <Input
               isInvalid={titleInputError !== ''}
@@ -175,36 +201,34 @@ export default function AddTemplatePage(props: IAddTemplatePageProps) {
               label="Tên biểu mẫu"
               type="text"
             />
-            <div className="grid grid-cols-2 gap-4">
-              <Select name="formTypeId" variant="bordered" label="Loại biểu mẫu">
-                {formTypes &&
-                  formTypes.map((type) => (
-                    <SelectItem key={type.id} value={type.id}>
-                      {type.typeName}
-                    </SelectItem>
-                  ))}
-              </Select>
-              <Select name="year" variant="bordered" label="năm">
-                {listYears.map((year) => (
-                  <SelectItem key={year} value={year}>
-                    {year.toString()}
+            <Select name="formTypeId" variant="bordered" label="Loại biểu mẫu">
+              {formTypes &&
+                formTypes.map((type) => (
+                  <SelectItem key={type.id} value={type.id}>
+                    {type.typeName}
                   </SelectItem>
                 ))}
-              </Select>
-            </div>
+            </Select>
             <Input name="price" variant="bordered" label="Giá" type="text" />
           </div>
         </div>
-        <div className="basis-5/12 h-auto bg-white p-5 rounded-md border-1 border-gray-400 ">
-          <h4 className="pt-2 text-base font-semibold mb-9">Chen bieu mau luat</h4>
+        <div className="h-auto basis-5/12 rounded-md border-1 border-gray-400 bg-white p-5 ">
+          <h4 className="mb-9 pt-2 text-base font-semibold">
+            Chen bieu mau luat
+          </h4>
           <FileUpload file={file} setFile={setFile} className="" />
         </div>
       </div>
-      <div className=" w-full p-5 rounded-md border-1 border-gray-400  ">
-        <h3 className="text-base font-semibold mb-9">Thông tin mô tả</h3>
-        <Textarea name="description" variant="bordered" className="w-full" label="Ghi chú" />
+      <div className=" w-full rounded-md border-1 border-gray-400 p-5  ">
+        <h3 className="mb-9 text-base font-semibold">Thông tin mô tả</h3>
+        <Textarea
+          name="description"
+          variant="bordered"
+          className="w-full"
+          label="Ghi chú"
+        />
       </div>
-      <div className="w-full mt-9 grid grid-cols-2 gap-2">
+      <div className="mt-9 grid w-full grid-cols-2 gap-2">
         <Button variant="bordered" className="bg-white ">
           Quay lại
         </Button>

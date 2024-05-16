@@ -6,3 +6,9 @@ export type FormTemplate = {
   title: string;
   description: string;
 };
+
+export type FormTemplateRequest = {
+  formTypeId: number;
+  title: string;
+  description: string;
+};
