@@ -50,13 +50,13 @@ const Pack = () => {
     onClose: onCloseUpdate,
   } = useDisclosure();
   // const userInfo = User();
-  const [name, setName] = useState("");
+  const [packageRequestServiceName, setPackageRequestServiceName] = useState("");
   const [price, setPrice] = useState(0);
   const [totalOfRequest, setTotalOfRequest] = useState(0);
   const [createBy, setCreateBy] = useState("");
   const [description, setDescription] = useState("");
   let newRequestPack = {
-    name,
+    packageRequestServiceName,
     price,
     totalOfRequest,
     createBy,
@@ -364,7 +364,7 @@ const Pack = () => {
                         isRequired
                         label="Tên gói"
                         onChange={(e) => {
-                          setName(e.target.value);
+                          setPackageRequestServiceName(e.target.value);
                         }}
                       />
                       <Input
@@ -422,9 +422,8 @@ const Pack = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 my-5">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => {
               setTabs(1), setPage(1);
             }}
@@ -446,10 +445,9 @@ const Pack = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 3 &&
+            className={`bg-white ${tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => {
               setTabs(3), setPage(1);
