@@ -23,22 +23,24 @@ const Wallet = () => {
   const userId = user?.data.data.userId;
 
   const getWallet = () => {
+    if (!user) return;
+
     setWalletError(null);
     try {
       axios
-      .get(
-        `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
-      )
-      .then((response) => {
-        setWalletId(response.data.data.walletId);
-        setWalletError(true);
-      })
-      .catch((error) => {
-        setWalletError(false);
-      });
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+        )
+        .then((response) => {
+          setWalletId(response.data.data.walletId);
+          setWalletError(true);
+        })
+        .catch((error) => {
+          setWalletError(false);
+        });
     } catch (error) {
       console.log(error);
-      
+
     }
 
   };

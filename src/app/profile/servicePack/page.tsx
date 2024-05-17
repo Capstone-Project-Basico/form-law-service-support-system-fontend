@@ -76,6 +76,7 @@ const ServicePack = () => {
   }, [userId]);
 
   const getUser = async () => {
+    if (!user) return
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`,

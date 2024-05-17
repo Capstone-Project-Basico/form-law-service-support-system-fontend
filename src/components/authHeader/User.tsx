@@ -16,6 +16,7 @@ export default function useUser() {
     const user: UserLocal | null = getUserFromStorage();
 
     const fetchUserInfo = async (userId: number) => {
+      if (!user) return;
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`
