@@ -24,13 +24,15 @@ import {
   Pagination,
   Select,
   SelectItem,
+  Textarea,
+  Autocomplete,
 } from "@nextui-org/react";
 import axios from "axios";
 import React, { FormEvent, useEffect, useState } from "react";
 import { faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { PackType } from "@/constants/types/homeType";
+import { PackType, UserLocal } from "@/constants/types/homeType";
 import authHeader from "@/components/authHeader/AuthHeader";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
@@ -41,6 +43,7 @@ const Pack = () => {
   const [packs, setPacks] = useState<PackType[]>([]);
   const [templates, setTemplates] = React.useState<FormTemplateVersion[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchTemplate, setSearchTemplate] = useState("");
   const [selectedPartner, setSelectedPartner] = useState<PackType | null>(null);
 
   const {
@@ -61,22 +64,32 @@ const Pack = () => {
     console.log(selected.target.value);
     const selectedIds = selected.target.value.split(",");
     const newItems = selectedIds.map((id: number) => ({
-      itemId: id,
+      itemId: Number(id),
       quantity: 5, // Set the quantity to 5 for each selected template
     }));
 
     setListItem(newItems);
   };
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
+  const userId = user?.data.data.userId;
 
   let newPack = {
     packageName,
     price,
     description,
     listItem,
+    userId,
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchTemplates();
     switch (tabs) {
       case 1:
         fetchPacks();
@@ -85,7 +98,7 @@ const Pack = () => {
         console.log("dang cho duyet ne");
         break;
       case 3:
-        // fetchDeletedPartner();
+        fetchDeletedTemplatePack();
         break;
       default:
         fetchPacks();
@@ -99,25 +112,35 @@ const Pack = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
       );
-      setPacks(response.data.data);
-      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === false));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchDeletedTemplatePack = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
+      );
+      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === true));
     } catch (error) {
       console.error(error);
     }
   };
 
   //get all templates
-  const fetchPosts = async () => {
+  const fetchTemplates = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion`
       );
       setTemplates(response.data.data);
-    } catch (error) {}
+    } catch (error) { }
   };
 
-  //add a new partner
-  const handleSubmit = async (e: FormEvent) => {
+  //add a new template package
+  const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
     axios
       .post(
@@ -127,10 +150,12 @@ const Pack = () => {
       )
 
       .then((response) => {
-        // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+        toast.success("Tạo gói biểu mẫu thành công");
+        onClose();
         fetchPacks();
       })
       .catch((error) => {
+        toast.error("Tạo gói biểu mẫu thất bại!");
         console.log(error);
       });
   };
@@ -170,16 +195,18 @@ const Pack = () => {
       if (result.isConfirmed) {
         try {
           axios
-            .delete(
-              `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/delete/${packageId}`
+            .patch(
+              `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/delete/${packageId}`,
+              {},
+              { headers: authHeader() }
             )
             .then(() => {
               toast.success("Xóa thành công");
               fetchPacks();
             }),
-            {
-              headers: authHeader(),
-            };
+          {
+            headers: authHeader(),
+          };
 
           // setPartners((prevPartners) =>
           //   prevPartners.filter((partner) => partner.partnerId !== partnerId)
@@ -219,7 +246,7 @@ const Pack = () => {
             <ModalContent>
               {(onClose) => (
                 <>
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={(e) => handleSubmit(e, onClose)}>
                     <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
                       Thêm gói dịch vụ
                     </ModalHeader>
@@ -244,7 +271,7 @@ const Pack = () => {
                         onChange={(e) => setPrice(Number(e.target.value))}
                         min="1"
                       />
-                      <Input
+                      <Textarea
                         type="text"
                         label="Chi tiết"
                         value={description}
@@ -282,9 +309,8 @@ const Pack = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 my-5">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => {
               setTabs(1), setPage(1);
             }}
@@ -306,10 +332,9 @@ const Pack = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 3 &&
+            className={`bg-white ${tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => {
               setTabs(3), setPage(1);
@@ -387,7 +412,7 @@ const Pack = () => {
                 <TableCell className="flex items-center justify-center">
                   <Button
                     className="bg-blue-600 text-white"
-                    // onClick={() => restoreDelete(partner.partnerId)}
+                  // onClick={() => restoreDelete(partner.partnerId)}
                   >
                     Khôi phục
                   </Button>
