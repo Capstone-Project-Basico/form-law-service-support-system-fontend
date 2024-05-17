@@ -96,7 +96,11 @@ const Page = (props: Props) => {
       return ` `;
     });
 
-    return result;
+    // remove more than ... from the result
+    const moreThanRegex = /\.\.\./g;
+    const resultWithoutMoreThan = result.replace(moreThanRegex, '');
+
+    return resultWithoutMoreThan;
   }
 
   const handleSubmit = async () => {
