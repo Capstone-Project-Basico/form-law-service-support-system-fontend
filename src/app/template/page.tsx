@@ -458,7 +458,7 @@ const Page = () => {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           size="full"
-          className="h-[800px] w-[1100px]"
+          className="h-[800px] w-[1200px]"
         >
           <ModalContent>
             {(onClose) => {
@@ -469,7 +469,10 @@ const Page = () => {
               return (
                 <>
                   <ModalBody className="flex flex-row gap-6 rounded-2xl p-6">
-                    <div className="h-[755px] w-[800px] overflow-y-scroll border-1 border-black p-10">
+                    <div
+                      className="h-[755px]  overflow-y-scroll border-1 border-black p-10"
+                      style={{ minWidth: '800px', maxWidth: '1000px' }}
+                    >
                       <div
                         className="min-h-full content-center  "
                         ref={templateRef}
