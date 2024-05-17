@@ -85,7 +85,7 @@ const Page = (props: Props) => {
             onclick="document.getElementById('${fieldName}').focus()"
             class="${
               isSelected && 'bg-orange-200'
-            } select-none text-center text-sm inline-block min-w-[50px] h-6 border border-black p-0.5">${fieldValue}</span>`;
+            } select-none  ml-2 pl-6 text-sm inline-block min-w-[80px] h-6 border border-black p-0.5"> ${fieldValue}</span>`;
         }
 
         return `<span
@@ -345,7 +345,7 @@ const Page = (props: Props) => {
               </div>
               {/* <Input className="m-2 w-40" variant="bordered" label="Tên biểu mẫu" type="text" name="formName" /> */}
             </div>
-            <div className="m-8 mx-auto w-[900px] border p-8 ">
+            <div className="m-8 mx-auto w-[1000px] border p-8 ">
               <div className="h-[50rem] overflow-y-scroll">
                 <div
                   className="min-h-[35rem] content-center p-10 "
