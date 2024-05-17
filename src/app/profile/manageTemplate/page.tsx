@@ -2,7 +2,11 @@
 
 import Loading from '@/components/loading';
 import { FormTemplate } from '@/constants/types/FormTemplate';
-import { OrderTemplatePackType, OrderType, Template } from '@/constants/types/homeType';
+import {
+  OrderTemplatePackType,
+  OrderType,
+  Template,
+} from '@/constants/types/homeType';
 import axiosClient from '@/lib/axiosClient';
 import paths from '@/lib/path-link';
 import { faEye, faPen, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -33,9 +37,14 @@ const ManageTemplate = () => {
   const router = useRouter();
   const [templates, setTemplates] = useState<FormTemplate[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<FormTemplate>();
-  const [selectedTemplateFromPack, setSelectedTemplateFromPack] = useState<FormTemplateVersion>();
+  const [selectedTemplateFromPack, setSelectedTemplateFromPack] =
+    useState<FormTemplateVersion>();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { isOpen: isOpenFromPack, onOpen: onOpenFromPack, onOpenChange: onOpenChangeFromPack } = useDisclosure();
+  const {
+    isOpen: isOpenFromPack,
+    onOpen: onOpenFromPack,
+    onOpenChange: onOpenChangeFromPack,
+  } = useDisclosure();
   const [checkoutForm, setCheckoutForm] = useState<CheckoutForm[]>();
   const templateRef = useRef<HTMLDivElement>(null);
   const [templatePack, setTemplatePack] = useState<FormTemplateVersion[]>([]);
@@ -120,11 +129,15 @@ const ManageTemplate = () => {
   };
 
   const getAllCheckOutForm = async () => {
-    const res = await axiosClient.get(
-      `order/getAllCheckOutFormTemplateDetailByUser/${userId}`
-    );
-    const allOrder = res.data;
-    setCheckoutForm(allOrder);
+    try {
+      const res = await axiosClient.get(
+        `order/getAllCheckOutFormTemplateDetailByUser/${userId}`
+      );
+      const allOrder = res.data;
+      setCheckoutForm(allOrder);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getQuantity = (itemId: number) => {
@@ -141,15 +154,18 @@ const ManageTemplate = () => {
   };
 
   const getAllTemplateFromPack = async () => {
-    const res = await axiosClient.get(
-      `orderPackageTemplate/getAllFormTemplateCheckedOut/${userId}`
-    );
-    const allTemplate = res.data;
-    console.log(allTemplate);
+    try {
+      const res = await axiosClient.get(
+        `orderPackageTemplate/getAllFormTemplateCheckedOut/${userId}`
+      );
+      const allTemplate = res.data;
+      console.log(allTemplate);
 
-    setTemplatePack(allTemplate);
+      setTemplatePack(allTemplate);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
 
   useEffect(() => {
     getAllTemplate();
@@ -262,7 +278,6 @@ const ManageTemplate = () => {
         })}
       </div>
       <div>
-
         <h1 className="p-3 text-xl font-bold">Biểu mẫu trong gói</h1>
         <div className="grid grid-cols-4">
           {templatePack.map((template, index) => {

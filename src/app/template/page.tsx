@@ -138,12 +138,16 @@ const Page = () => {
   };
 
   const getAllCheckOutForm = async () => {
-    if (!userId) return;
-    const res = await axiosClient.get(
-      `order/getAllCheckOutFormTemplateDetailByUser/${userId}`
-    );
-    const allOrder = res.data;
-    setCheckoutForm(allOrder);
+    try {
+      if (!userId) return;
+      const res = await axiosClient.get(
+        `order/getAllCheckOutFormTemplateDetailByUser/${userId}`
+      );
+      const allOrder = res.data;
+      setCheckoutForm(allOrder);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const getQuantity = (itemId: number) => {
