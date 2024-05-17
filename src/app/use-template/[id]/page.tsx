@@ -85,7 +85,7 @@ const Page = (props: Props) => {
             onclick="document.getElementById('${fieldName}').focus()"
             class="${
               isSelected && 'bg-orange-200'
-            } select-none text-center text-sm inline-block min-w-[50px] h-6 border border-black p-0.5">${fieldValue}</span>`;
+            } select-none text-center text-sm inline-block min-w-[100px] h-6 border border-black p-0.5">${fieldValue}</span>`;
         }
 
         return `<span
@@ -153,8 +153,21 @@ const Page = (props: Props) => {
   };
 
   const handleFormDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type } = e.target;
+    let formattedValue = value;
+
+    console.log(name, value, type);
+
+    if (type === 'date') {
+      const date = new Date(value);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = String(date.getFullYear());
+
+      formattedValue = `${day}-${month}-${year}`;
+    }
+
+    setFormData({ ...formData, [name]: formattedValue });
   };
 
   const renderField = (field: any, props?: any) => {
@@ -167,6 +180,7 @@ const Page = (props: Props) => {
         return (
           <Input {...props} type="number" min={1900} max={2022} step={1} />
         );
+
       default:
         return <Input {...props} />;
     }
@@ -223,7 +237,8 @@ const Page = (props: Props) => {
           acc[field.fieldName] = 0;
           break;
         case 'date':
-          acc[field.fieldName] = date.toISOString().slice(0, 10);
+          acc[field.fieldName] =
+            `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
           break;
         default:
           acc[field.fieldName] = '';
