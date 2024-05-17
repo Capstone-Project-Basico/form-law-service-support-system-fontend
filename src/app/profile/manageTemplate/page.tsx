@@ -243,7 +243,7 @@ const ManageTemplate = () => {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           size="full"
-          className="h-[800px] w-[1100px]"
+          className="h-[800px] w-[1200px]"
         >
           <ModalContent>
             {(onClose) => {
@@ -253,15 +253,18 @@ const ManageTemplate = () => {
 
               return (
                 <>
-                  <ModalBody className="flex flex-row gap-6 overflow-y-scroll p-6">
-                    <div className="w-[800px]">
+                  <ModalBody className="flex flex-row gap-6 rounded-2xl p-6">
+                    <div
+                      className="h-[755px]  overflow-y-scroll border-1 border-black p-10"
+                      style={{ minWidth: '800px', maxWidth: '1000px' }}
+                    >
                       <div
-                        className="min-h-full content-center border-1 border-black p-10"
+                        className="min-h-full content-center "
                         ref={templateRef}
                       ></div>
                     </div>
                     <div className="flex w-[300px] flex-col items-center justify-start gap-10">
-                      <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      <h1 className="flex justify-start text-2xl font-semibold">
                         {selectedTemplate?.title
                           ? selectedTemplate?.title
                           : 'Biểu mẫu này hiện tại không có tên'}
