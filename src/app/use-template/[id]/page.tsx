@@ -339,13 +339,13 @@ const Page = (props: Props) => {
                       </div>
                     </div>
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                      <button
+                      {/* <button
                         onClick={handleSaveDraft}
                         className="ml-3 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white opacity-20"
                         aria-label="Save"
                       >
                         Lưu tạm
-                      </button>
+                      </button> */}
                       <button
                         type="button"
                         onClick={handleSubmit}
@@ -360,7 +360,7 @@ const Page = (props: Props) => {
               </div>
               {/* <Input className="m-2 w-40" variant="bordered" label="Tên biểu mẫu" type="text" name="formName" /> */}
             </div>
-            <div className="m-8 mx-auto w-[900px] border p-8 ">
+            <div className="m-8 mx-auto w-[1000px] border p-8 ">
               <div className="h-[50rem] overflow-y-scroll">
                 <div
                   className="min-h-[35rem] content-center p-10 "

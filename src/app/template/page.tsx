@@ -69,7 +69,7 @@ const Page = () => {
   const user: UserLocal | null = getUserFromStorage();
   const userId = user?.data.data.userId;
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(5);
   const [price, setPrice] = useState(1);
   const [itemId, setItemId] = useState(0);
   const [dataOrder, setDataOrder] = useState({

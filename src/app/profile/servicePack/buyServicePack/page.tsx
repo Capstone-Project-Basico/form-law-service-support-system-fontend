@@ -63,6 +63,7 @@ const BuyPacks = () => {
   }, []);
 
   const getUser = async () => {
+    if (!user) return;
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`,
@@ -71,7 +72,7 @@ const BuyPacks = () => {
         }
       );
       setEmailUser(response.data.data.email);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const getAllPacks = async () => {
@@ -88,7 +89,7 @@ const BuyPacks = () => {
             service.deleted === false && service.processStatus === "ĐÃ DUYỆT"
         )
       );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   //buy pack
@@ -308,9 +309,8 @@ const BuyPacks = () => {
             <div className="flex gap-10">
               <Button
                 variant="faded"
-                className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${
-                  isSelectedQR === 1 ? "border-1 border-[#FF0004]" : ""
-                }`}
+                className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${isSelectedQR === 1 ? "border-1 border-[#FF0004]" : ""
+                  }`}
                 onClick={() => setIsSelectedQR(1)}
               >
                 <Image alt="" src="/wallet/vietqr.png" width={50} height={50} />
@@ -319,9 +319,8 @@ const BuyPacks = () => {
 
               <Button
                 variant="faded"
-                className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${
-                  isSelectedQR === 2 ? "border-1 border-[#FF0004]" : ""
-                }`}
+                className={`bg-white w-[350px] h-[100px] flex justify-start items-center gap-2 ${isSelectedQR === 2 ? "border-1 border-[#FF0004]" : ""
+                  }`}
                 onClick={() => setIsSelectedQR(2)}
               >
                 <Image alt="" src="/wallet/wallet.png" width={50} height={50} />

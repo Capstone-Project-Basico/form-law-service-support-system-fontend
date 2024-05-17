@@ -62,16 +62,18 @@ const ProfileSidebar = () => {
   const userId = user?.data.data.userId;
 
   const getDataUser = () => {
+    if (!user) return;
     try {
       axios
         .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`)
         .then((response) => {
           setProfileData(response.data.data);
         });
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const getWallet = () => {
+    if (!user) return;
     setWalletError(null);
     axios
       .get(
@@ -260,9 +262,8 @@ const MenuItem = ({ item }: { item: ProfileSidebarItem }) => {
     <div className="py-2">
       <Link
         href={item.path}
-        className={`flex flex-row items-center space-x-4 rounded-lg p-2 hover:text-[#FF0004] ${
-          item.path === pathname ? 'text-[#FF0004]' : ''
-        }`}
+        className={`flex flex-row items-center space-x-4 rounded-lg p-2 hover:text-[#FF0004] ${item.path === pathname ? 'text-[#FF0004]' : ''
+          }`}
       >
         {item.icon}
         <span className="flex text-xl font-semibold">{item.title}</span>
