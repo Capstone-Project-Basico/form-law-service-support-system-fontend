@@ -111,7 +111,6 @@ const Page = (props: Props) => {
       templateVersionId: Number(params.id),
       formData: formData,
     };
-    console.log(data);
     await postUserForm(data);
   };
 
@@ -156,8 +155,6 @@ const Page = (props: Props) => {
     const { name, value, type } = e.target;
     let formattedValue = value;
 
-    console.log(name, value, type);
-
     if (type === 'date') {
       const date = new Date(value);
       const day = String(date.getDate()).padStart(2, '0');
@@ -180,6 +177,11 @@ const Page = (props: Props) => {
         return (
           <Input {...props} type="number" min={1900} max={2022} step={1} />
         );
+      case 'date':
+        const dateData = formData[field.fieldName];
+        const [day, month, year] = dateData.split('-');
+        const formattedDate = `${year}-${month}-${day}`;
+        return <Input {...props} type="date" value={formattedDate} />;
 
       default:
         return <Input {...props} />;
