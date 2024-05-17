@@ -213,7 +213,7 @@ export type OrderType = {
       itemUUID: string;
       totalRequest: number;
       orderDetailUUID: string;
-    }
+    },
   ];
   // price: number;
   orderStatus: string;
@@ -221,6 +221,26 @@ export type OrderType = {
   transactionId: Date;
   deleted: boolean;
 };
+
+export type OrderTemplatePackType = {
+  orderId: string;
+  email: string;
+  itemPackageTemplateResponses: [
+    {
+      itemId: number;
+      formTemplateName: string;
+      quantity: number;
+    },
+  ];
+  packageId: string;
+  packageName: string;
+  packageDescription: string;
+  orderStatus: string;
+  dateCreated: any;
+  transactionId: string;
+  deleted: boolean;
+};
+
 export type CardTemplate = {
   itemDetail?: Template;
 };
@@ -233,6 +253,7 @@ export type PackType = {
   price: number;
   itemPackageList: [];
   deleted: boolean;
+  processStatus: string;
 };
 
 export type ServiceType = {

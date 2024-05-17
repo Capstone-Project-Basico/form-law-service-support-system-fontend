@@ -58,8 +58,10 @@ const BuyTemplatePack = () => {
           headers: authHeader(),
         }
       );
-      setServicePacks(response.data.data);
-    } catch (error) { }
+      setServicePacks(response.data.data.filter((pack: PackType) => pack.deleted === false && pack.processStatus === "ĐÃ DUYỆT" && pack.itemPackageList.length > 0));
+    } catch (error) {
+      toast.error("KHông mua được!");
+    }
   };
 
   //buy pack
@@ -105,18 +107,6 @@ const BuyTemplatePack = () => {
       toast.error('Yêu cầu mua thất bại');
       console.log(error);
     }
-  };
-
-  const payForTemplate = (orderId: string) => {
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}orderPackageTemplate/payOrderPackageTemplateDetail/${orderId}`,
-        {},
-        { headers: authHeader() }
-      )
-      .then((res) => {
-        toast.success(`${res.data.data}`);
-      });
   };
 
   const payment = () => {

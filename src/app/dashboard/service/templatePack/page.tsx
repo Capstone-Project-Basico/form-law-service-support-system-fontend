@@ -95,7 +95,7 @@ const Pack = () => {
         fetchPacks();
         break;
       case 2:
-        console.log("dang cho duyet ne");
+        fetchPendingPacks();
         break;
       case 3:
         fetchDeletedTemplatePack();
@@ -112,7 +112,18 @@ const Pack = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
       );
-      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === false));
+      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === false && pack.itemPackageList.length > 0));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchPendingPacks = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
+      );
+      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === false && pack.processStatus === "CHỜ DUYỆT" && pack.itemPackageList.length > 0));
     } catch (error) {
       console.error(error);
     }
@@ -123,7 +134,7 @@ const Pack = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
       );
-      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === true));
+      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === true && pack.itemPackageList.length > 0));
     } catch (error) {
       console.error(error);
     }
@@ -135,7 +146,7 @@ const Pack = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion`
       );
-      setTemplates(response.data.data);
+      setTemplates(response.data.data.filter((template: FormTemplateVersion) => template.status === "ACTIVE") || []);
     } catch (error) { }
   };
 
