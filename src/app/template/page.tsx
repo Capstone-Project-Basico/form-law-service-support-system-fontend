@@ -69,7 +69,7 @@ const Page = () => {
   const user: UserLocal | null = getUserFromStorage();
   const userId = user?.data.data.userId;
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(5);
   const [price, setPrice] = useState(1);
   const [itemId, setItemId] = useState(0);
   const [dataOrder, setDataOrder] = useState({
@@ -458,7 +458,7 @@ const Page = () => {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           size="full"
-          className="h-[800px] w-[1100px]"
+          className="h-[800px] w-[1200px]"
         >
           <ModalContent>
             {(onClose) => {
@@ -468,15 +468,18 @@ const Page = () => {
 
               return (
                 <>
-                  <ModalBody className="flex flex-row gap-6 p-6">
-                    <div className="h-[755px] w-[800px] overflow-y-scroll border-1 border-black p-10">
+                  <ModalBody className="flex flex-row gap-6 rounded-2xl p-6">
+                    <div
+                      className="h-[755px]  overflow-y-scroll border-1 border-black p-10"
+                      style={{ minWidth: '800px', maxWidth: '1000px' }}
+                    >
                       <div
                         className="min-h-full content-center  "
                         ref={templateRef}
                       ></div>
                     </div>
                     <div className="flex w-[300px] flex-col items-center justify-start gap-10">
-                      <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      <h1 className="flex justify-start text-2xl font-semibold">
                         {selectedTemplate?.title
                           ? selectedTemplate?.title
                           : 'Biểu mẫu này hiện tại không có tên'}
