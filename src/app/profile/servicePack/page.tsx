@@ -26,6 +26,7 @@ import {
 import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';
 import dateConvert from '@/components/dateConvert';
+import { useRouter } from 'next/navigation';
 
 interface UserLocal {
   data: {
@@ -49,7 +50,7 @@ const ServicePack = () => {
   ] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const todayDate = new Date().toISOString().substring(0, 10);
-
+  const router = useRouter();
   let newTask = {
     taskName,
     description,
@@ -286,8 +287,8 @@ const ServicePack = () => {
                 {servicePack.packageName}
               </h2>
               <p className="pt-3 text-xl">{servicePack.description}</p>
-              <Button className="my-5 bg-[#FF0004] text-white" disabled>
-                Đang sở hữu
+              <Button className="my-5 bg-green-600 text-white" onClick={() => router.push(`/useTemplate/`)}>
+                Chi tiết
               </Button>
             </div>
           ))}
