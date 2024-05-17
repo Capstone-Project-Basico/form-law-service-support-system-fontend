@@ -104,6 +104,7 @@ const Navbar = () => {
   }, [userId]);
 
   const getWallet = () => {
+    if (!user) return;
     setWalletError(null);
     try {
       axios
