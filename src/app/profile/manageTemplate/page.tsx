@@ -356,6 +356,8 @@ const ManageTemplate = () => {
             onChange={(page) => setPage(page)}
           /> */}
         </div>
+
+        {/* Modal Xem trước*/}
         <Modal
           hideCloseButton
           isOpen={isOpen}
@@ -405,7 +407,12 @@ const ManageTemplate = () => {
                       <div className="flex flex-col gap-3">
                         <Button
                           className="w-80 bg-[#FF0004] text-white"
-                          onPress={onClose}
+                          onPress={() => {
+                            onClose();
+                            router.push(
+                              `${paths.useTemplate.path}/${selectedTemplate?.latestVersion?.id}`
+                            );
+                          }}
                         >
                           <FontAwesomeIcon
                             icon={faPen}

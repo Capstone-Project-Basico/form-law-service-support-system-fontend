@@ -348,11 +348,11 @@ const ManagerTemplatePage = (props: Props) => {
 
     const renderAction = () => {
       const menuItems = [
-        {
-          title: 'Chỉnh sửa',
-          onClick: () => setIsUpdate({ isOpen: true, data: item }),
-          role: ['ROLE_MANAGER', 'ROLE_STAFF'],
-        },
+        // {
+        //   title: 'Chỉnh sửa',
+        //   onClick: () => setIsUpdate({ isOpen: true, data: item }),
+        //   role: ['ROLE_MANAGER', 'ROLE_STAFF'],
+        // },
         {
           title: 'Chuẩn hóa',
           onClick: () =>
