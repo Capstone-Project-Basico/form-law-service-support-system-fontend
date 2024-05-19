@@ -40,9 +40,7 @@ const Wallet = () => {
         });
     } catch (error) {
       console.log(error);
-
     }
-
   };
 
   useEffect(() => {
@@ -114,7 +112,7 @@ const Wallet = () => {
               </h3>
               <p>Chuyển khoản ngân hàng online</p>
             </div>
-            <h1 className="font-bold text-[#FF0004]">Đang bảo trì</h1>
+            <h1 className="font-bold text-[#FF0004]">Đang phát triển</h1>
           </Button>
         </div>
         <div className="border w-full">
@@ -129,7 +127,7 @@ const Wallet = () => {
               </h3>
               <p>Nạp tiền tự động liên kết với Momo</p>
             </div>
-            <h1 className="font-bold text-[#FF0004]">Đang bảo trì</h1>
+            <h1 className="font-bold text-[#FF0004]">Đang phát triển</h1>
           </Button>
         </div>
         <div className="border w-full">

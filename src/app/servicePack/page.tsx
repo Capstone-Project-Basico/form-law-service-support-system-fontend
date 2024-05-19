@@ -44,6 +44,7 @@ const BuyPacks = () => {
   const [orderId, setOrderId] = useState<string>();
   const [transactionId, setTransactionId] = useState<string>();
   const [isSelectedQR, setIsSelectedQR] = useState(0);
+  const [walletError, setWalletError] = useState<boolean>();
 
   //data
   const [quantity, setQuantity] = useState(1);
@@ -60,6 +61,7 @@ const BuyPacks = () => {
   const userId = user?.data.data.userId;
 
   useEffect(() => {
+    getWallet();
     getUser();
     getAllPacks();
   }, []);
@@ -79,6 +81,24 @@ const BuyPacks = () => {
         });
     } catch (error) { }
   };
+
+  const getWallet = () => {
+    if (!user) return;
+    try {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+        )
+        .then((response) => {
+          setWalletError(false);
+        })
+        .catch((error) => {
+          setWalletError(true);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const getAllPacks = async () => {
     try {
@@ -335,6 +355,7 @@ const BuyPacks = () => {
                   className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
                     }`}
                   onClick={() => setIsSelectedQR(2)}
+                  disabled={walletError}
                 >
                   <Image
                     alt=""

@@ -210,55 +210,55 @@ const Tasks: React.FC<TasksProps> = ({
               </TableCell>
               <TableCell>{task.processStatus}</TableCell>
 
-              {task.deleted === false ? ( task.processStatus === "ĐÃ HOÀN THÀNH" ? 
-              (
-              <TableCell className="flex gap-2 items-center justify-center">
-                <Button
-                    className="bg-blue-600 text-white"
-                    onClick={() => {
-                      router.push(`task/taskDetail/${task.id}`);
-                    }}
-                  >
-                    Chi tiết
-                  </Button>
-              </TableCell>
-              ) : (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onPress={() => {
-                      handleTaskSelect(task);
-                      onOpenUpdate();
-                    }}
-                  >
-                    Cập nhật
-                  </Button>
+              {task.deleted === false ? (task.processStatus === "ĐÃ HOÀN THÀNH" ?
+                (
+                  <TableCell className="flex gap-2 items-center justify-center">
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onClick={() => {
+                        router.push(`task/taskDetail/${task.id}`);
+                      }}
+                    >
+                      Chi tiết
+                    </Button>
+                  </TableCell>
+                ) : (
+                  <TableCell className="flex gap-2 items-center  justify-center ">
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onPress={() => {
+                        handleTaskSelect(task);
+                        onOpenUpdate();
+                      }}
+                    >
+                      Cập nhật
+                    </Button>
 
-                  <Button
-                    className="bg-yellow-600 text-white"
-                    onClick={() => {
-                      setSelectedTask(task);
-                      onOpenTaskAssign();
-                    }}
-                  >
-                    Giao việc
-                  </Button>
-                  <Button
-                    className="bg-green-600 text-white"
-                    onClick={() => {
-                      router.push(`task/taskDetail/${task.id}`);
-                    }}
-                  >
-                    Chi tiết
-                  </Button>
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(task.id)}
-                  >
-                    Xóa
-                  </Button>
-                </TableCell>
-              )
+                    <Button
+                      className="bg-yellow-600 text-white"
+                      onClick={() => {
+                        setSelectedTask(task);
+                        onOpenTaskAssign();
+                      }}
+                    >
+                      Giao việc
+                    </Button>
+                    <Button
+                      className="bg-green-600 text-white"
+                      onClick={() => {
+                        router.push(`task/taskDetail/${task.id}`);
+                      }}
+                    >
+                      Chi tiết
+                    </Button>
+                    <Button
+                      className="bg-[#FF0004] text-white"
+                      onClick={() => handleDelete(task.id)}
+                    >
+                      Xóa
+                    </Button>
+                  </TableCell>
+                )
               ) : (
                 <TableCell className="flex gap-2 items-center justify-center">
                   <Button
@@ -413,7 +413,7 @@ const Tasks: React.FC<TasksProps> = ({
                 >
                   {(item: any) => (
                     <AutocompleteItem key={item.userId}>
-                      {item.email}
+                      {item.userName}
                     </AutocompleteItem>
                   )}
                 </Autocomplete>

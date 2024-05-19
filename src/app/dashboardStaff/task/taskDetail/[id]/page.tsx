@@ -35,6 +35,7 @@ import ChildTasks from "@/components/staff/ChildTasks";
 import { useParams } from "next/navigation";
 import dateConvert from "@/components/dateConvert";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const TaskDetail = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -60,6 +61,7 @@ const TaskDetail = () => {
 
   const [task, setTask] = useState<ChildTaskType[]>([]);
   const [selectedTask, setSelectedTask] = useState<ChildTaskType | null>(null);
+  const router = useRouter();
   let newChildTask = {
     taskName,
     description,
@@ -259,6 +261,7 @@ const TaskDetail = () => {
             )
             .then((response) => {
               toast.success("Bạn đã hoàn thành 1 việc");
+              router.push("/dashboardStaff/task/");
               fetchTask();
             });
         } catch (error) {
@@ -326,12 +329,28 @@ const TaskDetail = () => {
               </h1>
             </div>
 
-            <div className="flex">
-              <h1 className="min-w-40">Người cần hỗ trợ:</h1>
-              <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                {mainTask?.supportTo}
-              </h1>
-            </div>
+
+            {mainTask?.supportTo ?
+              (
+                <div className="flex flex-col gap-10">
+                  <div className="flex">
+                    <h1 className="min-w-40">Người cần hỗ trợ:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      {mainTask?.supportTo}
+                    </h1>
+                  </div>
+
+                  <div className="flex">
+                    <h1 className="min-w-40">Thời gian hỗ trợ:</h1>
+                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      {mainTask?.startDate.substring(0, 10) + " vào lúc " + mainTask?.startDate.substring(11, 16)}
+                    </h1>
+                  </div>
+                </div>
+              )
+              :
+              (<></>)
+            }
           </div>
         </AccordionItem>
       </Accordion>
