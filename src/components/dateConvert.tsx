@@ -9,11 +9,11 @@ const dateConvert = (dateInput: Date) => {
     "-" +
     dateFormat.getDate().toString().padStart(2, "0") +
     " " +
-    dateFormat.getHours() +
+    dateFormat.getHours().toString().padStart(2, "0") +
     ":" +
-    dateFormat.getMinutes() +
+    dateFormat.getMinutes().toString().padStart(2, "0") +
     ":" +
-    dateFormat.getSeconds();
+    dateFormat.getSeconds().toString().padStart(2, "0");
 
   return date;
 };

@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import authHeader from '@/components/authHeader/AuthHeader';
 import { FormTemplate } from '@/constants/types/FormTemplate';
 import axiosClient from '@/lib/axiosClient';
-import { faDollarSign, faEye, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faBasketShopping, faDollarSign, faEye, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Autocomplete,
@@ -50,6 +50,8 @@ const Page = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedTemplate, setSelectedTemplate] = useState<FormTemplate>();
   const templateRef = useRef<HTMLDivElement>(null);
+  const [walletError, setWalletError] = useState<boolean>();
+
   const {
     isOpen: isOpenPayment,
     onOpen: onOpenPayment,
@@ -312,10 +314,29 @@ const Page = () => {
   }, [page, filteredItems]);
 
   useEffect(() => {
+    getWallet();
     getTemplate();
     getType();
     getAllCheckOutForm();
   }, []);
+
+  const getWallet = () => {
+    if (!user) return;
+    try {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+        )
+        .then((response) => {
+          setWalletError(false);
+        })
+        .catch((error) => {
+          setWalletError(true);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     if (selectedTemplate?.latestVersion === undefined) return;
@@ -430,7 +451,7 @@ const Page = () => {
                         className="bg-[#FF0004] text-white "
                       >
                         <FontAwesomeIcon
-                          icon={faDollarSign}
+                          icon={faBasketShopping}
                           className="ml-1 size-4"
                         />
                         Mua
@@ -517,7 +538,7 @@ const Page = () => {
                           }}
                         >
                           <FontAwesomeIcon
-                            icon={faPen}
+                            icon={faBasketShopping}
                             className="ml-1 size-4"
                           />
                           Mua mẫu này
@@ -552,9 +573,8 @@ const Page = () => {
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                    isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                  }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                    }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
                   <Image
@@ -568,10 +588,10 @@ const Page = () => {
 
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                    isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                  }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                    }`}
                   onClick={() => setIsSelectedQR(2)}
+                  disabled={walletError}
                 >
                   <Image
                     alt=""

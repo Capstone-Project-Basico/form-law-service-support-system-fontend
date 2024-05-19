@@ -29,6 +29,7 @@ const BuyTemplatePack = () => {
   const [orderId, setOrderId] = useState<string>();
   const [transactionId, setTransactionId] = useState<string>();
   const [isSelectedQR, setIsSelectedQR] = useState(0);
+  const [walletError, setWalletError] = useState<boolean>();
 
   const {
     isOpen: isOpenPayment,
@@ -47,6 +48,7 @@ const BuyTemplatePack = () => {
   const userId = user?.data.data.userId;
 
   useEffect(() => {
+    getWallet();
     getAllPacks();
   }, []);
 
@@ -63,6 +65,24 @@ const BuyTemplatePack = () => {
       toast.error("KHông mua được!");
     }
   };
+
+  const getWallet = () => {
+    if (!user) return;
+    try {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+        )
+        .then((response) => {
+          setWalletError(false);
+        })
+        .catch((error) => {
+          setWalletError(true);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   //buy pack
   const handleBuy = async (packageId: string, price: number) => {
@@ -285,6 +305,7 @@ const BuyTemplatePack = () => {
                 className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
                   }`}
                 onClick={() => setIsSelectedQR(2)}
+                disabled={walletError}
               >
                 <Image alt="" src="/wallet/wallet.png" width={50} height={50} />
                 Thanh toán bằng ví của bạn

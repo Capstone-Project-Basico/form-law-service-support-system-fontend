@@ -333,12 +333,11 @@ const Navbar = () => {
                   isBordered
                   as="button"
                   className="transition-transform"
-                  color="primary"
                   name="Jason Hughes"
                   size="lg"
                   src={
-                    userData?.avatar ??
-                    "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                    userData?.avatar ? userData?.avatar :
+                      "/User-avatar.png"
                   }
                 />
               </DropdownTrigger>
@@ -371,7 +370,7 @@ const Navbar = () => {
                         {userData?.userName}
                       </h2>
                       <h2 className="font-bold">
-                        {walletError ? 0 : wallet?.balance.toLocaleString()}Đ
+                        {walletError ? 0 : wallet?.balance.toLocaleString()} Đ
                       </h2>
                       <h2 className="">{userData?.email}</h2>
                     </div>

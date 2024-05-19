@@ -14,6 +14,7 @@ import {
   ModalHeader,
   Pagination,
   Textarea,
+  TimeInput,
   useDisclosure,
 } from '@nextui-org/react';
 import {
@@ -49,7 +50,7 @@ const ServicePack = () => {
     setOrderPackageRequestServiceDetailUUID,
   ] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const todayDate = new Date().toISOString().substring(0, 10);
+  const todayDate = new Date().toISOString().substring(0, 16);
   const router = useRouter();
   let newTask = {
     taskName,
@@ -234,17 +235,25 @@ const ServicePack = () => {
                   <Input
                     isRequired
                     required
-                    type="date"
+                    type="datetime-local"
                     label="Ngày luật sư có thể liên hệ"
-                    value={startDate ? startDate.substring(0, 10) : ''}
+                    value={startDate ? startDate.substring(0, 10) + "T" + startDate.substring(11, 16) : ''}
+                    // value="2018-06-12T19:30"
                     onChange={(e) => {
                       const dateValue = e.target.value
                         ? dateConvert(new Date(e.target.value))
                         : null;
                       setStartDate(dateValue);
+                      console.log(todayDate);
                     }}
                     min={todayDate}
                     className="form-input"
+                  />
+                  <TimeInput
+                    label="Giờ để chúng tôi có thể liên hệ"
+                    hourCycle={24}
+                    onChange={(e) => console.log(e.hour + ":" + e.minute)}
+                    granularity="minute"
                   />
                 </ModalBody>
                 <ModalFooter>
