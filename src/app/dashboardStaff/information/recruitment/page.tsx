@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Table,
@@ -21,17 +21,18 @@ import {
   NavbarContent,
   NavbarItem,
   MenuItem,
-} from "@nextui-org/react";
-import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
-import { RecruitmentType } from "@/constants/types/homeType";
-import Recruitments from "@/components/manageStaff/Recruitment";
-import { v4 as uuidv4 } from "uuid";
-import { ToastContainer, toast } from "react-toastify";
-import authHeader from "@/components/authHeader/AuthHeader";
+} from '@nextui-org/react';
+import axios from 'axios';
+import { FormEvent, useEffect, useState } from 'react';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
+import { RecruitmentType } from '@/constants/types/homeType';
+import Recruitments from '@/components/manageStaff/Recruitment';
+import { v4 as uuidv4 } from 'uuid';
+import { ToastContainer, toast } from 'react-toastify';
+import authHeader from '@/components/authHeader/AuthHeader';
+import Swal from 'sweetalert2';
 
 interface UserLocal {
   data: {
@@ -45,21 +46,21 @@ const Recruitment = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
   //data
-  const [fullName, serFullName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [id_number, setIdNumber] = useState("");
-  const [homeTown, setHomeTown] = useState("");
-  const [maritalStatus, setMaritalStatus] = useState("");
-  const [gender, setGender] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNum, setPhoneNum] = useState("");
-  const [position, setPosition] = useState("");
-  const [exp, setExp] = useState("");
-  const [field, setField] = useState("");
-  const [graduate, setGraduate] = useState("");
-  const [target, setTarget] = useState("");
-  const [workPlace, setWorkPlace] = useState("");
-  const [processStatus, setprocessStatus] = useState("");
+  const [fullName, serFullName] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [id_number, setIdNumber] = useState('');
+  const [homeTown, setHomeTown] = useState('');
+  const [maritalStatus, setMaritalStatus] = useState('');
+  const [gender, setGender] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNum, setPhoneNum] = useState('');
+  const [position, setPosition] = useState('');
+  const [exp, setExp] = useState('');
+  const [field, setField] = useState('');
+  const [graduate, setGraduate] = useState('');
+  const [target, setTarget] = useState('');
+  const [workPlace, setWorkPlace] = useState('');
+  const [processStatus, setprocessStatus] = useState('');
 
   const [recruitment, setRecruitment] = useState<RecruitmentType[]>([]);
   // const [selectedRecruitment, setSelectedRecruitment] =
@@ -84,8 +85,8 @@ const Recruitment = () => {
   };
 
   const getUserFromStorage = () => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
     }
   };
@@ -97,9 +98,11 @@ const Recruitment = () => {
       case 1:
         fetchRecruitment();
         break;
-
-      default:
-        fetchRecruitment();
+      case 2:
+        fetchDoneRecruitments();
+        break;
+      case 3:
+        fetchDeletedRecruitment();
         break;
     }
   }, [tabs]);
@@ -110,9 +113,157 @@ const Recruitment = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/getAllRecruitmentForm`
       );
+      setRecruitment(
+        response.data.data.filter(
+          (recruitment: RecruitmentType) =>
+            recruitment.processStatus === 'TODO' ||
+            recruitment.processStatus === ''
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //get done Recruitment
+  const fetchDoneRecruitments = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/getAllRecruitmentForm`
+      );
+      setRecruitment(
+        response.data.data.filter(
+          (recruitment: RecruitmentType) => recruitment.processStatus === 'DONE'
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateStatus = async (newStatus: string, id: number) => {
+    try {
+      // Construct the URL with query parameters
+      const url = `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/updateStatusRecruitmentForm/${id}?status=${newStatus}`;
+
+      // Prepare the config object for headers
+      const config = {
+        headers: authHeader(), // Include authentication headers
+      };
+
+      // Make the PUT request with URL and config
+      const response = await axios.put(url, {}, config);
+
+      // Check if response is successful
+      if (response.status === 200) {
+        toast.success('Cập nhật tình trạng thành công!');
+        switch (tabs) {
+          case 1:
+            fetchRecruitment();
+            break;
+          case 2:
+            fetchDoneRecruitments();
+            break;
+          case 3:
+            fetchDeletedRecruitment();
+            break;
+        }
+      }
+    } catch (error) {
+      // Handle error
+      toast.error('Có lỗi xảy ra khi cập nhật tình trạng.');
+    }
+  };
+
+  //get all deleted items
+  const fetchDeletedRecruitment = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/getAllDeletedRecruitmentForm`
+      );
       setRecruitment(response.data.data);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  //delete
+  const handleDelete = async (id: number) => {
+    // const isConfirmed = window.confirm(
+    //   "Bạn có chắc muốn xóa tuyển dụng này không?"
+    // );
+    // if (isConfirmed) {
+    //   try {
+    //     if (!user) {
+    //       console.log("No user found");
+    //       return;
+    //     }
+    //     axios
+    //       .delete(
+    //         `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
+    //         {
+    //           headers: authHeader(),
+    //         }
+    //       )
+    //       .then(() => {
+    //         toast.success("Xóa thành công");
+    //         fetchRecruitment();
+    //       }),
+    //       {
+    //         headers: authHeader(),
+    //       };
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+    Swal.fire({
+      title: 'Bạn có muốn xóa thông tin tuyển dụng này không?',
+      showDenyButton: true,
+      confirmButtonText: 'Có',
+      denyButtonText: `Không`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          axios
+            .delete(
+              `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
+              {
+                headers: authHeader(),
+              }
+            )
+            .then(() => {
+              toast.success('Xóa thông tin tuyển dụng thành công');
+              fetchRecruitment();
+            });
+        } catch (error) {
+          toast.error('Xóa thông tin tuyển dụng thất bại');
+
+          console.log(error);
+        }
+      } else if (result.isDenied) {
+        Swal.fire('Bạn đã hủy xóa', '', 'error');
+        return;
+      }
+    });
+  };
+
+  // restore
+  const restoreDelete = async (id: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/restoreRecruitmentForm/${id}`,
+          {},
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success('Khôi phục thành công');
+          fetchDeletedRecruitment();
+        });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -145,32 +296,71 @@ const Recruitment = () => {
         }
       )
       .then((response) => {
-        toast.success("Cập nhật thành công");
+        toast.success('Cập nhật thành công');
         fetchRecruitment();
       })
       .catch((error) => {
-        console.error("Failed to update recruitment", error);
+        console.error('Failed to update recruitment', error);
       });
   };
 
   return (
-    <div className="w-full mt-5 ml-5 mr-5">
+    <div className="ml-5 mr-5 mt-5 w-full">
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">Quản lí thông tin</p>
+            <p className="text-3xl font-bold text-black ">Quản lí thông tin</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Tuyển dụng</p>
+            <p className="text-3xl font-bold text-[#FF0004]">Tuyển dụng</p>
           </BreadcrumbItem>
         </Breadcrumbs>
       </div>
 
-      {/* <div className="flex flex-row gap-10 font-bold border-b-1 "></div> */}
+      <div className="flex flex-row gap-10 border-b-1 font-bold ">
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+            }`}
+            onClick={() => setTabs(1)}
+            radius="none"
+          >
+            ĐANG LÀM
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+            }`}
+            onClick={() => setTabs(2)}
+            radius="none"
+          >
+            ĐÃ HOÀN THÀNH
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 3 &&
+              'border-b-2 border-[#FF0004] border-b-[#FF0004] text-[#FF0004]'
+            }`}
+            radius="none"
+            onClick={() => setTabs(3)}
+          >
+            SPAM
+          </Button>
+        </div>
+      </div>
 
       <div>
         <Recruitments
           recruitments={recruitment}
+          tabs={tabs}
+          handleDelete={handleDelete}
+          restoreDelete={restoreDelete}
+          updateStatus={updateStatus}
           handleUpdateSubmit={handleUpdateSubmit}
         />
       </div>

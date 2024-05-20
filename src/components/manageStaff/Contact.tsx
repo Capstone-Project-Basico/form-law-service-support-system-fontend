@@ -1,5 +1,7 @@
-import axios from "axios";
-import React, { FormEvent, useEffect, useState } from "react";
+'use client';
+
+import axios from 'axios';
+import React, { FormEvent, useEffect, useState } from 'react';
 import {
   Table,
   TableHeader,
@@ -22,27 +24,40 @@ import {
   NavbarItem,
   MenuItem,
   Pagination,
-} from "@nextui-org/react";
-import { usePathname } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
-import { ContactType } from "@/constants/types/homeType";
-import { ToastContainer, toast } from "react-toastify";
-
+  Select,
+  SelectItem,
+} from '@nextui-org/react';
+import { usePathname } from 'next/navigation';
+import { v4 as uuidv4 } from 'uuid';
+import { ContactType } from '@/constants/types/homeType';
+import { ToastContainer, toast } from 'react-toastify';
+import { status } from '@/lib/status';
+import { headers } from 'next/headers';
+import authHeader from '../authHeader/AuthHeader';
+import Contact from '../home/Contact';
 type ContactsProps = {
   contacts: ContactType[];
-
+  tabs: number;
+  handleDelete: (id: number) => void;
+  restoreDelete: (id: number) => void;
+  updateStatus: (newStatus: string, id: number) => void;
   handleUpdateSubmit: (data: any) => void;
 };
 
 const Contacts: React.FC<ContactsProps> = ({
   contacts,
-
+  tabs,
+  handleDelete,
+  restoreDelete,
+  updateStatus,
   handleUpdateSubmit,
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedContact, setSelectedContact] = useState<ContactType | null>(
     null
   );
+  const [contactsList, setContactsList] = useState(contacts);
+  // const [selectedStatus, setSelectedStatus] = useState<string | null>("ALL");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenUpdate,
@@ -61,6 +76,9 @@ const Contacts: React.FC<ContactsProps> = ({
 
   //pagination
   const [page, setPage] = React.useState(1);
+  useEffect(() => {
+    setPage(1);
+  }, [tabs]);
   const rowsPerPage = 8;
 
   const pages = Math.ceil(filteredContacts.length / rowsPerPage);
@@ -79,11 +97,11 @@ const Contacts: React.FC<ContactsProps> = ({
         <div className="my-10 flex flex-row">
           <Input
             classNames={{
-              base: "w-full sm:max-w-[10rem] h-10",
-              mainWrapper: "h-full w-96",
-              input: "text-small",
+              base: 'w-full sm:max-w-[10rem] h-10',
+              mainWrapper: 'h-full w-96',
+              input: 'text-small',
               inputWrapper:
-                "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+                'h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20',
             }}
             placeholder="Từ khóa tìm kiếm .."
             size="sm"
@@ -101,10 +119,10 @@ const Contacts: React.FC<ContactsProps> = ({
             <Pagination
               showControls
               classNames={{
-                wrapper: "gap-0 overflow-visible h-8 ",
-                item: "w-8 h-8 text-small rounded-none bg-transparent",
+                wrapper: 'gap-0 overflow-visible h-8 ',
+                item: 'w-8 h-8 text-small rounded-none bg-transparent',
                 cursor:
-                  "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold",
+                  'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
               }}
               page={page}
               total={pages}
@@ -115,47 +133,110 @@ const Contacts: React.FC<ContactsProps> = ({
       >
         <TableHeader>
           <TableColumn className="bg-[#FF0004] text-white">
-            Họ và Tên
+            Tên khách hàng
           </TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">Email</TableColumn>
           <TableColumn className="bg-[#FF0004] text-white">SĐT</TableColumn>
-          <TableColumn className="bg-[#FF0004] text-white">
+          <TableColumn className="w-[160px] bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
-
-          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
+          <TableColumn className="flex items-center justify-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
         </TableHeader>
         <TableBody>
           {items.map((contact, index) => (
             <TableRow key={index}>
-              <TableCell>{contact.fullName}</TableCell>
+              <TableCell className="font-bold">{contact.fullName}</TableCell>
               <TableCell>{contact.email}</TableCell>
               <TableCell>{contact.phoneNum}</TableCell>
-              <TableCell>{contact.status}</TableCell>
-
-              <TableCell className="flex gap-2 items-center  justify-center ">
-                <Button
-                  className="bg-blue-600 text-white"
-                  onPress={() => {
-                    setSelectedContact(contact);
-                    onOpenUpdate();
+              <TableCell>
+                <Select
+                  className="max-w-xs"
+                  selectedKeys={[contact.status]}
+                  onChange={(e: any) =>
+                    updateStatus(e.target.value, contact.contactId)
+                  }
+                  style={{
+                    backgroundColor:
+                      contact.status === 'TODO' || contact.status === ''
+                        ? '#C0C0C0'
+                        : 'transparent' || contact.status === 'DONE'
+                          ? '#7CFC00'
+                          : 'transparent',
+                    color: contact.status === 'DONE' ? '#00800' : 'initial',
                   }}
                 >
-                  Cập nhật
-                </Button>
-
-                <Button
-                  className="bg-green-600 text-white"
-                  onClick={() => {
-                    setSelectedContact(contact);
-                    onOpen();
-                  }}
-                >
-                  Chi tiết
-                </Button>
+                  {status.map((stt) => (
+                    <SelectItem
+                      key={stt.value}
+                      value={stt.value}
+                      style={{
+                        backgroundColor:
+                          stt.value === 'DONE' ? '#7CFC00' : undefined,
+                        color: stt.value === 'DONE' ? '#00800' : undefined,
+                        display: stt.value !== contact.status ? '' : 'none',
+                      }}
+                    >
+                      {stt.statusName}
+                    </SelectItem>
+                  ))}
+                </Select>
               </TableCell>
+
+              {contact.delete === false ? (
+                <TableCell className="flex items-center justify-center  gap-2 ">
+                  <Button
+                    className={`bg-blue-600 text-white ${
+                      contact.status === 'DONE' ? 'hidden' : ''
+                    }`}
+                    onPress={() => {
+                      setSelectedContact(contact);
+                      onOpenUpdate();
+                    }}
+                  >
+                    Cập nhật
+                  </Button>
+
+                  <Button
+                    className={`bg-[#FF0004] text-white ${
+                      contact.status === 'DONE' ? 'hidden' : ''
+                    }`}
+                    onClick={() => handleDelete(contact.contactId)}
+                  >
+                    Xóa
+                  </Button>
+
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedContact(contact);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
+                </TableCell>
+              ) : (
+                <TableCell className="flex items-center justify-center gap-2">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    onClick={() => restoreDelete(contact.contactId)}
+                  >
+                    Khôi phục
+                  </Button>
+
+                  <Button
+                    className="bg-green-600 text-white"
+                    onClick={() => {
+                      setSelectedContact(contact);
+                      onOpen();
+                    }}
+                  >
+                    Chi tiết
+                  </Button>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
@@ -163,8 +244,8 @@ const Contacts: React.FC<ContactsProps> = ({
 
       {/* update modal */}
       <Modal isOpen={isOpen} onClose={onClose} hideCloseButton>
-        <ModalContent style={{ width: "50%", maxWidth: "500px" }}>
-          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+        <ModalContent style={{ width: '50%', maxWidth: '500px' }}>
+          <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
             Chi tiết
           </ModalHeader>
           <ModalBody>
@@ -226,7 +307,7 @@ const Contacts: React.FC<ContactsProps> = ({
       {/* update modal */}
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+          <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
             Cập nhật đối tác
           </ModalHeader>
           <ModalBody>

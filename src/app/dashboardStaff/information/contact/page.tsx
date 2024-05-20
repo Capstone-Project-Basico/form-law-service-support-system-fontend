@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Table,
@@ -21,32 +21,34 @@ import {
   NavbarContent,
   NavbarItem,
   MenuItem,
-} from "@nextui-org/react";
-import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
-import { ContactType } from "@/constants/types/homeType";
-import Contacts from "@/components/manageStaff/Contact";
-import { v4 as uuidv4 } from "uuid";
-import { ToastContainer, toast } from "react-toastify";
-import authHeader from "@/components/authHeader/AuthHeader";
+} from '@nextui-org/react';
+import axios from 'axios';
+import { FormEvent, useEffect, useState } from 'react';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Link from 'next/link';
+import { ContactType } from '@/constants/types/homeType';
+import Contacts from '@/components/manageStaff/Contact';
+import { v4 as uuidv4 } from 'uuid';
+import { ToastContainer, toast } from 'react-toastify';
+import authHeader from '@/components/authHeader/AuthHeader';
+import Swal from 'sweetalert2';
 
 const Contact = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
   //data
-  const [fullName, serFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNum, setPhoneNum] = useState("");
-  const [career, setCareer] = useState("");
-  const [city, setCity] = useState("");
-  const [businessTime, setBusinessTime] = useState("");
-  const [annualRevenue, setAnnualRevenue] = useState("");
-  const [juridical, setJuridical] = useState("");
-  const [status, setStatus] = useState("");
+  const [fullName, serFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNum, setPhoneNum] = useState('');
+  const [career, setCareer] = useState('');
+  const [city, setCity] = useState('');
+  const [businessTime, setBusinessTime] = useState('');
+  const [annualRevenue, setAnnualRevenue] = useState('');
+  const [juridical, setJuridical] = useState('');
+  const [status, setStatus] = useState('');
   const [contacts, setContacts] = useState<ContactType[]>([]);
+  const [contactsList, setContactsList] = useState(contacts);
 
   let newContact = {
     fullName,
@@ -65,11 +67,12 @@ const Contact = () => {
       case 1:
         fetchContacts();
         break;
-
-      default:
-        fetchContacts();
+      case 2:
+        fetchDoneContacts();
         break;
-        ``;
+      case 3:
+        fetchDeletedContacts();
+        break;
     }
   }, [tabs]);
 
@@ -79,10 +82,114 @@ const Contact = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllContact`
       );
+      setContacts(
+        response.data.data.filter(
+          (contact: ContactType) =>
+            contact.status === 'TODO' || contact.status === ''
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //get done contact
+  const fetchDoneContacts = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllContact`
+      );
+      setContacts(
+        response.data.data.filter(
+          (contact: ContactType) => contact.status === 'DONE'
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //update status
+  const updateStatus = async (newStatus: string, contactId: number) => {
+    try {
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/updateStatusContact/${contactId}?contactStatus=${newStatus}`,
+        { headers: authHeader() }
+      );
+      // Check if response is successful
+      if (response.status === 200) {
+        // Update the contact's status in the local state to trigger a re-render
+        // setContactsList((prevContacts) =>
+        //   prevContacts.map((contact) =>
+        //     contact.contactId === contactId
+        //       ? { ...contact, status: newStatus }
+        //       : contact
+        //   )
+        // );
+
+        toast.success('Cập nhật tình trạng thành công!');
+        switch (tabs) {
+          case 1:
+            fetchContacts();
+            break;
+          case 2:
+            fetchDoneContacts();
+            break;
+          case 3:
+            fetchDeletedContacts();
+            break;
+        }
+      }
+    } catch (error) {
+      // Handle error
+      // You might want to show a toast message here
+      toast.error('Có lỗi xảy ra khi cập nhật tình trạng.');
+    }
+  };
+
+  //get all deleted items
+  const fetchDeletedContacts = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}contact/getAllDeletedContact`
+      );
       setContacts(response.data.data);
     } catch (error) {
       console.error(error);
     }
+  };
+
+  //delete
+  const handleDelete = async (contactId: number) => {
+    Swal.fire({
+      title: 'Bạn có muốn xóa liên hệ này không?',
+      showDenyButton: true,
+      confirmButtonText: 'Có',
+      denyButtonText: `Không`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        try {
+          axios
+            .delete(
+              `${process.env.NEXT_PUBLIC_BASE_API}contact/deleteContact/${contactId}`,
+              {
+                headers: authHeader(),
+              }
+            )
+            .then(() => {
+              toast.success('Xóa liên hệ thành công');
+              fetchContacts();
+            });
+        } catch (error) {
+          toast.error('Xóa liên hệ thất bại');
+
+          console.log(error);
+        }
+      } else if (result.isDenied) {
+        Swal.fire('Bạn đã hủy xóa', '', 'error');
+        return;
+      }
+    });
   };
 
   ///update
@@ -106,31 +213,91 @@ const Contact = () => {
         }
       )
       .then((response) => {
-        toast.success("Cập nhật thành công");
+        toast.success('Cập nhật thành công');
         fetchContacts();
       })
       .catch((error) => {
-        console.error("Failed to update contact", error);
+        console.error('Failed to update contact', error);
       });
   };
 
+  // restore
+  const restoreDelete = async (contactId: number) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}contact/restoreContact/${contactId}`
+        )
+        .then((response) => {
+          toast.success('Khôi phục thành công');
+          fetchDeletedContacts();
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="w-full mt-5 ml-5 mr-5">
+    <div className="ml-5 mr-5 mt-5 w-full">
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">Quản lí thông tin</p>
+            <p className="text-3xl font-bold text-black ">Quản lí thông tin</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Liên hệ</p>
+            <p className="text-3xl font-bold text-[#FF0004]">Liên hệ</p>
           </BreadcrumbItem>
         </Breadcrumbs>
       </div>
 
-      {/* <div className="flex flex-row gap-10 font-bold border-b-1 "></div> */}
+      <div className="flex flex-row gap-10 border-b-1 font-bold ">
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+            }`}
+            onClick={() => setTabs(1)}
+            radius="none"
+          >
+            ĐANG LÀM
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+            }`}
+            onClick={() => setTabs(2)}
+            radius="none"
+          >
+            ĐÃ HOÀN THÀNH
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={`bg-white ${
+              tabs === 3 &&
+              'border-b-2 border-[#FF0004] border-b-[#FF0004] text-[#FF0004]'
+            }`}
+            radius="none"
+            onClick={() => setTabs(3)}
+          >
+            SPAM
+          </Button>
+        </div>
+      </div>
 
       <div>
-        <Contacts contacts={contacts} handleUpdateSubmit={handleUpdateSubmit} />
+        {contacts && (
+          <Contacts
+            contacts={contacts}
+            handleDelete={handleDelete}
+            restoreDelete={restoreDelete}
+            updateStatus={updateStatus}
+            handleUpdateSubmit={handleUpdateSubmit}
+            tabs={tabs}
+          />
+        )}
       </div>
     </div>
   );
