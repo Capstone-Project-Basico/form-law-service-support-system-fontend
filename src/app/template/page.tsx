@@ -8,7 +8,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import authHeader from '@/components/authHeader/AuthHeader';
 import { FormTemplate } from '@/constants/types/FormTemplate';
 import axiosClient from '@/lib/axiosClient';
-import { faBasketShopping, faDollarSign, faEye, faPen } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBasketShopping,
+  faDollarSign,
+  faEye,
+  faPen,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Autocomplete,
@@ -71,7 +76,7 @@ const Page = () => {
   const user: UserLocal | null = getUserFromStorage();
   const userId = user?.data.data.userId;
 
-  const [quantity, setQuantity] = useState(5);
+  const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState(1);
   const [itemId, setItemId] = useState(0);
   const [dataOrder, setDataOrder] = useState({
@@ -336,7 +341,7 @@ const Page = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     if (selectedTemplate?.latestVersion === undefined) return;
@@ -573,8 +578,9 @@ const Page = () => {
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
                   <Image
@@ -588,8 +594,9 @@ const Page = () => {
 
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(2)}
                   disabled={walletError}
                 >
