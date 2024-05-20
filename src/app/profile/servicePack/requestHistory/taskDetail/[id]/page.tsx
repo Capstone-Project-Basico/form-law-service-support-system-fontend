@@ -49,7 +49,6 @@ const TaskDetail = () => {
   }, [tabs]);
 
   useEffect(() => {
-    // fetchAssignmentTask();
     fetchUser();
   }, [])
 
@@ -67,23 +66,8 @@ const TaskDetail = () => {
     }
   };
 
-  const fetchAssignmentTask = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/getAllTaskAssignment`,
-        {
-          headers: authHeader(),
-        }
-      );
-      const task = response.data.data.filter((task: TaskAssignmentType) => task.taskId === Number(params.id))
-      setAssignmentTask(task);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const fetchUser = async () => {
-    let assignTask = [];
+    let assignTask: TaskAssignmentType[] = [];
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/getAllTaskAssignment`,
@@ -91,8 +75,6 @@ const TaskDetail = () => {
           headers: authHeader(),
         }
       );
-      // const task = response.data.data.filter((task: TaskAssignmentType) => task.taskId === Number(params.id))
-      // setAssignmentTask(task);
       assignTask = response.data.data.filter((task: TaskAssignmentType) => task.taskId === Number(params.id))
     } catch (error) {
       console.error(error);
