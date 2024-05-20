@@ -357,12 +357,11 @@ const Navbar = () => {
                       isBordered
                       as="button"
                       className="transition-transform h-10 w-10 ml-1 mr-5"
-                      color="primary"
                       name="Jason Hughes"
                       size="lg"
                       src={
-                        userData?.avatar ??
-                        "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                        userData?.avatar ? userData?.avatar :
+                          "/User-avatar.png"
                       }
                     />
                     <div className="flex-col">
