@@ -186,8 +186,9 @@ const ManagerTemplatePage = (props: Props) => {
   };
 
   const autoStandardizationTemplate = async (id: number, fileName: string) => {
+    let toastId;
     try {
-      const toastId = toast.loading('Đang chuẩn hóa biểu mẫu', {
+      toastId = toast.loading('Đang chuẩn hóa biểu mẫu', {
         autoClose: false,
         bodyClassName: 'text-lg',
       });
@@ -212,8 +213,24 @@ const ManagerTemplatePage = (props: Props) => {
         isLoading: false,
         autoClose: 3000,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (toastId !== undefined) {
+        if (error.response.status === 409)
+          toast.update(toastId, {
+            render: 'Có biểu mẫu đang được chuẩn hóa',
+            type: 'error',
+            isLoading: false,
+            autoClose: 3000,
+          });
+        else {
+          toast.update(toastId, {
+            render: 'Chuẩn hóa biểu mẫu thất bại',
+            type: 'error',
+            isLoading: false,
+            autoClose: 3000,
+          });
+        }
+      }
     }
   };
 
