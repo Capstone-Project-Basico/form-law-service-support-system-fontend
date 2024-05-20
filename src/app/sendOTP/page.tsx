@@ -1,5 +1,6 @@
 'use client';
 
+import axiosClient from '@/lib/axiosClient';
 import { Button, Input } from '@nextui-org/react';
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -83,8 +84,18 @@ const FetchUser = () => {
               </Button>
               <div className="">
                 <Button
-                  type="submit"
+                  type="button"
                   className="border-#ff0000 text-#ff0000 my-4 w-full border bg-[white]"
+                  onPress={() => {
+                    axiosClient
+                      .get('auth/resendVerificationCode/' + user)
+                      .then(() => {
+                        toast.success('Đã gửi mã xác nhận');
+                      })
+                      .catch(() => {
+                        toast.error('Gửi mã xác nhận thất bại');
+                      });
+                  }}
                 >
                   Tôi không nhận được mã
                 </Button>
