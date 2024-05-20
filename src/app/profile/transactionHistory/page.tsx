@@ -4,6 +4,7 @@ import authHeader from "@/components/authHeader/AuthHeader";
 import { TransactionType, UserLocal } from "@/constants/types/homeType";
 import {
   Button,
+  Input,
   Pagination,
   Table,
   TableBody,
@@ -20,6 +21,7 @@ const TransactionHistory = () => {
     TransactionType[]
   >([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const getUserFromStorage = () => {
     if (typeof window !== "undefined") {
@@ -33,7 +35,7 @@ const TransactionHistory = () => {
 
   useEffect(() => {
     fetchTransaction();
-  });
+  }, []);
 
   //get all items
   const fetchTransaction = async () => {
@@ -50,33 +52,69 @@ const TransactionHistory = () => {
     }
   };
 
-  //search
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-  // Filter transactions based on search term
-  const filteredPartners = transactionHistory.filter((transaction) =>
-    transaction.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+
+  const filteredItems = React.useMemo(() => {
+    let filteredTransaction = [...transactionHistory];
+
+    if (selectedDate) {
+      filteredTransaction = filteredTransaction.filter((transaction) => {
+        const transactionDate = new Date(transaction.createAt).setHours(
+          0,
+          0,
+          0,
+          0
+        );
+        const selectedDateTime = selectedDate.setHours(0, 0, 0, 0);
+        return transactionDate === selectedDateTime;
+      });
+    }
+
+    return filteredTransaction;
+  }, [selectedDate]);
 
   //pagination
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 8;
 
-  const pages = Math.ceil(filteredPartners.length / rowsPerPage);
+  const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return filteredPartners.slice(start, end);
-  }, [page, filteredPartners]);
+    return filteredItems.slice(start, end);
+  }, [page, filteredItems]);
+
+  const topContent = React.useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-end gap-3 items-end">
+          <div className="flex gap-3 h-full">
+            <Input
+              type="date"
+              label="Lọc theo ngày"
+              // value={
+              //   selectedDate ? selectedDate.toISOString().substring(0, 10) : ""
+              // }
+              onChange={(e: any) =>
+                setSelectedDate(
+                  e.target.value ? new Date(e.target.value) : null
+                )
+              }
+              className="w-52"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }, []);
 
   return (
     <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
       <h1 className="font-bold p-3 text-3xl">Lịch sử giao dịch của bạn</h1>
       <Table
         aria-label="Example static collection table"
+        topContent={topContent}
         bottomContent={
           <div className="flex w-full justify-center">
             <Pagination
@@ -129,17 +167,17 @@ const TransactionHistory = () => {
                 {transaction.status === "SUCCESS"
                   ? "Thành công"
                   : transaction.status === "PENDING"
-                  ? "Đang chờ"
-                  : transaction.status}
+                    ? "Đang chờ"
+                    : transaction.status}
               </TableCell>
 
               <TableCell>
                 {transaction.type === "BUY" ||
-                transaction.type === "BUY_FORM_TEMPLATE"
+                  transaction.type === "BUY_FORM_TEMPLATE"
                   ? "MUA BIỂU MẪU"
                   : transaction.type === "BUY_PACKAGE"
-                  ? "MUA GÓI"
-                  : transaction.type}
+                    ? "MUA GÓI"
+                    : transaction.type}
               </TableCell>
             </TableRow>
           ))}

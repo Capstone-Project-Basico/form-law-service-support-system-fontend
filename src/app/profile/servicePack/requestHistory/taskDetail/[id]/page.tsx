@@ -6,6 +6,7 @@ import {
   TaskAssignmentType,
   TaskType,
   UserLocal,
+  UserType,
 } from "@/constants/types/homeType";
 import {
   useDisclosure
@@ -29,6 +30,8 @@ const TaskDetail = () => {
   const [tabs, setTabs] = useState(1);
   const params = useParams<{ id: string }>();
   const [task, setTask] = useState<TaskType>();
+  const [assignmentTask, setAssignmentTask] = useState<TaskAssignmentType[]>([]);
+  const [userInfo, setUserInfo] = useState<UserType[]>([]);
   const router = useRouter();
 
   const getUserFromStorage = () => {
@@ -45,6 +48,10 @@ const TaskDetail = () => {
     fetchTask();
   }, [tabs]);
 
+  useEffect(() => {
+    fetchUser();
+  }, [])
+
   const fetchTask = async () => {
     try {
       const response = await axios.get(
@@ -54,6 +61,37 @@ const TaskDetail = () => {
         }
       );
       setTask(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchUser = async () => {
+    let assignTask: TaskAssignmentType[] = [];
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/getAllTaskAssignment`,
+        {
+          headers: authHeader(),
+        }
+      );
+      assignTask = response.data.data.filter((task: TaskAssignmentType) => task.taskId === Number(params.id))
+    } catch (error) {
+      console.error(error);
+    }
+
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllStaffs`,
+        {
+          headers: authHeader(),
+        }
+      );
+      const user = response.data.data.filter((user: UserType) => user?.email === assignTask?.[0].email);
+      setUserInfo(user);
+      // console.log(assignTask?.[0].email);
+
+      console.log(response.data.data.filter((user: UserType) => user?.email === assignTask?.[0].email));
     } catch (error) {
       console.error(error);
     }
@@ -82,6 +120,7 @@ const TaskDetail = () => {
     return (
       <Card title={item.status} subTitle={<div className="font-bold">{task?.taskName}</div>} className="p-3">
         {item.image && <Image src={item.image} alt={item.image} width={200} height={200} className="shadow-1" />}
+        <p className="font-semibold">Người hỗ trợ: {userInfo?.[0]?.userName}</p>
         <p>{task?.description}</p>
       </Card>
     );
