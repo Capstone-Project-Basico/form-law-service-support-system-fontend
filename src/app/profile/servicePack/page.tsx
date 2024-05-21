@@ -125,6 +125,7 @@ const ServicePack = () => {
         setDescription('');
         setStartDate(null);
         onClose();
+        getAllPurchasedPacks();
       })
       .catch((error) => {
         toast.error('Gửi yêu cầu thất bại!');
@@ -237,8 +238,8 @@ const ServicePack = () => {
                     required
                     type="datetime-local"
                     label="Ngày luật sư có thể liên hệ"
+                    placeholder="Ngày liên hệ"
                     value={startDate ? startDate.substring(0, 10) + "T" + startDate.substring(11, 16) : ''}
-                    // value="2018-06-12T19:30"
                     onChange={(e) => {
                       const dateValue = e.target.value
                         ? dateConvert(new Date(e.target.value))
@@ -248,12 +249,6 @@ const ServicePack = () => {
                     }}
                     min={todayDate}
                     className="form-input"
-                  />
-                  <TimeInput
-                    label="Giờ để chúng tôi có thể liên hệ"
-                    hourCycle={24}
-                    onChange={(e) => console.log(e.hour + ":" + e.minute)}
-                    granularity="minute"
                   />
                 </ModalBody>
                 <ModalFooter>
