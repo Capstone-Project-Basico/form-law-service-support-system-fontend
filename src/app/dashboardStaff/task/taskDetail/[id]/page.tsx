@@ -49,7 +49,7 @@ const TaskDetail = () => {
   const [mainTask, setMainTask] = useState<TaskType>();
   const [assignmentTaskId, setAssignmentTaskId] = useState("");
   const todayDate = new Date().toISOString().substring(0, 10);
-
+  const [checkProgress, setCheckProgress] = useState<boolean>();
   //data
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -57,7 +57,6 @@ const TaskDetail = () => {
   const [endDate, setEndDate] = useState<any>(null);
   const [createBy, setCreateBy] = useState("");
   const [supportTo, setSupportTo] = useState("");
-  // const [belongToTask, setBelongToTask] = useState("");
 
   const [task, setTask] = useState<ChildTaskType[]>([]);
   const [selectedTask, setSelectedTask] = useState<ChildTaskType | null>(null);
@@ -101,8 +100,6 @@ const TaskDetail = () => {
   useEffect(() => {
     if (userId && params.id) {
       fetchAssignmentTask();
-      console.log("hello");
-
     }
   }, [userId, params.id]);
 
@@ -115,6 +112,13 @@ const TaskDetail = () => {
         }
       );
       setMainTask(response.data.data);
+      setCheckProgress(response.data.data.progress > 0 && response.data.data.progress < 100);
+
+      console.log(response.data.data.progress > 0 && response.data.data.progress < 100);
+      if (response.data.data.progress === 100) {
+        router.push("/dashboardStaff/task/");
+      }
+
     } catch (error) {
       console.error(error);
     }
@@ -130,8 +134,6 @@ const TaskDetail = () => {
       ).then((response) => {
         const task: any = response.data.data.filter((task: TaskAssignmentType) => task.taskId === Number(params.id))
         setAssignmentTaskId(task[0].id);
-        console.log(task[0].id);
-
       }).catch((err) => {
         console.log(err);
 
@@ -182,35 +184,35 @@ const TaskDetail = () => {
 
   // done
   const completeTask = async (id: number) => {
-    Swal.fire({
+    const result = await Swal.fire({
       title: "Bạn đã hoàn thành nhiệm vụ này?",
       showDenyButton: true,
       confirmButtonText: "Có",
       denyButtonText: `Không`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        try {
-          axios
-            .put(
-              `${process.env.NEXT_PUBLIC_BASE_API}taskParent/completeTaskParent/${id}`,
-              {},
-              {
-                headers: authHeader(),
-              }
-            )
-            .then((response) => {
-              toast.success("Bạn đã hoàn thành 1 việc");
-              fetchDetailTasks();
-            });
-        } catch (error) {
-          console.log(error);
-        }
-      } else if (result.isDenied) {
-        Swal.fire("Tiếp tục làm công việc này", "", "error");
-        return;
-      }
     });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.put(
+          `${process.env.NEXT_PUBLIC_BASE_API}taskParent/completeTaskParent/${id}`,
+          {},
+          {
+            headers: authHeader(),
+          }
+        );
+        toast.success("Bạn đã hoàn thành 1 việc");
+        fetchTask();
+        fetchDetailTasks();
+        // console.log(checkProgress);
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (result.isDenied) {
+      Swal.fire("Tiếp tục làm công việc này", "", "error");
+      return;
+    }
   };
+
 
   //add a new child task
   const handleSubmit = async (e: FormEvent, onClose: () => void) => {
@@ -234,6 +236,7 @@ const TaskDetail = () => {
       .then((response) => {
         toast.success("tạo mới thành công");
         onClose();
+        fetchTask();
         fetchDetailTasks();
       })
       .catch((error) => {
@@ -263,6 +266,8 @@ const TaskDetail = () => {
               toast.success("Bạn đã hoàn thành 1 việc");
               router.push("/dashboardStaff/task/");
               fetchTask();
+            }).catch((error) => {
+              toast.error("Bạn phải hoàn thành các nhiệm vụ phụ trước")
             });
         } catch (error) {
           console.log(error);
@@ -294,6 +299,7 @@ const TaskDetail = () => {
             radius="full"
             className="bg-blue-600 text-white"
             onClick={() => completeMainTask(assignmentTaskId)}
+          // disabled={checkProgress}
           >
             Hoàn thành
           </Button>

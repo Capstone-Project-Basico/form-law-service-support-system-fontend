@@ -3,7 +3,7 @@
 import authHeader from '@/components/authHeader/AuthHeader';
 import useUser from '@/components/authHeader/User';
 import { TaskType } from '@/constants/types/homeType';
-import { Button, Input, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react'
+import { Button, Input, Pagination, Progress, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -133,7 +133,8 @@ const Page = () => {
               </TableCell>
 
               <TableCell>
-                {task.processStatus}
+                {/* {task.processStatus} */}
+                <Progress aria-label="Loading..." value={task.progress} className="max-w-md" />
               </TableCell>
 
               <TableCell className="flex gap-2 items-center justify-center">

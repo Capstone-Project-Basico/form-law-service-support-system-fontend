@@ -124,6 +124,8 @@ const Task = () => {
             .then((response) => {
               toast.success("Bạn đã hoàn thành 1 việc");
               fetchTask();
+            }).catch((error) => {
+              toast.error("Bạn phải hoàn thành hết nhiệm vụ phụ trước!");
             });
         } catch (error) {
           console.log(error);
@@ -149,9 +151,8 @@ const Task = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -161,10 +162,9 @@ const Task = () => {
 
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 &&
+            className={`bg-white ${tabs === 2 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(2)}
           >
