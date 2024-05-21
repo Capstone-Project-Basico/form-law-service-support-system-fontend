@@ -158,6 +158,7 @@ export type TaskType = {
   startDate: any; // startDate can be a Date object or null
   endDate: any;
   email: string;
+  progress: number;
   processStatus: string;
   status: number;
   deleted: boolean;

@@ -24,6 +24,7 @@ import {
   Pagination,
   Autocomplete,
   AutocompleteItem,
+  Progress,
 } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
@@ -173,9 +174,6 @@ const Tasks: React.FC<TasksProps> = ({
           <TableColumn className=" bg-[#FF0004] text-white">
             Tên công việc
           </TableColumn>
-          <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
-            Mô tả
-          </TableColumn>
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày bắt đầu
           </TableColumn>
@@ -185,6 +183,9 @@ const Tasks: React.FC<TasksProps> = ({
           <TableColumn className=" bg-[#FF0004] text-white">
             Tình trạng
           </TableColumn>
+          <TableColumn className=" justify-center items-center bg-[#FF0004] text-white">
+            Tiến độ
+          </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -193,7 +194,6 @@ const Tasks: React.FC<TasksProps> = ({
           {items.map((task, index) => (
             <TableRow key={index}>
               <TableCell className="font-bold">{task.taskName}</TableCell>
-              <TableCell>{task.description}</TableCell>
               <TableCell>
                 {
                   task.startDate
@@ -209,6 +209,9 @@ const Tasks: React.FC<TasksProps> = ({
                 }
               </TableCell>
               <TableCell>{task.processStatus}</TableCell>
+              <TableCell>
+                <Progress aria-label="Loading..." value={task.progress} className="max-w-md" />
+              </TableCell>
 
               {task.deleted === false ? (task.processStatus === "ĐÃ HOÀN THÀNH" ?
                 (
@@ -222,6 +225,7 @@ const Tasks: React.FC<TasksProps> = ({
                       Chi tiết
                     </Button>
                   </TableCell>
+
                 ) : (
                   <TableCell className="flex gap-2 items-center  justify-center ">
                     <Button
