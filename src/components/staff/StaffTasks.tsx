@@ -119,6 +119,9 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Ngày kết thúc
           </TableColumn>
+          <TableColumn className="bg-[#FF0004] text-white">
+            Trạng thái
+          </TableColumn>
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
@@ -155,6 +158,7 @@ const StaffTasks: React.FC<TasksProps> = ({ tasks = [], completeTask }) => {
                     : "N/A" // Handle cases where dateOfBirth might not be available or is not a Date object
                 }
               </TableCell>
+              <TableCell>{task.status}</TableCell>
 
               {task.status === "ĐANG THỰC HIỆN" ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
