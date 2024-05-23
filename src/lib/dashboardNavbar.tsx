@@ -47,6 +47,7 @@ export const sideNavItems: SideNavItem[] = [
       { title: "Gói dịch vụ", path: "/dashboard/service/service" },
       { title: "Dịch vụ tư vấn", path: "/dashboard/service/consult" },
       { title: "Gói biểu mẫu", path: "/dashboard/service/templatePack" },
+      { title: "Yêu cầu rút tiền", path: "/dashboard/service/requestWithdrawal" },
     ],
   },
 
