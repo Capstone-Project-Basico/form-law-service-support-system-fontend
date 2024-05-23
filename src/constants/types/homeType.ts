@@ -282,6 +282,19 @@ export type ConsultServiceType = {
   itemName?: string;
 };
 
+export type RequestWithdrawalType = {
+  requestId: string;
+  walletId: string;
+  fullName: string;
+  bankNumber: string;
+  bankName: string;
+  balance: number;
+  processStatus: string;
+  createAt: any;
+  updateAt: any;
+  deleted: boolean;
+};
+
 export interface UserLocal {
   data: {
     data: {
