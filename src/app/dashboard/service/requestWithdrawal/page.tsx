@@ -96,14 +96,9 @@ const Page = () => {
     const fetchDeleteRequestWithdrawal = async () => {
         try {
             const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_BASE_API}request-withdrawal/getAllRequests`
+                `${process.env.NEXT_PUBLIC_BASE_API}request-withdrawal/getAllDeletedRequestss`
             );
-            const filteredRequest = response.data.data.filter(
-                (service: RequestWithdrawalType) =>
-                    service.deleted === true
-            );
-
-            setRequests(filteredRequest);
+            setRequests(response.data.data);
         } catch (error) {
             console.error(error);
         }
@@ -199,6 +194,26 @@ const Page = () => {
         });
     };
 
+    const restoreDelete = async (packageId: string) => {
+        try {
+            axios
+                .patch(
+                    `${process.env.NEXT_PUBLIC_BASE_API}request-withdrawal/restoreRequest/${packageId}`,
+                    {},
+                    { headers: authHeader() }
+                )
+                .then(() => {
+                    toast.success('Khôi phục thành công');
+                    fetchDeleteRequestWithdrawal();
+                })
+                .catch((err) => {
+                    toast.error('Khôi phục thất bại!');
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className="ml-5 mr-5 mt-5 w-full">
             <ToastContainer />
@@ -234,7 +249,7 @@ const Page = () => {
                         ĐÃ HOÀN THÀNH
                     </Button>
                 </div>
-                {/* <div>
+                <div>
                     <Button
                         className="bg-white"
                         onClick={() => {
@@ -244,7 +259,7 @@ const Page = () => {
                     >
                         SPAM
                     </Button>
-                </div> */}
+                </div>
             </div>
             <Table
                 aria-label="Example static collection table"
@@ -325,7 +340,7 @@ const Page = () => {
                                 <TableCell className="flex items-center justify-center">
                                     <Button
                                         className="bg-blue-600 text-white"
-                                    // onClick={() => restoreDelete(request.packageServiceId)}
+                                        onClick={() => restoreDelete(request.requestId)}
                                     >
                                         Khôi phục
                                     </Button>
