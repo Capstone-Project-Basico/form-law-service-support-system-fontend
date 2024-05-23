@@ -32,9 +32,11 @@ import {
   Chip,
   Select,
   SelectItem,
+  AutocompleteItem,
+  Autocomplete,
 } from '@nextui-org/react';
 import axios from 'axios';
-import React, { FormEvent, Key, useCallback, useEffect, useState } from 'react';
+import React, { FormEvent, Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
@@ -125,6 +127,9 @@ const ManagerTemplatePage = (props: Props) => {
   }>({ isOpen: false });
   const [file, setFile] = useState<File | null>(null);
   const [formType, setFormType] = useState<FormType[]>([]);
+  const [types, setTypes] = useState<FormType[]>([]);
+  const [selectTypeId, setSelectTypeId] = useState<number | undefined>();
+  const [filterValue, setFilterValue] = useState('');
 
   const getUserFromStorage = () => {
     if (typeof window !== 'undefined') {
@@ -449,18 +454,67 @@ const ManagerTemplatePage = (props: Props) => {
     return renderFunctions[String(columnKey)]?.();
   }, []);
 
+  //get types of templates
+  const getType = async () => {
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
+      .then((response) => {
+        console.log(response);
+
+        setTypes(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  //filter
+  const hasSearchFilter = Boolean(filterValue);
+
+  const filteredItems = useMemo(() => {
+    let filteredTemplates = [...formTemplate];
+
+    if (hasSearchFilter) {
+      filteredTemplates = filteredTemplates.filter((temp) =>
+        temp.title.toLowerCase().includes(filterValue.toLowerCase())
+      );
+    }
+
+    if (selectTypeId) {
+      filteredTemplates = filteredTemplates.filter(
+        (temp) => temp.latestVersion?.formTypeId === selectTypeId
+      );
+    }
+
+    return filteredTemplates;
+  }, [formTemplate, hasSearchFilter, selectTypeId, filterValue]);
+
+  const onSearchChange = useCallback((value?: string) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue('');
+    }
+  }, []);
+
+  const onClear = useCallback(() => {
+    setFilterValue('');
+    setPage(1);
+  }, []);
+
   //pagination
   const [page, setPage] = React.useState(1);
   const rowsPerPage = 8;
 
-  const pages = Math.ceil(formTemplate.length / rowsPerPage);
+  const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return formTemplate.slice(start, end);
-  }, [page, formTemplate]);
+    return filteredItems.slice(start, end);
+  }, [page, filteredItems]);
 
   useEffect(() => {
     // switch (tabs) {
@@ -471,7 +525,7 @@ const ManagerTemplatePage = (props: Props) => {
     //   default:
     //     fetchTemplates();
     // }
-
+    getType();
     getData();
   }, []);
 
@@ -643,6 +697,45 @@ const ManagerTemplatePage = (props: Props) => {
             Tạo mới
             <FontAwesomeIcon icon={faPlus} />
           </Button>
+        </div>
+      </div>
+
+      <div className="ml-auto flex flex-row items-end justify-end">
+        <Autocomplete
+          defaultItems={types}
+          label="Loại biểu mẫu"
+          className="mr-3 max-w-xs"
+          onSelectionChange={(e: any) => {
+            setSelectTypeId(Number(e));
+          }}
+        >
+          {(item: any) => (
+            <AutocompleteItem key={item.id}>
+              {item.typeName}
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
+
+        <div className="flex w-72 flex-col items-start justify-end">
+          <div className="mb-3 w-72 border-b-1 text-[#FF0004]">
+            Tìm kiếm
+          </div>
+          <div className="">
+            <Input
+              isClearable
+              // className="w-[660px] h-14 sm:max-w-[44%]"
+              classNames={{
+                base: 'w-[288px] h-14',
+
+                inputWrapper: 'h-full ',
+              }}
+              placeholder="Tìm tên biểu mẫu"
+              // startContent={<SearchIcon />}
+              value={filterValue}
+              onClear={() => onClear()}
+              onValueChange={onSearchChange}
+            />
+          </div>
         </div>
       </div>
 
