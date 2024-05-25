@@ -36,7 +36,14 @@ import {
   Autocomplete,
 } from '@nextui-org/react';
 import axios from 'axios';
-import React, { FormEvent, Key, useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  FormEvent,
+  Key,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { faPen, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
@@ -130,6 +137,7 @@ const ManagerTemplatePage = (props: Props) => {
   const [types, setTypes] = useState<FormType[]>([]);
   const [selectTypeId, setSelectTypeId] = useState<number | undefined>();
   const [filterValue, setFilterValue] = useState('');
+  
 
   const getUserFromStorage = () => {
     if (typeof window !== 'undefined') {
@@ -165,11 +173,9 @@ const ManagerTemplatePage = (props: Props) => {
       if (!user) return;
 
       //if user role is staff remove deleted form template
-      if (user.roleName === 'ROLE_STAFF') {
-        formTemplatesWithVersions = formTemplatesWithVersions.filter(
-          (formTemplate) => formTemplate.latestVersion?.status !== 'DELETED'
-        );
-      }
+      formTemplatesWithVersions = formTemplatesWithVersions.filter(
+        (formTemplate) => formTemplate.latestVersion?.status !== 'DELETED'
+      );
 
       formTemplatesWithVersions.sort((a, b) => {
         //check undefined
@@ -710,16 +716,12 @@ const ManagerTemplatePage = (props: Props) => {
           }}
         >
           {(item: any) => (
-            <AutocompleteItem key={item.id}>
-              {item.typeName}
-            </AutocompleteItem>
+            <AutocompleteItem key={item.id}>{item.typeName}</AutocompleteItem>
           )}
         </Autocomplete>
 
         <div className="flex w-72 flex-col items-start justify-end">
-          <div className="mb-3 w-72 border-b-1 text-[#FF0004]">
-            Tìm kiếm
-          </div>
+          <div className="mb-3 w-72 border-b-1 text-[#FF0004]">Tìm kiếm</div>
           <div className="">
             <Input
               isClearable
