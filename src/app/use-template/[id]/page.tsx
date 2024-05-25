@@ -3,7 +3,7 @@
 import axiosClient from '@/lib/axiosClient';
 import { DatePicker, Input, input } from '@nextui-org/react';
 import { AxiosError } from 'axios';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -11,6 +11,7 @@ type Props = {};
 
 const Page = (props: Props) => {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
 
   const templateRef = useRef<HTMLDivElement>(null);
 
@@ -85,7 +86,7 @@ const Page = (props: Props) => {
             onclick="document.getElementById('${fieldName}').focus()"
             class="${
               isSelected && 'bg-orange-200'
-            } select-none text-center text-sm inline-block min-w-[100px] h-6 border border-black p-0.5">${fieldValue}</span>`;
+            } select-none text-center text-sm  min-w-[50px] h-6 border border-black p-0.5">${fieldValue}</span>`;
         }
 
         return `<span
@@ -104,6 +105,7 @@ const Page = (props: Props) => {
   }
 
   const handleSubmit = async () => {
+    console.log('submit');
     if (formName.value === '') {
       console.log('error');
       setFormName({ ...formName, error: 'Tên biểu mẫu không được trống' });
@@ -179,13 +181,17 @@ const Page = (props: Props) => {
         return <Input {...props} type="number" min={1} max={12} step={1} />;
       case 'year':
         return (
-          <Input {...props} type="number" min={1900} max={2022} step={1} />
+          <Input {...props} type="number" min={1900} max={3000} step={1} />
         );
       case 'date':
-        const dateData = formData[field.fieldName];
-        const [day, month, year] = dateData.split('-');
-        const formattedDate = `${year}-${month}-${day}`;
-        return <Input {...props} type="date" value={formattedDate} />;
+        try {
+          const dateData = formData[field.fieldName];
+          const [day, month, year] = dateData.split('-');
+          const formattedDate = `${year}-${month}-${day}`;
+          return <Input {...props} type="date" value={formattedDate} />;
+        } catch (error: any) {
+          return <Input {...props} type="date" />;
+        }
 
       default:
         return <Input {...props} />;
@@ -221,12 +227,17 @@ const Page = (props: Props) => {
   // };
 
   const setDefaultFormData = (fields: any) => {
-    // const draft = JSON.parse(localStorage.getItem('draft') || '{}');
-    // if (draft || draft.templateVersionId === Number(params.id)) {
-    //   setFormData(draft.formData);
-    //   setFormName({ value: draft.name });
-    //   return;
-    // }
+    const draft = localStorage.getItem('draft');
+    if (draft) {
+      const data = new Map(JSON.parse(draft));
+      const draftData: any = data.get(params.id);
+      if (draftData) {
+        setFormData(draftData.formData);
+        setFormName({ value: draftData.name, error: '' });
+        return;
+      }
+    }
+
     const date = new Date();
     const defaultData = fields.reduce((acc: any, field: any) => {
       switch (field.fieldType) {
@@ -264,12 +275,22 @@ const Page = (props: Props) => {
   };
 
   const handleSaveDraft = () => {
-    const data = {
+    const dataJson = localStorage.getItem('draft');
+    let data = new Map<String, Object>();
+
+    // parse data to map
+    if (dataJson) {
+      data = new Map(JSON.parse(dataJson));
+    }
+
+    data.set(params.id, {
       name: formName.value,
-      templateVersionId: Number(params.id),
       formData: formData,
-    };
-    localStorage.setItem('draft', JSON.stringify(data));
+    });
+
+    localStorage.setItem('draft', JSON.stringify(Array.from(data.entries())));
+
+    toast.success('Lưu bản nháp thành công');
   };
 
   useEffect(() => {
@@ -300,82 +321,95 @@ const Page = (props: Props) => {
       <h1 className="text-left text-2xl font-semibold text-black">
         Sữ dụng biểu mẫu
       </h1>
-      <div className="grid grid-cols-12">
-        <div className="col-span-3 mx-12 my-2 mt-32 flex h-[50rem] flex-wrap gap-2 overflow-y-scroll border-2 p-4">
-          <h3 className="my-1 text-xl font-semibold">Nhập thông tin</h3>
-          {formFields.map((field: any) =>
-            renderField(field, {
-              id: field.fieldName,
-              key: field.id,
-              label: field.fieldName,
-              name: field.fieldName,
-              variant: 'bordered',
-              type: field.fieldType,
-              value: formData[field.fieldName],
-              onChange: handleFormDataChange,
-              onFocus: () => setFieldOnSelect(field.fieldName),
-              onBlur: () => setFieldOnSelect(''),
-            })
-          )}
-        </div>
+      <div>
+        <form className="grid grid-cols-12">
+          <div className="col-span-3 mx-12 my-2 mt-32 flex h-[50rem] flex-wrap gap-2 overflow-y-scroll border-2 p-4">
+            <h3 className="my-1 text-xl font-semibold">Nhập thông tin</h3>
+            {formFields.map((field: any) =>
+              renderField(field, {
+                id: field.fieldName,
+                key: field.id,
+                label: field.fieldName,
+                name: field.fieldName,
+                variant: 'bordered',
+                type: field.fieldType,
+                value: formData[field.fieldName],
+                onChange: handleFormDataChange,
+                onFocus: () => setFieldOnSelect(field.fieldName),
+                onBlur: () => setFieldOnSelect(''),
+              })
+            )}
+          </div>
 
-        <div className="col-span-9">
-          <div className="mt-5 border-2 bg-white">
-            <div className="basis-3/12 border-b-2 bg-white">
-              <div className="p-4">
-                <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-                  <div className="relative flex h-16 items-center justify-between">
-                    <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                      <div className="flex flex-shrink-0 items-center">
-                        <Input
-                          label="Tên biểu mẫu"
-                          type="text"
-                          name="formName"
-                          variant="bordered"
-                          value={formName.value}
-                          onChange={(e: { target: { value: any } }) =>
-                            setFormName({
-                              value: e.target.value,
-                              error: '',
-                            })
-                          }
-                          isInvalid={formName.error !== ''}
-                          errorMessage={'Tên biểu mẫu không được trống'}
-                        />
+          <div className="col-span-9">
+            <div className="mt-5 border-2 bg-white">
+              <div className="basis-3/12 border-b-2 bg-white">
+                <div className="p-4">
+                  <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                    <div className="relative flex h-16 items-center justify-between">
+                      <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                        <div className="flex flex-shrink-0 items-center">
+                          <Input
+                            label="Tên biểu mẫu"
+                            type="text"
+                            name="formName"
+                            variant="bordered"
+                            value={formName.value}
+                            onChange={(e: { target: { value: any } }) =>
+                              setFormName({
+                                value: e.target.value,
+                                error: '',
+                              })
+                            }
+                            isInvalid={formName.error !== ''}
+                            errorMessage={'Tên biểu mẫu không được trống'}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                      {/* <button
-                        onClick={handleSaveDraft}
-                        className="ml-3 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white opacity-20"
-                        aria-label="Save"
-                      >
-                        Lưu tạm
-                      </button> */}
-                      <button
-                        type="button"
-                        onClick={handleSubmit}
-                        className="ml-3 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white"
-                        aria-label="Download"
-                      >
-                        Lưu và tải xuống
-                      </button>
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                        <button
+                          onClick={() => {
+                            router.push('/profile/manageTemplate');
+                          }}
+                          className="ml-3 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white"
+                          aria-label="Save"
+                          type="button"
+                        >
+                          Đóng
+                        </button>
+                        <button
+                          onClick={handleSaveDraft}
+                          className="ml-3 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white "
+                          aria-label="Save"
+                          type="button"
+                        >
+                          Lưu
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleSubmit}
+                          className="ml-3 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white"
+                          aria-label="Download"
+                        >
+                          Lưu và tải xuống
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+                {/* <Input className="m-2 w-40" variant="bordered" label="Tên biểu mẫu" type="text" name="formName" /> */}
               </div>
-              {/* <Input className="m-2 w-40" variant="bordered" label="Tên biểu mẫu" type="text" name="formName" /> */}
-            </div>
-            <div className="m-8 mx-auto w-[1000px] border p-8 ">
-              <div className="h-[50rem] overflow-y-scroll">
-                <div
-                  className="min-h-[35rem] content-center p-10 "
-                  ref={templateRef}
-                ></div>
+              <div className="m-8 mx-auto w-[1000px] border p-8 ">
+                <div className="h-[50rem] overflow-y-scroll">
+                  <div
+                    className="min-h-[35rem] content-center p-10 "
+                    ref={templateRef}
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
