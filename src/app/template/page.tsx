@@ -36,6 +36,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import Loading from '@/components/loading';
 // import userId from "@/components/authHeader/GetUserId";
 
 interface UserLocal {
@@ -84,9 +85,11 @@ const Page = () => {
     cartRequestList: [{ itemId, quantity, price }],
   });
   const [checkoutForm, setCheckoutForm] = useState<CheckoutForm[]>();
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
 
   const getFile = async (id: number) => {
     // fetch file
+    setIsLoadingPreview(true);
     const res = await axiosClient
       .get('formTemplateVersion/download/' + id, {
         responseType: 'blob',
@@ -113,6 +116,7 @@ const Page = () => {
     });
 
     const html = htmlRes.data;
+    setIsLoadingPreview(false);
     return html;
   };
 
@@ -504,7 +508,7 @@ const Page = () => {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           size="full"
-          className="h-[800px] w-[1200px]"
+          className=" h-[900px] w-[1200px]"
         >
           <ModalContent>
             {(onClose) => {
@@ -516,9 +520,10 @@ const Page = () => {
                 <>
                   <ModalBody className="flex flex-row gap-6 rounded-2xl p-6">
                     <div
-                      className="h-[755px]  overflow-y-scroll border-1 border-black p-10"
+                      className="h-[855px]  overflow-y-scroll border-1 border-black p-10"
                       style={{ minWidth: '800px', maxWidth: '1000px' }}
                     >
+                      {isLoadingPreview && <Loading />}
                       <div
                         className="min-h-full content-center  "
                         ref={templateRef}
@@ -594,8 +599,9 @@ const Page = () => {
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
                   <Image
@@ -609,8 +615,9 @@ const Page = () => {
 
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(2)}
                   disabled={walletError}
                 >

@@ -48,9 +48,11 @@ const ManageTemplate = () => {
   const [checkoutForm, setCheckoutForm] = useState<CheckoutForm[]>();
   const templateRef = useRef<HTMLDivElement>(null);
   const [templatePack, setTemplatePack] = useState<FormTemplateVersion[]>([]);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
 
   const getFile = async (id: number) => {
     try {
+      setIsLoadingPreview(true);
       const res = await axiosClient.get('formTemplateVersion/download/' + id, {
         responseType: 'blob',
       });
@@ -71,8 +73,10 @@ const ManageTemplate = () => {
       });
 
       const html = htmlRes.data;
+      setIsLoadingPreview(false);
       return html;
     } catch (error) {
+      setIsLoadingPreview(false);
       toast.error('Lỗi khi lấy dữ liệu');
     }
   };
@@ -363,7 +367,7 @@ const ManageTemplate = () => {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           size="full"
-          className="h-[800px] w-[1200px]"
+          className="h-[900px] w-[1200px]"
         >
           <ModalContent>
             {(onClose) => {
@@ -375,9 +379,10 @@ const ManageTemplate = () => {
                 <>
                   <ModalBody className="flex flex-row gap-6 rounded-2xl p-6">
                     <div
-                      className="h-[755px]  overflow-y-scroll border-1 border-black p-10"
+                      className="h-[855px]  overflow-y-scroll border-1 border-black p-10"
                       style={{ minWidth: '800px', maxWidth: '1000px' }}
                     >
+                      {isLoadingPreview && <Loading />}
                       <div
                         className="min-h-full content-center "
                         ref={templateRef}
