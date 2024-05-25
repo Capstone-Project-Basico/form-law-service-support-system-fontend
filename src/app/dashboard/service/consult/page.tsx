@@ -240,7 +240,7 @@ const Pack = () => {
   //delete
   const handleDelete = async (packageId: string) => {
     Swal.fire({
-      title: 'Bạn có muốn xóa gói này không?',
+      text: 'Bạn có muốn xóa gói này không?',
       showDenyButton: true,
       // showCancelButton: true,
       confirmButtonText: 'Có',
@@ -423,9 +423,8 @@ const Pack = () => {
       <div className="my-5 flex flex-row gap-10 border-b-1 font-bold">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
-            }`}
+            className={`bg-white ${tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+              }`}
             onClick={() => {
               setTabs(1), setPage(1);
             }}
@@ -447,10 +446,9 @@ const Pack = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 3 &&
+            className={`bg-white ${tabs === 3 &&
               'border-b-2 border-[#FF0004] border-b-[#FF0004] text-[#FF0004]'
-            }`}
+              }`}
             radius="none"
             onClick={() => {
               setTabs(3), setPage(1);

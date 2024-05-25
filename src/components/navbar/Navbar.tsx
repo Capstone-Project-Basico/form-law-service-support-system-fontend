@@ -29,6 +29,7 @@ import {
 } from "@/constants/types/homeType";
 import {
   faAddressCard,
+  faBell,
   faClockRotateLeft,
   faFileSignature,
   faFolderOpen,
@@ -326,139 +327,165 @@ const Navbar = () => {
         {/* login */}
         <NavbarContent justify="end" className="w-[165px] h-5">
           {user ? (
-            <Dropdown placement="bottom-end" className="w-96">
-              <DropdownTrigger className="h-14">
-                <Avatar
-                  style={{ height: "60px" }}
-                  isBordered
-                  as="button"
-                  className="transition-transform"
-                  name="Jason Hughes"
-                  size="lg"
-                  src={
-                    userData?.avatar ? userData?.avatar :
-                      "/User-avatar.png"
-                  }
-                />
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Profile Actions"
-                variant="flat"
-                disabledKeys={["hr", "hr2", "hr3"]}
-              >
-                <DropdownItem
-                  key="user"
-                  textValue={userData?.userName}
-                  className="h-14 gap-2"
+            <div className="flex justify-center items-center gap-10">
+              <Dropdown placement="bottom-end" className="w-96">
+                <DropdownTrigger>
+                  <FontAwesomeIcon icon={faBell} className="h-7 w-7 bg-[#F2F2F2] rounded-full p-5 text-[#FF0004]" />
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Profile Actions" variant="flat">
+                  <DropdownItem key="settings" className="mb-5" isReadOnly>
+                    <p className="font-bold text-xl">
+                      Thông báo
+                    </p>
+                  </DropdownItem>
+                  <DropdownItem key="team_settings">Bài viết mới: Hello</DropdownItem>
+                  <DropdownItem key="analytics">
+                    Analytics
+                  </DropdownItem>
+                  <DropdownItem key="system">System</DropdownItem>
+                  <DropdownItem key="configurations">Configurations</DropdownItem>
+                  <DropdownItem key="help_and_feedback">
+                    Help & Feedback
+                  </DropdownItem>
+                  <DropdownItem key="logout" color="danger">
+                    Log Out
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+
+              <Dropdown placement="bottom-end" className="w-96">
+                <DropdownTrigger className="h-14">
+                  <Avatar
+                    style={{ height: "60px" }}
+                    isBordered
+                    as="button"
+                    className="transition-transform"
+                    name="Jason Hughes"
+                    size="lg"
+                    src={
+                      userData?.avatar ? userData?.avatar :
+                        "/User-avatar.png"
+                    }
+                  />
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Profile Actions"
+                  variant="flat"
+                  disabledKeys={["hr", "hr2", "hr3"]}
                 >
-                  <div className="flex items-center">
-                    <Avatar
-                      // style={{ height: "20px" w}}
-                      isBordered
-                      as="button"
-                      className="transition-transform h-10 w-10 ml-1 mr-5"
-                      name="Jason Hughes"
-                      size="lg"
-                      src={
-                        userData?.avatar ? userData?.avatar :
-                          "/User-avatar.png"
-                      }
-                    />
-                    <div className="flex-col">
-                      <h2 className="font-semibold text-[#FF0004]">
-                        {userData?.userName}
-                      </h2>
-                      <h2 className="font-bold">
-                        {walletError ? 0 : wallet?.balance.toLocaleString()} Đ
-                      </h2>
-                      <h2 className="">{userData?.email}</h2>
+                  <DropdownItem
+                    key="user"
+                    textValue={userData?.userName}
+                    className="h-14 gap-2"
+                  >
+                    <div className="flex items-center">
+                      <Avatar
+                        // style={{ height: "20px" w}}
+                        isBordered
+                        as="button"
+                        className="transition-transform h-10 w-10 ml-1 mr-5"
+                        name="Jason Hughes"
+                        size="lg"
+                        src={
+                          userData?.avatar ? userData?.avatar :
+                            "/User-avatar.png"
+                        }
+                      />
+                      <div className="flex-col">
+                        <h2 className="font-semibold text-[#FF0004]">
+                          {userData?.userName}
+                        </h2>
+                        <h2 className="font-bold">
+                          {walletError ? 0 : wallet?.balance.toLocaleString()} Đ
+                        </h2>
+                        <h2 className="">{userData?.email}</h2>
+                      </div>
                     </div>
-                  </div>
-                </DropdownItem>
-                <DropdownItem
-                  key="profile"
-                  textValue="Cài đặt thông tin cá nhân"
-                  className="bg-[#F2F2F2] "
-                >
-                  <Link
-                    href="/profile"
-                    className="text-black w-full py-3 text-[17px]"
+                  </DropdownItem>
+                  <DropdownItem
+                    key="profile"
+                    textValue="Cài đặt thông tin cá nhân"
+                    className="bg-[#F2F2F2] "
                   >
-                    <FontAwesomeIcon
-                      icon={faAddressCard}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    <p>Cài đặt thông tin cá nhân</p>
-                  </Link>
-                </DropdownItem>
-                <DropdownItem
-                  key="changePassword"
-                  textValue="Đổi mật khẩu"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/changePassword"
-                    className="text-black w-full py-3 text-[17px]"
+                    <Link
+                      href="/profile"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faAddressCard}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      <p>Cài đặt thông tin cá nhân</p>
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="changePassword"
+                    textValue="Đổi mật khẩu"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faLock}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Đổi mật khẩu
-                  </Link>
-                </DropdownItem>
-                <DropdownItem
-                  key="wallet"
-                  textValue="Ví của bạn"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/wallet"
-                    className="text-black w-full py-3 text-[17px]"
+                    <Link
+                      href="/profile/changePassword"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faLock}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Đổi mật khẩu
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="wallet"
+                    textValue="Ví của bạn"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faWallet}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Ví của bạn
-                  </Link>
-                </DropdownItem>
-                <DropdownItem key="hr" textValue=" ">
-                  <hr />
-                </DropdownItem>
-                <DropdownItem
-                  key="manageTemplate"
-                  textValue="Quản lí biểu mẫu"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/manageTemplate"
-                    className="text-black w-full py-3 text-[17px]"
+                    <Link
+                      href="/profile/wallet"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faWallet}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Ví của bạn
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="hr" textValue=" ">
+                    <hr />
+                  </DropdownItem>
+                  <DropdownItem
+                    key="manageTemplate"
+                    textValue="Quản lí biểu mẫu"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faFileSignature}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Quản lí biểu mẫu
-                  </Link>
-                </DropdownItem>
-                <DropdownItem
-                  key="servicePack"
-                  textValue="Gói dịch vụ"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/servicePack"
-                    className="text-black w-full py-3 text-[17px]"
+                    <Link
+                      href="/profile/manageTemplate"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faFileSignature}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Quản lí biểu mẫu
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="servicePack"
+                    textValue="Gói dịch vụ"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faHeadset}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Gói dịch vụ
-                  </Link>
-                </DropdownItem>
-                {/* <DropdownItem
+                    <Link
+                      href="/profile/servicePack"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faHeadset}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Gói dịch vụ
+                    </Link>
+                  </DropdownItem>
+                  {/* <DropdownItem
                   key="templatePack"
                   textValue="Gói biểu mẫu"
                   className="bg-[#F2F2F2]"
@@ -477,44 +504,45 @@ const Navbar = () => {
                 <DropdownItem key="hr2" textValue=" ">
                   <hr />
                 </DropdownItem> */}
-                <DropdownItem
-                  key="transactionHistory"
-                  textValue="Lịch sử giao dịch"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/transactionHistory"
-                    className="text-black w-full py-3 text-[17px]"
+                  <DropdownItem
+                    key="transactionHistory"
+                    textValue="Lịch sử giao dịch"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faClockRotateLeft}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Lịch sử giao dịch
-                  </Link>
-                </DropdownItem>
-                <DropdownItem key="hr3" textValue=" ">
-                  <hr />
-                </DropdownItem>
-                <DropdownItem
-                  key="logout"
-                  textValue="Đăng xuất"
-                  color="danger"
-                  className="h-11"
-                >
-                  <div
-                    className="flex flex-row  items-center gap-3"
-                    onClick={() => logout()}
+                    <Link
+                      href="/profile/transactionHistory"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faClockRotateLeft}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Lịch sử giao dịch
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="hr3" textValue=" ">
+                    <hr />
+                  </DropdownItem>
+                  <DropdownItem
+                    key="logout"
+                    textValue="Đăng xuất"
+                    color="danger"
+                    className="h-11"
                   >
-                    <FontAwesomeIcon
-                      icon={faRightFromBracket}
-                      className="w-5 h-5 text-[#FF0004]"
-                    />
-                    <p>Đăng xuất</p>
-                  </div>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+                    <div
+                      className="flex flex-row  items-center gap-3"
+                      onClick={() => logout()}
+                    >
+                      <FontAwesomeIcon
+                        icon={faRightFromBracket}
+                        className="w-5 h-5 text-[#FF0004]"
+                      />
+                      <p>Đăng xuất</p>
+                    </div>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
           ) : (
             <NavbarItem className="hidden lg:flex gap-2">
               <Button

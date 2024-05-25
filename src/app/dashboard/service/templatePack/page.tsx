@@ -196,7 +196,7 @@ const Pack = () => {
   //delete
   const handleDelete = async (packageId: string) => {
     Swal.fire({
-      title: "Bạn có muốn xóa gói này không?",
+      text: "Bạn có muốn xóa gói này không?",
       showDenyButton: true,
       // showCancelButton: true,
       confirmButtonText: "Có",

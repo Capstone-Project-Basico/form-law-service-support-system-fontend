@@ -120,7 +120,7 @@ const Partner = () => {
           partner.processStatus === 'CHỜ DUYỆT' && partner.delete === false
       );
       setPartners(filteredPosts);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   //get all deleted items
@@ -139,7 +139,7 @@ const Partner = () => {
   //delete
   const handleDelete = async (partnerId: number) => {
     Swal.fire({
-      title: 'Bạn có muốn xóa bài viết này không?',
+      text: 'Bạn có muốn xóa bài viết này không?',
       showDenyButton: true,
       confirmButtonText: 'Có',
       denyButtonText: `Không`,
@@ -161,9 +161,9 @@ const Partner = () => {
                 fetchPendingPartners();
               }
             }),
-            {
-              headers: authHeader(),
-            };
+          {
+            headers: authHeader(),
+          };
         } catch (error) {
           console.log(error);
         }
@@ -383,9 +383,8 @@ const Partner = () => {
       <div className="flex flex-row gap-10 border-b-1 font-bold ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
-            }`}
+            className={`bg-white ${tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -395,9 +394,8 @@ const Partner = () => {
 
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
-            }`}
+            className={`bg-white ${tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+              }`}
             onClick={() => setTabs(2)}
             radius="none"
           >

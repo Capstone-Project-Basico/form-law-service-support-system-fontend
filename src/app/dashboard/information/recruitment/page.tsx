@@ -147,8 +147,9 @@ const Recruitment = () => {
       const url = `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/updateStatusRecruitmentForm/${id}?status=${newStatus}`;
 
       // Prepare the config object for headers
-      const config = { headers: authHeader(), // Include authentication headers
-    };
+      const config = {
+        headers: authHeader(), // Include authentication headers
+      };
 
       // Make the PUT request with URL and config
       const response = await axios.put(url, {}, config);
@@ -216,7 +217,7 @@ const Recruitment = () => {
     //   }
     // }
     Swal.fire({
-      title: "Bạn có muốn xóa thông tin tuyển dụng này không?",
+      text: "Bạn có muốn xóa thông tin tuyển dụng này không?",
       showDenyButton: true,
       confirmButtonText: "Có",
       denyButtonText: `Không`,
@@ -319,9 +320,8 @@ const Recruitment = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -330,9 +330,8 @@ const Recruitment = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(2)}
             radius="none"
           >
@@ -341,10 +340,9 @@ const Recruitment = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 3 &&
+            className={`bg-white ${tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(3)}
           >

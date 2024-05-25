@@ -120,7 +120,7 @@ const TaskDetail = () => {
       );
       setAssignmentTask(response.data.data.filter((task: TaskAssignmentType) => task.taskId === Number(params.id)));
       console.log(assignmentTask);
-      
+
     } catch (error) {
       console.error(error);
     }
@@ -165,7 +165,7 @@ const TaskDetail = () => {
   // done
   const completeTask = async (id: number) => {
     Swal.fire({
-      title: "Bạn đã hoàn thành nhiệm vụ này?",
+      text: "Bạn đã hoàn thành nhiệm vụ này?",
       showDenyButton: true,
       confirmButtonText: "Có",
       denyButtonText: `Không`,
@@ -211,49 +211,48 @@ const TaskDetail = () => {
         </Breadcrumbs>
       </div>
       <Accordion defaultExpandedKeys={["2"]}>
-      <AccordionItem
-        key="2"
-        title={<div className="font-bold bg-gray-300 rounded-md h-full w-96">Nhiệm vụ chính</div>}
-      >
-           <div className="gap-10 flex flex-col justify-start items-start text-2xl">
-                  <div className="flex">
-                    <h1 className="min-w-72">Tên nhiệm vụ:</h1>
-                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {mainTask?.taskName
-                        ? mainTask?.taskName
-                        : "Nhiệm vụ này hiện không có tên"}
-                    </h1>
-                  </div>
+        <AccordionItem
+          key="2"
+          title={<div className="font-bold bg-gray-300 rounded-md h-full w-96">Nhiệm vụ chính</div>}
+        >
+          <div className="gap-10 flex flex-col justify-start items-start text-2xl">
+            <div className="flex">
+              <h1 className="min-w-72">Tên nhiệm vụ:</h1>
+              <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                {mainTask?.taskName
+                  ? mainTask?.taskName
+                  : "Nhiệm vụ này hiện không có tên"}
+              </h1>
+            </div>
 
-                  <div className="flex">
-                    <h1 className="min-w-72">Chi tiết nhiệm vụ:</h1>
-                    <h1 className="flex justify-start font-semibold text-[#FF0004] max-h-64 overflow-auto">
-                      {mainTask?.description}
-                    </h1>
-                  </div>
+            <div className="flex">
+              <h1 className="min-w-72">Chi tiết nhiệm vụ:</h1>
+              <h1 className="flex justify-start font-semibold text-[#FF0004] max-h-64 overflow-auto">
+                {mainTask?.description}
+              </h1>
+            </div>
 
-                  <div className="flex">
-                    <h1 className="min-w-72">Người cần hỗ trợ:</h1>
-                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {mainTask?.supportTo}
-                    </h1>
-                  </div>
-                  <div className="flex">
-                    <h1 className="min-w-72">Người chịu trách nhiệm:</h1>
-                    <h1 className="flex justify-start font-semibold text-[#FF0004]">
-                      {assignmentTask && assignmentTask[0]?.email}
-                    </h1>
-                  </div>
-                  
-                </div>
-      </AccordionItem>
+            <div className="flex">
+              <h1 className="min-w-72">Người cần hỗ trợ:</h1>
+              <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                {mainTask?.supportTo}
+              </h1>
+            </div>
+            <div className="flex">
+              <h1 className="min-w-72">Người chịu trách nhiệm:</h1>
+              <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                {assignmentTask && assignmentTask[0]?.email}
+              </h1>
+            </div>
+
+          </div>
+        </AccordionItem>
       </Accordion>
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -263,10 +262,9 @@ const TaskDetail = () => {
 
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 &&
+            className={`bg-white ${tabs === 2 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(2)}
           >
