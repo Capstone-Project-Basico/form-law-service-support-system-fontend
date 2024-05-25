@@ -1,17 +1,30 @@
-"use client";
+'use client';
 
-import authHeader from "@/components/authHeader/AuthHeader";
-import axios from "axios";
+import axios from 'axios';
+import { config } from 'process';
 
 const getToken = () => {
-  if (typeof window === "undefined") return null;
+  if (typeof window === 'undefined') return null;
 
-  return JSON.parse(localStorage.getItem("auth-token") || "{}");
+  const authToken = localStorage.getItem('auth-token');
+
+  if (authToken === null) {
+    return null;
+  }
+
+  return JSON.parse(authToken);
 };
 
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API,
-  headers: authHeader(),
+});
+
+axiosClient.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 axiosClient.interceptors.response.use(
