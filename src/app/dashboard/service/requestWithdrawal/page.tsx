@@ -128,7 +128,7 @@ const Page = () => {
     //complete
     const complete = async (id: string) => {
         Swal.fire({
-            title: 'Bạn đã hoàn thành yêu cầu này?',
+            text: 'Bạn đã hoàn thành yêu cầu này?',
             showDenyButton: true,
             // showCancelButton: true,
             confirmButtonText: 'Có',
@@ -162,7 +162,7 @@ const Page = () => {
 
     const handleDelete = async (packageId: string) => {
         Swal.fire({
-            title: 'Bạn có muốn xóa yêu cầu này không?',
+            text: 'Bạn có muốn xóa yêu cầu này không?',
             showDenyButton: true,
             // showCancelButton: true,
             confirmButtonText: 'Có',

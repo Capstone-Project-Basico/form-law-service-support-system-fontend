@@ -28,6 +28,7 @@ import Image from 'next/image';
 import { v4 as uuidv4 } from 'uuid';
 import BuyTemplatePack from '@/components/Pack/BuyTemplatePack';
 import HeaderComponent from '@/components/header';
+import Loading from '@/components/loading';
 
 const BuyPacks = () => {
   const router = useRouter();
@@ -45,6 +46,7 @@ const BuyPacks = () => {
   const [transactionId, setTransactionId] = useState<string>();
   const [isSelectedQR, setIsSelectedQR] = useState(0);
   const [walletError, setWalletError] = useState<boolean>();
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   //data
   const [quantity, setQuantity] = useState(1);
@@ -101,6 +103,7 @@ const BuyPacks = () => {
   }
 
   const getAllPacks = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/getAllPackageRequestService`,
@@ -108,12 +111,16 @@ const BuyPacks = () => {
           headers: authHeader(),
         }
       );
-      setServicePacks(
-        response.data.data.filter(
-          (service: ConsultServiceType) =>
-            service.deleted === false && service.processStatus === 'ĐÃ DUYỆT'
-        )
-      );
+      if (response && response.status === 200) {
+        setIsLoading(false);
+        setServicePacks(
+          response.data.data.filter(
+            (service: ConsultServiceType) =>
+              service.deleted === false && service.processStatus === 'ĐÃ DUYỆT'
+          )
+        );
+      }
+
     } catch (error) { }
   };
 
@@ -122,7 +129,7 @@ const BuyPacks = () => {
     try {
       if (!user) {
         Swal.fire({
-          title: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
+          text: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
           showDenyButton: true,
           // showCancelButton: true,
           confirmButtonText: 'Có',
@@ -173,6 +180,7 @@ const BuyPacks = () => {
   };
 
   const payForService = () => {
+    setIsLoading(true);
     axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_API}orderPackageRequestService/payOrderPackageRequestServiceDetailByWallet/${orderId}`,
@@ -182,6 +190,7 @@ const BuyPacks = () => {
       .then((res) => {
         toast.success(`${res.data.data}`);
         onClosePayment();
+        window.location.reload();
       })
       .catch((err) => {
         toast.error('Ví của bạn không đủ tiền vui lòng nạp tại ví');
@@ -204,8 +213,12 @@ const BuyPacks = () => {
       });
   };
 
+
   return (
     <>
+      {isLoading && (
+        <Loading className="fixed left-0 top-0 z-[100] h-full w-full bg-white bg-opacity-50" />
+      )}
       <HeaderComponent title="GÓI DỊCH VỤ" link="GÓI DỊCH VỤ" />
       <div className="items-center justify-center rounded-xl bg-white p-5 px-[360px] text-center shadow-lg">
         <ToastContainer />
@@ -372,7 +385,7 @@ const BuyPacks = () => {
                 Đóng
               </Button>
               <Button color="primary" onClick={() => payment()}>
-                thanh toán
+                Thanh toán
               </Button>
             </ModalFooter>
           </ModalContent>

@@ -132,16 +132,24 @@ const Page = () => {
   }
 
   const getTemplate = async () => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplate`)
-      .then((response) => {
-        const listForm: FormTemplate[] = response.data.data;
-        // only status ACTIVE
-        const listFormActive = listForm.filter(
-          (form) => form.latestVersion?.status === 'ACTIVE'
-        );
-        setTemplates(listFormActive);
-      });
+    try {
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplate`)
+        .then((response) => {
+          const listForm: FormTemplate[] = response.data.data;
+          // only status ACTIVE
+          const listFormActive = listForm.filter(
+            (form) => form.latestVersion?.status === 'ACTIVE'
+          );
+          setTemplates(listFormActive);
+        }).catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   const getAllCheckOutForm = async () => {
@@ -171,23 +179,29 @@ const Page = () => {
   };
 
   const getType = async () => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
-      .then((response) => {
-        console.log(response);
+    try {
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
+        .then((response) => {
+          console.log(response);
 
-        setTypes(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+          setTypes(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   const handleBuy = async (formId: number, price: number) => {
     try {
       if (!user) {
         Swal.fire({
-          title: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
+          text: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
           showDenyButton: true,
           confirmButtonText: 'Có',
           confirmButtonColor: '#00BB00',
@@ -249,6 +263,7 @@ const Page = () => {
       .then((res) => {
         onClosePayment();
         toast.success('Thanh toán thành công');
+        window.location.reload();
       })
       .catch((error) => {
         toast.error('Tài khoản không đủ tiền, vui lòng nạp tại ví');
@@ -614,7 +629,7 @@ const Page = () => {
                 Đóng
               </Button>
               <Button color="primary" onClick={() => payment()}>
-                thanh toán
+                Thanh toán
               </Button>
             </ModalFooter>
           </ModalContent>

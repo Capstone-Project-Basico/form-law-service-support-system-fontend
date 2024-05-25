@@ -62,7 +62,9 @@ const BuyTemplatePack = () => {
       );
       setServicePacks(response.data.data.filter((pack: PackType) => pack.deleted === false && pack.processStatus === "ĐÃ DUYỆT" && pack.itemPackageList.length > 0));
     } catch (error) {
-      toast.error("KHông mua được!");
+      // toast.error("Lỗi hệ thống!");
+      console.log(error);
+
     }
   };
 
@@ -89,7 +91,7 @@ const BuyTemplatePack = () => {
     try {
       if (!user) {
         Swal.fire({
-          title: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
+          text: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
           showDenyButton: true,
           // showCancelButton: true,
           confirmButtonText: 'Có',
@@ -317,7 +319,7 @@ const BuyTemplatePack = () => {
               Đóng
             </Button>
             <Button color="primary" onClick={() => payment()}>
-              thanh toán
+              Thanh toán
             </Button>
           </ModalFooter>
         </ModalContent>

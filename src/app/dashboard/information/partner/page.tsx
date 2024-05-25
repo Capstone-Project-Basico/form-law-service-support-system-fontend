@@ -139,7 +139,7 @@ const Partner = () => {
   //delete
   const handleDelete = async (partnerId: number) => {
     Swal.fire({
-      title: "Bạn có muốn xóa bài viết này không?",
+      text: "Bạn có muốn xóa bài viết này không?",
       showDenyButton: true,
       confirmButtonText: "Có",
       denyButtonText: `Không`,

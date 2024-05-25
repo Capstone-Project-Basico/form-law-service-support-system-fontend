@@ -105,7 +105,7 @@ const Post = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}post/findAllActivePost`
       );
       setPost(response.data.data);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   //get all pending posts
@@ -119,7 +119,7 @@ const Post = () => {
           post.processStatus === 'CHỜ DUYỆT' && post.deleted === false
       );
       setPost(filteredPosts);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   //get all deleted
@@ -166,7 +166,7 @@ const Post = () => {
   //delete
   const handleDelete = async (postId: number) => {
     Swal.fire({
-      title: 'Bạn có muốn xóa bài viết này không?',
+      text: 'Bạn có muốn xóa bài viết này không?',
       showDenyButton: true,
       confirmButtonText: 'Có',
       denyButtonText: `Không`,
@@ -188,9 +188,9 @@ const Post = () => {
                 fetchPendingPosts();
               }
             }),
-            {
-              headers: authHeader(),
-            };
+          {
+            headers: authHeader(),
+          };
         } catch (error) {
           console.log(error);
         }
@@ -407,9 +407,8 @@ const Post = () => {
       <div className="flex flex-row gap-10 border-b-1 font-bold ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
-            }`}
+            className={`bg-white ${tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -419,9 +418,8 @@ const Post = () => {
 
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
-            }`}
+            className={`bg-white ${tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+              }`}
             onClick={() => setTabs(2)}
             radius="none"
           >
