@@ -40,24 +40,24 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
   const hasSearchFilter = Boolean(filterValue);
 
   const filteredItems = React.useMemo(() => {
-    let filteredUsers = [...transactions];
+    let filteredTransaction = [...transactions];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((user) =>
-        user.email?.toLowerCase().includes(filterValue.toLowerCase())
+      filteredTransaction = filteredTransaction.filter((transaction) =>
+        transaction.email?.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
     if (
       statusFilter !== "all" &&
       Array.from(statusFilter).length !== statusTransaction.length
     ) {
-      filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.status)
+      filteredTransaction = filteredTransaction.filter((transaction) =>
+        Array.from(statusFilter).includes(transaction.status)
       );
     }
 
     if (selectedDate) {
-      filteredUsers = filteredUsers.filter((transaction) => {
+      filteredTransaction = filteredTransaction.filter((transaction) => {
         const transactionDate = new Date(transaction.createAt).setHours(
           0,
           0,
@@ -69,7 +69,7 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
       });
     }
 
-    return filteredUsers;
+    return filteredTransaction;
   }, [transactions, filterValue, statusFilter, selectedDate]);
 
   const onSearchChange = React.useCallback((value?: string) => {
@@ -216,17 +216,17 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
                 {transaction.status === "SUCCESS"
                   ? "Thành công"
                   : transaction.status === "PENDING"
-                  ? "Đang chờ"
-                  : transaction.status}
+                    ? "Đang chờ"
+                    : transaction.status}
               </TableCell>
 
               <TableCell>
                 {transaction.type === "BUY" ||
-                transaction.type === "BUY_FORM_TEMPLATE"
+                  transaction.type === "BUY_FORM_TEMPLATE"
                   ? "MUA BIỂU MẪU"
                   : transaction.type === "BUY_PACKAGE"
-                  ? "MUA GÓI"
-                  : transaction.type}
+                    ? "MUA GÓI"
+                    : transaction.type}
               </TableCell>
             </TableRow>
           ))}
