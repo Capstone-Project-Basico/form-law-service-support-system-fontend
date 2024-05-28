@@ -55,7 +55,7 @@ const FetchUser = () => {
           <div className="mb-5 border-l-5 border-[#FF0004] pl-5 text-[17px] font-bold">
             <div className="text-3xl">NHẬP MÃ XÁC NHẬN</div>
             <div className="text-2xl">
-              Để xác nhận tài khoản của bạn, hãy nhập mã gồm 5 chữ{' '}
+              Để xác nhận tài khoản của bạn, hãy nhập mã{' '}
             </div>
             <div className="text-2xl">
               mà chúng tôi gữi đến địa chỉ email của bạn
