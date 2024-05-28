@@ -81,7 +81,7 @@ const BuyPacks = () => {
         .catch((error) => {
           console.log(error);
         });
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const getWallet = () => {
@@ -100,7 +100,7 @@ const BuyPacks = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const getAllPacks = async () => {
     setIsLoading(true);
@@ -120,8 +120,7 @@ const BuyPacks = () => {
           )
         );
       }
-
-    } catch (error) { }
+    } catch (error) {}
   };
 
   //buy pack
@@ -213,7 +212,6 @@ const BuyPacks = () => {
       });
   };
 
-
   return (
     <>
       {isLoading && (
@@ -291,7 +289,7 @@ const BuyPacks = () => {
                   <div className="flex flex-col items-start justify-start gap-10 text-2xl">
                     <div className="flex">
                       <h1 className="w-72">Tên dịch vụ tư vấn:</h1>
-                      <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                      <h1 className="flex justify-start font-semibold text-black">
                         {selectedPack?.packageRequestServiceName
                           ? selectedPack?.packageRequestServiceName
                           : 'Biểu mẫu này hiện tại không có tên'}
@@ -300,7 +298,7 @@ const BuyPacks = () => {
 
                     <div className="flex">
                       <h1 className="min-w-72">Chi tiết gói:</h1>
-                      <h1 className="flex max-h-64 justify-start overflow-auto font-semibold text-[#FF0004]">
+                      <h1 className="flex max-h-64 justify-start overflow-auto font-semibold text-black">
                         {selectedPack?.description}
                       </h1>
                     </div>
@@ -350,8 +348,9 @@ const BuyPacks = () => {
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
                   <Image
@@ -365,8 +364,9 @@ const BuyPacks = () => {
 
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(2)}
                   disabled={walletError}
                 >
