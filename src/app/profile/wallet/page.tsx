@@ -108,7 +108,7 @@ const Wallet = () => {
       .then((res) => {
         console.log(res.data);
 
-        window.open(res.data.checkoutUrl, "_blank");
+        window.open(res.data.checkoutUrl);
       });
   };
 

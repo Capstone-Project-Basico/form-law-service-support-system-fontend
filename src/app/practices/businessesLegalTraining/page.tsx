@@ -18,7 +18,7 @@ const page = () => {
       />
       <div className="flex flex-col justify-center items-center mx-[374px] pt-16">
         <div className="text-3xl font-bold mb-9">
-        Đào tạo pháp lý cho doanh nghiệp
+          Đào tạo pháp lý cho doanh nghiệp
         </div>
         <p>
           {" "}
@@ -57,7 +57,6 @@ const page = () => {
                 <Link
                   key={specialist.name}
                   href={specialist.link}
-                  target="_blank"
                   rel="noopener"
                 >
                   <li className="hover:text-[#FF0004]">{specialist.name}</li>
@@ -80,7 +79,6 @@ const page = () => {
               {professionalLegals.map((professional) => (
                 <Link
                   key={professional.name}
-                  target="_blank"
                   rel="noopener"
                   href={professional.link}
                 >

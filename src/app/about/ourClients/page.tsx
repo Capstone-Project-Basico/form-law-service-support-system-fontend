@@ -81,7 +81,6 @@ const Page = () => {
               <Link
                 href={partner.link}
                 className="py-[25px]"
-                target="_blank"
                 rel="noopener noreferrer"
               >
                 <Image alt="" src={partner?.avatar} width={200} height={133} />

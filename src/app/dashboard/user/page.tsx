@@ -1,47 +1,17 @@
 "use client";
 
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-  Breadcrumbs,
-  BreadcrumbItem,
-  Button,
-  Input,
-  useDisclosure,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-  MenuItem,
-} from "@nextui-org/react";
-import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
+import authHeader from "@/components/authHeader/AuthHeader";
+import Users from "@/components/manage/User";
 import { UserType } from "@/constants/types/homeType";
 import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  listAll,
-  list,
-  StorageReference,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { storage } from "@/app/firebase";
-import Users from "@/components/manage/User";
-import { v4 as uuidv4 } from "uuid";
-import { ToastContainer, toast } from "react-toastify";
-import authHeader from "@/components/authHeader/AuthHeader";
+  BreadcrumbItem,
+  Breadcrumbs,
+  Button,
+  useDisclosure
+} from "@nextui-org/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const User = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -189,9 +159,8 @@ const User = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -200,10 +169,9 @@ const User = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 &&
+            className={`bg-white ${tabs === 2 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(2)}
           >
