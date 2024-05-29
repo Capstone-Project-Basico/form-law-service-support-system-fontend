@@ -211,9 +211,7 @@ const Page = () => {
           confirmButtonColor: '#00BB00',
           denyButtonText: `Không`,
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            // Swal.fire("Saved!", "", "success");
             router.push('/login');
           } else if (result.isDenied) {
             Swal.fire('Bạn cần đăng nhập để sử dụng tính năng này', '', 'info');
