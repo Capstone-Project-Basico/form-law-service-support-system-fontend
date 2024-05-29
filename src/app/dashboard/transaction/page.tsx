@@ -11,7 +11,7 @@ const Page = () => {
 
   useEffect(() => {
     fetchTransactions();
-  });
+  }, []);
   //get all items
   const fetchTransactions = async () => {
     try {
