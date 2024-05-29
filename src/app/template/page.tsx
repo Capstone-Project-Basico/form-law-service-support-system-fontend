@@ -284,7 +284,7 @@ const Page = () => {
       .then((res) => {
         console.log(res.data);
 
-        window.open(res.data.checkoutUrl, '_blank');
+        window.open(res.data.checkoutUrl);
       })
       .catch((err) => {
         toast.error('Lỗi thanh toán, vui lòng kiểm tra lại!');
@@ -599,9 +599,8 @@ const Page = () => {
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                    isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                  }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                    }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
                   <Image
@@ -615,9 +614,8 @@ const Page = () => {
 
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                    isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                  }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                    }`}
                   onClick={() => setIsSelectedQR(2)}
                   disabled={walletError}
                 >

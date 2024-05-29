@@ -49,6 +49,13 @@ const Pack = () => {
     onOpen: onOpenUpdate,
     onClose: onCloseUpdate,
   } = useDisclosure();
+
+  const {
+    isOpen: isOpenDetail,
+    onOpen: onOpenDetail,
+    onClose: onCloseDetail,
+  } = useDisclosure();
+
   // const userInfo = User();
   const [packageRequestServiceName, setPackageRequestServiceName] =
     useState('');
@@ -435,7 +442,8 @@ const Pack = () => {
         </div>
         <div>
           <Button
-            className="bg-white"
+            className={`bg-white ${tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+              }`}
             onClick={() => {
               setTabs(2), setPage(1);
             }}
@@ -498,10 +506,10 @@ const Pack = () => {
           {items.map((pack, index) => (
             <TableRow key={index}>
               <TableCell>{pack.packageRequestServiceName}</TableCell>
-              <TableCell className=" w-[200px]">
+              <TableCell className="w-[200px]">
                 {pack.price.toLocaleString()} VND
               </TableCell>
-              <TableCell>{pack.description}</TableCell>
+              <TableCell className='line-clamp-1 h-8 w-[600px]'>{pack.description}</TableCell>
               <TableCell className="w-[150px] ">
                 <span style={{ color: pack.deleted ? 'red' : 'green' }}>
                   {pack.deleted ? 'Không sử dụng' : 'Đang hoạt động'}
@@ -511,13 +519,13 @@ const Pack = () => {
                 pack.processStatus === 'CHỜ DUYỆT' ? (
                   <TableCell className="flex items-center justify-center  gap-2">
                     <Button
-                      className="bg-green-600 text-white"
+                      className="bg-blue-600 text-white"
                       onClick={() => approve(pack.packageServiceId)}
                     >
                       Duyệt
                     </Button>
                     <Button
-                      className="bg-blue-600 text-white"
+                      className="bg-orange-600 text-white"
                       onPress={() => {
                         setSelectedRequestService(pack);
                         onOpenUpdate();
@@ -525,7 +533,15 @@ const Pack = () => {
                     >
                       Cập nhật
                     </Button>
-
+                    <Button
+                      className="bg-green-600 text-white"
+                      onPress={() => {
+                        setSelectedRequestService(pack);
+                        onOpenDetail();
+                      }}
+                    >
+                      Chi tiết
+                    </Button>
                     <Button
                       className="bg-[#FF0004] text-white"
                       onClick={() => handleDelete(pack.packageServiceId)}
@@ -542,6 +558,15 @@ const Pack = () => {
                       }}
                     >
                       Chuyển chờ duyệt
+                    </Button>
+                    <Button
+                      className="bg-green-600 text-white"
+                      onPress={() => {
+                        setSelectedRequestService(pack);
+                        onOpenDetail();
+                      }}
+                    >
+                      Chi tiết
                     </Button>
                   </TableCell>
                 )
@@ -571,7 +596,7 @@ const Pack = () => {
                 <>
                   <Input
                     type="text"
-                    label="Tên công việc"
+                    label="Tên gói yêu cầu"
                     value={selectedRequestService.packageRequestServiceName}
                     onChange={(e: any) =>
                       setSelectedRequestService({
@@ -639,6 +664,88 @@ const Pack = () => {
               </Button>
             </ModalFooter>
           </form>
+        </ModalContent>
+      </Modal>
+
+      {/* detail modal */}
+      <Modal isOpen={isOpenDetail} onClose={onCloseDetail} hideCloseButton>
+        <ModalContent>
+          <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
+            Chi tiết gói dịch vụ tư vấn
+          </ModalHeader>
+          <ModalBody>
+            {selectedRequestService && (
+              <>
+                <Input
+                  isReadOnly
+                  type="text"
+                  label="Tên gói yêu cầu"
+                  value={selectedRequestService.packageRequestServiceName}
+                  onChange={(e: any) =>
+                    setSelectedRequestService({
+                      ...selectedRequestService,
+                      packageRequestServiceName: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  isReadOnly
+                  type="number"
+                  label="Giá gói"
+                  endContent={
+                    <div className="pointer-events-none flex items-center">
+                      <span className="text-small text-default-400">
+                        Đồng
+                      </span>
+                    </div>
+                  }
+                  value={selectedRequestService.price.toString()}
+                  onChange={(e: any) =>
+                    setSelectedRequestService({
+                      ...selectedRequestService,
+                      price: e.target.value,
+                    })
+                  }
+                  min="1"
+                />
+                <Input
+                  isReadOnly
+                  type="number"
+                  label="Số lần gửi yêu cầu"
+                  endContent={
+                    <div className="pointer-events-none flex items-center">
+                      <span className="text-small text-default-400">Lần</span>
+                    </div>
+                  }
+                  value={selectedRequestService.totalRequest.toString()}
+                  onChange={(e: any) =>
+                    setSelectedRequestService({
+                      ...selectedRequestService,
+                      totalRequest: e.target.value,
+                    })
+                  }
+                  min="1"
+                />
+                <Textarea
+                  isReadOnly
+                  type="text"
+                  label="Chi tiết"
+                  value={selectedRequestService.description}
+                  onChange={(e: any) =>
+                    setSelectedRequestService({
+                      ...selectedRequestService,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              </>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onCloseDetail}>
+              Đóng
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </div>

@@ -48,7 +48,7 @@ const Users: React.FC<UsersProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
-  const filteredRoles = Roles.filter((role) => role.value !== "ROLE_ADMIN");
+  const filteredRoles = Roles.filter((role) => role.value !== "ROLE_ADMIN" && role.value !== "ROLE_MANAGER");
 
   const {
     isOpen: isOpenUpdate,
