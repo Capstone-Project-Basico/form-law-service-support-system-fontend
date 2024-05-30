@@ -3,6 +3,7 @@
 import authHeader from "@/components/authHeader/AuthHeader";
 import {
   ChildTaskType,
+  CommentDataType,
   TaskAssignmentType,
   TaskType,
   UserLocal,
@@ -36,6 +37,7 @@ import { useParams } from "next/navigation";
 import dateConvert from "@/components/dateConvert";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import useUser from "@/components/authHeader/User";
 
 const TaskDetail = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -80,10 +82,28 @@ const TaskDetail = () => {
 
   const user: UserLocal | null = getUserFromStorage();
   const userId = user?.data.data.userId;
+  const userInfo = useUser();
+
+  //comment data
+  const [commentsData, setCommentsData] = useState<CommentDataType[]>([]);
+  const [comment, setComment] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+
+  const newCommentData = {
+    comment,
+    userEmail,
+    taskId: params.id
+  }
 
   useEffect(() => {
-    // fetchAssignmentTask();
+    if (userInfo && userInfo.email) {
+      setUserEmail(userInfo.email);
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
     fetchTask();
+    getAllCommentByTaskId();
     switch (tabs) {
       case 1:
         fetchDetailTasks();
@@ -279,6 +299,38 @@ const TaskDetail = () => {
     });
   };
 
+  //comment handling
+  const getAllCommentByTaskId = () => {
+    try {
+      axios.get(`${process.env.NEXT_PUBLIC_BASE_API}taskComment/findAllTaskCommentByTask/${params.id}`,
+        { headers: authHeader() }
+      ).then((response) => {
+        setCommentsData(response.data.data)
+      })
+        .catch((error) => {
+          toast.error("Có lỗi xảy ra, vui lòng kiểm tra lại!")
+        });
+    } catch (error) {
+      toast.error("Có lỗi xảy ra, vui lòng kiểm tra lại!");
+    }
+  }
+
+  const handleComment = () => {
+    try {
+      axios.post(`${process.env.NEXT_PUBLIC_BASE_API}taskComment/createNewComment`,
+        newCommentData,
+        { headers: authHeader() }
+      ).then((response) => {
+        getAllCommentByTaskId();
+      })
+        .catch((error) => {
+          toast.error("Có lỗi xảy ra, vui lòng kiểm tra lại!")
+        });
+    } catch (error) {
+      toast.error("Có lỗi xảy ra, vui lòng kiểm tra lại!");
+    }
+  }
+
   return (
     <div className="w-full mt-5 ml-5 mr-5">
       <div className="grid grid-cols-2">
@@ -368,13 +420,23 @@ const TaskDetail = () => {
             key="1"
             title={<div className="font-bold bg-gray-300 rounded-md h-full w-full">Bình luận</div>}
           >
-            <div className="gap-10 flex flex-col justify-start items-start border-1 h-full">
-
+            <div className="gap-10 flex flex-col justify-start items-start border-1 h-[220px]">
+              <div className="overflow-auto  w-full">
+                {commentsData
+                  ? commentsData.map((cmt, key) => (
+                    <div key={key} className="">
+                      {cmt.comment}
+                    </div>
+                  ))
+                  : <></>}
+              </div>
               <div className="flex max-h-full w-full px-5">
-                <Input className="" label="Bình luận về nhiệm vụ này"></Input>
-                <Button>
-                  <FontAwesomeIcon icon={faPaperPlane} className="" />
-                </Button>
+                <Input className="" label="Bình luận về nhiệm vụ này" onChange={(e) => setComment(e.target.value)}></Input>
+                <div>
+                  <Button onClick={() => handleComment()} className="h-full">
+                    <FontAwesomeIcon icon={faPaperPlane} className="text-2xl" />
+                  </Button>
+                </div>
               </div>
             </div>
           </AccordionItem>

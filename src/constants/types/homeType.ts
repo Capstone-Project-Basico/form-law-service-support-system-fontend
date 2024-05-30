@@ -295,6 +295,16 @@ export type RequestWithdrawalType = {
   deleted: boolean;
 };
 
+export type CommentDataType = {
+  taskCommentId: number;
+  comment: string;
+  userEmail: string;
+  userName: string;
+  avatar: string;
+  taskId: number;
+  commentAt: any;
+};
+
 export interface UserLocal {
   data: {
     data: {
