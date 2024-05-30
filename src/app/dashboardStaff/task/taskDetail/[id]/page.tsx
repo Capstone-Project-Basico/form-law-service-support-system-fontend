@@ -7,10 +7,12 @@ import {
   TaskAssignmentType,
   TaskType,
   UserLocal,
+  UserType,
 } from "@/constants/types/homeType";
 import {
   Accordion,
   AccordionItem,
+  Avatar,
   BreadcrumbItem,
   Breadcrumbs,
   Button,
@@ -38,6 +40,7 @@ import dateConvert from "@/components/dateConvert";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useUser from "@/components/authHeader/User";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
 
 const TaskDetail = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -46,6 +49,13 @@ const TaskDetail = () => {
     onOpen: onOpenDetail,
     onClose: onCloseDetail,
   } = useDisclosure();
+
+  const {
+    isOpen: isOpenComment,
+    onOpen: onOpenComment,
+    onOpenChange: onOpenChangeComment,
+  } = useDisclosure();
+
   const [tabs, setTabs] = useState(1);
   const params = useParams<{ id: string }>();
   const [mainTask, setMainTask] = useState<TaskType>();
@@ -122,6 +132,7 @@ const TaskDetail = () => {
       fetchAssignmentTask();
     }
   }, [userId, params.id]);
+
 
   const fetchTask = async () => {
     try {
@@ -356,6 +367,14 @@ const TaskDetail = () => {
             Hoàn thành
           </Button>
           <Button
+            className="flex justify-end w-[100px] bg-green-600 text-white"
+            radius="full"
+            onPress={onOpenComment}
+          >
+            <FontAwesomeIcon icon={faComment} />
+            Bình luận
+          </Button>
+          <Button
             className="flex justify-end w-[100px] bg-[#FF0004] text-white"
             radius="full"
             onPress={onOpen}
@@ -411,33 +430,6 @@ const TaskDetail = () => {
                 :
                 (<></>)
               }
-            </div>
-          </AccordionItem>
-        </Accordion>
-
-        <Accordion defaultExpandedKeys={["1"]}>
-          <AccordionItem
-            key="1"
-            title={<div className="font-bold bg-gray-300 rounded-md h-full w-full">Bình luận</div>}
-          >
-            <div className="gap-10 flex flex-col justify-start items-start border-1 h-[220px]">
-              <div className="overflow-auto  w-full">
-                {commentsData
-                  ? commentsData.map((cmt, key) => (
-                    <div key={key} className="">
-                      {cmt.comment}
-                    </div>
-                  ))
-                  : <></>}
-              </div>
-              <div className="flex max-h-full w-full px-5">
-                <Input className="" label="Bình luận về nhiệm vụ này" onChange={(e) => setComment(e.target.value)}></Input>
-                <div>
-                  <Button onClick={() => handleComment()} className="h-full">
-                    <FontAwesomeIcon icon={faPaperPlane} className="text-2xl" />
-                  </Button>
-                </div>
-              </div>
             </div>
           </AccordionItem>
         </Accordion>
@@ -535,6 +527,55 @@ const TaskDetail = () => {
               </form>
             </>
           )}
+        </ModalContent>
+      </Modal>
+
+      {/* comment modal*/}
+      <Modal isOpen={isOpenComment} onOpenChange={onOpenChangeComment} size="5xl">
+        <ModalContent>
+          <ModalHeader className="flex justify-center items-center">Tất cả bình luận</ModalHeader>
+
+          {/* <div className="m-10"> */}
+          <div className="gap-10 flex flex-col justify-start items-start border-1 max-h-[500px] p-10">
+            <div className="overflow-auto w-full">
+              {commentsData
+                ? commentsData.map((data, key) => (
+                  <div key={key} className="my-5 flex ">
+                    <Avatar
+                      // style={{ height: "20px" w}}
+                      isBordered
+                      as="button"
+                      className="transition-transform h-10 w-10 ml-1 mr-5"
+                      name="Jason Hughes"
+                      size="lg"
+                      src={
+                        data?.avatar ? data?.avatar :
+                          "/User-avatar.png"
+                      }
+                    />
+                    <div className="flex flex-col bg-[#d8dce2] rounded-lg px-2">
+                      <h1 className="font-bold">
+                        {data?.userName}
+                      </h1>
+                      <p>
+                        {data.comment}
+                      </p>
+                    </div>
+                  </div>
+                ))
+                : <div className="flex justify-center items-center m-20">Hiện tại chưa có bình luận</div>}
+            </div>
+            <div className="flex max-h-full w-full px-5 justify-end">
+              <Input className="" label="Bình luận về nhiệm vụ này" onChange={(e) => setComment(e.target.value)}></Input>
+              <div>
+                <Button onClick={() => handleComment()} className="h-full">
+                  <FontAwesomeIcon icon={faPaperPlane} className="text-2xl" />
+                </Button>
+              </div>
+            </div>
+          </div>
+          {/* </div> */}
+
         </ModalContent>
       </Modal>
     </div>
