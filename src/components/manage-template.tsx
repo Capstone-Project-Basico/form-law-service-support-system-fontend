@@ -137,7 +137,6 @@ const ManagerTemplatePage = (props: Props) => {
   const [types, setTypes] = useState<FormType[]>([]);
   const [selectTypeId, setSelectTypeId] = useState<number | undefined>();
   const [filterValue, setFilterValue] = useState('');
-  
 
   const getUserFromStorage = () => {
     if (typeof window !== 'undefined') {
@@ -636,7 +635,7 @@ const ManagerTemplatePage = (props: Props) => {
       >
         <ModalContent style={{ width: '50%', maxWidth: '500px' }}>
           <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
-            Chi tiết
+            Cập nhật trạng thái
           </ModalHeader>
           <ModalBody>
             <form onSubmit={handleUpdateStatus}>
@@ -653,7 +652,7 @@ const ManagerTemplatePage = (props: Props) => {
                 >
                   <SelectItem key={'ACTIVE'}>Hoạt động</SelectItem>
                   <SelectItem key={'INACTIVE'}>Không hoạt động</SelectItem>
-                  <SelectItem key={'UNSTANDARDIZED'}>Chưa chuẩn hóa</SelectItem>
+                  {/* <SelectItem key={'UNSTANDARDIZED'}>Chưa chuẩn hóa</SelectItem> */}
                 </Select>
               </div>
               <div className="flex justify-end gap-4 p-6">
@@ -741,7 +740,7 @@ const ManagerTemplatePage = (props: Props) => {
         </div>
       </div>
 
-      <div className="flex flex-row gap-10 border-b-1 font-bold ">
+      <div className="mb-5 flex flex-row gap-10 border-b-1 font-bold">
         <div>
           <Button
             className={`bg-white ${tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'}`}
