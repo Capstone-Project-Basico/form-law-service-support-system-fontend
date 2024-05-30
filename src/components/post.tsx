@@ -14,15 +14,17 @@ import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "./authHeader/AuthHeader";
 import Swal from "sweetalert2";
+import Loading from "./loading";
 
 type TasksProps = {
     cateName: string;
 };
 
 const PostComponent: React.FC<TasksProps> = ({ cateName }) => {
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [posts, setPosts] = useState<PostType[]>([]);
     const router = useRouter();
-
+    const [checkLike, setCheckLike] = useState<boolean>();
     const getUserFromStorage = () => {
         if (typeof window !== "undefined") {
             const storedUser = localStorage.getItem("user");
@@ -43,10 +45,12 @@ const PostComponent: React.FC<TasksProps> = ({ cateName }) => {
     useEffect(() => {
         getCateId();
         getAllPosts();
+        // checkUserLike();
     }, []);
 
     const getAllPosts = () => {
         try {
+            setIsLoading(true)
             axios
                 .get(
                     `${process.env.NEXT_PUBLIC_BASE_API}post/findPostByCateName?cateName=${cateName}`
@@ -58,11 +62,13 @@ const PostComponent: React.FC<TasksProps> = ({ cateName }) => {
             console.log(error);
 
         }
+        setIsLoading(false)
 
     };
 
     const getCateId = () => {
         try {
+            setIsLoading(true)
             axios
                 .get(
                     `${process.env.NEXT_PUBLIC_BASE_API}category/getAllCategories`
@@ -70,11 +76,37 @@ const PostComponent: React.FC<TasksProps> = ({ cateName }) => {
                 .then((response) => {
                     const category = response.data.data.filter((category: Category) => category.cateName === cateName)
                     setCategoryId(category[0].cateId)
+                    checkUserLike(category[0].cateId);
                 }).catch((error) => { });
         } catch (error) {
             console.log(error);
-
         }
+        setIsLoading(false)
+    }
+
+    const checkUserLike = async (categoryId: number) => {
+        const checkData = {
+            userId,
+            categoryId
+        }
+        setIsLoading(true)
+        try {
+            await axios
+                .put(
+                    `${process.env.NEXT_PUBLIC_BASE_API}userCategory/checkUserLikeCategory`,
+                    checkData,
+                    { headers: authHeader() }
+                )
+                .then((response) => {
+                    setCheckLike(response.data.data)
+                }).catch((error) => {
+                    setCheckLike(false);
+                });
+        } catch (error) {
+            // setCheckLike(false);
+            console.log(error);
+        }
+        setIsLoading(false)
     }
 
     const likePost = () => {
@@ -101,6 +133,7 @@ const PostComponent: React.FC<TasksProps> = ({ cateName }) => {
                     { headers: authHeader() }
                 )
                     .then((response) => {
+                        getCateId();
                         toast.success("Bạn sẽ nhận được thông báo liên quan đến nội dung này");
                     })
                     .catch((error) => {
@@ -115,11 +148,48 @@ const PostComponent: React.FC<TasksProps> = ({ cateName }) => {
 
 
     const dislikePost = () => {
+        try {
 
+            Swal.fire({
+                text: 'Bạn có muốn hủy theo dõi nhưng bài viết liên quan đến chủ đề này không',
+                showDenyButton: true,
+                confirmButtonText: 'Có',
+                confirmButtonColor: '#00BB00',
+                denyButtonText: `Không`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    try {
+                        axios.put(`${process.env.NEXT_PUBLIC_BASE_API}userCategory/disLikeCategory`,
+                            data,
+                            { headers: authHeader() }
+                        )
+                            .then((response) => {
+                                checkUserLike(response.data.data.categoryId);
+                                toast.success("Bạn đã hủy theo dõi");
+                            })
+                            .catch((error) => {
+                                toast.error("Đã xảy ra lỗi vui lòng kiểm tra lại sau!");
+                            });
+                    } catch (error) {
+                        getCateId();
+                        console.log(error);
+                    }
+
+                } else if (result.isDenied) {
+                    Swal.fire('Bạn vẫn tiếp túc theo dõi những bài viết này', '', 'info');
+                    return;
+                }
+            })
+        } catch (error) {
+            toast.error("Đã xảy ra lỗi vui lòng kiểm tra lại sau!");
+        }
     }
 
     return (
         <>
+            {isLoading && (
+                <Loading className="fixed left-0 top-0 z-[100] h-full w-full bg-white bg-opacity-50" />
+            )}
             <ToastContainer />
             <div className="flex pt-20 bg-white text-black px-20">
                 <Side />
@@ -152,13 +222,24 @@ const PostComponent: React.FC<TasksProps> = ({ cateName }) => {
                         </Card>
                     ))}
                 </div>
-                <Button
-                    variant="faded"
-                    className="bg-white border-[#FF0004] text-[#FF0004]"
-                    onClick={() => likePost()}
-                >
-                    Yêu thích <FontAwesomeIcon icon={faHeart} />
-                </Button>
+                {checkLike ?
+                    <Button
+                        variant="faded"
+                        className="bg-[#FF0004] border-[#FF0004] text-white"
+                        onClick={() => dislikePost()}
+                    >
+                        Đang yêu thích <FontAwesomeIcon icon={faHeart} className="" />
+                    </Button>
+                    :
+                    <Button
+                        variant="faded"
+                        className="bg-white border-[#FF0004] text-[#FF0004]"
+                        onClick={() => likePost()}
+                    >
+                        Yêu thích <FontAwesomeIcon icon={faHeart} />
+                    </Button>
+                }
+
             </div>
         </>
     );
