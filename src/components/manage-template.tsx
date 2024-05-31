@@ -284,9 +284,11 @@ const ManagerTemplatePage = (props: Props) => {
       if (res.data?.status === false) return;
       getData();
       setIsLoading(false);
+      toast.success('Xóa thành công');
     } catch (error) {
       console.log(error);
       setIsLoading(false);
+      toast.success('Xóa thất bại');
     }
   };
 
@@ -304,10 +306,12 @@ const ManagerTemplatePage = (props: Props) => {
       getData();
       setIsLoading(false);
       setIsUpdate({ isOpen: false });
+      toast.success('Cập nhật thành công');
     } catch (error) {
       console.log(error);
       setIsLoading(false);
       setIsUpdate({ isOpen: false });
+      toast.error('Cập nhật thất bại');
     }
   };
 
