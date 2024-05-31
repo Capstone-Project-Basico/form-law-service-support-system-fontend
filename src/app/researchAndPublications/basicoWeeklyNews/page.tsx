@@ -11,7 +11,7 @@ const Page = () => {
         title="LĨNH VỰC CHUYÊN MÔN"
         link=" Dịch Vụ Luật Sư Nội Bộ"
       />
-      <PostComponent cateName="Basico tuần luật" />
+      <PostComponent cateName="BASICO tuần luật" />
     </>
   );
 };

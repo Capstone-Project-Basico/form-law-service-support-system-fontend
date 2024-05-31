@@ -305,6 +305,16 @@ export type CommentDataType = {
   commentAt: any;
 };
 
+export type NotificationType = {
+  systemNotificationId: number;
+  message: string;
+  sendDate: any;
+  userMail: string;
+  userName: string;
+  deleted: boolean;
+  seen: boolean;
+};
+
 export interface UserLocal {
   data: {
     data: {

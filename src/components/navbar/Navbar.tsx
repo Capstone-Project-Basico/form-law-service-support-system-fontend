@@ -23,6 +23,7 @@ import { researchAndPublications, about } from "@/lib/navbarItems";
 import { log } from "console";
 import axios from "axios";
 import {
+  NotificationType,
   ProfileSidebarItem,
   UserType,
   WalletType,
@@ -65,12 +66,7 @@ const Navbar = () => {
   const [walletError, setWalletError] = useState<string | null>(null);
   const [wallet, setWallet] = useState<WalletType>();
 
-  // const getUserFromStorage = () => {
-  //   if (typeof window !== "undefined") {
-  //     const storedUser = localStorage.getItem("user");
-  //     return storedUser ? JSON.parse(storedUser) : null;
-  //   }
-  // };
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const logout = () => {
     router.push("/login");
     window.localStorage.clear();
@@ -128,6 +124,32 @@ const Navbar = () => {
 
   };
 
+  useEffect(() => {
+    getNotifications();
+  }, []);
+
+  const getNotifications = () => {
+    try {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}systemNotification/getAllSystemNotificationOfUser/${userId}`
+        )
+        .then((response) => {
+          setNotifications(response.data.data);
+          console.log(response.data.data);
+
+        })
+        .catch((error) => {
+          console.error("Error fetching wallet:", error);
+          setWalletError(
+            "Failed to fetch wallet details. Please try again later."
+          );
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+  };
   return (
     <div className={styles.container}>
       <MyNavbar
@@ -338,17 +360,21 @@ const Navbar = () => {
                       Thông báo
                     </p>
                   </DropdownItem>
-                  <DropdownItem key="team_settings">Bài viết mới: Hello</DropdownItem>
-                  <DropdownItem key="analytics">
-                    Analytics
-                  </DropdownItem>
-                  <DropdownItem key="system">System</DropdownItem>
-                  <DropdownItem key="configurations">Configurations</DropdownItem>
-                  <DropdownItem key="help_and_feedback">
-                    Help & Feedback
-                  </DropdownItem>
-                  <DropdownItem key="logout" color="danger">
-                    Log Out
+                  <DropdownItem>
+                    {notifications ?
+                      (
+                        notifications.map((notification) => (
+                          <div key={notification.systemNotificationId}>
+                            <p>
+
+                              Bài viết mới về chủ đề: {notification.message}
+                            </p>
+                          </div>
+                        ))
+                      )
+                      :
+                      <div>Hiện tại chưa có thông báo mới</div>
+                    }
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -566,7 +592,7 @@ const Navbar = () => {
           )}
         </NavbarContent>
       </MyNavbar>
-    </div>
+    </div >
   );
 };
 
