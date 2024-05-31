@@ -157,12 +157,9 @@ const Pack = () => {
   const fetchDeletedService = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/getAllPackageRequestService`
+        `${process.env.NEXT_PUBLIC_BASE_API}packageRequestService/getAllDeletedPackageRequestService`
       );
-      const filteredService = response.data.data.filter(
-        (service: ConsultServiceType) => service.deleted === true
-      );
-      setServices(filteredService);
+      setServices(response.data.data);
     } catch (error) {
       console.error(error);
     }

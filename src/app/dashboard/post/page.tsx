@@ -31,7 +31,7 @@ import {
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "@/components/authHeader/AuthHeader";
 import Posts from "@/components/manage/Post";
@@ -148,19 +148,27 @@ const Post = () => {
   };
 
   //add new post
-  const handleSubmit = async () => {
-    await axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_API}post/createPost`, newPost, {
-        headers: authHeader(),
-      })
-      .then((response) => {
-        toast.success("Tạo bài viết thành công");
-        fetchPosts();
-        onOpenChange();
-      })
-      .catch((error) => {
-        toast.error("Tạo bài viết thất bại");
-      });
+  const handleSubmit = async (e: FormEvent, onClose: () => void) => {
+    e.preventDefault();
+    try {
+      await axios
+        .post(`${process.env.NEXT_PUBLIC_BASE_API}post/createPost`, newPost, {
+          headers: authHeader(),
+        })
+        .then((response) => {
+          toast.success("Tạo bài viết thành công");
+          fetchPosts();
+          onOpenChange();
+          onClose();
+        })
+        .catch((error) => {
+          toast.error("Tạo bài viết thất bại");
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   //delete
@@ -335,17 +343,17 @@ const Post = () => {
             <ModalContent className="w-[1200px] h-[800px] max-w-none">
               {(onClose) => (
                 <>
-                  <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
-                    Thêm bài viết mới
-                  </ModalHeader>
+                  <form onSubmit={(e) => handleSubmit(e, onClose)}>
+                    <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+                      Thêm bài viết mới
+                    </ModalHeader>
 
-                  <ModalBody
-                    style={{
-                      maxHeight: "calc(100% - 100px)",
-                      overflowY: "auto",
-                    }}
-                  >
-                    <form onSubmit={handleSubmit}>
+                    <ModalBody
+                      style={{
+                        maxHeight: "calc(100% - 100px)",
+                        overflowY: "auto",
+                      }}
+                    >
                       <Input
                         className="font-bold pb-5"
                         type="text"
@@ -379,25 +387,21 @@ const Post = () => {
                         value={content}
                         // onTextChange={(e) => setContent(e.htmlValue || "")}
                         onTextChange={(e) => handleEditorChange(e)}
-                        style={{ height: "400px" }}
+                        style={{ height: "350px" }}
                       />
-                    </form>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="danger" variant="light" onPress={onClose}>
-                      Đóng
-                    </Button>
-                    <Button
-                      color="primary"
-                      onPress={() => {
-                        handleSubmit();
-                        // onClose();
-                      }}
-                      type="submit"
-                    >
-                      Thêm bài viết
-                    </Button>
-                  </ModalFooter>
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button color="danger" variant="light" onPress={onClose}>
+                        Đóng
+                      </Button>
+                      <Button
+                        color="primary"
+                        type="submit"
+                      >
+                        Thêm bài viết
+                      </Button>
+                    </ModalFooter>
+                  </form>
                 </>
               )}
             </ModalContent>
