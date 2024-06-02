@@ -407,7 +407,7 @@ const Navbar = () => {
         <NavbarContent justify="end" className="w-[165px] h-5">
           {user ? (
             <div className="flex justify-center items-center gap-10">
-              <Dropdown placement="bottom-end" className="w-full">
+              <Dropdown placement="bottom-end" className="w-full h-[500px] overflow-auto">
                 <DropdownTrigger>
                   <FontAwesomeIcon icon={faBell} className="h-7 w-7 bg-[#F2F2F2] rounded-full p-5 text-[#FF0004]" />
                 </DropdownTrigger>
