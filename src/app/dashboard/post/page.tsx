@@ -195,10 +195,11 @@ const Post = () => {
               } else {
                 fetchPendingPosts();
               }
-            }),
-          {
-            headers: authHeader(),
-          };
+            })
+            .catch(() => {
+              toast.error("Xóa thất bại");
+            });
+
         } catch (error) {
           console.log(error);
         }
@@ -223,6 +224,9 @@ const Post = () => {
         .then((response) => {
           toast.success("Khôi phục thành công");
           fetchDeletedPosts();
+        })
+        .catch((error) => {
+          toast.error("Khôi phục thất bại");
         });
     } catch (error) {
       console.log(error);
@@ -241,9 +245,12 @@ const Post = () => {
           }
         )
         .then((response) => {
-          toast.success("Bài viết đã được chấp nhận");
+          toast.success("Bài viết đã được duyệt");
           fetchPosts();
           fetchPendingPosts();
+        })
+        .catch((error) => {
+          toast.error("Duyệt thất bại");
         });
     } catch (error) {
       console.log(error);
@@ -309,7 +316,7 @@ const Post = () => {
           { headers: authHeader() }
         )
         .then((response) => {
-          toast.success("Bạn đã chuyển gói biểu mẫu này sang chờ duyệt");
+          toast.success("Bạn đã chuyển bài viết này sang chờ duyệt");
           fetchPosts();
         });
     } catch (error) {

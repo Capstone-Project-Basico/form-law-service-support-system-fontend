@@ -127,7 +127,7 @@ const Contact = () => {
         //   )
         // );
 
-        toast.success("Cập nhật tình trạng thành công!");
+        toast.success("Cập nhật tình trạng thành công");
         switch (tabs) {
           case 1:
             fetchContacts();
@@ -143,7 +143,7 @@ const Contact = () => {
     } catch (error) {
       // Handle error
       // You might want to show a toast message here
-      toast.error("Có lỗi xảy ra khi cập nhật tình trạng.");
+      toast.error("Có lỗi xảy ra khi cập nhật tình trạng!");
     }
   };
 
@@ -231,8 +231,12 @@ const Contact = () => {
         .then((response) => {
           toast.success("Khôi phục thành công");
           fetchDeletedContacts();
+        })
+        .catch((error) => {
+          toast.error("Khôi phục thất bại")
         });
     } catch (error) {
+      toast.error("Khôi phục thất bại")
       console.log(error);
     }
   };
