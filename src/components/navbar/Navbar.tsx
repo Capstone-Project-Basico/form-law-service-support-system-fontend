@@ -33,6 +33,7 @@ import {
 import {
   faAddressCard,
   faBell,
+  faCheckDouble,
   faClockRotateLeft,
   faFileSignature,
   faFolderOpen,
@@ -43,6 +44,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import authHeader from "../authHeader/AuthHeader";
 
 
 const MENU = [
@@ -147,8 +149,29 @@ const Navbar = () => {
     }
   };
 
-  const viewNotification = (systemNotificationId: number) => {
+  const viewNotification = (systemNotificationId: number, name: string) => {
     try {
+      switch (name) {
+        case "Bài viết nghiên cứu trên báo chí":
+          router.push('/researchAndPublications/researchArticles')
+          break;
+        case "BASICO tuần luật":
+          router.push('/researchAndPublications/basicoWeeklyNews')
+          break;
+        case "Sách pháp lý nghiệp vụ":
+          router.push('/researchAndPublications/professionalLegalBooks')
+          break;
+        case "Tư liệu ảnh":
+          router.push('/about/photography')
+          break;
+        case "Tư liệu video":
+          router.push('/about/video')
+          break;
+        case "Dịch vụ":
+          router.push('/about/service')
+          break;
+      }
+
       axios
         .get(
           `${process.env.NEXT_PUBLIC_BASE_API}systemNotification/getById/${systemNotificationId}`
@@ -158,16 +181,31 @@ const Navbar = () => {
         })
         .catch((error) => {
           console.error("Error:", error);
-          switch (systemNotificationId) {
-            case 0:
-              break;
-          }
-
         });
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  const viewAllNotification = () => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}systemNotification/markAllSystemSeen/${userId}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          getNotifications();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -375,14 +413,21 @@ const Navbar = () => {
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Notification" variant="flat">
                   <DropdownSection
-                    title={<div className="font-bold text-2xl">Thông báo</div> as any}
+                    title={
+                      <div className="flex justify-between">
+                        <div className="font-bold text-2xl">Thông báo</div>
+                        <Button className="bg-white hover:text-[#FF0004] hover:bg-[#F2F2F2]" onClick={() => viewAllNotification()}>
+                          <FontAwesomeIcon icon={faCheckDouble} />
+                        </Button>
+                      </div> as any
+                    }
                   >
                     {notifications ? (
                       notifications.map((notification) => (
                         <DropdownItem key={notification.systemNotificationId} className="bg-white hover:bg-white">
                           <Link
                             className={`w-full min-h-10 justify-between bg-white text-black hover:bg-[#F2F2F2] ${notification.seen === false ? "font-bold" : ""}`}
-                            onClick={() => viewNotification(notification.systemNotificationId)}
+                            onClick={() => viewNotification(notification.systemNotificationId, notification.message)}
                           >
                             Bài viết mới về chủ đề: {notification.message}
                             {
