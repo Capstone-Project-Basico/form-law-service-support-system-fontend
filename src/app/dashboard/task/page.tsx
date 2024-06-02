@@ -172,10 +172,10 @@ const Task = () => {
           .then(() => {
             toast.success("Xóa thành công");
             fetchTask();
-          }),
-        {
-          headers: authHeader(),
-        };
+          })
+          .catch(err => {
+            toast.success("Xóa thất bại");
+          });
       } catch (error) {
         console.log(error);
       }

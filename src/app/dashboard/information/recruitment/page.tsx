@@ -156,7 +156,7 @@ const Recruitment = () => {
 
       // Check if response is successful
       if (response.status === 200) {
-        toast.success("Cập nhật tình trạng thành công!");
+        toast.success("Cập nhật tình trạng thành công");
         switch (tabs) {
           case 1:
             fetchRecruitment();
@@ -189,33 +189,6 @@ const Recruitment = () => {
 
   //delete
   const handleDelete = async (id: number) => {
-    // const isConfirmed = window.confirm(
-    //   "Bạn có chắc muốn xóa tuyển dụng này không?"
-    // );
-    // if (isConfirmed) {
-    //   try {
-    //     if (!user) {
-    //       console.log("No user found");
-    //       return;
-    //     }
-    //     axios
-    //       .delete(
-    //         `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/deleteRecruitmentForm/${id}`,
-    //         {
-    //           headers: authHeader(),
-    //         }
-    //       )
-    //       .then(() => {
-    //         toast.success("Xóa thành công");
-    //         fetchRecruitment();
-    //       }),
-    //       {
-    //         headers: authHeader(),
-    //       };
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
     Swal.fire({
       text: "Bạn có muốn xóa thông tin tuyển dụng này không?",
       showDenyButton: true,
@@ -261,6 +234,9 @@ const Recruitment = () => {
         .then((response) => {
           toast.success("Khôi phục thành công");
           fetchDeletedRecruitment();
+        })
+        .catch((error) => {
+          toast.error("Khôi phục thất bại");
         });
     } catch (error) {
       console.log(error);

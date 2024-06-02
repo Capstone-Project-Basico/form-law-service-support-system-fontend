@@ -14,6 +14,7 @@ import {
   DropdownItem,
   Avatar,
   Divider,
+  DropdownSection,
 } from "@nextui-org/react";
 import { Navbar as MyNavbar } from "@nextui-org/react";
 import { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ import axios from "axios";
 import {
   NotificationType,
   ProfileSidebarItem,
+  UserLocal,
   UserType,
   WalletType,
 } from "@/constants/types/homeType";
@@ -40,14 +42,9 @@ import {
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 
-interface UserLocal {
-  data: {
-    data: {
-      userId: string;
-    };
-  };
-}
+
 const MENU = [
   { name: "LUẬT SƯ CỦA BASICO", path: "/basicoLawyers" },
   // { name: "BIỂU MẪU", path: "/template" },
@@ -67,6 +64,8 @@ const Navbar = () => {
   const [wallet, setWallet] = useState<WalletType>();
 
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
+  const [notificationLink, setNotificationLink] = useState("");
+
   const logout = () => {
     router.push("/login");
     window.localStorage.clear();
@@ -140,16 +139,36 @@ const Navbar = () => {
 
         })
         .catch((error) => {
-          console.error("Error fetching wallet:", error);
-          setWalletError(
-            "Failed to fetch wallet details. Please try again later."
-          );
+          console.error("Error:", error);
         });
     } catch (error) {
       console.log(error);
 
     }
   };
+
+  const viewNotification = (systemNotificationId: number) => {
+    try {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}systemNotification/getById/${systemNotificationId}`
+        )
+        .then((response) => {
+          getNotifications();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          switch (systemNotificationId) {
+            case 0:
+              break;
+          }
+
+        });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <MyNavbar
@@ -346,39 +365,42 @@ const Navbar = () => {
           })}
         </NavbarContent>
 
-        {/* login */}
+        {/* Notification */}
         <NavbarContent justify="end" className="w-[165px] h-5">
           {user ? (
             <div className="flex justify-center items-center gap-10">
-              <Dropdown placement="bottom-end" className="w-96">
+              <Dropdown placement="bottom-end" className="w-full">
                 <DropdownTrigger>
                   <FontAwesomeIcon icon={faBell} className="h-7 w-7 bg-[#F2F2F2] rounded-full p-5 text-[#FF0004]" />
                 </DropdownTrigger>
-                <DropdownMenu aria-label="Profile Actions" variant="flat">
-                  <DropdownItem key="settings" className="mb-5" isReadOnly>
-                    <p className="font-bold text-xl">
-                      Thông báo
-                    </p>
-                  </DropdownItem>
-                  <DropdownItem>
-                    {notifications ?
-                      (
-                        notifications.map((notification) => (
-                          <div key={notification.systemNotificationId}>
-                            <p>
-
-                              Bài viết mới về chủ đề: {notification.message}
-                            </p>
-                          </div>
-                        ))
-                      )
-                      :
+                <DropdownMenu aria-label="Notification" variant="flat">
+                  <DropdownSection
+                    title={<div className="font-bold text-2xl">Thông báo</div> as any}
+                  >
+                    {notifications ? (
+                      notifications.map((notification) => (
+                        <DropdownItem key={notification.systemNotificationId} className="bg-white hover:bg-white">
+                          <Link
+                            className={`w-full min-h-10 justify-between bg-white text-black hover:bg-[#F2F2F2] ${notification.seen === false ? "font-bold" : ""}`}
+                            onClick={() => viewNotification(notification.systemNotificationId)}
+                          >
+                            Bài viết mới về chủ đề: {notification.message}
+                            {
+                              notification.seen === false
+                                ? <FontAwesomeIcon icon={faCircle} className="text-[#FF0004] ml-3" />
+                                : <div></div>
+                            }
+                          </Link>
+                        </DropdownItem>
+                      ))
+                    ) : (
                       <div>Hiện tại chưa có thông báo mới</div>
-                    }
-                  </DropdownItem>
+                    )}
+                  </DropdownSection>
                 </DropdownMenu>
               </Dropdown>
 
+              {/* login */}
               <Dropdown placement="bottom-end" className="w-96">
                 <DropdownTrigger className="h-14">
                   <Avatar

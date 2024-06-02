@@ -175,6 +175,7 @@ const Users: React.FC<UsersProps> = ({
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(user.userId)}
+                    isDisabled={user.roleName === "ROLE_ADMIN" || user.roleName === "ROLE_MANAGER"}
                   >
                     Xóa
                   </Button>

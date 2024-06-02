@@ -259,7 +259,7 @@ const Partner = () => {
 
       .then((response) => {
         setPartners((prevPartners) => [...prevPartners, response.data.data]);
-        toast.success("tạo mới thành công");
+        toast.success("Tạo mới thành công");
         fetchPartners();
       })
       .catch((error) => {
@@ -282,6 +282,9 @@ const Partner = () => {
           toast.success("Đối tác đã được chấp nhận");
           fetchPartners();
           fetchPendingPartners();
+        })
+        .catch(() => {
+          toast.error("Duyệt thất bại!");
         });
     } catch (error) {
       console.log(error);
@@ -298,7 +301,7 @@ const Partner = () => {
           { headers: authHeader() }
         )
         .then((response) => {
-          toast.success("Bạn đã chuyển gói biểu mẫu này sang chờ duyệt");
+          toast.success("Bạn đã chuyển đối tác này sang chờ duyệt thành công");
           fetchPartners();
         });
     } catch (error) {
