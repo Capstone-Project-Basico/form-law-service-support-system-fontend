@@ -83,7 +83,18 @@ const Page = () => {
                 className="py-[25px]"
                 rel="noopener noreferrer"
               >
-                <Image alt="" src={partner?.avatar} width={200} height={133} />
+                <Image
+                  alt=""
+                  src={
+                    partner.avatar
+                      ? partner.avatar.startsWith("http")
+                        ? partner.avatar
+                        : `/${partner.avatar}`
+                      : "/errorImage.png"
+                  }
+                  width={200}
+                  height={133}
+                />
               </Link>
             </div>
           ))}

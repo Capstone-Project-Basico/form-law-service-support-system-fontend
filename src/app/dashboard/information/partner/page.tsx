@@ -249,7 +249,7 @@ const Partner = () => {
   };
 
   //add a new partner
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
     axios
       .post(
@@ -261,6 +261,7 @@ const Partner = () => {
         setPartners((prevPartners) => [...prevPartners, response.data.data]);
         toast.success("Tạo mới thành công");
         fetchPartners();
+        onClose();
       })
       .catch((error) => {
         console.log(error);
@@ -335,7 +336,7 @@ const Partner = () => {
             <ModalContent>
               {(onClose) => (
                 <>
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={(e) => handleSubmit(e, onClose)}>
                     <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
                       Thêm đối tác
                     </ModalHeader>
@@ -346,6 +347,7 @@ const Partner = () => {
                         label="Tên đối tác"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        isRequired
                       />
                       <div>
                         <input
@@ -368,7 +370,6 @@ const Partner = () => {
                       </Button>
                       <Button
                         color="primary"
-                        onPress={onClose}
                         type="submit"
                         disabled={uploading}
                       >
