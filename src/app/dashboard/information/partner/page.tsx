@@ -258,7 +258,7 @@ const Partner = () => {
       )
 
       .then((response) => {
-        setPartners((prevPartners) => [...prevPartners, response.data.data]);
+        // setPartners((prevPartners) => [...prevPartners, response.data.data]);
         toast.success("Tạo mới thành công");
         fetchPartners();
         onClose();

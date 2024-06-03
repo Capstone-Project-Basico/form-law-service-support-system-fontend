@@ -162,11 +162,10 @@ const Post = () => {
           onClose();
         })
         .catch((error) => {
-          toast.error("Tạo bài viết thất bại");
+          toast.error(error.response.data.message);
         });
     } catch (error) {
       console.log(error);
-
     }
 
   };
@@ -363,6 +362,7 @@ const Post = () => {
                     >
                       <Input
                         className="font-bold pb-5"
+                        isRequired
                         type="text"
                         label="Tên bài viết"
                         value={title}
@@ -392,7 +392,7 @@ const Post = () => {
                       <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
                       <Editor
                         value={content}
-                        // onTextChange={(e) => setContent(e.htmlValue || "")}
+                        required
                         onTextChange={(e) => handleEditorChange(e)}
                         style={{ height: "350px" }}
                       />

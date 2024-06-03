@@ -183,7 +183,7 @@ const Pack = () => {
           fetchServices();
         })
         .catch((error) => {
-          toast.error('Tạo gói thất bại');
+          toast.error(error.response.data.message);
         });
     } catch (error) {
       toast.error('Tạo mới gói thất bại!');
@@ -191,7 +191,7 @@ const Pack = () => {
     }
   };
 
-  //add a new service
+  //update a request service
   const handleUpdateSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
     try {
@@ -209,7 +209,7 @@ const Pack = () => {
           fetchPendingServices();
         })
         .catch((error) => {
-          toast.error('Cập nhật gói thất bại!');
+          toast.error(error.response.data.message);
         });
     } catch (error) {
       toast.error('Cập nhật gói thất bại!');
@@ -375,6 +375,7 @@ const Pack = () => {
                       <Input
                         type="number"
                         label="Giá gói"
+                        isRequired
                         endContent={
                           <div className="pointer-events-none flex items-center">
                             <span className="text-small text-default-400">
@@ -384,11 +385,12 @@ const Pack = () => {
                         }
                         // value={newRequestPack.price.toString}
                         onChange={(e) => setPrice(Number(e.target.value))}
-                        min="1"
+                        min="5000"
                       />
                       <Input
                         type="number"
                         label="Số lần gửi yêu cầu"
+                        isRequired
                         endContent={
                           <div className="pointer-events-none flex items-center">
                             <span className="text-small text-default-400">
@@ -405,7 +407,7 @@ const Pack = () => {
                       <Textarea
                         type="text"
                         label="Chi tiết"
-                        // value={serviceDescription}
+                        isRequired
                         onChange={(e) => setDescription(e.target.value)}
                       />
                     </ModalBody>
@@ -594,6 +596,7 @@ const Pack = () => {
                   <Input
                     type="text"
                     label="Tên gói yêu cầu"
+                    isRequired
                     value={selectedRequestService.packageRequestServiceName}
                     onChange={(e: any) =>
                       setSelectedRequestService({
@@ -605,6 +608,7 @@ const Pack = () => {
                   <Input
                     type="number"
                     label="Giá gói"
+                    isRequired
                     endContent={
                       <div className="pointer-events-none flex items-center">
                         <span className="text-small text-default-400">
@@ -619,11 +623,12 @@ const Pack = () => {
                         price: e.target.value,
                       })
                     }
-                    min="1"
+                    min="5000"
                   />
                   <Input
                     type="number"
                     label="Số lần gửi yêu cầu"
+                    isRequired
                     endContent={
                       <div className="pointer-events-none flex items-center">
                         <span className="text-small text-default-400">Lần</span>
@@ -641,6 +646,7 @@ const Pack = () => {
                   <Textarea
                     type="text"
                     label="Chi tiết"
+                    isRequired
                     value={selectedRequestService.description}
                     onChange={(e: any) =>
                       setSelectedRequestService({

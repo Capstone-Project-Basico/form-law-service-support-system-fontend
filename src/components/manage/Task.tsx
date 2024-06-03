@@ -41,7 +41,7 @@ type TasksProps = {
   tabs: number;
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
-  handleUpdateSubmit: (data: any) => void;
+  handleUpdateSubmit: (data: any, onClose: any) => void;
   handleTaskAssignSubmit: (data: any, staffId: number, date: Date) => void;
 };
 
@@ -291,11 +291,12 @@ const Tasks: React.FC<TasksProps> = ({
                 onSubmit={(e) => {
                   console.log(e);
                   e.preventDefault();
-                  handleUpdateSubmit(selectedTask);
-                  onCloseUpdate();
+                  handleUpdateSubmit(selectedTask, onCloseUpdate);
+                  // onCloseUpdate();
                 }}
               >
                 <Input
+                  isRequired
                   type="text"
                   label="Tên công việc"
                   value={selectedTask.taskName}
@@ -307,6 +308,7 @@ const Tasks: React.FC<TasksProps> = ({
                   }
                 />
                 <Input
+                  isRequired
                   className="pt-3 pb-3"
                   type="text"
                   label="Mô tả"
@@ -320,6 +322,7 @@ const Tasks: React.FC<TasksProps> = ({
                 />
 
                 <Input
+                  isRequired
                   type="date"
                   label="Ngày bắt đầu"
                   value={
@@ -340,6 +343,7 @@ const Tasks: React.FC<TasksProps> = ({
                 />
 
                 <Input
+                  isRequired
                   type="date"
                   label="Ngày kết thúc"
                   value={
