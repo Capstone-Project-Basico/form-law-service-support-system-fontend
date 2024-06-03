@@ -143,8 +143,8 @@ const Wallet = () => {
         onClose();
       })
       .catch((error) => {
-        toast.error('Gửi yêu cầu thất bại!');
-        console.log(error);
+        toast.error(error.response.data.message);
+        console.log(error.message);
       });
   };
 
@@ -278,7 +278,7 @@ const Wallet = () => {
                     label="Số tiền muốn rút"
                     value={balance?.toString()}
                     onChange={(e) => setBalance(Number(e.target.value))}
-                    min={10000}
+                    min={5000}
                     max={maxBalance}
                   />
                 </ModalBody>

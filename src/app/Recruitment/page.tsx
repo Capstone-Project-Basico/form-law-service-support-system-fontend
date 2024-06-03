@@ -51,22 +51,34 @@ const Page = () => {
     workPlace,
     processStatus,
   };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/createNewRecruitmentForm`,
-        newRecruitment
-      )
+    try {
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BASE_API}recruitmentForm/createNewRecruitmentForm`,
+          newRecruitment
+        )
 
-      .then((response) => {
-        setRecruitment((prevPartners) => [...prevPartners, response.data.data]);
-        toast.success("Gửi thông tin thành công");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.success("Gửi thông tin thất bại");
-      });
+        .then((response) => {
+          setFullName("");
+          setDateOfBirth(null);
+          setIdNumber("");
+          setHomeTown("");
+          setMaritalStatus("");
+          setGender("");
+          setEmail("");
+          setPhoneNum("");
+          toast.success("Gửi thông tin thành công");
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+
   };
 
   /// Initialize the step state to 1 to represent the first step in the process.
@@ -263,7 +275,7 @@ const Page = () => {
                 htmlFor="phone"
                 className="block text-sm font-medium text-gray-700"
               >
-                Giới tính
+                Giới tính (*)
               </label>
               <select
                 id="gender"
@@ -283,7 +295,7 @@ const Page = () => {
                 htmlFor="phone"
                 className="block text-sm font-medium text-gray-700"
               >
-                Tình trạng hôn nhân
+                Tình trạng hôn nhân (*)
               </label>
               <select
                 id="maritalStatus"
