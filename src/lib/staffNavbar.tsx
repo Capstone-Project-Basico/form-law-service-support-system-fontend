@@ -40,7 +40,8 @@ export const staffNavItems: SideNavItem[] = [
     subMenu: true,
     subMenuItems: [
       { title: "Biểu mẫu", path: "/dashboardStaff/service/manageTemplate" },
-      { title: "Gói dịch vụ", path: "/dashboardStaff/service/pack" },
+      { title: "Gói biểu mẫu", path: "/dashboardStaff/service/templatePack" },
+      { title: "Dịch vụ tư vấn", path: "/dashboardStaff/service/consult" },
     ],
   },
 

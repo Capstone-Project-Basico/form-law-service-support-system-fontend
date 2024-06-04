@@ -49,7 +49,7 @@ const BuyPacks = () => {
         }
       );
       setServicePacks(response.data.data);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   //buy pack
@@ -57,7 +57,7 @@ const BuyPacks = () => {
     try {
       if (!user) {
         Swal.fire({
-          title: "Bạn chưa đăng nhập, bạn có muốn đăng nhập?",
+          text: "Bạn chưa đăng nhập, bạn có muốn đăng nhập?",
           showDenyButton: true,
           // showCancelButton: true,
           confirmButtonText: "Có",
@@ -87,7 +87,7 @@ const BuyPacks = () => {
           .then((response) => {
             const orderId = response.data.data;
             Swal.fire({
-              title: "Bạn có chấp nhận thanh toán",
+              text: "Bạn có chấp nhận thanh toán",
               showDenyButton: true,
               // showCancelButton: true,
               confirmButtonText: "Có",

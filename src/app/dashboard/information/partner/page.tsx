@@ -139,7 +139,7 @@ const Partner = () => {
   //delete
   const handleDelete = async (partnerId: number) => {
     Swal.fire({
-      title: "Bạn có muốn xóa bài viết này không?",
+      text: "Bạn có muốn xóa bài viết này không?",
       showDenyButton: true,
       confirmButtonText: "Có",
       denyButtonText: `Không`,
@@ -175,25 +175,30 @@ const Partner = () => {
   };
 
   //update
-  const handleUpdateSubmit = async (selectedPartner: any) => {
-    //if (!selectedPartner) return; // Check if a partner is selected
-    // Example: PUT request to update partner details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
-        {
-          name: selectedPartner.name,
-          avatar: selectedPartner.avatar,
-          link: selectedPartner.link,
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-        fetchPartners();
-      })
-      .catch((error) => {
-        console.error("Failed to update partner", error);
-      });
+  const handleUpdateSubmit = async (selectedPartner: any, onClose: () => void) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
+          {
+            name: selectedPartner.name,
+            avatar: selectedPartner.avatar,
+            link: selectedPartner.link,
+          }
+        )
+        .then((response) => {
+          toast.success("Cập nhật thành công");
+          fetchPendingPartners();
+          onClose();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   // restore
@@ -249,7 +254,7 @@ const Partner = () => {
   };
 
   //add a new partner
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
     axios
       .post(
@@ -258,9 +263,10 @@ const Partner = () => {
       )
 
       .then((response) => {
-        setPartners((prevPartners) => [...prevPartners, response.data.data]);
-        toast.success("tạo mới thành công");
+        // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+        toast.success("Tạo mới thành công");
         fetchPartners();
+        onClose();
       })
       .catch((error) => {
         console.log(error);
@@ -282,6 +288,9 @@ const Partner = () => {
           toast.success("Đối tác đã được chấp nhận");
           fetchPartners();
           fetchPendingPartners();
+        })
+        .catch(() => {
+          toast.error("Duyệt thất bại!");
         });
     } catch (error) {
       console.log(error);
@@ -298,7 +307,7 @@ const Partner = () => {
           { headers: authHeader() }
         )
         .then((response) => {
-          toast.success("Bạn đã chuyển gói biểu mẫu này sang chờ duyệt");
+          toast.success("Bạn đã chuyển đối tác này sang chờ duyệt thành công");
           fetchPartners();
         });
     } catch (error) {
@@ -332,7 +341,7 @@ const Partner = () => {
             <ModalContent>
               {(onClose) => (
                 <>
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={(e) => handleSubmit(e, onClose)}>
                     <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
                       Thêm đối tác
                     </ModalHeader>
@@ -343,6 +352,7 @@ const Partner = () => {
                         label="Tên đối tác"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        isRequired
                       />
                       <div>
                         <input
@@ -365,7 +375,6 @@ const Partner = () => {
                       </Button>
                       <Button
                         color="primary"
-                        onPress={onClose}
                         type="submit"
                         disabled={uploading}
                       >

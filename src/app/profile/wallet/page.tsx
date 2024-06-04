@@ -1,18 +1,30 @@
-"use client";
+'use client';
 
-import authHeader from "@/components/authHeader/AuthHeader";
-import { UserLocal } from "@/constants/types/homeType";
-import { Accordion, AccordionItem, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from "@nextui-org/react";
-import axios from "axios";
-import Image from "next/image";
-import React, { FormEvent, useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import authHeader from '@/components/authHeader/AuthHeader';
+import { UserLocal } from '@/constants/types/homeType';
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Textarea,
+  useDisclosure,
+} from '@nextui-org/react';
+import axios from 'axios';
+import Image from 'next/image';
+import React, { FormEvent, useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Wallet = () => {
   const [walletError, setWalletError] = useState<boolean>();
-  const [walletId, setWalletId] = useState("");
+  const [walletId, setWalletId] = useState('');
   const [maxBalance, setMaxBalance] = useState();
-  const [money, setMoney] = useState("");
+  const [money, setMoney] = useState('');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   //data
@@ -26,12 +38,12 @@ const Wallet = () => {
     fullName,
     bankNumber,
     bankName,
-    balance
+    balance,
   };
 
   const getUserFromStorage = () => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
     }
   };
@@ -50,7 +62,7 @@ const Wallet = () => {
         )
         .then((response) => {
           setWalletId(response.data.data.walletId);
-          setMaxBalance(response.data.data.balance)
+          setMaxBalance(response.data.data.balance);
           setWalletError(true);
         })
         .catch((error) => {
@@ -108,7 +120,7 @@ const Wallet = () => {
       .then((res) => {
         console.log(res.data);
 
-        window.open(res.data.checkoutUrl, "_blank");
+        window.open(res.data.checkoutUrl);
       });
   };
 
@@ -131,13 +143,13 @@ const Wallet = () => {
         onClose();
       })
       .catch((error) => {
-        toast.error('Gửi yêu cầu thất bại!');
-        console.log(error);
+        toast.error(error.response.data.message);
+        console.log(error.message);
       });
   };
 
   return (
-    <div className="w-[1350px]  p-5 bg-white rounded-xl shadow-lg">
+    <div className="w-[1350px]  rounded-xl bg-white p-5 shadow-lg">
       <ToastContainer />
       <div className="flex justify-between">
         <div>
@@ -154,14 +166,14 @@ const Wallet = () => {
           Yêu cầu rút tiền
         </Button>
       </div>
-      <div className="mt-10 border-black border ">
-        <div className="border w-full">
+      <div className="mt-10 border border-black ">
+        <div className="w-full border">
           <Button
-            className="bg-white flex flex-row items-center justify-between h-24 w-full"
+            className="flex h-24 w-full flex-row items-center justify-between bg-white"
             disabled
           >
             <Image src="/wallet/bank.png" alt="" width={50} height={50} />
-            <div className="flex flex-col justify-start items-start ml-3  w-full">
+            <div className="ml-3 flex w-full flex-col items-start  justify-start">
               <h3 className="text-[18px] font-semibold">
                 Chuyển khoản ngân hàng 24/7
               </h3>
@@ -170,13 +182,13 @@ const Wallet = () => {
             <h1 className="font-bold text-[#FF0004]">Đang phát triển</h1>
           </Button>
         </div>
-        <div className="border w-full">
+        <div className="w-full border">
           <Button
-            className="bg-white flex flex-row items-center justify-between h-24 w-full"
+            className="flex h-24 w-full flex-row items-center justify-between bg-white"
             disabled
           >
             <Image src="/wallet/momo.png" alt="" width={50} height={50} />
-            <div className="flex flex-col justify-start items-start ml-3 w-full">
+            <div className="ml-3 flex w-full flex-col items-start justify-start">
               <h3 className="text-[18px] font-semibold">
                 Nạp số dư trực tiếp bằng Momo Payment
               </h3>
@@ -185,13 +197,13 @@ const Wallet = () => {
             <h1 className="font-bold text-[#FF0004]">Đang phát triển</h1>
           </Button>
         </div>
-        <div className="border w-full">
+        <div className="w-full border">
           <Accordion selectionMode="multiple">
             <AccordionItem
               key="1"
               aria-label="Chung Miller"
               startContent={
-                <div className="bg-white flex flex-row justify-start h-full w-full">
+                <div className="flex h-full w-full flex-row justify-start bg-white">
                   <Image
                     src="/wallet/vietqr.png"
                     alt=""
@@ -207,20 +219,20 @@ const Wallet = () => {
                 </h3>
               }
             >
-              <div className="flex items-start justify-start gap-3 h-full">
+              <div className="flex h-full items-start justify-start gap-3">
                 <Input
                   isRequired
                   variant="bordered"
                   className="w-96"
                   type="number"
                   label="Nhập số tiền"
-                  min={2000}
+                  min={5000}
                   onChange={(e: any) => setMoney(e.target.value)}
                 ></Input>
                 <Button
-                  className="bg-[#FF0004] h-14 text-white"
+                  className="h-14 bg-[#FF0004] text-white"
                   onClick={() => checkRequest()}
-                  disabled={!money || Number(money) < 2000}
+                  disabled={!money || Number(money) < 5000}
                 >
                   Nạp tiền
                 </Button>
@@ -266,10 +278,9 @@ const Wallet = () => {
                     label="Số tiền muốn rút"
                     value={balance?.toString()}
                     onChange={(e) => setBalance(Number(e.target.value))}
-                    min={10000}
+                    min={5000}
                     max={maxBalance}
                   />
-
                 </ModalBody>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>

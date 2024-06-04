@@ -48,7 +48,7 @@ const Users: React.FC<UsersProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
-  const filteredRoles = Roles.filter((role) => role.value !== "ROLE_ADMIN");
+  const filteredRoles = Roles.filter((role) => role.value !== "ROLE_ADMIN" && role.value !== "ROLE_MANAGER");
 
   const {
     isOpen: isOpenUpdate,
@@ -175,6 +175,7 @@ const Users: React.FC<UsersProps> = ({
                   <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(user.userId)}
+                    isDisabled={user.roleName === "ROLE_ADMIN" || user.roleName === "ROLE_MANAGER"}
                   >
                     Xóa
                   </Button>

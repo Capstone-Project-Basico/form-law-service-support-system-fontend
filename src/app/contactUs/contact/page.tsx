@@ -44,20 +44,28 @@ const Page = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}contact/createNewContact`,
-        newContact
-      )
 
-      .then((response) => {
-        setContact((prevContacts) => [...prevContacts, response.data.data]);
-        toast.success("Gửi thông tin thành công");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.success("Gửi thông tin thất bại");
-      });
+    try {
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BASE_API}contact/createNewContact`,
+          newContact
+        )
+
+        .then((response) => {
+          setContact((prevContacts) => [...prevContacts, response.data.data]);
+          toast.success("Gửi thông tin thành công");
+        })
+        .catch((error) => {
+          // console.log(error.response.data.message);
+          // toast.error("Gửi thông tin thất bại");
+          toast.error(error.response.data.message);
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+
   };
   /// Initialize the step state to 1 to represent the first step in the process.
   const [step, setStep] = useState(1);

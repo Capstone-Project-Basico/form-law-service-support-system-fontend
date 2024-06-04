@@ -8,17 +8,17 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Page = () => {
-  const [partners, setPartners] = useState<PartnerType[]>([]);
+  const [clients, setClients] = useState<PartnerType[]>([]);
 
   useEffect(() => {
-    getAllPartners();
+    getAllClients();
   }, []);
 
-  const getAllPartners = () => {
+  const getAllClients = () => {
     axios
       .get(`${process.env.NEXT_PUBLIC_BASE_API}partner/getAllApprovePartner`)
       .then((response) => {
-        setPartners(response.data.data);
+        setClients(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -75,16 +75,26 @@ const Page = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-5 justify-center items-center gap-5">
-          {partners.map((partner) => (
+        <div className="grid grid-cols-5 justify-center items-center gap-5 py-10">
+          {clients.map((partner) => (
             <div key={partner.partnerId} className="border-1 bg-white">
               <Link
                 href={partner.link}
                 className="py-[25px]"
-                target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image alt="" src={partner?.avatar} width={200} height={133} />
+                <Image
+                  alt=""
+                  src={
+                    partner.avatar
+                      ? partner.avatar.startsWith("http")
+                        ? partner.avatar
+                        : `/${partner.avatar}`
+                      : "/errorImage.png"
+                  }
+                  width={200}
+                  height={133}
+                />
               </Link>
             </div>
           ))}

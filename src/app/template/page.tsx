@@ -136,16 +136,24 @@ const Page = () => {
   }
 
   const getTemplate = async () => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplate`)
-      .then((response) => {
-        const listForm: FormTemplate[] = response.data.data;
-        // only status ACTIVE
-        const listFormActive = listForm.filter(
-          (form) => form.latestVersion?.status === 'ACTIVE'
-        );
-        setTemplates(listFormActive);
-      });
+    try {
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplate`)
+        .then((response) => {
+          const listForm: FormTemplate[] = response.data.data;
+          // only status ACTIVE
+          const listFormActive = listForm.filter(
+            (form) => form.latestVersion?.status === 'ACTIVE'
+          );
+          setTemplates(listFormActive);
+        }).catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   const getAllCheckOutForm = async () => {
@@ -175,31 +183,35 @@ const Page = () => {
   };
 
   const getType = async () => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
-      .then((response) => {
-        console.log(response);
+    try {
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
+        .then((response) => {
+          console.log(response);
 
-        setTypes(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+          setTypes(response.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   const handleBuy = async (formId: number, price: number) => {
     try {
       if (!user) {
         Swal.fire({
-          title: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
+          text: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
           showDenyButton: true,
           confirmButtonText: 'Có',
           confirmButtonColor: '#00BB00',
           denyButtonText: `Không`,
         }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
           if (result.isConfirmed) {
-            // Swal.fire("Saved!", "", "success");
             router.push('/login');
           } else if (result.isDenied) {
             Swal.fire('Bạn cần đăng nhập để sử dụng tính năng này', '', 'info');
@@ -268,8 +280,7 @@ const Page = () => {
       )
       .then((res) => {
         console.log(res.data);
-
-        window.open(res.data.checkoutUrl, '_blank');
+        window.open(res.data.checkoutUrl, "_self");
       })
       .catch((err) => {
         toast.error('Lỗi thanh toán, vui lòng kiểm tra lại!');
@@ -584,9 +595,8 @@ const Page = () => {
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                    isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                  }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                    }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
                   <Image
@@ -600,9 +610,8 @@ const Page = () => {
 
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                    isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                  }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                    }`}
                   onClick={() => setIsSelectedQR(2)}
                   disabled={walletError}
                 >
@@ -621,7 +630,7 @@ const Page = () => {
                 Đóng
               </Button>
               <Button color="primary" onClick={() => payment()}>
-                thanh toán
+                Thanh toán
               </Button>
             </ModalFooter>
           </ModalContent>

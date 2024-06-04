@@ -22,8 +22,8 @@ const validatePrice = (value: string) => {
     return 'Giá không được để trống';
   }
   // value < 100 > 1000000
-  if (parseInt(value) < 1000 || parseInt(value) > 1000000) {
-    return 'Giá phải từ 100 đến 1,000,000';
+  if (parseInt(value) < 2000 || parseInt(value) > 1000000) {
+    return 'Giá phải từ 2000 đến 1,000,000';
   }
   return '';
 };

@@ -172,10 +172,10 @@ const Task = () => {
           .then(() => {
             toast.success("Xóa thành công");
             fetchTask();
-          }),
-        {
-          headers: authHeader(),
-        };
+          })
+          .catch(err => {
+            toast.success("Xóa thất bại");
+          });
       } catch (error) {
         console.log(error);
       }
@@ -183,7 +183,7 @@ const Task = () => {
   };
 
   //update
-  const handleUpdateSubmit = async (selectedTask: any) => {
+  const handleUpdateSubmit = async (selectedTask: any, onClose: () => void) => {
     if (startDate && endDate) {
       let start = new Date(startDate);
       let end = new Date(endDate);
@@ -194,28 +194,33 @@ const Task = () => {
         return;
       }
     }
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}task-api/updateTask/${selectedTask.id}`,
-        {
-          taskName: selectedTask.taskName,
-          description: selectedTask.description,
-          startDate: selectedTask.startDate,
-          endDate: selectedTask.endDate,
-          // processStatus: selectedTask.processStatus,
-        },
-        {
-          headers: authHeader(),
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-        fetchTask();
-      })
-      .catch((error) => {
-        toast.error("Cập nhật thất bại");
-        console.error("Failed to update partner", error);
-      });
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}task-api/updateTask/${selectedTask.id}`,
+          {
+            taskName: selectedTask.taskName,
+            description: selectedTask.description,
+            startDate: selectedTask.startDate,
+            endDate: selectedTask.endDate,
+          },
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success("Cập nhật thành công");
+          fetchTask();
+          onClose();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   const handleTaskAssignSubmit = async (
@@ -278,25 +283,28 @@ const Task = () => {
         return;
       }
     }
-    axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_API}task-api/createNewTask`, newTask, {
-        headers: authHeader(),
-      })
-      .then((response) => {
-        setTaskName("");
-        setDescription("");
-        setStartDate(null);
-        setEndDate(null);
+    try {
+      axios
+        .post(`${process.env.NEXT_PUBLIC_BASE_API}task-api/createNewTask`, newTask, {
+          headers: authHeader(),
+        })
+        .then((response) => {
+          setTaskName("");
+          setDescription("");
+          setStartDate(null);
+          setEndDate(null);
+          toast.success("Tạo mới thành công");
+          onClose();
+          fetchTask();
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error(error.response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+    }
 
-        setTask((prevTasks) => [...prevTasks, response.data.data]);
-        toast.success("Tạo mới thành công");
-        onClose();
-        fetchTask();
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Tạo mới thất bại");
-      });
   };
 
   return (
@@ -338,6 +346,7 @@ const Task = () => {
                         onChange={(e) => setTaskName(e.target.value)}
                       />
                       <Textarea
+                        isRequired
                         type="text"
                         label="Mô tả"
                         value={description}

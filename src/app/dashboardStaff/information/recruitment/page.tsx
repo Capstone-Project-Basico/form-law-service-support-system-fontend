@@ -217,7 +217,7 @@ const Recruitment = () => {
     //   }
     // }
     Swal.fire({
-      title: 'Bạn có muốn xóa thông tin tuyển dụng này không?',
+      text: 'Bạn có muốn xóa thông tin tuyển dụng này không?',
       showDenyButton: true,
       confirmButtonText: 'Có',
       denyButtonText: `Không`,

@@ -70,7 +70,7 @@ const TransactionHistory = () => {
     }
 
     return filteredTransaction;
-  }, [selectedDate]);
+  }, [selectedDate, transactionHistory]);
 
   //pagination
   const [page, setPage] = React.useState(1);

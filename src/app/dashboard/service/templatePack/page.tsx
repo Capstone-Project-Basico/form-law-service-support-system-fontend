@@ -112,7 +112,7 @@ const Pack = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
       );
-      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === false && pack.itemPackageList.length > 0));
+      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === false && pack.itemPackageList.length > 0 && pack.processStatus === "ĐÃ DUYỆT"));
     } catch (error) {
       console.error(error);
     }
@@ -196,7 +196,7 @@ const Pack = () => {
   //delete
   const handleDelete = async (packageId: string) => {
     Swal.fire({
-      title: "Bạn có muốn xóa gói này không?",
+      text: "Bạn có muốn xóa gói này không?",
       showDenyButton: true,
       // showCancelButton: true,
       confirmButtonText: "Có",
@@ -230,6 +230,54 @@ const Pack = () => {
         return;
       }
     });
+  };
+
+  const restoreDelete = (id: string) => {
+    try {
+      axios.patch(`${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/delete/${id}`)
+        .then(() => { })
+        .catch(() => { })
+    } catch (error) {
+
+    }
+  };
+
+  // unApprove
+  const unApprove = async (id: string) => {
+    try {
+      axios
+        .patch(
+          `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/unApprovePackageFormTemplate/${id}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success('Bạn đã chuyển gói này sang chờ duyệt');
+          fetchPacks();
+        });
+    } catch (error) {
+      toast.error('Chuyển sang chờ duyệt thất bại');
+      console.log(error);
+    }
+  };
+
+  // Approve
+  const approve = async (id: string) => {
+    try {
+      axios
+        .patch(
+          `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/approvePackageFormTemplate/${id}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success('Duyệt thành công');
+          fetchPendingPacks();
+        });
+    } catch (error) {
+      toast.error('Duyệt thật bại, vui lòng kiểm tra lại!');
+      console.log(error);
+    }
   };
   return (
     <div className="w-full mt-5 ml-5 mr-5">
@@ -332,7 +380,8 @@ const Pack = () => {
         </div>
         <div>
           <Button
-            className="bg-white"
+            className={`bg-white ${tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => {
               setTabs(2), setPage(1);
             }}
@@ -401,29 +450,49 @@ const Pack = () => {
                 </span>
               </TableCell>
               {pack.deleted === false ? (
-                <TableCell className="flex gap-2 items-center  justify-center ">
-                  <Button
-                    className="bg-blue-600 text-white"
-                    onPress={() => {
-                      setSelectedPartner(pack);
-                      onOpenUpdate();
-                    }}
-                  >
-                    Cập nhật
-                  </Button>
+                pack.processStatus === 'CHỜ DUYỆT' ? (
 
-                  <Button
-                    className="bg-[#FF0004] text-white"
-                    onClick={() => handleDelete(pack.packageId)}
-                  >
-                    Xóa
-                  </Button>
-                </TableCell>
+                  <TableCell className="flex gap-2 items-center  justify-center ">
+                    <Button
+                      className="bg-green-600 text-white"
+                      onClick={() => approve(pack.packageId)}
+                    >
+                      Duyệt
+                    </Button>
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onPress={() => {
+                        setSelectedPartner(pack);
+                        onOpenUpdate();
+                      }}
+                    >
+                      Cập nhật
+                    </Button>
+
+                    <Button
+                      className="bg-[#FF0004] text-white"
+                      onClick={() => handleDelete(pack.packageId)}
+                    >
+                      Xóa
+                    </Button>
+                  </TableCell>
+                ) : (
+                  <TableCell className="flex items-center justify-center  gap-2 ">
+                    <Button
+                      className="bg-blue-600 text-white"
+                      onPress={() => {
+                        unApprove(pack.packageId);
+                      }}
+                    >
+                      Chuyển chờ duyệt
+                    </Button>
+                  </TableCell>
+                )
               ) : (
                 <TableCell className="flex items-center justify-center">
                   <Button
                     className="bg-blue-600 text-white"
-                  // onClick={() => restoreDelete(partner.partnerId)}
+                    onClick={() => restoreDelete(pack.packageId)}
                   >
                     Khôi phục
                   </Button>

@@ -24,13 +24,14 @@ import {
   Pagination,
   Select,
   SelectItem,
+  Textarea,
 } from "@nextui-org/react";
 import axios from "axios";
 import React, { FormEvent, useEffect, useState } from "react";
 import { faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { PackType } from "@/constants/types/homeType";
+import { PackType, UserLocal } from "@/constants/types/homeType";
 import authHeader from "@/components/authHeader/AuthHeader";
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
@@ -68,21 +69,35 @@ const Pack = () => {
     setListItem(newItems);
   };
 
+  const getUserFromStorage = () => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
+  const userId = user?.data.data.userId;
+
   let newPack = {
     packageName,
     price,
     description,
     listItem,
+    userId,
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchTemplates();
     switch (tabs) {
       case 1:
         fetchPacks();
         break;
       case 2:
-        console.log("dang cho duyet ne");
+        fetchPendingPacks();
+        break;
+      case 3:
+        fetchDeletedTemplatePack();
         break;
 
       default:
@@ -97,21 +112,42 @@ const Pack = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
       );
-      setPacks(response.data.data);
-      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === false && pack.itemPackageList.length > 0 && pack.processStatus === "ĐÃ DUYỆT"));
     } catch (error) {
       console.error(error);
     }
   };
 
   //get all templates
-  const fetchPosts = async () => {
+  const fetchTemplates = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}formTemplateVersion`
       );
       setTemplates(response.data.data);
-    } catch (error) {}
+    } catch (error) { }
+  };
+
+  const fetchPendingPacks = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
+      );
+      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === false && pack.processStatus === "CHỜ DUYỆT" && pack.itemPackageList.length > 0));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchDeletedTemplatePack = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`
+      );
+      setPacks(response.data.data.filter((pack: PackType) => pack.deleted === true && pack.itemPackageList.length > 0));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   //add a new partner
@@ -163,7 +199,7 @@ const Pack = () => {
             <p className="text-black font-bold text-3xl ">Quản lí dịch vụ</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Gói dịch vụ</p>
+            <p className="text-[#FF0004] font-bold text-3xl">Gói biểu mẫu</p>
           </BreadcrumbItem>
         </Breadcrumbs>
 
@@ -204,7 +240,7 @@ const Pack = () => {
                         value={price !== undefined ? price.toString() : ""}
                         onChange={(e: any) => setPrice(Number(e.target.value))}
                       />
-                      <Input
+                      <Textarea
                         type="text"
                         label="Chi tiết"
                         value={description}
@@ -239,7 +275,45 @@ const Pack = () => {
           </Modal>
         </div>
       </div>
-      {/* <div className="flex flex-row gap-10 font-bold border-b-1 my-5"></div> */}
+      <div className="flex flex-row gap-10 font-bold border-b-1 my-5">
+        <div>
+          <Button
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
+            onClick={() => {
+              setTabs(1), setPage(1);
+            }}
+            radius="none"
+          >
+            TẤT CẢ
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={`bg-white ${tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
+            onClick={() => {
+              setTabs(2), setPage(1);
+            }}
+            radius="none"
+          >
+            CHỜ DUYỆT
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={`bg-white ${tabs === 3 &&
+              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
+            radius="none"
+            onClick={() => {
+              setTabs(3), setPage(1);
+            }}
+          >
+            KHÔNG SỬ DỤNG
+          </Button>
+        </div>
+      </div>
       <Table
         aria-label="Example static collection table"
         bottomContent={
@@ -267,7 +341,6 @@ const Pack = () => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Chi tiết
           </TableColumn>
-
           <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>

@@ -14,6 +14,7 @@ import {
   DropdownItem,
   Avatar,
   Divider,
+  DropdownSection,
 } from "@nextui-org/react";
 import { Navbar as MyNavbar } from "@nextui-org/react";
 import { useEffect, useState } from "react";
@@ -23,12 +24,16 @@ import { researchAndPublications, about } from "@/lib/navbarItems";
 import { log } from "console";
 import axios from "axios";
 import {
+  NotificationType,
   ProfileSidebarItem,
+  UserLocal,
   UserType,
   WalletType,
 } from "@/constants/types/homeType";
 import {
   faAddressCard,
+  faBell,
+  faCheckDouble,
   faClockRotateLeft,
   faFileSignature,
   faFolderOpen,
@@ -38,14 +43,10 @@ import {
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import authHeader from "../authHeader/AuthHeader";
 
-interface UserLocal {
-  data: {
-    data: {
-      userId: string;
-    };
-  };
-}
+
 const MENU = [
   { name: "LUẬT SƯ CỦA BASICO", path: "/basicoLawyers" },
   // { name: "BIỂU MẪU", path: "/template" },
@@ -64,12 +65,9 @@ const Navbar = () => {
   const [walletError, setWalletError] = useState<string | null>(null);
   const [wallet, setWallet] = useState<WalletType>();
 
-  // const getUserFromStorage = () => {
-  //   if (typeof window !== "undefined") {
-  //     const storedUser = localStorage.getItem("user");
-  //     return storedUser ? JSON.parse(storedUser) : null;
-  //   }
-  // };
+  const [notifications, setNotifications] = useState<NotificationType[]>([]);
+  const [notificationLink, setNotificationLink] = useState("");
+
   const logout = () => {
     router.push("/login");
     window.localStorage.clear();
@@ -126,6 +124,88 @@ const Navbar = () => {
     }
 
   };
+
+  useEffect(() => {
+    getNotifications();
+  }, []);
+
+  const getNotifications = () => {
+    try {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}systemNotification/getAllSystemNotificationOfUser/${userId}`
+        )
+        .then((response) => {
+          setNotifications(response.data.data);
+          console.log(response.data.data);
+
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+  };
+
+  const viewNotification = (systemNotificationId: number, name: string) => {
+    try {
+      switch (name) {
+        case "Bài viết nghiên cứu trên báo chí":
+          router.push('/researchAndPublications/researchArticles')
+          break;
+        case "BASICO tuần luật":
+          router.push('/researchAndPublications/basicoWeeklyNews')
+          break;
+        case "Sách pháp lý nghiệp vụ":
+          router.push('/researchAndPublications/professionalLegalBooks')
+          break;
+        case "Tư liệu ảnh":
+          router.push('/about/photography')
+          break;
+        case "Tư liệu video":
+          router.push('/about/video')
+          break;
+        case "Dịch vụ":
+          router.push('/about/service')
+          break;
+      }
+
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_BASE_API}systemNotification/getById/${systemNotificationId}`
+        )
+        .then((response) => {
+          getNotifications();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const viewAllNotification = () => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}systemNotification/markAllSystemSeen/${userId}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          getNotifications();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -323,142 +403,182 @@ const Navbar = () => {
           })}
         </NavbarContent>
 
-        {/* login */}
+        {/* Notification */}
         <NavbarContent justify="end" className="w-[165px] h-5">
           {user ? (
-            <Dropdown placement="bottom-end" className="w-96">
-              <DropdownTrigger className="h-14">
-                <Avatar
-                  style={{ height: "60px" }}
-                  isBordered
-                  as="button"
-                  className="transition-transform"
-                  name="Jason Hughes"
-                  size="lg"
-                  src={
-                    userData?.avatar ? userData?.avatar :
-                      "/User-avatar.png"
-                  }
-                />
-              </DropdownTrigger>
-              <DropdownMenu
-                aria-label="Profile Actions"
-                variant="flat"
-                disabledKeys={["hr", "hr2", "hr3"]}
-              >
-                <DropdownItem
-                  key="user"
-                  textValue={userData?.userName}
-                  className="h-14 gap-2"
+            <div className="flex justify-center items-center gap-10">
+              <Dropdown placement="bottom-end" className="w-full h-[500px] overflow-auto">
+                <DropdownTrigger>
+                  <FontAwesomeIcon icon={faBell} className="h-7 w-7 bg-[#F2F2F2] rounded-full p-5 text-[#FF0004]" />
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Notification" variant="flat">
+                  <DropdownSection
+                    title={
+                      <div className="flex justify-between">
+                        <div className="font-bold text-2xl">Thông báo</div>
+                        <Button className="bg-white hover:text-[#FF0004] hover:bg-[#F2F2F2]" onClick={() => viewAllNotification()}>
+                          <FontAwesomeIcon icon={faCheckDouble} />
+                        </Button>
+                      </div> as any
+                    }
+                  >
+                    {notifications ? (
+                      notifications.map((notification) => (
+                        <DropdownItem key={notification.systemNotificationId} className="bg-white hover:bg-white">
+                          <Link
+                            className={`w-full min-h-10 justify-between bg-white text-black hover:bg-[#F2F2F2] ${notification.seen === false ? "font-bold" : ""}`}
+                            onClick={() => viewNotification(notification.systemNotificationId, notification.message)}
+                          >
+                            Bài viết mới về chủ đề: {notification.message}
+                            {
+                              notification.seen === false
+                                ? <FontAwesomeIcon icon={faCircle} className="text-[#FF0004] ml-3" />
+                                : <div></div>
+                            }
+                          </Link>
+                        </DropdownItem>
+                      ))
+                    ) : (
+                      <div>Hiện tại chưa có thông báo mới</div>
+                    )}
+                  </DropdownSection>
+                </DropdownMenu>
+              </Dropdown>
+
+              {/* login */}
+              <Dropdown placement="bottom-end" className="w-96">
+                <DropdownTrigger className="h-14">
+                  <Avatar
+                    style={{ height: "60px" }}
+                    isBordered
+                    as="button"
+                    className="transition-transform"
+                    name="Jason Hughes"
+                    size="lg"
+                    src={
+                      userData?.avatar ? userData?.avatar :
+                        "/User-avatar.png"
+                    }
+                  />
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Profile Actions"
+                  variant="flat"
+                  disabledKeys={["hr", "hr2", "hr3"]}
                 >
-                  <div className="flex items-center">
-                    <Avatar
-                      // style={{ height: "20px" w}}
-                      isBordered
-                      as="button"
-                      className="transition-transform h-10 w-10 ml-1 mr-5"
-                      name="Jason Hughes"
-                      size="lg"
-                      src={
-                        userData?.avatar ? userData?.avatar :
-                          "/User-avatar.png"
-                      }
-                    />
-                    <div className="flex-col">
-                      <h2 className="font-semibold text-[#FF0004]">
-                        {userData?.userName}
-                      </h2>
-                      <h2 className="font-bold">
-                        {walletError ? 0 : wallet?.balance.toLocaleString()} Đ
-                      </h2>
-                      <h2 className="">{userData?.email}</h2>
+                  <DropdownItem
+                    key="user"
+                    textValue={userData?.userName}
+                    className="h-14 gap-2"
+                  >
+                    <div className="flex items-center">
+                      <Avatar
+                        // style={{ height: "20px" w}}
+                        isBordered
+                        as="button"
+                        className="transition-transform h-10 w-10 ml-1 mr-5"
+                        name="Jason Hughes"
+                        size="lg"
+                        src={
+                          userData?.avatar ? userData?.avatar :
+                            "/User-avatar.png"
+                        }
+                      />
+                      <div className="flex-col">
+                        <h2 className="font-semibold text-[#FF0004]">
+                          {userData?.userName}
+                        </h2>
+                        <h2 className="font-bold">
+                          {walletError ? 0 : wallet?.balance.toLocaleString()} Đ
+                        </h2>
+                        <h2 className="">{userData?.email}</h2>
+                      </div>
                     </div>
-                  </div>
-                </DropdownItem>
-                <DropdownItem
-                  key="profile"
-                  textValue="Cài đặt thông tin cá nhân"
-                  className="bg-[#F2F2F2] "
-                >
-                  <Link
-                    href="/profile"
-                    className="text-black w-full py-3 text-[17px]"
+                  </DropdownItem>
+                  <DropdownItem
+                    key="profile"
+                    textValue="Cài đặt thông tin cá nhân"
+                    className="bg-[#F2F2F2] "
                   >
-                    <FontAwesomeIcon
-                      icon={faAddressCard}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    <p>Cài đặt thông tin cá nhân</p>
-                  </Link>
-                </DropdownItem>
-                <DropdownItem
-                  key="changePassword"
-                  textValue="Đổi mật khẩu"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/changePassword"
-                    className="text-black w-full py-3 text-[17px]"
+                    <Link
+                      href="/profile"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faAddressCard}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      <p>Cài đặt thông tin cá nhân</p>
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="changePassword"
+                    textValue="Đổi mật khẩu"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faLock}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Đổi mật khẩu
-                  </Link>
-                </DropdownItem>
-                <DropdownItem
-                  key="wallet"
-                  textValue="Ví của bạn"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/wallet"
-                    className="text-black w-full py-3 text-[17px]"
+                    <Link
+                      href="/profile/changePassword"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faLock}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Đổi mật khẩu
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="wallet"
+                    textValue="Ví của bạn"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faWallet}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Ví của bạn
-                  </Link>
-                </DropdownItem>
-                <DropdownItem key="hr" textValue=" ">
-                  <hr />
-                </DropdownItem>
-                <DropdownItem
-                  key="manageTemplate"
-                  textValue="Quản lí biểu mẫu"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/manageTemplate"
-                    className="text-black w-full py-3 text-[17px]"
+                    <Link
+                      href="/profile/wallet"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faWallet}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Ví của bạn
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="hr" textValue=" ">
+                    <hr />
+                  </DropdownItem>
+                  <DropdownItem
+                    key="manageTemplate"
+                    textValue="Quản lí biểu mẫu"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faFileSignature}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Quản lí biểu mẫu
-                  </Link>
-                </DropdownItem>
-                <DropdownItem
-                  key="servicePack"
-                  textValue="Gói dịch vụ"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/servicePack"
-                    className="text-black w-full py-3 text-[17px]"
+                    <Link
+                      href="/profile/manageTemplate"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faFileSignature}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Quản lí biểu mẫu
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="servicePack"
+                    textValue="Gói dịch vụ"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faHeadset}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Gói dịch vụ
-                  </Link>
-                </DropdownItem>
-                {/* <DropdownItem
+                    <Link
+                      href="/profile/servicePack"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faHeadset}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Gói dịch vụ
+                    </Link>
+                  </DropdownItem>
+                  {/* <DropdownItem
                   key="templatePack"
                   textValue="Gói biểu mẫu"
                   className="bg-[#F2F2F2]"
@@ -477,44 +597,45 @@ const Navbar = () => {
                 <DropdownItem key="hr2" textValue=" ">
                   <hr />
                 </DropdownItem> */}
-                <DropdownItem
-                  key="transactionHistory"
-                  textValue="Lịch sử giao dịch"
-                  className="bg-[#F2F2F2]"
-                >
-                  <Link
-                    href="/profile/transactionHistory"
-                    className="text-black w-full py-3 text-[17px]"
+                  <DropdownItem
+                    key="transactionHistory"
+                    textValue="Lịch sử giao dịch"
+                    className="bg-[#F2F2F2]"
                   >
-                    <FontAwesomeIcon
-                      icon={faClockRotateLeft}
-                      className="w-5 h-5 text-[#FF0004] mr-3"
-                    />
-                    Lịch sử giao dịch
-                  </Link>
-                </DropdownItem>
-                <DropdownItem key="hr3" textValue=" ">
-                  <hr />
-                </DropdownItem>
-                <DropdownItem
-                  key="logout"
-                  textValue="Đăng xuất"
-                  color="danger"
-                  className="h-11"
-                >
-                  <div
-                    className="flex flex-row  items-center gap-3"
-                    onClick={() => logout()}
+                    <Link
+                      href="/profile/transactionHistory"
+                      className="text-black w-full py-3 text-[17px]"
+                    >
+                      <FontAwesomeIcon
+                        icon={faClockRotateLeft}
+                        className="w-5 h-5 text-[#FF0004] mr-3"
+                      />
+                      Lịch sử giao dịch
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="hr3" textValue=" ">
+                    <hr />
+                  </DropdownItem>
+                  <DropdownItem
+                    key="logout"
+                    textValue="Đăng xuất"
+                    color="danger"
+                    className="h-11"
                   >
-                    <FontAwesomeIcon
-                      icon={faRightFromBracket}
-                      className="w-5 h-5 text-[#FF0004]"
-                    />
-                    <p>Đăng xuất</p>
-                  </div>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+                    <div
+                      className="flex flex-row  items-center gap-3"
+                      onClick={() => logout()}
+                    >
+                      <FontAwesomeIcon
+                        icon={faRightFromBracket}
+                        className="w-5 h-5 text-[#FF0004]"
+                      />
+                      <p>Đăng xuất</p>
+                    </div>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
           ) : (
             <NavbarItem className="hidden lg:flex gap-2">
               <Button
@@ -538,7 +659,7 @@ const Navbar = () => {
           )}
         </NavbarContent>
       </MyNavbar>
-    </div>
+    </div >
   );
 };
 

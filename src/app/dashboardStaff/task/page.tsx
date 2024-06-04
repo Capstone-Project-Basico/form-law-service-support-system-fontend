@@ -106,7 +106,7 @@ const Task = () => {
   // done
   const completeTask = async (id: number) => {
     Swal.fire({
-      title: "Bạn đã hoàn thành nhiệm vụ này?",
+      text: "Bạn đã hoàn thành nhiệm vụ này?",
       showDenyButton: true,
       confirmButtonText: "Có",
       denyButtonText: `Không`,

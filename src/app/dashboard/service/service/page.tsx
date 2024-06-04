@@ -172,7 +172,7 @@ const Service = () => {
   //delete
   const handleDelete = async (packageId: number) => {
     Swal.fire({
-      title: "Bạn có muốn xóa gói này không?",
+      text: "Bạn có muốn xóa gói này không?",
       showDenyButton: true,
       // showCancelButton: true,
       confirmButtonText: "Có",
@@ -190,9 +190,9 @@ const Service = () => {
               toast.success("Xóa thành công");
               fetchPendingServices();
             }),
-            {
-              headers: authHeader(),
-            };
+          {
+            headers: authHeader(),
+          };
         } catch (error) {
           console.log(error);
         }
@@ -340,9 +340,8 @@ const Service = () => {
       <div className="flex flex-row gap-10 font-bold border-b-1 my-5">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
+              }`}
             onClick={() => {
               setTabs(1), setPage(1);
             }}
@@ -364,10 +363,9 @@ const Service = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 3 &&
+            className={`bg-white ${tabs === 3 &&
               "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-            }`}
+              }`}
             radius="none"
             onClick={() => {
               setTabs(3), setPage(1);
