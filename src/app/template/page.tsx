@@ -265,7 +265,6 @@ const Page = () => {
       .then((res) => {
         onClosePayment();
         toast.success('Thanh toán thành công');
-        window.location.reload();
       })
       .catch((error) => {
         toast.error('Tài khoản không đủ tiền, vui lòng nạp tại ví');
