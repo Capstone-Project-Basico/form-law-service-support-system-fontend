@@ -175,25 +175,30 @@ const Partner = () => {
   };
 
   //update
-  const handleUpdateSubmit = async (selectedPartner: any) => {
-    //if (!selectedPartner) return; // Check if a partner is selected
-    // Example: PUT request to update partner details
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
-        {
-          name: selectedPartner.name,
-          avatar: selectedPartner.avatar,
-          link: selectedPartner.link,
-        }
-      )
-      .then((response) => {
-        toast.success("Cập nhật thành công");
-        fetchPartners();
-      })
-      .catch((error) => {
-        console.error("Failed to update partner", error);
-      });
+  const handleUpdateSubmit = async (selectedPartner: any, onClose: () => void) => {
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
+          {
+            name: selectedPartner.name,
+            avatar: selectedPartner.avatar,
+            link: selectedPartner.link,
+          }
+        )
+        .then((response) => {
+          toast.success("Cập nhật thành công");
+          fetchPendingPartners();
+          onClose();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   // restore
