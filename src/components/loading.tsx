@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface Props extends React.HtmlHTMLAttributes<HTMLDivElement> {}
+export interface Props extends React.HtmlHTMLAttributes<HTMLDivElement> { }
 
 const Loading = (props: Props) => {
   return (
@@ -14,7 +14,7 @@ const Loading = (props: Props) => {
             fillRule="evenodd"
           />
         </svg>
-        <div>Loading ...</div>
+        <div>Đang tải...</div>
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ type PartnersProps = {
   unApprove: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleApprove: (id: number) => void;
-  handleUpdateSubmit: (data: any) => void;
+  handleUpdateSubmit: (data: any, onClose: any) => void;
 };
 
 const Partners: React.FC<PartnersProps> = ({
@@ -301,13 +301,13 @@ const Partners: React.FC<PartnersProps> = ({
                 onSubmit={(e) => {
                   console.log(e);
                   e.preventDefault();
-                  handleUpdateSubmit(selectedPartner);
-                  onCloseUpdate();
+                  handleUpdateSubmit(selectedPartner, onCloseUpdate);
                 }}
               >
                 <Input
                   type="text"
                   label="Name"
+                  isRequired
                   value={selectedPartner.name}
                   onChange={(e: any) =>
                     setSelectedPartner({

@@ -282,7 +282,7 @@ const Page = () => {
       .then((res) => {
         console.log(res.data);
 
-        window.open(res.data.checkoutUrl);
+        window.open(res.data.checkoutUrl, "_self");
       })
       .catch((err) => {
         toast.error('Lỗi thanh toán, vui lòng kiểm tra lại!');
