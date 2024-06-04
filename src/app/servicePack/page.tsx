@@ -189,7 +189,6 @@ const BuyPacks = () => {
       .then((res) => {
         toast.success(`${res.data.data}`);
         onClosePayment();
-        window.location.reload();
       })
       .catch((err) => {
         toast.error('Ví của bạn không đủ tiền vui lòng nạp tại ví');
