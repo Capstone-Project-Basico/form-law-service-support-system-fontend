@@ -1,3 +1,5 @@
+// 'use client'
+
 import axios from "axios";
 import React, { FormEvent, useEffect, useState } from "react";
 import {
@@ -44,7 +46,7 @@ type PostsProps = {
   handleDelete: (id: number) => void;
   restoreDelete: (id: number) => void;
   handleApprove: (id: number) => void;
-  handleUpdateSubmit: (data: any) => void;
+  handleUpdateSubmit: (data: any, onCloseUpdate: any) => void;
   categories: Category[];
 };
 
@@ -294,7 +296,7 @@ const Posts: React.FC<PostsProps> = ({
       <Modal isOpen={isOpenUpdate} onClose={onCloseUpdate} hideCloseButton>
         <ModalContent className="w-[1200px] h-[850px] max-w-none">
           <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
-            Cập nhật liên hệ
+            Cập nhật bài viết
           </ModalHeader>
           <ModalBody
             style={{ maxHeight: "calc(100% - 100px)", overflowY: "auto" }}
@@ -304,14 +306,15 @@ const Posts: React.FC<PostsProps> = ({
                 id="post"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  handleUpdateSubmit(selectedPost);
-                  onCloseUpdate();
+                  handleUpdateSubmit(selectedPost, onCloseUpdate);
                 }}
               >
                 <Input
-                  className="py-2"
+                  isRequired
+                  className="py-2 font-bold"
                   type="text"
                   label="Tên bài viết"
+                  labelPlacement="outside"
                   value={selectedPost.title}
                   onChange={(e: any) =>
                     setSelectedPost({
@@ -321,8 +324,8 @@ const Posts: React.FC<PostsProps> = ({
                   }
                 />
                 <Select
+                  isRequired
                   label="Chọn loại cho bài viết"
-                  placeholder="Thể loại"
                   labelPlacement="outside"
                   className="font-bold"
                   defaultSelectedKeys={[`${selectedPost.cateId}`]}
@@ -348,7 +351,7 @@ const Posts: React.FC<PostsProps> = ({
                       ...selectedPost,
                       content: encodeToBase64(e.htmlValue || ""),
                     })
-                  } // Ensures that 'text' is never null
+                  }
                   style={{ height: "400px" }}
                 />
               </form>

@@ -254,9 +254,7 @@ const Post = () => {
   };
 
   ///update
-  const handleUpdateSubmit = async (selectedPost: any) => {
-    // if (!selectedRecruitment) return; // Check if a Recruitment is selected
-    // Example: PUT request to update Recruitment details
+  const handleUpdateSubmit = async (selectedPost: any, onClose: () => void) => {
     axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_API}post/updatePost/${selectedPost.postId}`,
@@ -272,7 +270,7 @@ const Post = () => {
       )
       .then((response) => {
         toast.success('Cập nhật thành công');
-        fetchPendingPosts();
+        fetchPosts();
       })
       .catch((error) => {
         toast.error('Thất bại, vui lòng điền đầy đủ thông tin');
@@ -389,7 +387,6 @@ const Post = () => {
                       <h2 className="mt-5 font-bold">Nội dung cho bài viết</h2>
                       <Editor
                         value={content}
-                        required
                         onTextChange={(e) => handleEditorChange(e)}
                         style={{ height: '350px' }}
                       />
