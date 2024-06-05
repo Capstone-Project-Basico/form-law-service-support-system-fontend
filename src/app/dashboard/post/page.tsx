@@ -173,9 +173,10 @@ const Post = () => {
   //delete
   const handleDelete = async (postId: number) => {
     Swal.fire({
-      title: "Bạn có muốn xóa bài viết này không?",
+      text: "Bạn có muốn xóa bài viết này không?",
       showDenyButton: true,
       confirmButtonText: "Có",
+      confirmButtonColor: "#00BB00",
       denyButtonText: `Không`,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -257,9 +258,7 @@ const Post = () => {
   };
 
   ///update
-  const handleUpdateSubmit = async (selectedPost: any) => {
-    // if (!selectedRecruitment) return; // Check if a Recruitment is selected
-    // Example: PUT request to update Recruitment details
+  const handleUpdateSubmit = async (selectedPost: any, onClose: () => void) => {
     axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_API}post/updatePost/${selectedPost.postId}`,
@@ -275,7 +274,8 @@ const Post = () => {
       )
       .then((response) => {
         toast.success("Cập nhật thành công");
-        fetchPosts();
+        fetchPendingPosts();
+        onClose();
       })
       .catch((error) => {
         toast.error("Thất bại, vui lòng điền đầy đủ thông tin");
@@ -392,7 +392,6 @@ const Post = () => {
                       <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
                       <Editor
                         value={content}
-                        required
                         onTextChange={(e) => handleEditorChange(e)}
                         style={{ height: "350px" }}
                       />

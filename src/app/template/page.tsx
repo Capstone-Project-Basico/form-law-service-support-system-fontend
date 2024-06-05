@@ -256,19 +256,25 @@ const Page = () => {
   };
 
   const payForTemplate = () => {
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByWallet/${orderId}`,
-        {},
-        { headers: authHeader() }
-      )
-      .then((res) => {
-        onClosePayment();
-        toast.success('Thanh toán thành công');
-      })
-      .catch((error) => {
-        toast.error('Tài khoản không đủ tiền, vui lòng nạp tại ví');
-      });
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByWallet/${orderId}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((res) => {
+          onClosePayment();
+          toast.success('Thanh toán thành công');
+        })
+        .catch((error) => {
+          toast.error('Tài khoản không đủ tiền, vui lòng nạp tại ví');
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   const payForTemplateByCash = () => {
