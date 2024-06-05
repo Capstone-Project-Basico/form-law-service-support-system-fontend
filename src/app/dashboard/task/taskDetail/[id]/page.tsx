@@ -228,6 +228,7 @@ const TaskDetail = () => {
       text: "Bạn đã hoàn thành nhiệm vụ này?",
       showDenyButton: true,
       confirmButtonText: "Có",
+      confirmButtonColor: '#00BB00',
       denyButtonText: `Không`,
     }).then((result) => {
       if (result.isConfirmed) {

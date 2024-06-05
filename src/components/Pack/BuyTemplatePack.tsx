@@ -96,7 +96,7 @@ const BuyTemplatePack = () => {
         Swal.fire({
           text: 'Bạn chưa đăng nhập, bạn có muốn đăng nhập?',
           showDenyButton: true,
-          // showCancelButton: true,
+          confirmButtonColor: '#00BB00',
           confirmButtonText: 'Có',
           denyButtonText: `Không`,
         }).then((result) => {

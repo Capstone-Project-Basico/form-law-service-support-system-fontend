@@ -129,6 +129,7 @@ const Page = () => {
       showDenyButton: true,
       // showCancelButton: true,
       confirmButtonText: 'Có',
+      confirmButtonColor: '#00BB00',
       denyButtonText: `Không`,
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
@@ -164,6 +165,7 @@ const Page = () => {
       showDenyButton: true,
       // showCancelButton: true,
       confirmButtonText: 'Có',
+      confirmButtonColor: '#00BB00',
       denyButtonText: `Không`,
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
@@ -228,9 +230,8 @@ const Page = () => {
       <div className="my-5 flex flex-row gap-10 border-b-1 font-bold">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
-            }`}
+            className={`bg-white ${tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+              }`}
             onClick={() => {
               setTabs(1), setPage(1);
             }}

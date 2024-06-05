@@ -165,6 +165,7 @@ const Contact = () => {
       text: "Bạn có muốn xóa liên hệ này không?",
       showDenyButton: true,
       confirmButtonText: "Có",
+      confirmButtonColor: '#00BB00',
       denyButtonText: `Không`,
     }).then((result) => {
       if (result.isConfirmed) {
