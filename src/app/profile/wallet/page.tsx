@@ -118,9 +118,7 @@ const Wallet = () => {
         { headers: authHeader() }
       )
       .then((res) => {
-        console.log(res.data);
-
-        window.open(res.data.checkoutUrl);
+        window.open(res.data.checkoutUrl, "_self");
       });
   };
 
