@@ -86,6 +86,7 @@ const Page = () => {
   });
   const [checkoutForm, setCheckoutForm] = useState<CheckoutForm[]>();
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const getFile = async (id: number) => {
     // fetch file
@@ -136,6 +137,7 @@ const Page = () => {
   }
 
   const getTemplate = async () => {
+    setIsLoading(true);
     try {
       axios
         .get(`${process.env.NEXT_PUBLIC_BASE_API}formTemplate`)
@@ -151,8 +153,8 @@ const Page = () => {
         });
     } catch (error) {
       console.log(error);
-
     }
+    setIsLoading(false);
 
   };
 
@@ -183,6 +185,7 @@ const Page = () => {
   };
 
   const getType = async () => {
+    setIsLoading(true);
     try {
       axios
         .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
@@ -196,8 +199,8 @@ const Page = () => {
         });
     } catch (error) {
       console.log(error);
-
     }
+    setIsLoading(false);
 
   };
 
@@ -255,9 +258,10 @@ const Page = () => {
     }
   };
 
-  const payForTemplate = () => {
+  const payForTemplate = async () => {
+    setIsLoading(true);
     try {
-      axios
+      await axios
         .put(
           `${process.env.NEXT_PUBLIC_BASE_API}order/payOrderFormTemplateDetailByWallet/${orderId}`,
           {},
@@ -272,8 +276,8 @@ const Page = () => {
         });
     } catch (error) {
       console.log(error);
-
     }
+    setIsLoading(false);
 
   };
 
@@ -380,6 +384,9 @@ const Page = () => {
 
   return (
     <>
+      {isLoading && (
+        <Loading className="fixed left-0 top-0 z-[100] h-full w-full bg-white bg-opacity-50" />
+      )}
       <HeaderComponent title="BIỂU MẪU" link="BIỂU MẪU" />
       <div className="mx-10 my-20">
         <ToastContainer />

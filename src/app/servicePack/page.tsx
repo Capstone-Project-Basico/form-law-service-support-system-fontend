@@ -112,7 +112,6 @@ const BuyPacks = () => {
         }
       );
       if (response && response.status === 200) {
-        setIsLoading(false);
         setServicePacks(
           response.data.data.filter(
             (service: ConsultServiceType) =>
@@ -121,6 +120,8 @@ const BuyPacks = () => {
         );
       }
     } catch (error) { }
+    setIsLoading(false);
+
   };
 
   //buy pack
@@ -178,21 +179,27 @@ const BuyPacks = () => {
     }
   };
 
-  const payForService = () => {
+  const payForService = async () => {
     setIsLoading(true);
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}orderPackageRequestService/payOrderPackageRequestServiceDetailByWallet/${orderId}`,
-        {},
-        { headers: authHeader() }
-      )
-      .then((res) => {
-        toast.success(`${res.data.data}`);
-        onClosePayment();
-      })
-      .catch((err) => {
-        toast.error('Ví của bạn không đủ tiền vui lòng nạp tại ví');
-      });
+    try {
+      await axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}orderPackageRequestService/payOrderPackageRequestServiceDetailByWallet/${orderId}`,
+          {},
+          { headers: authHeader() }
+        )
+        .then((res) => {
+          toast.success(`${res.data.data}`);
+          onClosePayment();
+        })
+        .catch((err) => {
+          toast.error('Ví của bạn không đủ tiền vui lòng nạp tại ví');
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
     setIsLoading(false);
   };
 
