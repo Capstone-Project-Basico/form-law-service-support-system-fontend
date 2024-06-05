@@ -220,6 +220,7 @@ const Recruitment = () => {
       text: 'Bạn có muốn xóa thông tin tuyển dụng này không?',
       showDenyButton: true,
       confirmButtonText: 'Có',
+      confirmButtonColor: '#00BB00',
       denyButtonText: `Không`,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -320,9 +321,8 @@ const Recruitment = () => {
       <div className="flex flex-row gap-10 border-b-1 font-bold ">
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
-            }`}
+            className={`bg-white ${tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+              }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -331,9 +331,8 @@ const Recruitment = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
-            }`}
+            className={`bg-white ${tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+              }`}
             onClick={() => setTabs(2)}
             radius="none"
           >
@@ -342,10 +341,9 @@ const Recruitment = () => {
         </div>
         <div>
           <Button
-            className={`bg-white ${
-              tabs === 3 &&
+            className={`bg-white ${tabs === 3 &&
               'border-b-2 border-[#FF0004] border-b-[#FF0004] text-[#FF0004]'
-            }`}
+              }`}
             radius="none"
             onClick={() => setTabs(3)}
           >

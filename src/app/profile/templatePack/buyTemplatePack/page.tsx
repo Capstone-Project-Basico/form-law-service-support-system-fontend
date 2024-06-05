@@ -61,6 +61,7 @@ const BuyPacks = () => {
           showDenyButton: true,
           // showCancelButton: true,
           confirmButtonText: "Có",
+          confirmButtonColor: '#00BB00',
           denyButtonText: `Không`,
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
@@ -89,8 +90,8 @@ const BuyPacks = () => {
             Swal.fire({
               text: "Bạn có chấp nhận thanh toán",
               showDenyButton: true,
-              // showCancelButton: true,
               confirmButtonText: "Có",
+              confirmButtonColor: '#00BB00',
               denyButtonText: `Không`,
             }).then((result) => {
               /* Read more about isConfirmed, isDenied below */

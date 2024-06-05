@@ -194,6 +194,7 @@ const Recruitment = () => {
       showDenyButton: true,
       confirmButtonText: "Có",
       denyButtonText: `Không`,
+      confirmButtonColor: '#00BB00',
     }).then((result) => {
       if (result.isConfirmed) {
         try {

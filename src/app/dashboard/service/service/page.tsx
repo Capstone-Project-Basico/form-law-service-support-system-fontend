@@ -176,6 +176,7 @@ const Service = () => {
       showDenyButton: true,
       // showCancelButton: true,
       confirmButtonText: "Có",
+      confirmButtonColor: '#00BB00',
       denyButtonText: `Không`,
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */

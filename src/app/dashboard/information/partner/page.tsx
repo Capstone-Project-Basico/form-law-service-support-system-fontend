@@ -142,6 +142,7 @@ const Partner = () => {
       text: "Bạn có muốn xóa bài viết này không?",
       showDenyButton: true,
       confirmButtonText: "Có",
+      confirmButtonColor: '#00BB00',
       denyButtonText: `Không`,
     }).then((result) => {
       if (result.isConfirmed) {
