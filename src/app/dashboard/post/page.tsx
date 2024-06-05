@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Category, PostType } from "@/constants/types/homeType";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Category, PostType } from '@/constants/types/homeType';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Table,
   TableHeader,
@@ -27,17 +27,17 @@ import {
   Pagination,
   Select,
   SelectItem,
-} from "@nextui-org/react";
-import axios from "axios";
-import Image from "next/image";
-import Link from "next/link";
-import React, { FormEvent, useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import authHeader from "@/components/authHeader/AuthHeader";
-import Posts from "@/components/manage/Post";
-import { Editor } from "primereact/editor";
-import { encodeToBase64 } from "@/utils/base64";
-import Swal from "sweetalert2";
+} from '@nextui-org/react';
+import axios from 'axios';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { FormEvent, useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import authHeader from '@/components/authHeader/AuthHeader';
+import Posts from '@/components/manage/Post';
+import { Editor } from 'primereact/editor';
+import { encodeToBase64 } from '@/utils/base64';
+import Swal from 'sweetalert2';
 
 interface UserLocal {
   data: {
@@ -50,16 +50,16 @@ interface UserLocal {
 const Post = () => {
   const [tabs, setTabs] = useState(1);
   const [post, setPost] = useState<PostType[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
+  const [content, setContent] = useState('');
+  const [title, setTitle] = useState('');
   const [cateId, setCateId] = useState<number | undefined>();
   // const [newPost, setNewPost] = useState<Category>();
   const getUserFromStorage = () => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
     }
   };
@@ -94,7 +94,7 @@ const Post = () => {
 
   const handleEditorChange = (e: any) => {
     // Assuming e.htmlValue contains the actual HTML content from the editor
-    const encodedContent = encodeToBase64(e.htmlValue || "");
+    const encodedContent = encodeToBase64(e.htmlValue || '');
     setContent(encodedContent);
   };
 
@@ -105,7 +105,7 @@ const Post = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}post/findAllActivePost`
       );
       setPost(response.data.data);
-    } catch (error) { }
+    } catch (error) {}
   };
 
   //get all pending posts
@@ -116,10 +116,10 @@ const Post = () => {
       );
       const filteredPosts = response.data.data.filter(
         (post: PostType) =>
-          post.processStatus === "CHỜ DUYỆT" && post.deleted === false
+          post.processStatus === 'CHỜ DUYỆT' && post.deleted === false
       );
       setPost(filteredPosts);
-    } catch (error) { }
+    } catch (error) {}
   };
 
   //get all deleted
@@ -156,7 +156,7 @@ const Post = () => {
           headers: authHeader(),
         })
         .then((response) => {
-          toast.success("Tạo bài viết thành công");
+          toast.success('Tạo bài viết thành công');
           fetchPosts();
           onOpenChange();
           onClose();
@@ -167,15 +167,14 @@ const Post = () => {
     } catch (error) {
       console.log(error);
     }
-
   };
 
   //delete
   const handleDelete = async (postId: number) => {
     Swal.fire({
-      title: "Bạn có muốn xóa bài viết này không?",
+      title: 'Bạn có muốn xóa bài viết này không?',
       showDenyButton: true,
-      confirmButtonText: "Có",
+      confirmButtonText: 'Có',
       denyButtonText: `Không`,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -188,7 +187,7 @@ const Post = () => {
               }
             )
             .then(() => {
-              toast.success("Xóa thành công");
+              toast.success('Xóa thành công');
               if (tabs === 1) {
                 fetchPosts();
               } else {
@@ -196,14 +195,13 @@ const Post = () => {
               }
             })
             .catch(() => {
-              toast.error("Xóa thất bại");
+              toast.error('Xóa thất bại');
             });
-
         } catch (error) {
           console.log(error);
         }
       } else if (result.isDenied) {
-        Swal.fire("Bạn đã hủy xóa", "", "error");
+        Swal.fire('Bạn đã hủy xóa', '', 'error');
         return;
       }
     });
@@ -221,11 +219,11 @@ const Post = () => {
           }
         )
         .then((response) => {
-          toast.success("Khôi phục thành công");
+          toast.success('Khôi phục thành công');
           fetchDeletedPosts();
         })
         .catch((error) => {
-          toast.error("Khôi phục thất bại");
+          toast.error('Khôi phục thất bại');
         });
     } catch (error) {
       console.log(error);
@@ -244,12 +242,11 @@ const Post = () => {
           }
         )
         .then((response) => {
-          toast.success("Bài viết đã được duyệt");
+          toast.success('Bài viết đã được duyệt');
           fetchPosts();
-          fetchPendingPosts();
         })
         .catch((error) => {
-          toast.error("Duyệt thất bại");
+          toast.error('Duyệt thất bại');
         });
     } catch (error) {
       console.log(error);
@@ -274,12 +271,12 @@ const Post = () => {
         }
       )
       .then((response) => {
-        toast.success("Cập nhật thành công");
-        fetchPosts();
+        toast.success('Cập nhật thành công');
+        fetchPendingPosts();
       })
       .catch((error) => {
-        toast.error("Thất bại, vui lòng điền đầy đủ thông tin");
-        console.error("Failed to update post", error);
+        toast.error('Thất bại, vui lòng điền đầy đủ thông tin');
+        console.error('Failed to update post', error);
       });
   };
 
@@ -315,30 +312,30 @@ const Post = () => {
           { headers: authHeader() }
         )
         .then((response) => {
-          toast.success("Bạn đã chuyển bài viết này sang chờ duyệt");
+          toast.success('Bạn đã chuyển bài viết này sang chờ duyệt');
           fetchPosts();
         });
     } catch (error) {
-      toast.error("Chuyển sang chờ duyệt thất bại");
+      toast.error('Chuyển sang chờ duyệt thất bại');
       console.log(error);
     }
   };
   return (
-    <div className="w-full mt-5 ml-5 mr-5">
+    <div className="ml-5 mr-5 mt-5 w-full">
       <ToastContainer />
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
-            <p className="text-black font-bold text-3xl ">Quản lí bài viết</p>
+            <p className="text-3xl font-bold text-black ">Quản lí bài viết</p>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            <p className="text-[#FF0004] font-bold text-3xl">Bài viết</p>
+            <p className="text-3xl font-bold text-[#FF0004]">Bài viết</p>
           </BreadcrumbItem>
         </Breadcrumbs>
 
         <div className="flex justify-end">
           <Button
-            className="flex justify-end w-[100px] bg-[#FF0004] text-white"
+            className="flex w-[100px] justify-end bg-[#FF0004] text-white"
             radius="full"
             onPress={onOpen}
           >
@@ -346,22 +343,22 @@ const Post = () => {
             Tạo mới
           </Button>
           <Modal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton>
-            <ModalContent className="w-[1200px] h-[800px] max-w-none">
+            <ModalContent className="h-[800px] w-[1200px] max-w-none">
               {(onClose) => (
                 <>
                   <form onSubmit={(e) => handleSubmit(e, onClose)}>
-                    <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+                    <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
                       Thêm bài viết mới
                     </ModalHeader>
 
                     <ModalBody
                       style={{
-                        maxHeight: "calc(100% - 100px)",
-                        overflowY: "auto",
+                        maxHeight: 'calc(100% - 100px)',
+                        overflowY: 'auto',
                       }}
                     >
                       <Input
-                        className="font-bold pb-5"
+                        className="pb-5 font-bold"
                         isRequired
                         type="text"
                         label="Tên bài viết"
@@ -389,22 +386,19 @@ const Post = () => {
                         ))}
                       </Select>
 
-                      <h2 className="font-bold mt-5">Nội dung cho bài viết</h2>
+                      <h2 className="mt-5 font-bold">Nội dung cho bài viết</h2>
                       <Editor
                         value={content}
                         required
                         onTextChange={(e) => handleEditorChange(e)}
-                        style={{ height: "350px" }}
+                        style={{ height: '350px' }}
                       />
                     </ModalBody>
                     <ModalFooter>
                       <Button color="danger" variant="light" onPress={onClose}>
                         Đóng
                       </Button>
-                      <Button
-                        color="primary"
-                        type="submit"
-                      >
+                      <Button color="primary" type="submit">
                         Thêm bài viết
                       </Button>
                     </ModalFooter>
@@ -415,11 +409,12 @@ const Post = () => {
           </Modal>
         </div>
       </div>
-      <div className="flex flex-row gap-10 font-bold border-b-1 ">
+      <div className="flex flex-row gap-10 border-b-1 font-bold ">
         <div>
           <Button
-            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            className={`bg-white ${
+              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+            }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
@@ -429,8 +424,9 @@ const Post = () => {
 
         <div>
           <Button
-            className={`bg-white ${tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            className={`bg-white ${
+              tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+            }`}
             onClick={() => setTabs(2)}
             radius="none"
           >
@@ -440,9 +436,10 @@ const Post = () => {
 
         <div>
           <Button
-            className={`bg-white ${tabs === 3 &&
-              "text-[#FF0004] border-b-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+            className={`bg-white ${
+              tabs === 3 &&
+              'border-b-2 border-[#FF0004] border-b-[#FF0004] text-[#FF0004]'
+            }`}
             radius="none"
             onClick={() => setTabs(3)}
           >
