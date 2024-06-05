@@ -369,11 +369,8 @@ const ManagerTemplatePage = (props: Props) => {
       </Chip>
     );
     const renderPrice = () => (
-      <div className="mx-auto w-20 text-right">
-        {new Intl.NumberFormat('vi-VN', {
-          style: 'currency',
-          currency: 'VND',
-        }).format(latestVersion.price)}
+      <div className="mx-auto w-32 text-right">
+        {new Intl.NumberFormat('vi-VN').format(latestVersion.price) + ' VND'}
       </div>
     );
 
