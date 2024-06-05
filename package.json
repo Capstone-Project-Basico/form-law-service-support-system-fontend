@@ -19,7 +19,7 @@
     "@nextui-org/aria-utils": "^2.0.20",
     "@nextui-org/breadcrumbs": "^2.0.4",
     "@nextui-org/navbar": "^2.0.32",
-    "@nextui-org/react": "^2.3.6",
+    "@nextui-org/react": "^2.4.1",
     "@nextui-org/table": "^2.0.35",
     "@types/chart.js": "^2.9.41",
     "axios": "^1.6.7",

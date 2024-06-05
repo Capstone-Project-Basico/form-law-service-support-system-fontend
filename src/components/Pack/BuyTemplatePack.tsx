@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
+import Loading from '../loading';
 
 const BuyTemplatePack = () => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const BuyTemplatePack = () => {
   const [transactionId, setTransactionId] = useState<string>();
   const [isSelectedQR, setIsSelectedQR] = useState(0);
   const [walletError, setWalletError] = useState<boolean>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const {
     isOpen: isOpenPayment,
@@ -53,6 +55,7 @@ const BuyTemplatePack = () => {
   }, []);
 
   const getAllPacks = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}packageTemplate/getAllPackage`,
@@ -64,8 +67,8 @@ const BuyTemplatePack = () => {
     } catch (error) {
       // toast.error("Lỗi hệ thống!");
       console.log(error);
-
     }
+    setIsLoading(false);
   };
 
   const getWallet = () => {
@@ -139,8 +142,9 @@ const BuyTemplatePack = () => {
     }
   };
 
-  const payForTemplatePack = () => {
-    axios
+  const payForTemplatePack = async () => {
+    setIsLoading(true);
+    await axios
       .put(
         `${process.env.NEXT_PUBLIC_BASE_API}orderPackageTemplate/payOrderPackageTemplateDetailByWallet/${orderId}`,
         {},
@@ -153,6 +157,8 @@ const BuyTemplatePack = () => {
       .catch((err) => {
         toast.error('Ví của bạn không đủ tiền vui lòng nạp tại ví');
       });
+    setIsLoading(false);
+
   };
 
   const payForTemplatePackByCash = () => {
@@ -173,6 +179,9 @@ const BuyTemplatePack = () => {
 
   return (
     <div className="rounded-xl bg-white p-5 ">
+      {isLoading && (
+        <Loading className="fixed left-0 top-0 z-[100] h-full w-full bg-white bg-opacity-50" />
+      )}
       <div className="flex flex-col items-center justify-center">
         <h2 className="mb-5 text-3xl font-bold text-gray-900">
           Gói dịch vụ biểu mẫu
