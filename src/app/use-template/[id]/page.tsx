@@ -216,7 +216,7 @@ const Page = (props: Props) => {
       formattedValue = `${day}-${month}-${year}`;
     }
 
-    setFormData({ ...formData, [name]: formattedValue, type });
+    setFormData({ ...formData, [name]: formattedValue });
   };
 
   const renderField = (field: any, props?: any) => {
