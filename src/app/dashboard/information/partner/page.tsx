@@ -178,7 +178,7 @@ const Partner = () => {
   //update
   const handleUpdateSubmit = async (selectedPartner: any, onClose: () => void) => {
     try {
-      axios
+      await axios
         .put(
           `${process.env.NEXT_PUBLIC_BASE_API}partner/updatePartner/${selectedPartner.partnerId}`,
           {
@@ -195,6 +195,8 @@ const Partner = () => {
         .catch((error) => {
           toast.error(error.response.data.message);
         });
+
+
     } catch (error) {
       console.log(error);
 
@@ -257,21 +259,28 @@ const Partner = () => {
   //add a new partner
   const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}partner/createNewPartner`,
-        newPartner
-      )
 
-      .then((response) => {
-        // setPartners((prevPartners) => [...prevPartners, response.data.data]);
-        toast.success("Tạo mới thành công");
-        fetchPartners();
-        onClose();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BASE_API}partner/createNewPartner`,
+          newPartner
+        )
+
+        .then((response) => {
+          // setPartners((prevPartners) => [...prevPartners, response.data.data]);
+          toast.success("Tạo mới thành công");
+          fetchPartners();
+          onClose();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   // approve
@@ -359,6 +368,7 @@ const Partner = () => {
                         <input
                           className="py-3"
                           type="file"
+                          required
                           onChange={(e) => uploadFile(e)}
                         />
                         {uploading && <Spinner />}

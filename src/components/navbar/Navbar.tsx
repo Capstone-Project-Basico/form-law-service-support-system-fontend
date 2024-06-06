@@ -73,7 +73,7 @@ const Navbar = () => {
 
   const logout = () => {
     router.push("/login");
-    window.localStorage.clear();
+    localStorage.clear();
   };
 
   const getUserFromStorage = () => {
@@ -370,14 +370,14 @@ const Navbar = () => {
         <NavbarContent justify="end" className="w-[165px] h-5">
           {user ? (
             <div className="flex justify-center items-center gap-10">
-              <Dropdown placement="bottom-end" className="w-full h-[500px] overflow-auto">
+              <Dropdown placement="bottom-end" className="w-full max-h-[500px] overflow-auto">
                 <DropdownTrigger>
                   <FontAwesomeIcon icon={faBell} className="h-7 w-7 bg-[#F2F2F2] rounded-full p-5 text-[#FF0004]" />
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Notification" variant="flat">
                   <DropdownSection
                     title={
-                      <div className="flex justify-between">
+                      <div className="flex justify-between pb-auto min-w-96">
                         <div className="font-bold text-2xl">Thông báo</div>
                         <Button className="bg-white hover:text-[#FF0004] hover:bg-[#F2F2F2]" onClick={() => viewAllNotification()}>
                           <FontAwesomeIcon icon={faCheckDouble} />

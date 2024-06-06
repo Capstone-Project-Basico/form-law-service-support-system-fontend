@@ -26,7 +26,7 @@ const Page = () => {
           {},
           { headers: authHeader() }
         )
-        .then((res) => {});
+        .then((res) => { });
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +39,7 @@ const Page = () => {
         className="size-32 text-[#FF0004] mb-10"
       />
       <div className="text-5xl font-semibold">Cảm ơn!</div>
-      <div className="text-3xl font-semibold">Mua hàng thành công!</div>
+      <div className="text-3xl font-semibold">Thanh toán thành công!</div>
       <div className="flex gap-5">
         <Button
           className="flex flex-row justify-center items-center bg-white border-[#FF0004] text-[#FF0004] hover:bg-[#FF0004] hover:text-white"

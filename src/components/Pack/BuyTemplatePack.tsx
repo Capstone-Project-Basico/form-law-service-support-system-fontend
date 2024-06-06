@@ -33,6 +33,7 @@ const BuyTemplatePack = () => {
   const [isSelectedQR, setIsSelectedQR] = useState(0);
   const [walletError, setWalletError] = useState<boolean>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [disableButton, setDisableButton] = useState<boolean>();
   const [updated, setUpdated] = useContext(UpdateContext);
 
   const {
@@ -93,6 +94,7 @@ const BuyTemplatePack = () => {
 
   //buy pack
   const handleBuy = async (packageId: string, price: number) => {
+    setDisableButton(true);
     try {
       if (!user) {
         Swal.fire({
@@ -118,7 +120,7 @@ const BuyTemplatePack = () => {
           userId,
           packageId,
         };
-        axios
+        await axios
           .post(
             `${process.env.NEXT_PUBLIC_BASE_API}orderPackageTemplate/createOrderPackageTemplateDetail`,
             updatedDataOrder,
@@ -134,6 +136,7 @@ const BuyTemplatePack = () => {
       toast.error('Yêu cầu mua thất bại');
       console.log(error);
     }
+    setDisableButton(false);
   };
 
   const payment = () => {
@@ -212,7 +215,7 @@ const BuyTemplatePack = () => {
               {servicePack.price.toLocaleString()} VND
             </h1>
             <div className="flex w-full items-center justify-evenly bg-black px-4 py-3">
-              <button
+              <Button
                 className="rounded-full bg-red-600 px-6 py-2 text-white shadow-md transition-colors duration-300 ease-in-out hover:bg-red-800"
                 onClick={() => {
                   setSelectedPack(servicePack);
@@ -220,15 +223,16 @@ const BuyTemplatePack = () => {
                 }}
               >
                 Chi tiết
-              </button>
-              <button
+              </Button>
+              <Button
+                disabled={disableButton}
                 className="rounded-full bg-red-600 px-6 py-2 text-white shadow-md transition-colors duration-300 ease-in-out hover:bg-red-800"
                 onClick={() =>
                   handleBuy(servicePack.packageId, servicePack.price)
                 }
               >
                 Mua gói
-              </button>
+              </Button>
             </div>
           </div>
         ))}
