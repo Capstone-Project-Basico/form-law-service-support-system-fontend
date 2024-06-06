@@ -17,7 +17,7 @@ import {
   DropdownSection,
 } from "@nextui-org/react";
 import { Navbar as MyNavbar } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { practices, template } from "@/lib/navbarItems";
 import { researchAndPublications, about } from "@/lib/navbarItems";
@@ -45,6 +45,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import authHeader from "../authHeader/AuthHeader";
+import getWallet from "../get-wallet";
+import { UpdateContext } from "@/app/clientComponent";
+import getUser from "../get-user";
 
 
 const MENU = [
@@ -59,19 +62,18 @@ const Navbar = () => {
   const [researchDropdownVisible, setResearchDropdownVisible] = useState(false);
   const [aboutDropdownVisible, setAboutDropdownVisible] = useState(false);
   const [templateDropdownVisible, setTemplateDropdownVisible] = useState(false);
-  const [userData, setUserData] = useState<UserType>();
+  // const [userData, setUserData] = useState<UserType>();
   const pathname = usePathname();
   const router = useRouter();
   const [walletError, setWalletError] = useState<string | null>(null);
   const [wallet, setWallet] = useState<WalletType>();
 
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
-  const [notificationLink, setNotificationLink] = useState("");
+  const [updated, setUpdated] = useContext(UpdateContext)
 
   const logout = () => {
     router.push("/login");
     window.localStorage.clear();
-    // window.location.reload();
   };
 
   const getUserFromStorage = () => {
@@ -84,46 +86,7 @@ const Navbar = () => {
   const user: UserLocal | null = getUserFromStorage();
   const userId = user?.data.data.userId;
 
-  useEffect(() => {
-    const getUserById = async () => {
-      if (!user) return;
-      axios
-        .get(`${process.env.NEXT_PUBLIC_BASE_API}user/getUserById/${userId}`)
-        .then((res) => {
-          setUserData(res.data.data);
-        })
-        .catch((error) => {
-          console.log("loi roi " + error);
-        });
-    };
-
-    getUserById();
-    getWallet();
-  }, [userId]);
-
-  const getWallet = () => {
-    if (!user) return;
-    setWalletError(null);
-    try {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
-        )
-        .then((response) => {
-          setWallet(response.data.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching wallet:", error);
-          setWalletError(
-            "Failed to fetch wallet details. Please try again later."
-          );
-        });
-    } catch (error) {
-      console.log(error);
-
-    }
-
-  };
+  const userData = getUser();
 
   useEffect(() => {
     getNotifications();
@@ -489,7 +452,8 @@ const Navbar = () => {
                           {userData?.userName}
                         </h2>
                         <h2 className="font-bold">
-                          {walletError ? 0 : wallet?.balance.toLocaleString()} Đ
+                          {/* {walletError ? 0 : wallet?.balance.toLocaleString()} Đ */}
+                          {getWallet()} Đ
                         </h2>
                         <h2 className="">{userData?.email}</h2>
                       </div>
