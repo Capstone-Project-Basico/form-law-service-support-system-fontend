@@ -549,7 +549,7 @@ const Page = () => {
                       ></div>
                     </div>
                     <div className="flex w-[300px] flex-col items-center justify-start gap-10">
-                      <h1 className="flex w-[300px] justify-start truncate text-2xl font-semibold">
+                      <h1 className="block  w-[300px] justify-start text-wrap break-words  text-2xl font-semibold">
                         {selectedTemplate?.title
                           ? selectedTemplate?.title
                           : 'Biểu mẫu này hiện tại không có tên'}

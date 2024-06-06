@@ -11,15 +11,15 @@ type Props = {};
 
 const validateNumber = (value: string) => {
   // max length 10
-  if (value.length > 10) {
-    return 'Số không được quá 10 kí tự';
+  if (value.length > 50) {
+    return 'Số không được quá 50 kí tự';
   }
   return '';
 };
 const validateText = (value: string) => {
   //max length 100
-  if (value.length > 50) {
-    return 'Văn bản không được quá 50 kí tự';
+  if (value.length > 100) {
+    return 'Văn bản không được quá 100 kí tự';
   }
   return '';
 };
@@ -155,6 +155,15 @@ const Page = (props: Props) => {
     if (formName.value === '') {
       console.log('error');
       setFormName({ ...formName, error: 'Tên biểu mẫu không được trống' });
+      return;
+    }
+    //max length of name is 50
+    if (formName.value.length > 50) {
+      console.log(formName.value.length);
+      setFormName({
+        ...formName,
+        error: 'Tên biểu mẫu không được quá 50 kí tự',
+      });
       return;
     }
 
@@ -444,7 +453,7 @@ const Page = (props: Props) => {
                               })
                             }
                             isInvalid={formName.error !== ''}
-                            errorMessage={'Tên biểu mẫu không được trống'}
+                            errorMessage={formName.error}
                           />
                         </div>
                       </div>
