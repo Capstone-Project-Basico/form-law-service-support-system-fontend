@@ -58,7 +58,7 @@ const Page = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}auth/registerNewUser`,
         dataRegister
       );
-      toast.success('Đăng ký thành công!');
+      toast.success('Vui lòng nhập mã xác nhận');
 
       //save user to local storage
       localStorage.setItem('verifyEmail', email);

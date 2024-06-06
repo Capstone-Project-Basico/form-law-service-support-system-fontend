@@ -5,7 +5,7 @@ import { UserLocal, UserType } from '@/constants/types/homeType';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
 
-const getUser = () => {
+const GetUser = () => {
     const [updated, setUpdated] = useContext(UpdateContext)
     const [userData, setUserData] = useState<UserType>();
 
@@ -45,4 +45,4 @@ const getUser = () => {
     )
 }
 
-export default getUser
+export default GetUser
