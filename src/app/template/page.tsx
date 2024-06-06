@@ -37,6 +37,7 @@ import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import Loading from '@/components/loading';
+import paths from '@/lib/path-link';
 // import userId from "@/components/authHeader/GetUserId";
 
 interface UserLocal {
@@ -148,14 +149,14 @@ const Page = () => {
             (form) => form.latestVersion?.status === 'ACTIVE'
           );
           setTemplates(listFormActive);
-        }).catch((error) => {
+        })
+        .catch((error) => {
           console.log(error);
         });
     } catch (error) {
       console.log(error);
     }
     setIsLoading(false);
-
   };
 
   const getAllCheckOutForm = async () => {
@@ -201,7 +202,6 @@ const Page = () => {
       console.log(error);
     }
     setIsLoading(false);
-
   };
 
   const handleBuy = async (formId: number, price: number) => {
@@ -269,6 +269,7 @@ const Page = () => {
         )
         .then((res) => {
           onClosePayment();
+          getAllCheckOutForm();
           toast.success('Thanh toán thành công');
         })
         .catch((error) => {
@@ -278,7 +279,6 @@ const Page = () => {
       console.log(error);
     }
     setIsLoading(false);
-
   };
 
   const payForTemplateByCash = () => {
@@ -290,7 +290,7 @@ const Page = () => {
       )
       .then((res) => {
         console.log(res.data);
-        window.open(res.data.checkoutUrl, "_self");
+        window.open(res.data.checkoutUrl, '_self');
       })
       .catch((err) => {
         toast.error('Lỗi thanh toán, vui lòng kiểm tra lại!');
@@ -562,6 +562,24 @@ const Page = () => {
                       </h3>
 
                       <div className="flex flex-col gap-3">
+                        {quantity !== 0 && (
+                          <Button
+                            className="w-80 bg-[#FF0004] text-white"
+                            onPress={() => {
+                              onClose();
+                              router.push(
+                                `${paths.useTemplate.path}/${selectedTemplate?.latestVersion?.id}`
+                              );
+                            }}
+                          >
+                            <FontAwesomeIcon
+                              icon={faPen}
+                              className="ml-1 size-4"
+                            />
+                            Dùng mẫu này
+                          </Button>
+                        )}
+
                         <Button
                           className="w-80 bg-[#FF0004] text-white"
                           onPress={() => {
@@ -608,8 +626,9 @@ const Page = () => {
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
                   <Image
@@ -623,8 +642,9 @@ const Page = () => {
 
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(2)}
                   disabled={walletError}
                 >
