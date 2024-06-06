@@ -245,8 +245,17 @@ const ManagerTemplatePage = (props: Props) => {
   };
 
   const handleFileUpload = async () => {
-    if (!file) return;
+    if (!file) {
+      toast.warn('Chưa chọn file');
+      return;
+    }
     if (!isEdit.id) return;
+
+    //check if file is more than 5MB return error message
+    if (file && file.size > 5 * 1024 * 1024) {
+      toast.warn('File không được lớn hơn 5MB');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('file', file);
@@ -273,8 +282,9 @@ const ManagerTemplatePage = (props: Props) => {
       console.log(error);
       setIsLoading(false);
       setIsEdit({ isOpen: false });
+      setFile(null);
       if (
-        error.response.data.message === 'Please check the tag in the document'
+        error.response?.data?.message === 'Please check the tag in the document'
       )
         toast.error('Có lỗi kí tự trong file biểu mẫu, vui lòng kiểm tra lại');
       else toast.error('Cập nhật file thất bại');
