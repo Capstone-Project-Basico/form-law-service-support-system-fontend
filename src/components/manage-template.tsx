@@ -352,6 +352,23 @@ const ManagerTemplatePage = (props: Props) => {
     }
   };
 
+  const updateStatus = async (id: number, status: string) => {
+    try {
+      setIsLoading(true);
+      const res = await axiosClient.put(
+        `formTemplateVersion/status/${id}?status=${status}`
+      );
+      if (res.data?.status === false) return;
+      getData();
+      setIsLoading(false);
+      toast.success('Cập nhật trạng thái thành công');
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      toast.error('Cập nhật trạng thái thất bại');
+    }
+  };
+
   const renderCell = useCallback((item: FormTemplate, columnKey: Key) => {
     const user = getUserFromStorage();
     if (!user) return null;
@@ -411,6 +428,36 @@ const ManagerTemplatePage = (props: Props) => {
           onClick: () => setIsEdit({ isOpen: true, id: latestVersion?.id }),
           notDisplayStatus: ['ACTIVE', 'STANDARDIZED', 'DELETED'],
           role: ['ROLE_MANAGER', 'ROLE_STAFF'],
+        },
+        {
+          title: 'Cập nhật hoạt động',
+          onClick: () => {
+            if (latestVersion) {
+              updateStatus(latestVersion.id, 'ACTIVE');
+            }
+          },
+          notDisplayStatus: [
+            'ACTIVE',
+            'DELETED',
+            'STANDARDIZED',
+            'UNSTANDARDIZED',
+          ],
+          role: ['ROLE_MANAGER'],
+        },
+        {
+          title: 'Cập nhật không hoạt động',
+          onClick: () => {
+            if (latestVersion) {
+              updateStatus(latestVersion.id, 'INACTIVE');
+            }
+          },
+          notDisplayStatus: [
+            'INACTIVE',
+            'DELETED',
+            'STANDARDIZED',
+            'UNSTANDARDIZED',
+          ],
+          role: ['ROLE_MANAGER'],
         },
         {
           title: 'Cập nhật trạng thái',
