@@ -30,7 +30,6 @@ const Page = () => {
       .post(`${process.env.NEXT_PUBLIC_BASE_API}auth/generateToken`, dataLogin)
       .then((response) => {
         const user = {
-          expiration: new Date().getTime() + 1000 * 60 * 25,
           ...response.data.data,
         };
         localStorage.setItem('userData', JSON.stringify(user));

@@ -9,6 +9,52 @@ import { ToastContainer, toast } from 'react-toastify';
 
 type Props = {};
 
+const validateNumber = (value: string) => {
+  // max length 10
+  if (value.length > 10) {
+    return 'Số không được quá 10 kí tự';
+  }
+  return '';
+};
+const validateText = (value: string) => {
+  //max length 100
+  if (value.length > 50) {
+    return 'Văn bản không được quá 50 kí tự';
+  }
+  return '';
+};
+
+const validateDay = (value: string) => {
+  //1 - 31
+  if (parseInt(value) < 1 || parseInt(value) > 31) {
+    return 'Ngày phải từ 1 đến 31';
+  }
+  return '';
+};
+const validateMonth = (value: string) => {
+  //1 - 12
+  if (parseInt(value) < 1 || parseInt(value) > 12) {
+    return 'Tháng phải từ 1 đến 12';
+  }
+  return '';
+};
+const validateYear = (value: string) => {
+  //1900 - 3000
+  if (parseInt(value) < 1900 || parseInt(value) > 3000) {
+    return 'Năm phải từ 1900 đến 3000';
+  }
+  return '';
+};
+const validateDate = (value: string) => {
+  if (
+    new Date(value).getFullYear() < 1900 ||
+    new Date(value).getFullYear() > 3000
+  ) {
+    return 'Năm phải từ 1900 đến 3000';
+  }
+  return '';
+};
+
 const Page = (props: Props) => {
   const params = useParams<{ id: string }>();
   const router = useRouter();
@@ -86,7 +132,7 @@ const Page = (props: Props) => {
             onclick="document.getElementById('${fieldName}').focus()"
             class="${
               isSelected && 'bg-orange-200'
-            } select-none text-center text-sm  min-w-[50px] h-6 border border-black p-0.5">${fieldValue}</span>`;
+            } select-none text-center text-sm  h-6 border border-black p-0.5">${fieldValue}</span>`;
         }
 
         return `<span
@@ -162,11 +208,11 @@ const Page = (props: Props) => {
     let formattedValue = value;
 
     if (type === 'date') {
+      console.log(value);
       const date = new Date(value);
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = String(date.getFullYear());
-
       formattedValue = `${day}-${month}-${year}`;
     }
 
@@ -176,22 +222,58 @@ const Page = (props: Props) => {
   const renderField = (field: any, props?: any) => {
     switch (field.fieldType) {
       case 'day':
-        return <Input {...props} type="number" min={1} max={31} step={1} />;
+        return (
+          <Input
+            {...props}
+            type="number"
+            min={1}
+            max={31}
+            step={1}
+            validate={validateDay}
+          />
+        );
       case 'month':
-        return <Input {...props} type="number" min={1} max={12} step={1} />;
+        return (
+          <Input
+            {...props}
+            type="number"
+            min={1}
+            max={12}
+            step={1}
+            validate={validateMonth}
+          />
+        );
       case 'year':
         return (
-          <Input {...props} type="number" min={1900} max={3000} step={1} />
+          <Input
+            {...props}
+            type="number"
+            min={1900}
+            max={3000}
+            step={1}
+            validate={validateYear}
+          />
         );
       case 'date':
         try {
           const dateData = formData[field.fieldName];
           const [day, month, year] = dateData.split('-');
           const formattedDate = `${year}-${month}-${day}`;
-          return <Input {...props} type="date" value={formattedDate} />;
+          return (
+            <Input
+              {...props}
+              type="date"
+              value={formattedDate}
+              validate={validateDate}
+            />
+          );
         } catch (error: any) {
           return <Input {...props} type="date" />;
         }
+      case 'number':
+        return <Input {...props} type="number" validate={validateNumber} />;
+      case 'text':
+        return <Input {...props} type="text" validate={validateText} />;
 
       default:
         return <Input {...props} />;
