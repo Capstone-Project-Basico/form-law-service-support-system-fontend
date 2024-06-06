@@ -40,13 +40,15 @@ const TransactionHistory = () => {
   //get all items
   const fetchTransaction = async () => {
     try {
-      const response = await axios.get(
+      await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}transaction/getAllTransactionByUser/${userId}`,
-        {
-          headers: authHeader(),
-        }
-      );
-      setTransactionHistory(response.data.data);
+        { headers: authHeader() })
+        .then(response => {
+          setTransactionHistory(response.data.data.filter((transaction: TransactionType) => transaction.status === "THÀNH CÔNG"));
+        })
+        .catch(error => {
+          console.log(error);
+        })
     } catch (error) {
       console.error(error);
     }
