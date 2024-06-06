@@ -17,23 +17,33 @@ import { ToastContainer, toast } from 'react-toastify';
 
 type Props = {};
 
-const validatePrice = (value: string) => {
-  if (value === '') {
-    return 'Giá không được để trống';
-  }
-  // value < 100 > 1000000
-  if (parseInt(value) < 2000 || parseInt(value) > 1000000) {
-    return 'Giá phải từ 2000 đến 1,000,000';
-  }
-  return '';
-};
-
 const AddTemplate = (props: Props) => {
   const router = useRouter();
   const [file, setFile] = React.useState<File | null>(null);
   const [titleInputError, setTitleInputError] = React.useState<string>('');
   const [formTypes, setFormTypes] = React.useState<FormType[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [isError, setIsError] = React.useState<boolean>(false);
+
+  const validatePrice = (value: string) => {
+    // value < 100 > 1000000
+    if (parseInt(value) < 2000 || parseInt(value) > 1000000) {
+      setIsError(true);
+      return 'Giá phải từ 2000 đến 1,000,000';
+    }
+    setIsError(false);
+    return '';
+  };
+
+  const validateDescription = (value: string) => {
+    //max length 500
+    if (value.length > 500) {
+      setIsError(true);
+      return 'Mô tả không quá 500 ký tự';
+    }
+    setIsError(false);
+    return '';
+  };
 
   const getUserFromStorage = () => {
     if (typeof window !== 'undefined') {
@@ -49,6 +59,10 @@ const AddTemplate = (props: Props) => {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
+      if (isError) {
+        toast.warn('Vui lòng kiểm tra lại thông tin');
+        return;
+      }
 
       const formData = new FormData(e.currentTarget);
       const formValues: { [key: string]: string } = {};
@@ -224,6 +238,7 @@ const AddTemplate = (props: Props) => {
           variant="bordered"
           className="w-full"
           label="Ghi chú"
+          validate={validateDescription}
         />
       </div>
       <div className="mt-9 grid w-full grid-cols-2 gap-2">

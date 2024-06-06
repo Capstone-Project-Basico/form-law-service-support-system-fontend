@@ -3,7 +3,14 @@
 import HeaderComponent from '@/components/header';
 import { FormType } from '@/constants/types/homeType';
 // import CardTemplate from "@/sections/CardTemplate";
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import authHeader from '@/components/authHeader/AuthHeader';
 import { FormTemplate } from '@/constants/types/FormTemplate';
@@ -91,6 +98,7 @@ const Page = () => {
   const [checkoutForm, setCheckoutForm] = useState<CheckoutForm[]>();
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [viewMore, setViewMore] = useState(false);
 
   const getFile = async (id: number) => {
     // fetch file
@@ -194,7 +202,6 @@ const Page = () => {
       axios
         .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
         .then((response) => {
-          console.log(response);
           setTypes(response.data.data);
         })
         .catch((error) => {
@@ -542,17 +549,22 @@ const Page = () => {
                       ></div>
                     </div>
                     <div className="flex w-[300px] flex-col items-center justify-start gap-10">
-                      <h1 className="flex justify-start text-2xl font-semibold">
+                      <h1 className="flex w-[300px] justify-start truncate text-2xl font-semibold">
                         {selectedTemplate?.title
                           ? selectedTemplate?.title
                           : 'Biểu mẫu này hiện tại không có tên'}
                       </h1>
                       {/* description */}
-                      <h3>
+                      <h3 onClick={() => setViewMore(!viewMore)} className="">
                         <span className="font-semibold">Mô tả:</span>{' '}
-                        {selectedTemplate?.description
-                          ? selectedTemplate?.description
-                          : 'Biểu mẫu này hiện tại không có mô tả'}
+                        <span className="block w-[300px] text-wrap break-words">
+                          {selectedTemplate?.description
+                            ? viewMore === true
+                              ? selectedTemplate?.description
+                              : selectedTemplate?.description.slice(0, 100) +
+                                '...'
+                            : 'Biểu mẫu này hiện tại không có mô tả'}
+                        </span>
                       </h3>
                       {/* quantity */}
                       <h3>
@@ -629,8 +641,9 @@ const Page = () => {
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
                   <Image
@@ -644,8 +657,9 @@ const Page = () => {
 
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                    }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
+                    isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                  }`}
                   onClick={() => setIsSelectedQR(2)}
                   disabled={walletError}
                 >
