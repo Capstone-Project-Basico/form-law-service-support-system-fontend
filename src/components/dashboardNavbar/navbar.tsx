@@ -8,10 +8,14 @@ import {
 } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const DashboardNavbar = () => {
+  const router = useRouter();
+
   const logout = () => {
-    window.localStorage.clear();
+    router.push("/login");
+    localStorage.clear();
   };
   return (
     <Navbar maxWidth="full" isBordered className="border-[#FF0004] px-8">

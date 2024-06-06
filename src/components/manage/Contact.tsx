@@ -115,20 +115,22 @@ const Contacts: React.FC<ContactsProps> = ({
       <Table
         aria-label="Example static collection table"
         bottomContent={
-          <div className="flex w-full justify-center">
-            <Pagination
-              showControls
-              classNames={{
-                wrapper: "gap-0 overflow-visible h-8 ",
-                item: "w-8 h-8 text-small rounded-none bg-transparent",
-                cursor:
-                  "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold",
-              }}
-              page={page}
-              total={pages}
-              onChange={(page: any) => setPage(page)}
-            />
-          </div>
+          pages > 1 && (
+            <div className="flex w-full justify-center">
+              <Pagination
+                showControls
+                classNames={{
+                  wrapper: "gap-0 overflow-visible h-8 ",
+                  item: "w-8 h-8 text-small rounded-none bg-transparent",
+                  cursor:
+                    "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold",
+                }}
+                page={page}
+                total={pages}
+                onChange={(page: any) => setPage(page)}
+              />
+            </div>
+          )
         }
       >
         <TableHeader>
@@ -162,8 +164,8 @@ const Contacts: React.FC<ContactsProps> = ({
                       contact.status === "TODO" || contact.status === ""
                         ? "#C0C0C0"
                         : "transparent" || contact.status === "DONE"
-                        ? "#7CFC00"
-                        : "transparent",
+                          ? "#7CFC00"
+                          : "transparent",
                     color: contact.status === "DONE" ? "#00800" : "initial",
                   }}
                 >
@@ -187,9 +189,8 @@ const Contacts: React.FC<ContactsProps> = ({
               {contact.delete === false ? (
                 <TableCell className="flex gap-2 items-center  justify-center ">
                   <Button
-                    className={`bg-blue-600 text-white ${
-                      contact.status === "DONE" ? "hidden" : ""
-                    }`}
+                    className={`bg-blue-600 text-white ${contact.status === "DONE" ? "hidden" : ""
+                      }`}
                     onPress={() => {
                       setSelectedContact(contact);
                       onOpenUpdate();
@@ -199,9 +200,8 @@ const Contacts: React.FC<ContactsProps> = ({
                   </Button>
 
                   <Button
-                    className={`bg-[#FF0004] text-white ${
-                      contact.status === "DONE" ? "hidden" : ""
-                    }`}
+                    className={`bg-[#FF0004] text-white ${contact.status === "DONE" ? "hidden" : ""
+                      }`}
                     onClick={() => handleDelete(contact.contactId)}
                   >
                     Xóa
