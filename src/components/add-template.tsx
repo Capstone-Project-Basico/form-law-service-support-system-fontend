@@ -95,13 +95,16 @@ const AddTemplate = (props: Props) => {
       if (res) {
         if (res.status === 200) {
           toast.success('Tạo mới biểu mẫu thành công');
-          const user = getUserFromStorage();
-          if (user) {
-            if (user.roleName === 'ROLE_MANAGER')
-              router.push('/dashboard/service/manageTemplate');
-            if (user.roleName === 'ROLE_STAFF')
-              router.push('/dashboardStaff/service/manageTemplate');
-          }
+          // pause for 2s then redirect to manageTemplate
+          setTimeout(() => {
+            const user = getUserFromStorage();
+            if (user) {
+              if (user.roleName === 'ROLE_MANAGER')
+                router.push('/dashboard/service/manageTemplate');
+              if (user.roleName === 'ROLE_STAFF')
+                router.push('/dashboardStaff/service/manageTemplate');
+            }
+          }, 2000);
         }
       }
     } catch (error) {}
