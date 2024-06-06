@@ -94,7 +94,11 @@ const AddTemplate = (props: Props) => {
       const res = await postFormTemplateVersion(formTemplateVersion);
       if (res) {
         if (res.status === 200) {
-          toast.success('Tạo mới biểu mẫu thành công');
+          if (res.data.message === 'Please check the tag in the document')
+            toast.error(
+              'Có lỗi kí tự trong file biểu mẫu, vui lòng kiểm tra lại'
+            );
+          else toast.success('Tạo mới biểu mẫu thành công');
           // pause for 2s then redirect to manageTemplate
           setTimeout(() => {
             const user = getUserFromStorage();
