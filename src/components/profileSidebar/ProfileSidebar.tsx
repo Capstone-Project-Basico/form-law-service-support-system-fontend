@@ -28,10 +28,11 @@ import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
 import authHeader from '../authHeader/AuthHeader';
+import { UpdateContext } from '@/app/clientComponent';
 
 interface UserLocal {
   data: {
@@ -50,6 +51,7 @@ const ProfileSidebar = () => {
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [avatar, setAvatar] = useState('');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [updated, setUpdated] = useContext(UpdateContext)
 
   const getUserFromStorage = () => {
     if (typeof window !== 'undefined') {
@@ -144,6 +146,7 @@ const ProfileSidebar = () => {
       .then((response) => {
         toast.success('Cập nhật ảnh đại diện thành công');
         getDataUser();
+        setUpdated(updated);
       })
       .catch((error) => {
         toast.error('Cập nhật ảnh đại diện thất bại!');
@@ -226,6 +229,7 @@ const ProfileSidebar = () => {
                     className="py-3"
                     type="file"
                     onChange={(e) => uploadFile(e)}
+                    accept="image/jpeg, image/png"
                   />
                   {uploading && <Spinner />}
                 </div>

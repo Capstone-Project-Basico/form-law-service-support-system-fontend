@@ -3,7 +3,7 @@
 import HeaderComponent from '@/components/header';
 import { FormType } from '@/constants/types/homeType';
 // import CardTemplate from "@/sections/CardTemplate";
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import authHeader from '@/components/authHeader/AuthHeader';
 import { FormTemplate } from '@/constants/types/FormTemplate';
@@ -37,6 +37,8 @@ import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import Loading from '@/components/loading';
+import getWallet from '@/components/get-wallet';
+import { UpdateContext } from '../clientComponent';
 // import userId from "@/components/authHeader/GetUserId";
 
 interface UserLocal {
@@ -57,6 +59,7 @@ const Page = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<FormTemplate>();
   const templateRef = useRef<HTMLDivElement>(null);
   const [walletError, setWalletError] = useState<boolean>();
+  const [updated, setUpdated] = useContext(UpdateContext);
 
   const {
     isOpen: isOpenPayment,
@@ -191,7 +194,6 @@ const Page = () => {
         .get(`${process.env.NEXT_PUBLIC_BASE_API}formType/getAllFormTypes`)
         .then((response) => {
           console.log(response);
-
           setTypes(response.data.data);
         })
         .catch((error) => {
@@ -269,10 +271,11 @@ const Page = () => {
         )
         .then((res) => {
           onClosePayment();
-          toast.success('Thanh toán thành công');
+          toast.success(res.data.data);
+          setUpdated(!updated);
         })
         .catch((error) => {
-          toast.error('Tài khoản không đủ tiền, vui lòng nạp tại ví');
+          toast.error(error.response.data.message);
         });
     } catch (error) {
       console.log(error);
@@ -345,29 +348,29 @@ const Page = () => {
   }, [page, filteredItems]);
 
   useEffect(() => {
-    getWallet();
+    // getWallet();
     getTemplate();
     getType();
     getAllCheckOutForm();
   }, []);
 
-  const getWallet = () => {
-    if (!user) return;
-    try {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
-        )
-        .then((response) => {
-          setWalletError(false);
-        })
-        .catch((error) => {
-          setWalletError(true);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getWallet = () => {
+  //   if (!user) return;
+  //   try {
+  //     axios
+  //       .get(
+  //         `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
+  //       )
+  //       .then((response) => {
+  //         setWalletError(false);
+  //       })
+  //       .catch((error) => {
+  //         setWalletError(true);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     if (selectedTemplate?.latestVersion === undefined) return;

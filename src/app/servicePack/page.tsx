@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import authHeader from '@/components/authHeader/AuthHeader';
 import {
@@ -29,6 +29,7 @@ import { v4 as uuidv4 } from 'uuid';
 import BuyTemplatePack from '@/components/Pack/BuyTemplatePack';
 import HeaderComponent from '@/components/header';
 import Loading from '@/components/loading';
+import { UpdateContext } from '../clientComponent';
 
 const BuyPacks = () => {
   const router = useRouter();
@@ -47,6 +48,7 @@ const BuyPacks = () => {
   const [isSelectedQR, setIsSelectedQR] = useState(0);
   const [walletError, setWalletError] = useState<boolean>();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [updated, setUpdated] = useContext(UpdateContext);
 
   //data
   const [quantity, setQuantity] = useState(1);
@@ -192,6 +194,7 @@ const BuyPacks = () => {
         .then((res) => {
           toast.success(`${res.data.data}`);
           onClosePayment();
+          setUpdated(!updated);
         })
         .catch((err) => {
           toast.error('Ví của bạn không đủ tiền vui lòng nạp tại ví');
