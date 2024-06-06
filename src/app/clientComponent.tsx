@@ -23,6 +23,7 @@ export default function ExampleClientComponent({
     "/dashboard",
     "/admin",
     "/forgetPassword",
+    "/sendOTP"
   ];
 
   const shouldHideNavbar = noNav.some((path) => pathname.startsWith(path));

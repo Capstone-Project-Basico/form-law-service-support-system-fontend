@@ -48,7 +48,7 @@ const FetchUser = () => {
   }, [user]);
 
   return (
-    <div className="flex flex-col items-center justify-center bg-custom-bg bg-cover pb-[97px] pt-32">
+    <div className="flex flex-col items-center justify-center bg-custom-bg bg-cover pb-[97px] pt-[166px]">
       <ToastContainer />
       <div className="rounded-2xl bg-white p-20">
         <div className="mt-51 flex flex-col items-center justify-center">
