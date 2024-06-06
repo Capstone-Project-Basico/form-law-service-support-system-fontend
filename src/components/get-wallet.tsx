@@ -4,7 +4,7 @@ import { UserLocal } from '@/constants/types/homeType';
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 
-const getWallet = () => {
+const GetWallet = () => {
     const [updated, setUpdated] = useContext(UpdateContext)
     const [money, setMoney] = useState();
 
@@ -41,4 +41,4 @@ const getWallet = () => {
     )
 }
 
-export default getWallet
+export default GetWallet

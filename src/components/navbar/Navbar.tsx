@@ -45,9 +45,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import authHeader from "../authHeader/AuthHeader";
-import getWallet from "../get-wallet";
+import GetWallet from "../get-wallet";
 import { UpdateContext } from "@/app/clientComponent";
-import getUser from "../get-user";
+import GetUser from "../get-user";
 
 
 const MENU = [
@@ -86,7 +86,7 @@ const Navbar = () => {
   const user: UserLocal | null = getUserFromStorage();
   const userId = user?.data.data.userId;
 
-  const userData = getUser();
+  const userData = GetUser();
 
   useEffect(() => {
     getNotifications();
@@ -453,7 +453,7 @@ const Navbar = () => {
                         </h2>
                         <h2 className="font-bold">
                           {/* {walletError ? 0 : wallet?.balance.toLocaleString()} Đ */}
-                          {getWallet()} Đ
+                          {GetWallet()} Đ
                         </h2>
                         <h2 className="">{userData?.email}</h2>
                       </div>

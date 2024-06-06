@@ -146,7 +146,7 @@ const ProfileSidebar = () => {
       .then((response) => {
         toast.success('Cập nhật ảnh đại diện thành công');
         getDataUser();
-        setUpdated(updated);
+        setUpdated(!updated);
       })
       .catch((error) => {
         toast.error('Cập nhật ảnh đại diện thất bại!');
