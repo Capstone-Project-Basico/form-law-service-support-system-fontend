@@ -317,20 +317,22 @@ const Pack = () => {
       <Table
         aria-label="Example static collection table"
         bottomContent={
-          <div className="flex w-full justify-center">
-            <Pagination
-              showControls
-              classNames={{
-                wrapper: "gap-0 overflow-visible h-8 ",
-                item: "w-8 h-8 text-small rounded-none bg-transparent",
-                cursor:
-                  "bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold",
-              }}
-              page={page}
-              total={pages}
-              onChange={(page: any) => setPage(page)}
-            />
-          </div>
+          pages > 1 && (
+            <div className="flex w-full justify-center">
+              <Pagination
+                showControls
+                classNames={{
+                  wrapper: 'gap-0 overflow-visible h-8 ',
+                  item: 'w-8 h-8 text-small rounded-none bg-transparent',
+                  cursor:
+                    'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
+                }}
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+              />
+            </div>
+          )
         }
       >
         <TableHeader className="">
@@ -351,18 +353,57 @@ const Pack = () => {
               <TableCell>{pack.packageName}</TableCell>
               <TableCell>{pack.price.toLocaleString()} VND</TableCell>
               <TableCell>{pack.description}</TableCell>
-
-              <TableCell className="flex gap-2 items-center  justify-center ">
-                <Button
-                  className="bg-blue-600 text-white"
-                  onPress={() => {
-                    setSelectedPartner(pack);
-                    onOpenUpdate();
-                  }}
-                >
-                  Cập nhật
-                </Button>
-              </TableCell>
+              {pack.deleted === false ? (
+                pack.processStatus === 'CHỜ DUYỆT' ? (
+                  <TableCell className="flex items-center justify-center  gap-2">
+                    <Button
+                      className="bg-orange-600 text-white"
+                      onPress={() => {
+                        setSelectedPartner(pack);
+                        onOpenUpdate();
+                      }}
+                    >
+                      Cập nhật
+                    </Button>
+                    <Button
+                      className="bg-green-600 text-white"
+                      onPress={() => {
+                        setSelectedPartner(pack);
+                        // onOpenDetail();
+                      }}
+                    >
+                      Chi tiết
+                    </Button>
+                    <Button
+                      className="bg-[#FF0004] text-white"
+                    // onClick={() => handleDelete(pack.packageServiceId)}
+                    >
+                      Xóa
+                    </Button>
+                  </TableCell>
+                ) : (
+                  <TableCell className="flex items-center justify-center  gap-2 ">
+                    <Button
+                      className="bg-green-600 text-white"
+                      onPress={() => {
+                        // setSelectedRequestService(pack);
+                        // onOpenDetail();
+                      }}
+                    >
+                      Chi tiết
+                    </Button>
+                  </TableCell>
+                )
+              ) : (
+                <TableCell className="flex items-center justify-center">
+                  <Button
+                    className="bg-blue-600 text-white"
+                  // onClick={() => restoreDelete(pack.packageServiceId)}
+                  >
+                    Khôi phục
+                  </Button>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

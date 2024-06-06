@@ -114,20 +114,22 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
       <Table
         aria-label="Example static collection table"
         bottomContent={
-          <div className="flex w-full justify-center">
-            <Pagination
-              showControls
-              classNames={{
-                wrapper: 'gap-0 overflow-visible h-8 ',
-                item: 'w-8 h-8 text-small rounded-none bg-transparent',
-                cursor:
-                  'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
-              }}
-              page={page}
-              total={pages}
-              onChange={(page: any) => setPage(page)}
-            />
-          </div>
+          pages > 1 && (
+            <div className="flex w-full justify-center">
+              <Pagination
+                showControls
+                classNames={{
+                  wrapper: 'gap-0 overflow-visible h-8 ',
+                  item: 'w-8 h-8 text-small rounded-none bg-transparent',
+                  cursor:
+                    'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
+                }}
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+              />
+            </div>
+          )
         }
       >
         <TableHeader>
@@ -179,7 +181,7 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   style={{
                     backgroundColor:
                       recruitment.processStatus === 'TODO' ||
-                      recruitment.processStatus === ''
+                        recruitment.processStatus === ''
                         ? '#C0C0C0'
                         : 'transparent' || recruitment.processStatus === 'DONE'
                           ? '#7CFC00'
@@ -215,9 +217,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
               {recruitment.deleted === false ? (
                 <TableCell className="flex items-center justify-center  gap-2 ">
                   <Button
-                    className={`bg-blue-600 text-white ${
-                      recruitment.processStatus === 'DONE' ? 'hidden' : ''
-                    }`}
+                    className={`bg-blue-600 text-white ${recruitment.processStatus === 'DONE' ? 'hidden' : ''
+                      }`}
                     onPress={() => {
                       setSelectedRecruitment(recruitment);
                       onOpenUpdate();
@@ -227,9 +228,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   </Button>
 
                   <Button
-                    className={`bg-[#FF0004] text-white ${
-                      recruitment.processStatus === 'DONE' ? 'hidden' : ''
-                    } `}
+                    className={`bg-[#FF0004] text-white ${recruitment.processStatus === 'DONE' ? 'hidden' : ''
+                      } `}
                     onClick={() => handleDelete(recruitment.id)}
                   >
                     Xóa
@@ -293,8 +293,8 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   <p className="pl-10">
                     {selectedRecruitment.dateOfBirth
                       ? new Date(
-                          selectedRecruitment.dateOfBirth
-                        ).toLocaleDateString()
+                        selectedRecruitment.dateOfBirth
+                      ).toLocaleDateString()
                       : 'N/A'}
                   </p>
                 </div>
@@ -377,10 +377,10 @@ const Recruitments: React.FC<RecruitmentsProps> = ({
                   label="Ngày sinh"
                   value={
                     selectedRecruitment &&
-                    selectedRecruitment.dateOfBirth instanceof Date
+                      selectedRecruitment.dateOfBirth instanceof Date
                       ? selectedRecruitment.dateOfBirth
-                          .toISOString()
-                          .substring(0, 10)
+                        .toISOString()
+                        .substring(0, 10)
                       : ''
                   }
                   onChange={

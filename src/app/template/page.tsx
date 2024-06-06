@@ -67,6 +67,7 @@ const Page = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<FormTemplate>();
   const templateRef = useRef<HTMLDivElement>(null);
   const [walletError, setWalletError] = useState<boolean>();
+  const [disableButton, setDisableButton] = useState<boolean>();
   const [updated, setUpdated] = useContext(UpdateContext);
 
   const {
@@ -214,6 +215,7 @@ const Page = () => {
   };
 
   const handleBuy = async (formId: number, price: number) => {
+    setDisableButton(true);
     try {
       if (!user) {
         Swal.fire({
@@ -242,22 +244,30 @@ const Page = () => {
           cartRequestList: [{ itemId: formId, quantity, price }],
         };
         {
-          axios
-            .post(
-              `${process.env.NEXT_PUBLIC_BASE_API}order/createOrderFormTemplateDetail`,
-              updatedDataOrder
-            )
-            .then((response) => {
-              setOrderId(response.data.data.orderId);
-              setTransactionId(response.data.data.transactionId);
-              onOpenPayment();
-            });
+          try {
+            await axios
+              .post(
+                `${process.env.NEXT_PUBLIC_BASE_API}order/createOrderFormTemplateDetail`,
+                updatedDataOrder
+              )
+              .then((response) => {
+                setOrderId(response.data.data.orderId);
+                setTransactionId(response.data.data.transactionId);
+                onOpenPayment();
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } catch (error) {
+            console.log(error);
+          }
         }
       }
     } catch (error) {
       toast.error('Yêu cầu mua thất bại');
       console.log(error);
     }
+    setDisableButton(false);
   };
   const payment = () => {
     if (isSelectedQR === 1) {
@@ -355,29 +365,10 @@ const Page = () => {
   }, [page, filteredItems]);
 
   useEffect(() => {
-    // getWallet();
     getTemplate();
     getType();
     getAllCheckOutForm();
   }, []);
-
-  // const getWallet = () => {
-  //   if (!user) return;
-  //   try {
-  //     axios
-  //       .get(
-  //         `${process.env.NEXT_PUBLIC_BASE_API}wallet/getWalletByUser/${userId}`
-  //       )
-  //       .then((response) => {
-  //         setWalletError(false);
-  //       })
-  //       .catch((error) => {
-  //         setWalletError(true);
-  //       });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   useEffect(() => {
     if (selectedTemplate?.latestVersion === undefined) return;
@@ -486,6 +477,7 @@ const Page = () => {
                         Xem trước
                       </Button>
                       <Button
+                        disabled={disableButton}
                         onClick={() =>
                           handleBuy(
                             template.latestVersion?.id ?? -1,
@@ -507,21 +499,25 @@ const Page = () => {
             ))}
           </div>
         )}
-        <div className="mt-10 flex w-full items-center justify-center">
-          <Pagination
-            isCompact
-            showControls
-            classNames={{
-              wrapper: 'gap-0 overflow-visible h-8 ',
-              item: 'w-8 h-8 text-small rounded-none bg-transparent',
-              cursor:
-                'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
-            }}
-            page={page}
-            total={pages}
-            onChange={(page: any) => setPage(page)}
-          />
-        </div>
+        {
+          pages > 1 && (
+            <div className="mt-10 flex w-full items-center justify-center">
+              <Pagination
+                isCompact
+                showControls
+                classNames={{
+                  wrapper: 'gap-0 overflow-visible h-8 ',
+                  item: 'w-8 h-8 text-small rounded-none bg-transparent',
+                  cursor:
+                    'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
+                }}
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+              />
+            </div>
+          )
+        }
         <Modal
           hideCloseButton
           isOpen={isOpen}
@@ -562,7 +558,7 @@ const Page = () => {
                             ? viewMore === true
                               ? selectedTemplate?.description
                               : selectedTemplate?.description.slice(0, 100) +
-                                '...'
+                              '...'
                             : 'Biểu mẫu này hiện tại không có mô tả'}
                         </span>
                       </h3>
@@ -641,9 +637,8 @@ const Page = () => {
               <div className="flex gap-10">
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                    isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
-                  }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 1 ? 'border-1 border-[#FF0004]' : ''
+                    }`}
                   onClick={() => setIsSelectedQR(1)}
                 >
                   <Image
@@ -657,9 +652,8 @@ const Page = () => {
 
                 <Button
                   variant="faded"
-                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${
-                    isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
-                  }`}
+                  className={`flex h-[100px] w-[350px] items-center justify-start gap-2 bg-white ${isSelectedQR === 2 ? 'border-1 border-[#FF0004]' : ''
+                    }`}
                   onClick={() => setIsSelectedQR(2)}
                   disabled={walletError}
                 >

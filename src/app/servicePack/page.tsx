@@ -48,6 +48,7 @@ const BuyPacks = () => {
   const [isSelectedQR, setIsSelectedQR] = useState(0);
   const [walletError, setWalletError] = useState<boolean>();
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [disableButton, setDisableButton] = useState<boolean>();
   const [updated, setUpdated] = useContext(UpdateContext);
 
   //data
@@ -128,6 +129,7 @@ const BuyPacks = () => {
 
   //buy pack
   const handleBuy = async (id: string, price: number) => {
+    setDisableButton(true);
     try {
       if (!user) {
         Swal.fire({
@@ -154,24 +156,29 @@ const BuyPacks = () => {
           userId,
           cartRequestList: [{ quantity, itemUUID: id, price, emailUser }],
         };
-        axios
-          .post(
-            `${process.env.NEXT_PUBLIC_BASE_API}orderPackageRequestService/createOrderServiceDetail`,
-            updatedDataOrder,
-            { headers: authHeader() }
-          )
-          .then((response) => {
-            setOrderId(response.data.data.orderId);
-            setTransactionId(response.data.data.transactionId);
-            onOpenPayment();
-          })
-          .catch((error) => {
-            toast.error('Yêu cầu mua thất bại');
-          });
+        try {
+          await axios
+            .post(
+              `${process.env.NEXT_PUBLIC_BASE_API}orderPackageRequestService/createOrderServiceDetail`,
+              updatedDataOrder,
+              { headers: authHeader() }
+            )
+            .then((response) => {
+              setOrderId(response.data.data.orderId);
+              setTransactionId(response.data.data.transactionId);
+              onOpenPayment();
+            })
+            .catch((error) => {
+              toast.error('Yêu cầu mua thất bại');
+            });
+        } catch (error) {
+          console.log(error);
+        }
       }
     } catch (error) {
       console.log(error);
     }
+    setDisableButton(false);
   };
 
   const payment = () => {
@@ -272,6 +279,7 @@ const BuyPacks = () => {
                   Chi tiết
                 </Button>
                 <Button
+                  disabled={disableButton}
                   className="rounded-full bg-red-600 px-6 py-2 text-white shadow-md transition-colors duration-300 ease-in-out hover:bg-red-800"
                   onClick={() =>
                     handleBuy(servicePack.packageServiceId, servicePack.price)
