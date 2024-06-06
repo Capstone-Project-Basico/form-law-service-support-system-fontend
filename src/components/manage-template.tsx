@@ -269,11 +269,15 @@ const ManagerTemplatePage = (props: Props) => {
       setIsEdit({ isOpen: false });
       setFile(null);
       toast.success('Cập nhật file thành công');
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       setIsLoading(false);
       setIsEdit({ isOpen: false });
-      toast.error('Cập nhật file thất bại');
+      if (
+        error.response.data.message === 'Please check the tag in the document'
+      )
+        toast.error('Có lỗi kí tự trong file biểu mẫu, vui lòng kiểm tra lại');
+      else toast.error('Cập nhật file thất bại');
     }
   };
 
