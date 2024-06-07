@@ -98,7 +98,7 @@ const ProfileSidebar = () => {
 
   useEffect(() => {
     getWallet();
-  }, []);
+  }, [updated]);
 
   const uploadFile = (e: any) => {
     setUploading(true);
