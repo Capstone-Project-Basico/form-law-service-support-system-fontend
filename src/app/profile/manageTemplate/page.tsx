@@ -120,7 +120,8 @@ const ManageTemplate = () => {
       const templates = allTemplate.filter((template: FormTemplate) => {
         const isBought = allCheckout.some((checkout: CheckoutForm) =>
           checkout.cart.some(
-            (item: CartItem) => item.itemId === template.latestVersion?.id
+            (item: CartItem) =>
+              item.itemId === template.latestVersion?.id && item.quantity > 0
           )
         );
         if (isBought) return template;
