@@ -15,6 +15,7 @@ import axiosClient from '@/lib/axiosClient';
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const [disableButton, setDisableButton] = useState<boolean>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
@@ -24,9 +25,10 @@ const Page = () => {
   };
 
   const handleSubmit = async (e: FormEvent) => {
+    setDisableButton(true);
     e.preventDefault();
 
-    axios
+    await axios
       .post(`${process.env.NEXT_PUBLIC_BASE_API}auth/generateToken`, dataLogin)
       .then((response) => {
         const user = {
@@ -38,24 +40,22 @@ const Page = () => {
           'auth-token',
           JSON.stringify(response.data.data.token)
         );
+
         axios.defaults.headers.common['Authorization'] = `${response}`;
 
+        toast.success('Đăng nhập thành công');
         switch (response.data.data.roleName) {
           case 'ROLE_ADMIN':
             router.push('/admin');
-            toast.success('Đăng nhập thành công');
             break;
           case 'ROLE_MANAGER':
             router.push('/dashboard');
-            toast.success('Đăng nhập thành công');
             break;
           case 'ROLE_STAFF':
             router.push('/dashboardStaff');
-            toast.success('Đăng nhập thành công');
             break;
           case 'ROLE_CUSTOMER':
             router.push('/');
-            toast.success('Đăng nhập thành công');
             break;
         }
         setTimeout(() => {
@@ -83,6 +83,7 @@ const Page = () => {
         }
         console.log(error.response);
       });
+    setDisableButton(false);
   };
 
   return (
@@ -148,6 +149,7 @@ const Page = () => {
             </div>
             <div className="flex items-center justify-center">
               <Button
+                isDisabled={disableButton}
                 type="submit"
                 size="lg"
                 className="my-4 w-96 bg-[#F00004] text-white"

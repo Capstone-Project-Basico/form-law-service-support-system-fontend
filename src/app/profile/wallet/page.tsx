@@ -1,6 +1,8 @@
 'use client';
 
+import { UpdateContext } from '@/app/clientComponent';
 import authHeader from '@/components/authHeader/AuthHeader';
+import Loading from '@/components/loading';
 import { UserLocal } from '@/constants/types/homeType';
 import {
   Accordion,
@@ -17,7 +19,7 @@ import {
 } from '@nextui-org/react';
 import axios from 'axios';
 import Image from 'next/image';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 
 const Wallet = () => {
@@ -26,6 +28,10 @@ const Wallet = () => {
   const [maxBalance, setMaxBalance] = useState();
   const [money, setMoney] = useState('');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [disableButton, setDisableButton] = useState<boolean>();
+  const [updated, setUpdated] = useContext(UpdateContext);
+  const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   //data
   const [fullName, setFullName] = useState('');
@@ -78,40 +84,29 @@ const Wallet = () => {
     getWallet();
   }, []);
 
-  const checkRequest = () => {
-    if (walletError) {
-      requestRecharge(walletId);
-    } else {
-      axios
-        .post(`${process.env.NEXT_PUBLIC_BASE_API}wallet/createWallet`, {
-          userId,
-        })
+  const requestRecharge = async (id: string) => {
+    setIsLoading(true);
+    try {
+      await axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}wallet/requestRechargeWallet/${id}?balance=${money}`,
+          {},
+          { headers: authHeader() }
+        )
         .then((response) => {
-          requestRecharge(response.data.data);
+          rechargeByCash(response.data.data);
         })
         .catch((error) => {
           console.log(error);
         });
+    } catch (error) {
+      console.log(error);
     }
+    setIsLoading(false);
   };
 
-  const requestRecharge = (id: string) => {
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_BASE_API}wallet/requestRechargeWallet/${id}?balance=${money}`,
-        {},
-        { headers: authHeader() }
-      )
-      .then((response) => {
-        rechargeByCash(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const rechargeByCash = (orderId: string) => {
-    axios
+  const rechargeByCash = async (orderId: string) => {
+    await axios
       .post(
         `${process.env.NEXT_PUBLIC_BASE_API}pay/create-payment-link/${orderId}`,
         {},
@@ -119,35 +114,59 @@ const Wallet = () => {
       )
       .then((res) => {
         window.open(res.data.checkoutUrl, "_self");
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 
   const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}request-withdrawal/createNewRequest`,
-        requestWithdrawal,
-        {
-          headers: authHeader(),
-        }
-      )
-      .then((response) => {
-        toast.success('Gửi yêu cầu thành công');
-        setFullName('');
-        setBankNumber('');
-        setBankName('');
-        setBalance(0);
-        onClose();
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-        console.log(error.message);
-      });
+    setDisableButton(true)
+    try {
+      await axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BASE_API}request-withdrawal/createNewRequest`,
+          requestWithdrawal,
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success('Gửi yêu cầu thành công');
+          setFullName('');
+          setBankNumber('');
+          setBankName('');
+          setBalance(0);
+          setUpdated(!updated)
+          onClose();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+          console.log(error.message);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+    setDisableButton(false)
   };
+
+  const onChangeMoney = (money: string) => {
+    if (Number(money) < 5000) {
+      setError(true)
+      setDisableButton(true);
+    } else {
+      setError(false)
+      setDisableButton(false);
+      setMoney(money);
+    }
+  }
 
   return (
     <div className="w-[1350px]  rounded-xl bg-white p-5 shadow-lg">
+      {isLoading && (
+        <Loading className="fixed left-0 top-0 z-[100] h-full w-full bg-white bg-opacity-50" />
+      )}
       <ToastContainer />
       <div className="flex justify-between">
         <div>
@@ -225,12 +244,14 @@ const Wallet = () => {
                   type="number"
                   label="Nhập số tiền"
                   min={5000}
-                  onChange={(e: any) => setMoney(e.target.value)}
+                  isInvalid={error}
+                  errorMessage="Số tiền ít nhất cần 5000"
+                  onChange={(e: any) => onChangeMoney(e.target.value)}
                 ></Input>
                 <Button
                   className="h-14 bg-[#FF0004] text-white"
-                  onClick={() => checkRequest()}
-                  disabled={!money || Number(money) < 5000}
+                  onClick={() => requestRecharge(walletId)}
+                  disabled={disableButton}
                 >
                   Nạp tiền
                 </Button>
@@ -284,7 +305,7 @@ const Wallet = () => {
                   <Button color="danger" variant="light" onPress={onClose}>
                     Đóng
                   </Button>
-                  <Button color="primary" type="submit">
+                  <Button color="primary" type="submit" isDisabled={disableButton}>
                     Gửi yêu cầu
                   </Button>
                 </ModalFooter>

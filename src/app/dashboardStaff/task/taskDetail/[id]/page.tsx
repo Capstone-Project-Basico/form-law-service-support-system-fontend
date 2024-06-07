@@ -62,6 +62,7 @@ const TaskDetail = () => {
   const [assignmentTaskId, setAssignmentTaskId] = useState("");
   const todayDate = new Date().toISOString().substring(0, 10);
   const [checkProgress, setCheckProgress] = useState<boolean>();
+  const [disableButton, setDisableButton] = useState<boolean>(true);
   //data
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -259,22 +260,40 @@ const TaskDetail = () => {
         return;
       }
     }
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}taskParent/createNewTaskParent`,
-        newChildTask,
-        { headers: authHeader() }
-      )
-      .then((response) => {
-        toast.success("tạo mới thành công");
-        onClose();
-        fetchTask();
-        fetchDetailTasks();
-      })
-      .catch((error) => {
-        toast.error("Tạo mới thất bại");
-        console.log(error);
-      });
+
+    if (taskName.length <= 0 || taskName.length > 50) {
+      toast.error('Tên nhiệm vụ không được bỏ trống và dài hơn 50 kí tự');
+      return;
+    }
+
+    if (description.length <= 0 || description.length > 200) {
+      toast.error('Chi tiết nhiệm vụ không được bỏ trống và dài hơn 200 kí tự');
+      return;
+    }
+    try {
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BASE_API}taskParent/createNewTaskParent`,
+          newChildTask,
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          setTaskName("");
+          setDescription("");
+          setStartDate(null);
+          setEndDate(null);
+          toast.success("tạo mới thành công");
+          onClose();
+          fetchTask();
+          fetchDetailTasks();
+        })
+        .catch((error) => {
+          toast.error("Tạo mới thất bại");
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const completeMainTask = async (id: any) => {
@@ -329,6 +348,10 @@ const TaskDetail = () => {
   }
 
   const handleComment = () => {
+    if (comment.length <= 0) {
+      toast.error("Không được bỏ trống")
+    }
+
     try {
       axios.post(`${process.env.NEXT_PUBLIC_BASE_API}taskComment/createNewComment`,
         newCommentData,
@@ -341,6 +364,15 @@ const TaskDetail = () => {
         });
     } catch (error) {
       toast.error("Có lỗi xảy ra, vui lòng kiểm tra lại!");
+    }
+  }
+
+  const onChangeComment = (commentContent: string) => {
+    if (commentContent.length <= 0) {
+      setDisableButton(true);
+    } else {
+      setDisableButton(false);
+      setComment(commentContent);
     }
   }
 
@@ -485,13 +517,14 @@ const TaskDetail = () => {
                     onChange={(e) => setTaskName(e.target.value)}
                   />
                   <Textarea
+                    isRequired
                     type="text"
                     label="Chi tiết"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
                   <Input
-                    isRequired
+                    // isRequired
                     type="date"
                     label="Ngày bắt đầu"
                     value={startDate ? startDate.substring(0, 10) : ""}
@@ -568,9 +601,9 @@ const TaskDetail = () => {
                 : <div className="flex justify-center items-center m-20">Hiện tại chưa có bình luận</div>}
             </div>
             <div className="flex max-h-full w-full px-5 justify-end">
-              <Input className="" label="Bình luận về nhiệm vụ này" onChange={(e) => setComment(e.target.value)}></Input>
+              <Input className="" label="Bình luận về nhiệm vụ này" onChange={(e) => onChangeComment(e.target.value)}></Input>
               <div>
-                <Button onClick={() => handleComment()} className="h-full">
+                <Button isDisabled={disableButton} onClick={() => handleComment()} className="h-full">
                   <FontAwesomeIcon icon={faPaperPlane} className="text-2xl" />
                 </Button>
               </div>

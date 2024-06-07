@@ -15,12 +15,15 @@ import Link from 'next/link';
 import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
+import Loading from '@/components/loading';
 
 const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const [isVisibleRepeat, setIsVisibleRepeat] = useState(false);
   const toggleVisibilityRepeat = () => setIsVisibleRepeat(!isVisibleRepeat);
+  const [disableButton, setDisableButton] = useState<boolean>();
+  const [isLoading, setIsLoading] = useState<boolean>();
 
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -30,6 +33,7 @@ const Page = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     // Check if both passwords are entered
     if (!password || !repeatPassword) {
@@ -67,11 +71,15 @@ const Page = () => {
       console.error(error);
       toast.error('Đăng ký thất bại, Vui lòng thử lại.');
     }
+    setIsLoading(false);
   };
 
   return (
     <div className="flex flex-col items-center justify-center bg-custom-bg bg-cover pb-[90px] pt-16 ">
       <ToastContainer />
+      {isLoading && (
+        <Loading className="fixed left-0 top-0 z-[100] h-full w-full bg-white bg-opacity-50" />
+      )}
       <div className="rounded-2xl bg-white p-20">
         <div className="mt-50 flex flex-col items-center justify-center">
           <div className="mb-5 border-l-5 border-[#FF0004] pl-5 text-[17px] font-bold">
@@ -167,6 +175,7 @@ const Page = () => {
               </div>
 
               <Button
+                isDisabled={disableButton}
                 type="submit"
                 className="my-4 w-full bg-[#FF0004] text-white"
               >
