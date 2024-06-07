@@ -245,8 +245,17 @@ const ManagerTemplatePage = (props: Props) => {
   };
 
   const handleFileUpload = async () => {
-    if (!file) return;
+    if (!file) {
+      toast.warn('Chưa chọn file');
+      return;
+    }
     if (!isEdit.id) return;
+
+    //check if file is more than 5MB return error message
+    if (file && file.size > 5 * 1024 * 1024) {
+      toast.warn('File không được lớn hơn 5MB');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('file', file);
@@ -273,8 +282,9 @@ const ManagerTemplatePage = (props: Props) => {
       console.log(error);
       setIsLoading(false);
       setIsEdit({ isOpen: false });
+      setFile(null);
       if (
-        error.response.data.message === 'Please check the tag in the document'
+        error.response?.data?.message === 'Please check the tag in the document'
       )
         toast.error('Có lỗi kí tự trong file biểu mẫu, vui lòng kiểm tra lại');
       else toast.error('Cập nhật file thất bại');
@@ -342,6 +352,23 @@ const ManagerTemplatePage = (props: Props) => {
     }
   };
 
+  const updateStatus = async (id: number, status: string) => {
+    try {
+      setIsLoading(true);
+      const res = await axiosClient.put(
+        `formTemplateVersion/status/${id}?status=${status}`
+      );
+      if (res.data?.status === false) return;
+      getData();
+      setIsLoading(false);
+      toast.success('Cập nhật trạng thái thành công');
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      toast.error('Cập nhật trạng thái thất bại');
+    }
+  };
+
   const renderCell = useCallback((item: FormTemplate, columnKey: Key) => {
     const user = getUserFromStorage();
     if (!user) return null;
@@ -401,6 +428,36 @@ const ManagerTemplatePage = (props: Props) => {
           onClick: () => setIsEdit({ isOpen: true, id: latestVersion?.id }),
           notDisplayStatus: ['ACTIVE', 'STANDARDIZED', 'DELETED'],
           role: ['ROLE_MANAGER', 'ROLE_STAFF'],
+        },
+        {
+          title: 'Cập nhật hoạt động',
+          onClick: () => {
+            if (latestVersion) {
+              updateStatus(latestVersion.id, 'ACTIVE');
+            }
+          },
+          notDisplayStatus: [
+            'ACTIVE',
+            'DELETED',
+            'STANDARDIZED',
+            'UNSTANDARDIZED',
+          ],
+          role: ['ROLE_MANAGER'],
+        },
+        {
+          title: 'Cập nhật không hoạt động',
+          onClick: () => {
+            if (latestVersion) {
+              updateStatus(latestVersion.id, 'INACTIVE');
+            }
+          },
+          notDisplayStatus: [
+            'INACTIVE',
+            'DELETED',
+            'STANDARDIZED',
+            'UNSTANDARDIZED',
+          ],
+          role: ['ROLE_MANAGER'],
         },
         {
           title: 'Cập nhật trạng thái',

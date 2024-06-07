@@ -63,6 +63,11 @@ const AddTemplate = (props: Props) => {
         toast.warn('Vui lòng kiểm tra lại thông tin');
         return;
       }
+      //check if file is more than 5MB return error message
+      if (file && file.size > 5 * 1024 * 1024) {
+        toast.warn('File không được lớn hơn 5MB');
+        return;
+      }
 
       const formData = new FormData(e.currentTarget);
       const formValues: { [key: string]: string } = {};
@@ -111,7 +116,10 @@ const AddTemplate = (props: Props) => {
           }, 2000);
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      setFile(null);
+      toast.error('Có lỗi xảy ra, vui lòng thử lại');
+    }
   }
 
   async function handleOnTitleInputFocusChanged(
