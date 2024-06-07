@@ -111,26 +111,37 @@ const ServicePack = () => {
   //send request
   const handleSubmit = async (e: FormEvent, onClose: () => void) => {
     e.preventDefault();
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_BASE_API}task-api/createNewTask`,
-        newTask,
-        {
-          headers: authHeader(),
-        }
-      )
-      .then((response) => {
-        toast.success('Gửi yêu cầu thành công');
-        setTaskName('');
-        setDescription('');
-        setStartDate(null);
-        onClose();
-        getAllPurchasedPacks();
-      })
-      .catch((error) => {
-        toast.error('Gửi yêu cầu thất bại!');
-        console.log(error);
-      });
+
+    try {
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_BASE_API}task-api/createNewTask`,
+          newTask,
+          {
+            headers: authHeader(),
+          }
+        )
+        .then((response) => {
+          toast.success('Gửi yêu cầu thành công');
+          setTaskName('');
+          setDescription('');
+          setStartDate(null);
+          onClose();
+          getAllPurchasedPacks();
+        })
+        .catch((error) => {
+          if (error.response.data.message === "Cannot invoke \"String.length()\" because \"text\" is null") {
+            toast.error("Vui lòng chọn ngày để được tư vấn")
+          }
+          else {
+            toast.error(error.response.data.message);
+          }
+        });
+    } catch (error) {
+      console.log(error);
+
+    }
+
   };
 
   //get template packs
@@ -227,6 +238,7 @@ const ServicePack = () => {
                     onChange={(e) => setTaskName(e.target.value)}
                   />
                   <Textarea
+                    isRequired
                     type="text"
                     label="Mô tả"
                     value={description}
@@ -235,7 +247,6 @@ const ServicePack = () => {
 
                   <Input
                     isRequired
-                    required
                     type="datetime-local"
                     label="Ngày luật sư có thể liên hệ"
                     placeholder="Ngày liên hệ"
