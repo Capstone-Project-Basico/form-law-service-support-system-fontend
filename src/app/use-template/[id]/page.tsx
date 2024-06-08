@@ -101,6 +101,13 @@ const Page = (props: Props) => {
     return fields;
   };
 
+  const getFormTypeByName = (name: string) => {
+    const type = formFields.find(
+      (field: any) => field.fieldName === name
+    ).fieldType;
+    return type;
+  };
+
   // function replaceFieldWithInput(htmlContent: string) {
   //   let decodedHtml = htmlContent.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
@@ -165,6 +172,46 @@ const Page = (props: Props) => {
         error: 'Tên biểu mẫu không được quá 50 kí tự',
       });
       return;
+    }
+
+    //check all fields is valid
+    for (const key in formData) {
+      if (getFormTypeByName(key) === 'number') {
+        if (validateNumber(formData[key]) !== '') {
+          toast.error('Thông tin không hợp lệ, vui lòng kiểm tra lại');
+          return;
+        }
+      }
+      if (getFormTypeByName(key) === 'text') {
+        if (validateText(formData[key]) !== '') {
+          toast.error('Thông tin không hợp lệ, vui lòng kiểm tra lại');
+          return;
+        }
+      }
+      if (getFormTypeByName(key) === 'day') {
+        if (validateDay(formData[key]) !== '') {
+          toast.error('Thông tin không hợp lệ, vui lòng kiểm tra lại');
+          return;
+        }
+      }
+      if (getFormTypeByName(key) === 'month') {
+        if (validateMonth(formData[key]) !== '') {
+          toast.error('Thông tin không hợp lệ, vui lòng kiểm tra lại');
+          return;
+        }
+      }
+      if (getFormTypeByName(key) === 'year') {
+        if (validateYear(formData[key]) !== '') {
+          toast.error('Thông tin không hợp lệ, vui lòng kiểm tra lại');
+          return;
+        }
+      }
+      if (getFormTypeByName(key) === 'date') {
+        if (validateDate(formData[key]) !== '') {
+          toast.error('Thông tin không hợp lệ, vui lòng kiểm tra lại');
+          return;
+        }
+      }
     }
 
     const data = {
