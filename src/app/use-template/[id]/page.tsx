@@ -1,5 +1,6 @@
 'use client';
 
+import { UserLocal } from '@/constants/types/homeType';
 import axiosClient from '@/lib/axiosClient';
 import { DatePicker, Input, input } from '@nextui-org/react';
 import { AxiosError } from 'axios';
@@ -70,6 +71,17 @@ const Page = (props: Props) => {
   }); // store form name
   const [fieldOnSelect, setFieldOnSelect] = useState<string>(''); // store field on select
 
+  const getUserFromStorage = () => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
+
+  console.log(user);
+
   const getFile = async (id: number) => {
     // fetch file
     const res = await axiosClient.get('formTemplateVersion/download/' + id, {
@@ -102,10 +114,14 @@ const Page = (props: Props) => {
   };
 
   const getFormTypeByName = (name: string) => {
-    const type = formFields.find(
-      (field: any) => field.fieldName === name
-    ).fieldType;
-    return type;
+    try {
+      const type = formFields.find(
+        (field: any) => field.fieldName === name
+      ).fieldType;
+      return type;
+    } catch (error) {
+      console.log(name);
+    }
   };
 
   // function replaceFieldWithInput(htmlContent: string) {
@@ -136,7 +152,7 @@ const Page = (props: Props) => {
           const fieldValue = value[fieldName];
           // Generate an input tag based on fieldType
           return `<span
-            onclick="document.getElementById('${fieldName}').focus()"
+            onclick="var el = document.getElementById('${fieldName}'); if(el) el.focus();"
             class="${
               isSelected && 'bg-orange-200'
             } select-none text-center text-sm  h-6 border border-black p-0.5">${fieldValue}</span>`;
@@ -158,15 +174,12 @@ const Page = (props: Props) => {
   }
 
   const handleSubmit = async () => {
-    console.log('submit');
     if (formName.value === '') {
-      console.log('error');
       setFormName({ ...formName, error: 'Tên biểu mẫu không được trống' });
       return;
     }
     //max length of name is 50
     if (formName.value.length > 50) {
-      console.log(formName.value.length);
       setFormName({
         ...formName,
         error: 'Tên biểu mẫu không được quá 50 kí tự',
@@ -249,7 +262,6 @@ const Page = (props: Props) => {
             ) {
               toast.error('Bạn chưa mua biểu mẫu này');
             }
-            console.log(jsonResponse);
           };
           reader.readAsText(error.response.data);
         } else {
@@ -264,7 +276,6 @@ const Page = (props: Props) => {
     let formattedValue = value;
 
     if (type === 'date') {
-      console.log(value);
       const date = new Date(value);
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -369,8 +380,14 @@ const Page = (props: Props) => {
     if (draft) {
       const data = new Map(JSON.parse(draft));
       const draftData: any = data.get(params.id);
+      // create obj by field name
+      const formData = fields.reduce((acc: any, field: any) => {
+        acc[field?.fieldName] = draftData?.formData[field?.fieldName] || '';
+        return acc;
+      }, {});
+
       if (draftData) {
-        setFormData(draftData.formData);
+        setFormData(formData);
         setFormName({ value: draftData.name, error: '' });
         return;
       }
@@ -432,6 +449,14 @@ const Page = (props: Props) => {
   };
 
   useEffect(() => {
+    if (user === null) {
+      toast.error('Vui lòng đăng nhập để sử dụng chức năng này');
+      //sleep 2s then redirect to login page
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
+    }
+
     const fetchData = async () => {
       // fetch html content
       const htmlRes = await getFile(Number(params.id));

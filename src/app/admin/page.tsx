@@ -66,6 +66,14 @@ const Page = () => {
       totalActiveFormTemplate: 0,
       totalDeletedFormTemplate: 0,
     },
+    formTemplateVersionDashboardResponse: {
+      totalFormTemplateVersion: 0,
+      totalActiveFormTemplateVersion: 0,
+      unStandardFormTemplateVersion: 0,
+      totalInActiveFormTemplateVersion: 0,
+      totalDeletedFormTemplateVerSion: 0,
+      totalPendingFormTemplateVersion: 0,
+    },
     postDashBoardResponse: {
       totalPost: 0,
       totalActivePost: 0,
@@ -391,23 +399,21 @@ const Page = () => {
       .replace(/,/g, '.');
   };
 
-  //export file 
+  //export file
   const exportFileUser = () => {
     try {
       // axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`)
-      axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`, {
-        method: 'GET',
-        responseType: 'blob', // important
-      })
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`, {
+          method: 'GET',
+          responseType: 'blob', // important
+        })
         .then((response) => {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
 
           link.href = url;
-          link.setAttribute(
-            'download',
-            `user${Date.now()}.xlsx`,
-          );
+          link.setAttribute('download', `user${Date.now()}.xlsx`);
 
           document.body.appendChild(link);
           link.click();
@@ -416,28 +422,26 @@ const Page = () => {
         })
         .catch((error) => {
           console.log(error);
-        })
+        });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const exportFileTransaction = () => {
     try {
       // axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`)
-      axios.get(`${process.env.NEXT_PUBLIC_BASE_API}transaction/export-to-excel`, {
-        method: 'GET',
-        responseType: 'blob', // important
-      })
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}transaction/export-to-excel`, {
+          method: 'GET',
+          responseType: 'blob', // important
+        })
         .then((response) => {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement('a');
 
           link.href = url;
-          link.setAttribute(
-            'download',
-            `transaction${Date.now()}.xlsx`,
-          );
+          link.setAttribute('download', `transaction${Date.now()}.xlsx`);
 
           document.body.appendChild(link);
           link.click();
@@ -446,11 +450,11 @@ const Page = () => {
         })
         .catch((error) => {
           console.log(error);
-        })
+        });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     // tầng 1
     <div className="w-full">
@@ -513,22 +517,34 @@ const Page = () => {
             <p className="mt-2 text-center text-2xl font-bold">Biểu mẫu luật</p>
             <p className="flex items-center justify-center py-5 font-semibold ">
               <p className="text-center text-3xl">
-                {dashboards.formTemplateDashBoardResponse.totalFormTemplate}
+                {dashboards.formTemplateVersionDashboardResponse
+                  .totalFormTemplateVersion -
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalDeletedFormTemplateVerSion -
+                  dashboards.formTemplateVersionDashboardResponse
+                    .unStandardFormTemplateVersion}
               </p>
             </p>
             <div className="flex ">
               <p className="w-1/2 text-center ">
                 Hoạt động:{' '}
                 {
-                  dashboards.formTemplateDashBoardResponse
-                    .totalActiveFormTemplate
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalActiveFormTemplateVersion
+                }
+              </p>
+              <p className="w-1/2 text-center ">
+                Đang chờ duyệt:{' '}
+                {
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalPendingFormTemplateVersion
                 }
               </p>
               <p className=" w-1/2 text-center ">
                 Không sử dụng:{' '}
                 {
-                  dashboards.formTemplateDashBoardResponse
-                    .totalDeletedFormTemplate
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalInActiveFormTemplateVersion
                 }
               </p>
             </div>
