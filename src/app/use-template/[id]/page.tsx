@@ -152,7 +152,7 @@ const Page = (props: Props) => {
           const fieldValue = value[fieldName];
           // Generate an input tag based on fieldType
           return `<span
-            onclick={document.getElementById(fieldName).focus();}
+            onclick="var el = document.getElementById('${fieldName}'); if(el) el.focus();"
             class="${
               isSelected && 'bg-orange-200'
             } select-none text-center text-sm  h-6 border border-black p-0.5">${fieldValue}</span>`;
@@ -451,7 +451,10 @@ const Page = (props: Props) => {
   useEffect(() => {
     if (user === null) {
       toast.error('Vui lòng đăng nhập để sử dụng chức năng này');
-      router.push('/login');
+      //sleep 2s then redirect to login page
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
     }
 
     const fetchData = async () => {
