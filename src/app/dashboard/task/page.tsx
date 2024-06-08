@@ -48,10 +48,13 @@ import { v4 as uuidv4 } from "uuid";
 import { headers } from "next/headers";
 import dateConvert from "@/components/dateConvert";
 import useUser from "@/components/authHeader/User";
+import Loading from "@/components/loading";
 
 const Task = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [tabs, setTabs] = useState(1);
+  const [isLoading, setIsLoading] = useState<boolean>();
+
   //data
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -228,10 +231,11 @@ const Task = () => {
     staffId: number,
     endDate: Date
   ) => {
+    setIsLoading(true);
     try {
       let dueDate = dateConvert(endDate);
 
-      axios
+      await axios
         .post(
           `${process.env.NEXT_PUBLIC_BASE_API}taskAssignment/createNewTaskAssignment`,
           {
@@ -244,10 +248,15 @@ const Task = () => {
         .then((response) => {
           fetchTask()
           toast.success("Giao việc thành công");
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
         });
     } catch (error) {
-      toast.error("Giao việc thất bại");
+      console.log(error);
     }
+    setIsLoading(false);
+
   };
 
   // restore
@@ -309,6 +318,9 @@ const Task = () => {
 
   return (
     <div className="w-full mt-5 ml-5 mr-5">
+      {isLoading && (
+        <Loading className="fixed left-0 top-0 z-[100] h-full w-full bg-white bg-opacity-50" />
+      )}
       <div className="grid grid-cols-2">
         <Breadcrumbs color="danger" size="lg" className="text-3xl">
           <BreadcrumbItem>
