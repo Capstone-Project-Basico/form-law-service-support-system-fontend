@@ -436,7 +436,7 @@ const Page = () => {
           link.href = url;
           link.setAttribute(
             'download',
-            `user${Date.now()}.xlsx`,
+            `transaction${Date.now()}.xlsx`,
           );
 
           document.body.appendChild(link);
