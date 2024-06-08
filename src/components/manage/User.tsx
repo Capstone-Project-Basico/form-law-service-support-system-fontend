@@ -31,6 +31,8 @@ import { UserType } from "@/constants/types/homeType";
 import { ToastContainer, toast } from "react-toastify";
 import authHeader from "../authHeader/AuthHeader";
 import { Roles } from "@/lib/roles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileExport } from "@fortawesome/free-solid-svg-icons";
 type UsersProps = {
   users: UserType[];
   tabs: number;
@@ -81,11 +83,33 @@ const Users: React.FC<UsersProps> = ({
     return filteredUsers.slice(start, end);
   }, [page, filteredUsers]);
 
+  //export file 
+  const exportFile = () => {
+    try {
+      axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`)
+        .then((response) => {
+          const file = new Blob([response.data]);
+          const url = URL.createObjectURL(file);
+
+          const a = document.createElement('a');
+          a.href = url;
+          document.body.appendChild(a);
+
+          a.download = "user" + '.xlsx';
+          a.click();
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div>
       <ToastContainer />
       <div>
-        <div className="my-10 flex flex-row">
+        <div className="my-10 flex flex-row justify-between">
           <Input
             classNames={{
               base: "w-full sm:max-w-[10rem] h-10",
@@ -101,6 +125,9 @@ const Users: React.FC<UsersProps> = ({
             value={searchTerm}
             onChange={handleSearchChange}
           />
+          <Button className="bg-white text-[#FF0004] border border-[#FF0004]">
+            <FontAwesomeIcon icon={faFileExport} size="2xl" onClick={() => exportFile()} />
+          </Button>
         </div>
       </div>
       <Table
