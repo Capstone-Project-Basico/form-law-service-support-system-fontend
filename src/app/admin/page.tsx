@@ -66,6 +66,14 @@ const Page = () => {
       totalActiveFormTemplate: 0,
       totalDeletedFormTemplate: 0,
     },
+    formTemplateVersionDashboardResponse: {
+      totalFormTemplateVersion: 0,
+      totalActiveFormTemplateVersion: 0,
+      unStandardFormTemplateVersion: 0,
+      totalInActiveFormTemplateVersion: 0,
+      totalDeletedFormTemplateVerSion: 0,
+      totalPendingFormTemplateVersion: 0,
+    },
     postDashBoardResponse: {
       totalPost: 0,
       totalActivePost: 0,
@@ -509,24 +517,34 @@ const Page = () => {
             <p className="mt-2 text-center text-2xl font-bold">Biểu mẫu luật</p>
             <p className="flex items-center justify-center py-5 font-semibold ">
               <p className="text-center text-3xl">
-                {dashboards.formTemplateDashBoardResponse.totalFormTemplate -
-                  dashboards.formTemplateDashBoardResponse
-                    .totalDeletedFormTemplate}
+                {dashboards.formTemplateVersionDashboardResponse
+                  .totalFormTemplateVersion -
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalDeletedFormTemplateVerSion -
+                  dashboards.formTemplateVersionDashboardResponse
+                    .unStandardFormTemplateVersion}
               </p>
             </p>
             <div className="flex ">
               <p className="w-1/2 text-center ">
                 Hoạt động:{' '}
                 {
-                  dashboards.formTemplateDashBoardResponse
-                    .totalActiveFormTemplate
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalActiveFormTemplateVersion
+                }
+              </p>
+              <p className="w-1/2 text-center ">
+                Đang chờ duyệt:{' '}
+                {
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalPendingFormTemplateVersion
                 }
               </p>
               <p className=" w-1/2 text-center ">
                 Không sử dụng:{' '}
                 {
-                  dashboards.formTemplateDashBoardResponse
-                    .totalDeletedFormTemplate
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalInActiveFormTemplateVersion
                 }
               </p>
             </div>
