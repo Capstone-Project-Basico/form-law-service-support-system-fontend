@@ -397,6 +397,7 @@ const Page = () => {
                         isRequired
                         type="text"
                         label="Biến cài đặt"
+                        readOnly
                         value={selectedConfig.configParam}
                         onChange={(e) =>
                           setSelectedConfig({
