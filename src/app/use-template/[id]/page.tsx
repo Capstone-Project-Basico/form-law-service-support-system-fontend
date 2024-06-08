@@ -102,10 +102,14 @@ const Page = (props: Props) => {
   };
 
   const getFormTypeByName = (name: string) => {
-    const type = formFields.find(
-      (field: any) => field.fieldName === name
-    ).fieldType;
-    return type;
+    try {
+      const type = formFields.find(
+        (field: any) => field.fieldName === name
+      ).fieldType;
+      return type;
+    } catch (error) {
+      console.log(name);
+    }
   };
 
   // function replaceFieldWithInput(htmlContent: string) {
@@ -158,15 +162,12 @@ const Page = (props: Props) => {
   }
 
   const handleSubmit = async () => {
-    console.log('submit');
     if (formName.value === '') {
-      console.log('error');
       setFormName({ ...formName, error: 'Tên biểu mẫu không được trống' });
       return;
     }
     //max length of name is 50
     if (formName.value.length > 50) {
-      console.log(formName.value.length);
       setFormName({
         ...formName,
         error: 'Tên biểu mẫu không được quá 50 kí tự',
@@ -249,7 +250,6 @@ const Page = (props: Props) => {
             ) {
               toast.error('Bạn chưa mua biểu mẫu này');
             }
-            console.log(jsonResponse);
           };
           reader.readAsText(error.response.data);
         } else {
@@ -264,7 +264,6 @@ const Page = (props: Props) => {
     let formattedValue = value;
 
     if (type === 'date') {
-      console.log(value);
       const date = new Date(value);
       const day = String(date.getDate()).padStart(2, '0');
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -369,8 +368,14 @@ const Page = (props: Props) => {
     if (draft) {
       const data = new Map(JSON.parse(draft));
       const draftData: any = data.get(params.id);
+      // create obj by field name
+      const formData = fields.reduce((acc: any, field: any) => {
+        acc[field?.fieldName] = draftData?.formData[field?.fieldName] || '';
+        return acc;
+      }, {});
+
       if (draftData) {
-        setFormData(draftData.formData);
+        setFormData(formData);
         setFormName({ value: draftData.name, error: '' });
         return;
       }
