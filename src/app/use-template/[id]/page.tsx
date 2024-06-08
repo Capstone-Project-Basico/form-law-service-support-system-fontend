@@ -140,7 +140,12 @@ const Page = (props: Props) => {
           const fieldValue = value[fieldName];
           // Generate an input tag based on fieldType
           return `<span
-            onclick="document.getElementById('${fieldName}').focus()"
+            onclick={() => {
+              const element = document.getElementById(fieldName);
+              if (element) {
+                element.focus();
+              }
+            }}
             class="${
               isSelected && 'bg-orange-200'
             } select-none text-center text-sm  h-6 border border-black p-0.5">${fieldValue}</span>`;
