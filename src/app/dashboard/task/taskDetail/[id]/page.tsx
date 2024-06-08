@@ -53,6 +53,7 @@ const TaskDetail = () => {
   const [mainTask, setMainTask] = useState<TaskType>();
   const [assignmentTask, setAssignmentTask] = useState<TaskAssignmentType[]>([]);
   const userInfo = useUser();
+  const [userData, setUserData] = useState<UserType[]>([])
 
   //comment data
   const [commentsData, setCommentsData] = useState<CommentDataType[]>([]);
@@ -104,6 +105,7 @@ const TaskDetail = () => {
   useEffect(() => {
     fetchTask();
     fetchAssignmentTask();
+    fetchUser();
     switch (tabs) {
       case 1:
         fetchDetailTasks();
@@ -156,18 +158,59 @@ const TaskDetail = () => {
   //get all tasks
   const fetchTask = async () => {
     try {
-      const response = await axios.get(
+      await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}task-api/getTaskById/${params.id}`,
         {
           headers: authHeader(),
         }
-      );
-      setMainTask(response.data.data);
+      )
+        .then(response => {
+          setMainTask(response.data.data);
+          const mTask = response.data.data
+          axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`,
+            {
+              headers: authHeader(),
+            }
+          )
+            .then(response => {
+              const userD = [] = response.data.data
+              setUserData(userD.filter((user: UserType) => user.email === mTask?.supportTo))
+
+            })
+            .catch(err => {
+              console.log(err);
+            });
+
+        })
+        .catch(err => {
+          console.log(err);
+
+        })
     } catch (error) {
       console.error(error);
     }
   };
 
+  //get all user
+  const fetchUser = async () => {
+    try {
+      await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`,
+        {
+          headers: authHeader(),
+        }
+      )
+        .then(response => {
+          setUserData(response.data.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   //filter task assignments
 
   const fetchAssignmentTask = async () => {
@@ -286,7 +329,7 @@ const TaskDetail = () => {
           key="2"
           title={<div className="font-bold bg-gray-300 rounded-md h-full w-96">Nhiệm vụ chính</div>}
         >
-          <div className="gap-10 flex flex-col justify-start items-start text-2xl">
+          <div className="gap-10 flex flex-col justify-start items-start text-xl">
             <div className="flex">
               <h1 className="min-w-72">Tên nhiệm vụ:</h1>
               <h1 className="flex justify-start font-semibold text-[#FF0004]">
@@ -309,6 +352,14 @@ const TaskDetail = () => {
                 {mainTask?.supportTo}
               </h1>
             </div>
+
+            <div className="flex">
+              <h1 className="min-w-72">SĐT người cần hỗ trợ:</h1>
+              <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                {userData[0]?.phoneNumber}
+              </h1>
+            </div>
+
             <div className="flex">
               <h1 className="min-w-72">Người chịu trách nhiệm:</h1>
               <h1 className="flex justify-start font-semibold text-[#FF0004]">

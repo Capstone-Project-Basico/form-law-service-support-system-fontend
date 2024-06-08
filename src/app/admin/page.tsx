@@ -6,6 +6,9 @@ import { useEffect, useState } from 'react';
 import authHeader from '@/components/authHeader/AuthHeader';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import { Button } from '@nextui-org/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileExport } from '@fortawesome/free-solid-svg-icons';
 const Page = () => {
   const [dashboards, setDashboardData] = useState({
     revenueDashBoardResponse: {
@@ -62,6 +65,14 @@ const Page = () => {
       totalFormTemplate: 0,
       totalActiveFormTemplate: 0,
       totalDeletedFormTemplate: 0,
+    },
+    formTemplateVersionDashboardResponse: {
+      totalFormTemplateVersion: 0,
+      totalActiveFormTemplateVersion: 0,
+      unStandardFormTemplateVersion: 0,
+      totalInActiveFormTemplateVersion: 0,
+      totalDeletedFormTemplateVerSion: 0,
+      totalPendingFormTemplateVersion: 0,
     },
     postDashBoardResponse: {
       totalPost: 0,
@@ -388,16 +399,84 @@ const Page = () => {
       .replace(/,/g, '.');
   };
 
+  //export file
+  const exportFileUser = () => {
+    try {
+      // axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`)
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`, {
+          method: 'GET',
+          responseType: 'blob', // important
+        })
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+
+          link.href = url;
+          link.setAttribute('download', `user${Date.now()}.xlsx`);
+
+          document.body.appendChild(link);
+          link.click();
+
+          link.remove();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const exportFileTransaction = () => {
+    try {
+      // axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`)
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}transaction/export-to-excel`, {
+          method: 'GET',
+          responseType: 'blob', // important
+        })
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+
+          link.href = url;
+          link.setAttribute('download', `transaction${Date.now()}.xlsx`);
+
+          document.body.appendChild(link);
+          link.click();
+
+          link.remove();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     // tầng 1
     <div className="w-full">
-      <div className="px-5 pt-5">
-        <button
+      <div className="flex gap-5 px-5 pt-5">
+        <Button
           className="mb-3 rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700"
           onClick={exportToExcel}
         >
           Xuất Excel
-        </button>
+        </Button>
+        <Button
+          className="mb-3 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+          onClick={exportFileTransaction}
+        >
+          Xuất Excel giao dịch
+        </Button>
+        <Button
+          className="mb-3 rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
+          onClick={exportFileUser}
+        >
+          Xuất Excel người dùng
+        </Button>
       </div>
       <div className="py-5">
         <div className="flex h-[150px] w-full items-center justify-around">
@@ -438,22 +517,34 @@ const Page = () => {
             <p className="mt-2 text-center text-2xl font-bold">Biểu mẫu luật</p>
             <p className="flex items-center justify-center py-5 font-semibold ">
               <p className="text-center text-3xl">
-                {dashboards.formTemplateDashBoardResponse.totalFormTemplate}
+                {dashboards.formTemplateVersionDashboardResponse
+                  .totalFormTemplateVersion -
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalDeletedFormTemplateVerSion -
+                  dashboards.formTemplateVersionDashboardResponse
+                    .unStandardFormTemplateVersion}
               </p>
             </p>
             <div className="flex ">
               <p className="w-1/2 text-center ">
                 Hoạt động:{' '}
                 {
-                  dashboards.formTemplateDashBoardResponse
-                    .totalActiveFormTemplate
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalActiveFormTemplateVersion
+                }
+              </p>
+              <p className="w-1/2 text-center ">
+                Đang chờ duyệt:{' '}
+                {
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalPendingFormTemplateVersion
                 }
               </p>
               <p className=" w-1/2 text-center ">
                 Không sử dụng:{' '}
                 {
-                  dashboards.formTemplateDashBoardResponse
-                    .totalDeletedFormTemplate
+                  dashboards.formTemplateVersionDashboardResponse
+                    .totalInActiveFormTemplateVersion
                 }
               </p>
             </div>

@@ -86,17 +86,25 @@ const Users: React.FC<UsersProps> = ({
   //export file 
   const exportFile = () => {
     try {
-      axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`)
+      // axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`)
+      axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`, {
+        method: 'GET',
+        responseType: 'blob', // important
+      })
         .then((response) => {
-          const file = new Blob([response.data]);
-          const url = URL.createObjectURL(file);
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
 
-          const a = document.createElement('a');
-          a.href = url;
-          document.body.appendChild(a);
+          link.href = url;
+          link.setAttribute(
+            'download',
+            `user${Date.now()}.xlsx`,
+          );
 
-          a.download = "user" + '.xlsx';
-          a.click();
+          document.body.appendChild(link);
+          link.click();
+
+          link.remove();
         })
         .catch((error) => {
           console.log(error);
@@ -125,30 +133,35 @@ const Users: React.FC<UsersProps> = ({
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <Button className="bg-white text-[#FF0004] border border-[#FF0004]">
-            <FontAwesomeIcon icon={faFileExport} size="2xl" onClick={() => exportFile()} />
-          </Button>
+
         </div>
       </div>
       <Table
         aria-label="Example static collection table"
         bottomContent={
-          pages > 1 && (
-            <div className="flex w-full justify-center">
-              <Pagination
-                showControls
-                classNames={{
-                  wrapper: 'gap-0 overflow-visible h-8 ',
-                  item: 'w-8 h-8 text-small rounded-none bg-transparent',
-                  cursor:
-                    'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
-                }}
-                page={page}
-                total={pages}
-                onChange={(page) => setPage(page)}
-              />
+          <div className="">
+            {pages > 1 && (
+              <div className="flex w-full justify-center">
+                <Pagination
+                  showControls
+                  classNames={{
+                    wrapper: 'gap-0 overflow-visible h-8 ',
+                    item: 'w-8 h-8 text-small rounded-none bg-transparent',
+                    cursor:
+                      'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
+                  }}
+                  page={page}
+                  total={pages}
+                  onChange={(page) => setPage(page)}
+                />
+              </div>
+            )}
+            <div className="flex justify-end items-end w-full">
+              <Button className="bg-white text-[#FF0004] border border-[#FF0004] ">
+                <FontAwesomeIcon icon={faFileExport} size="2xl" onClick={() => exportFile()} />
+              </Button>
             </div>
-          )
+          </div>
         }
       >
         <TableHeader className="">

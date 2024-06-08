@@ -67,7 +67,6 @@ const User = () => {
         `${process.env.NEXT_PUBLIC_BASE_API}user/getAllDeletedUsers`
       );
       setUsers(response.data.data);
-      // setPartners((prevPartners) => [...prevPartners, response.data.data]);
     } catch (error) {
       console.error(error);
     }

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import authHeader from "@/components/authHeader/AuthHeader";
-import { ConfigType } from "@/constants/types/homeType";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import authHeader from '@/components/authHeader/AuthHeader';
+import { ConfigType } from '@/constants/types/homeType';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
   Input,
@@ -19,21 +19,26 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  useDisclosure
-} from "@nextui-org/react";
-import axios from "axios";
-import { FormEvent, useEffect, useMemo, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+  useDisclosure,
+} from '@nextui-org/react';
+import axios from 'axios';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Page = () => {
   const [tabs, setTabs] = useState(1);
   const [configs, setConfigs] = useState<ConfigType[]>([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+  const {
+    isOpen: isOpenUpdate,
+    onOpen: onOpenUpdate,
+    onClose: onCloseUpdate,
+  } = useDisclosure();
+  const [selectedConfig, setSelectedConfig] = useState<ConfigType>();
   //new config data
-  const [configName, setConfigName] = useState("");
-  const [configParam, setConfigParam] = useState("");
-  const [configValue, setConfigValue] = useState("");
+  const [configName, setConfigName] = useState('');
+  const [configParam, setConfigParam] = useState('');
+  const [configValue, setConfigValue] = useState('');
   let newConfig = {
     configName,
     configParam,
@@ -57,15 +62,16 @@ const Page = () => {
   //get all items
   const fetchConfigs = async () => {
     try {
-      axios.get(`${process.env.NEXT_PUBLIC_BASE_API}systemConfig/getAllConfigs`,
-        { headers: authHeader() }
-      )
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}systemConfig/getAllConfigs`, {
+          headers: authHeader(),
+        })
         .then((response) => {
-          setConfigs(response.data.data)
+          setConfigs(response.data.data);
         })
         .catch((error) => {
           console.log(error);
-        })
+        });
     } catch (error) {
       console.error(error);
     }
@@ -73,15 +79,20 @@ const Page = () => {
 
   const fetchDeletedConfigs = async () => {
     try {
-      axios.get(`${process.env.NEXT_PUBLIC_BASE_API}systemConfig/getAllConfigs`,
-        { headers: authHeader() }
-      )
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_API}systemConfig/getAllConfigs`, {
+          headers: authHeader(),
+        })
         .then((response) => {
-          setConfigs(response.data.data.filter((config: ConfigType) => config.deleted === true));
+          setConfigs(
+            response.data.data.filter(
+              (config: ConfigType) => config.deleted === true
+            )
+          );
         })
         .catch((error) => {
           console.log(error);
-        })
+        });
     } catch (error) {
       console.error(error);
     }
@@ -115,7 +126,31 @@ const Page = () => {
           { headers: authHeader() }
         )
         .then((response) => {
-          toast.success("Tạo mới thành công");
+          toast.success('Tạo mới thành công');
+          fetchConfigs();
+          onClose();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //add new
+  const handleUpdateSubmit = async (e: FormEvent, onClose: () => void) => {
+    e.preventDefault();
+
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}systemConfig/updateConfig/${selectedConfig?.id}`,
+          selectedConfig,
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success('Cập nhật thành công');
           fetchConfigs();
           onClose();
         })
@@ -130,44 +165,39 @@ const Page = () => {
   //delete
   const handleDelete = (id: string) => {
     try {
-      axios.delete(
-        `${process.env.NEXT_PUBLIC_BASE_API}systemConfig/deleteConfig/${id}`,
-        { headers: authHeader() }
-      )
+      axios
+        .delete(
+          `${process.env.NEXT_PUBLIC_BASE_API}systemConfig/deleteConfig/${id}`,
+          { headers: authHeader() }
+        )
         .then(() => {
           fetchConfigs();
-          toast.success("Xóa thành công")
+          toast.success('Xóa thành công');
         })
         .catch(() => {
-          toast.error("Xóa thất bại vui lòng kiểm tra lại!")
+          toast.error('Xóa thất bại vui lòng kiểm tra lại!');
         });
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   //restore
   const restoreDelete = (id: string) => {
     try {
-
     } catch (error) {
       console.log(error);
-
     }
   };
 
   return (
-    <div className="w-full mt-5 ml-5 mr-5">
+    <div className="ml-5 mr-5 mt-5 w-full">
       <ToastContainer />
 
       <div className="grid grid-cols-2">
-
-        <div className="text-black font-bold text-3xl ">Quản lí thông tin</div>
-
+        <div className="text-3xl font-bold text-black ">Quản lí hệ thống</div>
 
         <div className="flex justify-end">
           <Button
-            className="flex justify-end w-[100px] bg-[#FF0004] text-white"
+            className="flex w-[100px] justify-end bg-[#FF0004] text-white"
             radius="full"
             onPress={onOpen}
           >
@@ -179,7 +209,7 @@ const Page = () => {
               {(onClose) => (
                 <>
                   <form onSubmit={(e) => handleSubmit(e, onClose)}>
-                    <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+                    <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
                       Thêm cài đặt hệ thống
                     </ModalHeader>
                     <ModalBody>
@@ -210,10 +240,7 @@ const Page = () => {
                       <Button color="danger" variant="light" onPress={onClose}>
                         Đóng
                       </Button>
-                      <Button
-                        color="primary"
-                        type="submit"
-                      >
+                      <Button color="primary" type="submit">
                         Thêm
                       </Button>
                     </ModalFooter>
@@ -225,26 +252,28 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="flex flex-row gap-10 font-bold border-b-1 ">
+      <div className="flex flex-row gap-10 border-b-1 pb-10 font-bold">
         <div>
-          <Button
-            className={`bg-white ${tabs === 1 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+          {/* <Button
+            className={`bg-white ${
+              tabs === 1 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+            }`}
             onClick={() => setTabs(1)}
             radius="none"
           >
             TẤT CẢ
-          </Button>
+          </Button> */}
         </div>
         <div>
-          <Button
-            className={`bg-white ${tabs === 2 && "text-[#FF0004] border-b-2 border-[#FF0004]"
-              }`}
+          {/* <Button
+            className={`bg-white ${
+              tabs === 2 && 'border-b-2 border-[#FF0004] text-[#FF0004]'
+            }`}
             onClick={() => setTabs(2)}
             radius="none"
           >
             KHÔNG SỬ DỤNG
-          </Button>
+          </Button> */}
         </div>
       </div>
       <Table
@@ -275,36 +304,36 @@ const Page = () => {
           <TableColumn className=" bg-[#FF0004] text-white">
             Biến cài đặt
           </TableColumn>
-          <TableColumn className=" bg-[#FF0004] text-white">Giá trị</TableColumn>
-          <TableColumn className="flex justify-center items-center bg-[#FF0004] text-white">
+          <TableColumn className=" bg-[#FF0004] text-white">
+            Giá trị
+          </TableColumn>
+          <TableColumn className="flex items-center justify-center bg-[#FF0004] text-white">
             Tương tác
           </TableColumn>
         </TableHeader>
         <TableBody>
           {items.map((config, index) => (
             <TableRow key={index}>
-              <TableCell className="font-bold">
-                {config.configName}
-              </TableCell>
+              <TableCell className="font-bold">{config.configName}</TableCell>
               <TableCell>{config.configParam}</TableCell>
               <TableCell>{config.configValue}</TableCell>
               {!config.deleted ? (
-                <TableCell className="flex gap-2 items-center justify-center">
+                <TableCell className="flex items-center justify-center gap-2">
                   <Button
                     className="bg-orange-600 text-white"
                     onPress={() => {
-                      // setSelectedPost(post);
-                      // onOpenUpdate();
+                      setSelectedConfig(config);
+                      onOpenUpdate();
                     }}
                   >
                     Cập nhật
                   </Button>
-                  <Button
+                  {/* <Button
                     className="bg-[#FF0004] text-white"
                     onClick={() => handleDelete(config.id)}
                   >
                     Xóa
-                  </Button>
+                  </Button> */}
                   {/* <Button
                     className="bg-green-600 text-white"
                   onClick={() => {
@@ -316,7 +345,7 @@ const Page = () => {
                   </Button> */}
                 </TableCell>
               ) : (
-                <TableCell className="flex gap-2 items-center justify-center">
+                <TableCell className="flex items-center justify-center gap-2">
                   <Button
                     className="bg-blue-600 text-white"
                     onClick={() => restoreDelete(config.id)}
@@ -338,6 +367,72 @@ const Page = () => {
           ))}
         </TableBody>
       </Table>
+
+      {/* Modal update */}
+      <Modal isOpen={isOpenUpdate} onOpenChange={onCloseUpdate} hideCloseButton>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <form onSubmit={(e) => handleUpdateSubmit(e, onClose)}>
+                <ModalHeader className="mb-5 flex flex-col gap-1 bg-[#FF0004] text-2xl font-bold text-white">
+                  Chỉnh sửa cài đặt hệ thống
+                </ModalHeader>
+                <ModalBody>
+                  {selectedConfig && (
+                    <>
+                      <Input
+                        className="font-bold"
+                        type="text"
+                        label="Tên cài đặt"
+                        value={selectedConfig.configName}
+                        onChange={(e) =>
+                          setSelectedConfig({
+                            ...selectedConfig,
+                            configName: e.target.value,
+                          })
+                        }
+                        isRequired
+                      />
+                      <Input
+                        isRequired
+                        type="text"
+                        label="Biến cài đặt"
+                        value={selectedConfig.configParam}
+                        onChange={(e) =>
+                          setSelectedConfig({
+                            ...selectedConfig,
+                            configParam: e.target.value,
+                          })
+                        }
+                      />
+                      <Input
+                        isRequired
+                        type="number"
+                        label="Giá trị"
+                        value={selectedConfig.configValue}
+                        onChange={(e) =>
+                          setSelectedConfig({
+                            ...selectedConfig,
+                            configValue: e.target.value,
+                          })
+                        }
+                      />
+                    </>
+                  )}
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Đóng
+                  </Button>
+                  <Button color="primary" type="submit">
+                    Cập nhật
+                  </Button>
+                </ModalFooter>
+              </form>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

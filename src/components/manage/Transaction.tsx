@@ -20,6 +20,9 @@ import {
 
 import { TransactionType } from "@/constants/types/homeType";
 import { statusTransaction } from "@/lib/status";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileExport } from "@fortawesome/free-solid-svg-icons";
 
 type TransactionProps = {
   transactions: TransactionType[];
@@ -158,6 +161,37 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
     );
   }, [filterValue, onSearchChange, statusFilter]);
 
+  //export file 
+  const exportFile = () => {
+    try {
+      // axios.get(`${process.env.NEXT_PUBLIC_BASE_API}user/export-to-excel`)
+      axios.get(`${process.env.NEXT_PUBLIC_BASE_API}transaction/export-to-excel`, {
+        method: 'GET',
+        responseType: 'blob', // important
+      })
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+
+          link.href = url;
+          link.setAttribute(
+            'download',
+            `transaction${Date.now()}.xlsx`,
+          );
+
+          document.body.appendChild(link);
+          link.click();
+
+          link.remove();
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       <Table
@@ -165,22 +199,29 @@ const Transaction: React.FC<TransactionProps> = ({ transactions }) => {
         topContent={topContent}
         topContentPlacement="outside"
         bottomContent={
-          pages > 1 && (
-            <div className="flex w-full justify-center">
-              <Pagination
-                showControls
-                classNames={{
-                  wrapper: 'gap-0 overflow-visible h-8 ',
-                  item: 'w-8 h-8 text-small rounded-none bg-transparent',
-                  cursor:
-                    'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
-                }}
-                page={page}
-                total={pages}
-                onChange={(page) => setPage(page)}
-              />
+          <div className="">
+            {pages > 1 && (
+              <div className="flex w-full justify-center">
+                <Pagination
+                  showControls
+                  classNames={{
+                    wrapper: 'gap-0 overflow-visible h-8 ',
+                    item: 'w-8 h-8 text-small rounded-none bg-transparent',
+                    cursor:
+                      'bg-gradient-to-b shadow-lg from-default-500 to-default-800 dark:from-default-300 dark:to-default-100 text-white font-bold',
+                  }}
+                  page={page}
+                  total={pages}
+                  onChange={(page) => setPage(page)}
+                />
+              </div>
+            )}
+            <div className="flex justify-end items-end w-full">
+              <Button className="bg-white text-[#FF0004] border border-[#FF0004]">
+                <FontAwesomeIcon icon={faFileExport} size="2xl" onClick={() => exportFile()} />
+              </Button>
             </div>
-          )
+          </div>
         }
       >
         <TableHeader className="">

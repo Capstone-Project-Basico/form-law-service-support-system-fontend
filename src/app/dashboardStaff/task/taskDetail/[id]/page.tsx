@@ -168,9 +168,6 @@ const TaskDetail = () => {
               console.log(err);
             });
 
-          // console.log(
-          //   userData.filter(user => user.email === response.data.data.supportTo)
-          // );
         })
         .catch(err => {
           console.log(err);
