@@ -7,6 +7,7 @@ import {
   faEye,
   faEyeSlash,
   faKey,
+  faPhone,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
@@ -27,19 +28,33 @@ const Page = () => {
 
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    // Check if both passwords are entered
-    if (!password || !repeatPassword) {
-      toast.error('Vui lòng điền vào đầy đủ!');
+    if (userName.length < 1) {
+      toast.error('Vui lòng nhập tên!');
       return;
     }
+    if (phoneNumber.length !== 10) {
+      toast.error('Số điện thoại bao gồm 10 số!');
+      return;
+    }
+
+    if (!password) {
+      toast.error('Vui lòng nhập mật khẩu!');
+      return;
+    }
+
+    if (!repeatPassword) {
+      toast.error('Vui lòng nhập xác nhận mật khẩu!');
+      return;
+    }
+
     // Check if passwords match
     if (password !== repeatPassword) {
       toast.error('Mật khẩu xác nhận phải trùng với mật khẩu mới!');
@@ -50,9 +65,14 @@ const Page = () => {
       toast.error('Mật khẩu mới tối thiểu 6 kí tự và tối đa 25 kí tự!');
       return;
     }
+
+
+    setIsLoading(true);
+
     let dataRegister = {
       userName: userName,
       email: email,
+      phoneNumber: phoneNumber,
       password: password,
     };
 
@@ -61,15 +81,16 @@ const Page = () => {
       await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_API}auth/registerNewUser`,
         dataRegister
-      );
-      toast.success('Vui lòng nhập mã xác nhận');
-
-      //save user to local storage
-      localStorage.setItem('verifyEmail', email);
-      router.push('/sendOTP?user=' + email);
+      ).then((response) => {
+        toast.success('Vui lòng nhập mã xác nhận');
+        localStorage.setItem('verifyEmail', email);
+        router.push('/sendOTP?user=' + email);
+      })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+        });
     } catch (error) {
-      console.error(error);
-      toast.error('Đăng ký thất bại, Vui lòng thử lại.');
+      console.log(error);
     }
     setIsLoading(false);
   };
@@ -108,6 +129,19 @@ const Page = () => {
                   onChange={(e: any) => setEmail(e.target.value)}
                   startContent={
                     <FontAwesomeIcon icon={faEnvelope} className="h-5 w-5" />
+                  }
+                />
+              </div>
+
+              <div className="mb-10 flex w-[662px] flex-wrap gap-4 md:flex-nowrap">
+                <Input
+                  type="number"
+                  label="Số điện thoại"
+                  placeholder="Nhập số điện thoại"
+                  min={1}
+                  onChange={(e: any) => setPhoneNumber(e.target.value)}
+                  startContent={
+                    <FontAwesomeIcon icon={faPhone} className="h-5 w-5" />
                   }
                 />
               </div>

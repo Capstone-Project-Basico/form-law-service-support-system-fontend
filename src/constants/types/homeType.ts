@@ -324,3 +324,12 @@ export interface UserLocal {
     };
   };
 }
+
+export interface ConfigType {
+  id: string;
+  configName: string;
+  configParam: string;
+  configValue: string;
+  status: string;
+  deleted: boolean;
+}

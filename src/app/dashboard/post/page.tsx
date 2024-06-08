@@ -1,42 +1,29 @@
 'use client';
 
+import authHeader from '@/components/authHeader/AuthHeader';
+import Posts from '@/components/manage/Post';
 import { Category, PostType } from '@/constants/types/homeType';
+import { encodeToBase64 } from '@/utils/base64';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-  Breadcrumbs,
   BreadcrumbItem,
+  Breadcrumbs,
   Button,
   Input,
-  useDisclosure,
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
-  Navbar,
-  NavbarContent,
-  NavbarItem,
-  MenuItem,
-  Pagination,
+  ModalHeader,
   Select,
   SelectItem,
+  useDisclosure
 } from '@nextui-org/react';
 import axios from 'axios';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Editor } from 'primereact/editor';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import authHeader from '@/components/authHeader/AuthHeader';
-import Posts from '@/components/manage/Post';
-import { Editor } from 'primereact/editor';
-import { encodeToBase64 } from '@/utils/base64';
 import Swal from 'sweetalert2';
 
 interface UserLocal {
