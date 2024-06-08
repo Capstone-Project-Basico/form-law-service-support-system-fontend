@@ -1,5 +1,6 @@
 'use client';
 
+import { UserLocal } from '@/constants/types/homeType';
 import axiosClient from '@/lib/axiosClient';
 import { DatePicker, Input, input } from '@nextui-org/react';
 import { AxiosError } from 'axios';
@@ -69,6 +70,17 @@ const Page = (props: Props) => {
     error: '',
   }); // store form name
   const [fieldOnSelect, setFieldOnSelect] = useState<string>(''); // store field on select
+
+  const getUserFromStorage = () => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+  };
+
+  const user: UserLocal | null = getUserFromStorage();
+
+  console.log(user);
 
   const getFile = async (id: number) => {
     // fetch file
@@ -140,12 +152,7 @@ const Page = (props: Props) => {
           const fieldValue = value[fieldName];
           // Generate an input tag based on fieldType
           return `<span
-            onclick={() => {
-              const element = document.getElementById(fieldName);
-              if (element) {
-                element.focus();
-              }
-            }}
+            onclick={document.getElementById(fieldName).focus();}
             class="${
               isSelected && 'bg-orange-200'
             } select-none text-center text-sm  h-6 border border-black p-0.5">${fieldValue}</span>`;
@@ -442,6 +449,11 @@ const Page = (props: Props) => {
   };
 
   useEffect(() => {
+    if (user === null) {
+      toast.error('Vui lòng đăng nhập để sử dụng chức năng này');
+      router.push('/login');
+    }
+
     const fetchData = async () => {
       // fetch html content
       const htmlRes = await getFile(Number(params.id));
