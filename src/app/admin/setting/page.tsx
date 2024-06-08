@@ -29,7 +29,8 @@ const Page = () => {
   const [tabs, setTabs] = useState(1);
   const [configs, setConfigs] = useState<ConfigType[]>([]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+  const { isOpen: isOpenUpdate, onOpen: onOpenUpdate, onClose: onCloseUpdate } = useDisclosure();
+  const [selectedConfig, setSelectedConfig] = useState<ConfigType>();
   //new config data
   const [configName, setConfigName] = useState("");
   const [configParam, setConfigParam] = useState("");
@@ -116,6 +117,30 @@ const Page = () => {
         )
         .then((response) => {
           toast.success("Tạo mới thành công");
+          fetchConfigs();
+          onClose();
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //add new
+  const handleUpdateSubmit = async (e: FormEvent, onClose: () => void) => {
+    e.preventDefault();
+
+    try {
+      axios
+        .put(
+          `${process.env.NEXT_PUBLIC_BASE_API}systemConfig/updateConfig/${selectedConfig?.id}`,
+          selectedConfig,
+          { headers: authHeader() }
+        )
+        .then((response) => {
+          toast.success("Cập nhật thành công");
           fetchConfigs();
           onClose();
         })
@@ -293,8 +318,8 @@ const Page = () => {
                   <Button
                     className="bg-orange-600 text-white"
                     onPress={() => {
-                      // setSelectedPost(post);
-                      // onOpenUpdate();
+                      setSelectedConfig(config);
+                      onOpenUpdate();
                     }}
                   >
                     Cập nhật
@@ -338,6 +363,72 @@ const Page = () => {
           ))}
         </TableBody>
       </Table>
+
+      {/* Modal update */}
+      <Modal isOpen={isOpenUpdate} onOpenChange={onCloseUpdate} hideCloseButton>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <form onSubmit={(e) => handleUpdateSubmit(e, onClose)}>
+                <ModalHeader className="flex flex-col gap-1 text-white text-2xl font-bold bg-[#FF0004] mb-5">
+                  Chỉnh sửa cài đặt hệ thống
+                </ModalHeader>
+                <ModalBody>
+                  {selectedConfig && (
+                    <>
+                      <Input
+                        className="font-bold"
+                        type="text"
+                        label="Tên cài đặt"
+                        value={selectedConfig.configName}
+                        onChange={(e) =>
+                          setSelectedConfig({
+                            ...selectedConfig,
+                            configName: e.target.value,
+                          })}
+                        isRequired
+                      />
+                      <Input
+                        isRequired
+                        type="text"
+                        label="Biến cài đặt"
+                        value={selectedConfig.configParam}
+                        onChange={(e) =>
+                          setSelectedConfig({
+                            ...selectedConfig,
+                            configParam: e.target.value,
+                          })}
+                      />
+                      <Input
+                        isRequired
+                        type="number"
+                        label="Giá trị"
+                        value={selectedConfig.configValue}
+                        onChange={(e) =>
+                          setSelectedConfig({
+                            ...selectedConfig,
+                            configValue: e.target.value,
+                          })}
+                      />
+                    </>
+                  )}
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Đóng
+                  </Button>
+                  <Button
+                    color="primary"
+                    type="submit"
+                  >
+                    Cập nhật
+                  </Button>
+                </ModalFooter>
+              </form>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
