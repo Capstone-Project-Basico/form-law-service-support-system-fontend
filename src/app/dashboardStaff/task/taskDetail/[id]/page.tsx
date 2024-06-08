@@ -63,6 +63,7 @@ const TaskDetail = () => {
   const todayDate = new Date().toISOString().substring(0, 10);
   const [checkProgress, setCheckProgress] = useState<boolean>();
   const [disableButton, setDisableButton] = useState<boolean>(true);
+  const [userData, setUserData] = useState<UserType[]>([])
   //data
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -115,6 +116,7 @@ const TaskDetail = () => {
   useEffect(() => {
     fetchTask();
     getAllCommentByTaskId();
+    fetchUser();
     switch (tabs) {
       case 1:
         fetchDetailTasks();
@@ -137,20 +139,62 @@ const TaskDetail = () => {
 
   const fetchTask = async () => {
     try {
-      const response = await axios.get(
+      await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_API}task-api/getTaskById/${params.id}`,
         {
           headers: authHeader(),
         }
-      );
-      setMainTask(response.data.data);
-      setCheckProgress(response.data.data.progress > 0 && response.data.data.progress < 100);
+      )
+        .then(response => {
+          setMainTask(response.data.data);
+          const mTask = response.data.data
+          setCheckProgress(response.data.data.progress > 0 && response.data.data.progress < 100);
+          if (response.data.data.progress === 100) {
+            router.push("/dashboardStaff/task/");
+          }
 
-      console.log(response.data.data.progress > 0 && response.data.data.progress < 100);
-      if (response.data.data.progress === 100) {
-        router.push("/dashboardStaff/task/");
-      }
+          axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`,
+            {
+              headers: authHeader(),
+            }
+          )
+            .then(response => {
+              const userD = [] = response.data.data
+              setUserData(userD.filter((user: UserType) => user.email === mTask?.supportTo))
 
+            })
+            .catch(err => {
+              console.log(err);
+            });
+
+          // console.log(
+          //   userData.filter(user => user.email === response.data.data.supportTo)
+          // );
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //get all user
+  const fetchUser = async () => {
+    try {
+      await axios.get(
+        `${process.env.NEXT_PUBLIC_BASE_API}user/getAllUsers`,
+        {
+          headers: authHeader(),
+        }
+      )
+        .then(response => {
+          setUserData(response.data.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     } catch (error) {
       console.error(error);
     }
@@ -195,6 +239,9 @@ const TaskDetail = () => {
       console.error(error);
     }
   };
+
+
+
   //fetch all done tasks
   const fetchDoneDetailTasks = async () => {
     try {
@@ -427,7 +474,7 @@ const TaskDetail = () => {
           >
             <div className="gap-10 flex flex-col justify-start items-start border-1">
               <div className="flex">
-                <h1 className="min-w-40">Tên nhiệm vụ:</h1>
+                <h1 className="min-w-48">Tên nhiệm vụ:</h1>
                 <h1 className="flex justify-start font-semibold text-[#FF0004]">
                   {mainTask?.taskName
                     ? mainTask?.taskName
@@ -436,7 +483,7 @@ const TaskDetail = () => {
               </div>
 
               <div className="flex">
-                <h1 className="min-w-40">Chi tiết nhiệm vụ:</h1>
+                <h1 className="min-w-48">Chi tiết nhiệm vụ:</h1>
                 <h1 className="flex justify-start font-semibold text-[#FF0004] max-h-64 overflow-auto">
                   {mainTask?.description}
                 </h1>
@@ -447,14 +494,21 @@ const TaskDetail = () => {
                 (
                   <div className="flex flex-col gap-10">
                     <div className="flex">
-                      <h1 className="min-w-40">Người cần hỗ trợ:</h1>
+                      <h1 className="min-w-48">Người cần hỗ trợ:</h1>
                       <h1 className="flex justify-start font-semibold text-[#FF0004]">
                         {mainTask?.supportTo}
                       </h1>
                     </div>
 
                     <div className="flex">
-                      <h1 className="min-w-40">Thời gian hỗ trợ:</h1>
+                      <h1 className="min-w-48">SĐT người cần hỗ trợ:</h1>
+                      <h1 className="flex justify-start font-semibold text-[#FF0004]">
+                        {userData[0]?.phoneNumber}
+                      </h1>
+                    </div>
+
+                    <div className="flex">
+                      <h1 className="min-w-48">Thời gian hỗ trợ:</h1>
                       <h1 className="flex justify-start font-semibold text-[#FF0004]">
                         {mainTask?.startDate.substring(0, 10) + " vào lúc " + mainTask?.startDate.substring(11, 16)}
                       </h1>
